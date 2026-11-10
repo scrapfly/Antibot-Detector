@@ -6535,6 +6535,12 @@
     "message": "Fehlgeschlagen oder übersprungen",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Als Zeilen kopieren"
+  },
+  "bulkFilterNone": {
+    "message": "Keine Seite entspricht diesem Filter."
+  },
   "bulkShowingFmt": {
     "message": "{0} von {1} Seiten angezeigt. Exporte enthalten nur diese.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"

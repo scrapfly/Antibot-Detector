@@ -6537,6 +6537,12 @@
     "message": "Con error u omitidas",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Copiar como líneas"
+  },
+  "bulkFilterNone": {
+    "message": "Ninguna página coincide con este filtro."
+  },
   "bulkShowingFmt": {
     "message": "Mostrando {0} de {1} páginas. Las exportaciones incluyen solo estas.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"

@@ -7170,6 +7170,14 @@
     "message": "Failed or skipped",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Copy as lines",
+    "description": "Bulk scan: button that copies the shown pages as one line each (address and protections), for chats and tickets"
+  },
+  "bulkFilterNone": {
+    "message": "No page matches this filter.",
+    "description": "Bulk scan: the line in the results table when the chosen Show filter matches no page"
+  },
   "bulkShowingFmt": {
     "message": "Showing {0} of {1} pages. Exports include only these.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"

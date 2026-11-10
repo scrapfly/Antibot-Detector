@@ -6535,6 +6535,12 @@
     "message": "विफल या छोड़े गए",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "पंक्तियों के रूप में कॉपी करें"
+  },
+  "bulkFilterNone": {
+    "message": "कोई पेज इस फ़िल्टर से मेल नहीं खाता।"
+  },
   "bulkShowingFmt": {
     "message": "{1} में से {0} पेज दिख रहे हैं। एक्सपोर्ट में केवल यही शामिल होंगे।",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"

@@ -6535,6 +6535,12 @@
     "message": "失败或已跳过",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "复制为行"
+  },
+  "bulkFilterNone": {
+    "message": "没有页面符合此筛选条件。"
+  },
   "bulkShowingFmt": {
     "message": "正在显示 {1} 个页面中的 {0} 个。导出仅包含这些页面。",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"

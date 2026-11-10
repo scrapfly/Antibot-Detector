@@ -6535,6 +6535,12 @@
     "message": "실패 또는 건너뜀",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "줄로 복사"
+  },
+  "bulkFilterNone": {
+    "message": "이 필터와 일치하는 페이지가 없습니다."
+  },
   "bulkShowingFmt": {
     "message": "{1}페이지 중 {0}페이지 표시 중. 내보내기에는 이 페이지만 포함됩니다.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"

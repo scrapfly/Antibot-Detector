@@ -6535,6 +6535,12 @@
     "message": "Selhaly nebo přeskočeny",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Kopírovat jako řádky"
+  },
+  "bulkFilterNone": {
+    "message": "Tomuto filtru neodpovídá žádná stránka."
+  },
   "bulkShowingFmt": {
     "message": "Zobrazeno {0} z {1} stránek. Exporty obsahují jen tyto.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
