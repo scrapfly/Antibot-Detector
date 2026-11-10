@@ -214,7 +214,7 @@
     "message": "Độ tin cậy thể hiện mức độ mạnh của bằng chứng phát hiện đã lưu, không phải bằng chứng xác nhận có thu thập dấu vân tay hay thử thách đang hoạt động."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} phát hiện có giá trị độ tin cậy; {1} không có điểm hợp lệ."
+    "message": "Phát hiện có giá trị độ tin cậy: {0}. Không có điểm hợp lệ: {1}."
   },
   "statsProtectionColumn": {
     "message": "Biện pháp bảo vệ"
@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Một mẫu được đánh dấu là biểu thức chính quy không hợp lệ hoặc có thể làm treo quá trình quét. Hãy sửa lại hoặc tắt Regex cho hàng đó."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Đã lưu. Quy tắc này có cùng một mẫu nhiều lần; có thể xóa các bản sao thừa."
+  },
   "rulesUiMethodFallback": {
     "message": "Phương thức"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Xuất Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "Không thể sao chép tóm tắt. Vui lòng thử lại.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Đã sao chép tóm tắt",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Sao chép tóm tắt",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Hiện các tên miền có {0}"
   },
@@ -6532,6 +6547,12 @@
     "message": "Thất bại hoặc bỏ qua",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Sao chép theo dòng"
+  },
+  "bulkFilterNone": {
+    "message": "Không có trang nào khớp với bộ lọc này."
+  },
   "bulkShowingFmt": {
     "message": "Đang hiển thị {0} trên {1} trang. Tệp xuất chỉ gồm các trang này.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "Sao chép dạng Markdown"
+  },
+  "historyCopyOneLine": {
+    "message": "Sao chép thành một dòng"
   },
   "presetAutoUpdateOff": {
     "message": "Tự động kiểm tra bản cập nhật đã tắt"

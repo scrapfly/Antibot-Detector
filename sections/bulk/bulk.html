@@ -64,6 +64,7 @@
           <button type="button" class="bulk-btn" id="bulkExportCsvBtn" data-i18n="statsExportCSV">Export CSV</button>
           <button type="button" class="bulk-btn" id="bulkExportJsonBtn" data-i18n="statsExportJSON">Export JSON</button>
           <button type="button" class="bulk-btn" id="bulkExportMarkdownBtn" data-i18n="statsExportMarkdown">Export Markdown</button>
+          <button type="button" class="bulk-btn" id="bulkCopyLinesBtn" data-i18n="bulkCopyLines">Copy as lines</button>
           <button type="button" class="bulk-btn" id="bulkNewBtn" data-i18n="bulkNewList" hidden>New list</button>
         </div>
       </div>
@@ -85,7 +86,7 @@
         <span class="bulk-muted" id="bulkFilterNote" aria-live="polite"></span>
       </div>
       <div class="bulk-table-wrap">
-        <table class="bulk-table">
+        <table class="bulk-table" aria-labelledby="bulkResultsTitle">
           <thead>
             <tr>
               <th scope="col" class="bulk-col-num">#</th>

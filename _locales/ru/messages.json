@@ -148,7 +148,7 @@
     "message": "Экспорт содержит домены и сводки обнаружений, но не файлы cookie, содержимое страниц или параметры URL."
   },
   "statsExportScopeFmt": {
-    "message": "Экспорт выбранного периода: {0} записей"
+    "message": "Экспорт охватывает выбранный период. Записей: {0}"
   },
   "statsExportStartedFmt": {
     "message": "Загрузка началась: {0}"
@@ -214,7 +214,7 @@
     "message": "Достоверность описывает убедительность сохранённых признаков обнаружения, но не доказывает наличие цифрового отпечатка или активной проверки."
   },
   "statsConfidenceKnownFmt": {
-    "message": "У {0} обнаружений есть значения достоверности; у {1} нет корректной оценки."
+    "message": "Обнаружения со значением достоверности: {0}. Без корректной оценки: {1}."
   },
   "statsProtectionColumn": {
     "message": "Защита"
@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Шаблон, отмеченный как регулярное выражение, недопустим или может заблокировать проверку. Исправьте его или отключите Regex в этой строке."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Сохранено. В этом правиле один и тот же шаблон встречается несколько раз; лишние копии можно удалить."
+  },
   "rulesUiMethodFallback": {
     "message": "Метод"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Экспорт Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "Не удалось скопировать сводку. Повторите попытку.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Сводка скопирована",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Копировать сводку",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Показать домены с {0}"
   },
@@ -6532,6 +6547,12 @@
     "message": "Со сбоем или пропущенные",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Копировать строками"
+  },
+  "bulkFilterNone": {
+    "message": "Нет страниц, подходящих под этот фильтр."
+  },
   "bulkShowingFmt": {
     "message": "Показано страниц: {0} из {1}. В экспорт попадут только они.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "Копировать как Markdown"
+  },
+  "historyCopyOneLine": {
+    "message": "Копировать одной строкой"
   },
   "presetAutoUpdateOff": {
     "message": "Автопроверка обновлений выключена"

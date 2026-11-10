@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Wzorzec oznaczony jako wyrażenie regularne jest nieprawidłowy lub może zablokować skanowanie. Popraw go albo wyłącz Regex w tym wierszu."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Zapisano. Ta reguła zawiera ten sam wzorzec więcej niż raz; nadmiarowe kopie można usunąć."
+  },
   "rulesUiMethodFallback": {
     "message": "Metoda"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Eksportuj Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "Nie udało się skopiować podsumowania. Spróbuj ponownie.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Skopiowano podsumowanie",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Kopiuj podsumowanie",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Pokaż domeny z ochroną {0}"
   },
@@ -6532,6 +6547,12 @@
     "message": "Nieudane lub pominięte",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Kopiuj jako wiersze"
+  },
+  "bulkFilterNone": {
+    "message": "Żadna strona nie pasuje do tego filtra."
+  },
   "bulkShowingFmt": {
     "message": "Pokazano {0} z {1} stron. Eksporty zawierają tylko te strony.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "Kopiuj jako Markdown"
+  },
+  "historyCopyOneLine": {
+    "message": "Kopiuj jako jedną linię"
   },
   "presetAutoUpdateOff": {
     "message": "Automatyczne sprawdzanie aktualizacji jest wyłączone"

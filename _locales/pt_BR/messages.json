@@ -214,7 +214,7 @@
     "message": "A confiança descreve a força dos indícios de detecção salvos, não comprova a presença de fingerprinting ou de um desafio ativo."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} detecções têm valores de confiança; {1} não têm uma pontuação válida."
+    "message": "Detecções com valor de confiança: {0}. Sem pontuação válida: {1}."
   },
   "statsProtectionColumn": {
     "message": "Proteção"
@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Um padrão marcado como expressão regular não é válido ou pode travar a análise. Corrija-o ou desative Regex nessa linha."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Salva. Esta regra tem o mesmo padrão mais de uma vez; as cópias extras podem ser excluídas."
+  },
   "rulesUiMethodFallback": {
     "message": "Método"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Exportar Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "Não foi possível copiar o resumo. Tente novamente.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Resumo copiado",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Copiar resumo",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Mostrar os domínios com {0}"
   },
@@ -6532,6 +6547,12 @@
     "message": "Com falha ou ignoradas",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Copiar como linhas"
+  },
+  "bulkFilterNone": {
+    "message": "Nenhuma página corresponde a este filtro."
+  },
   "bulkShowingFmt": {
     "message": "Mostrando {0} de {1} páginas. As exportações incluem apenas estas.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "Copiar como Markdown"
+  },
+  "historyCopyOneLine": {
+    "message": "Copiar como uma linha"
   },
   "presetAutoUpdateOff": {
     "message": "A verificação automática de atualizações está desativada"

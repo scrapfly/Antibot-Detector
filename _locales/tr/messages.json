@@ -214,7 +214,7 @@
     "message": "Güven, kayıtlı tespit kanıtının gücünü ifade eder; parmak izi oluşturmanın veya etkin bir doğrulama sınamasının kanıtı değildir."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} tespitin güven değeri var; {1} tespitin geçerli puanı yok."
+    "message": "Güven değeri olan tespitler: {0}. Geçerli puanı olmayanlar: {1}."
   },
   "statsProtectionColumn": {
     "message": "Koruma"
@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Normal ifade olarak işaretlenen bir desen geçersiz veya taramayı kilitleyebilir. Düzeltin ya da o satırda Regex'i kapatın."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Kaydedildi. Bu kuralda aynı desen birden fazla kez var; fazla kopyalar silinebilir."
+  },
   "rulesUiMethodFallback": {
     "message": "Yöntem"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Markdown'a aktar"
   },
+  "statsExportCopyFailed": {
+    "message": "Özet kopyalanamadı. Lütfen tekrar deneyin.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Özet kopyalandı",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Özeti kopyala",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "{0} bulunan alan adlarını göster"
   },
@@ -6532,6 +6547,12 @@
     "message": "Başarısız veya atlanan",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Satırlar olarak kopyala"
+  },
+  "bulkFilterNone": {
+    "message": "Bu filtreyle eşleşen sayfa yok."
+  },
   "bulkShowingFmt": {
     "message": "{1} sayfadan {0} tanesi gösteriliyor. Dışa aktarmalar yalnızca bunları içerir.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "Markdown olarak kopyala"
+  },
+  "historyCopyOneLine": {
+    "message": "Tek satır olarak kopyala"
   },
   "presetAutoUpdateOff": {
     "message": "Güncellemelerin otomatik kontrolü kapalı"

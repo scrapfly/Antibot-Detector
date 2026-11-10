@@ -1379,7 +1379,7 @@
 
 #detectionTab .page-info .total-pages {
   position: relative;
-  left: 1px;
+  inset-inline-start: 1px;
   min-width: 38px;
 }
 
@@ -1394,7 +1394,7 @@
 
 /* The page label sits a little closer to the prev button than the total does to next */
 #detectionTab .pagination-btn-prev {
-  margin-right: -2px;
+  margin-inline-end: -2px;
 }
 
 .total-pages {
@@ -1517,7 +1517,7 @@
 .detection-scan-check .category-icon {
   display: inline-flex;
   flex-shrink: 0;
-  margin-right: -5px;
+  margin-inline-end: -5px;
 }
 
 .detection-scan-check .category-icon svg {

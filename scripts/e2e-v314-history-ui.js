@@ -438,7 +438,7 @@ const RICH = [
       await page.click('#historyItemMenu [data-action="pin"]');
       await sleep(1500);
       assert.equal((await said()).length, before, 'unpinning one with the chip on redraws the list, and the count was not asked for');
-    } finally { await page.close(); }
+    } finally { await page.evaluate(() => { try { localStorage.removeItem('historyFilterChips'); } catch (_) {} }).catch(() => {}); await page.close(); }
   });
 
   // ===============================================================================================

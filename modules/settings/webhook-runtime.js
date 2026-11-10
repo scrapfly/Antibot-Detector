@@ -187,7 +187,7 @@ SettingsRuntime._noLongerSent = async function(webhook, item) {
     if (item.trigger === 'cache' && webhook.webhookOnCache !== true) return {};
     const decision = WebhookFilter.evaluate(ctx.detections, ctx.hostname, WebhookFilter.settingsOf(webhook));
     if (!decision.send) return { reason: decision.reason };
-    if (await Utils.isUrlBlacklisted(ctx.url)) return { hidden: true };
+    if (await Utils.isUrlBlacklisted(ctx.url, { failClosed: true })) return { hidden: true };
     return null;
 };
 

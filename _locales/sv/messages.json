@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Ett mönster markerat som reguljärt uttryck är ogiltigt eller kan låsa genomsökningen. Rätta det eller stäng av Regex för den raden."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Sparad. Den här regeln har samma mönster flera gånger; de extra kopiorna kan tas bort."
+  },
   "rulesUiMethodFallback": {
     "message": "Metod"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Exportera Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "Det gick inte att kopiera sammanfattningen. Försök igen.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Sammanfattningen kopierad",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Kopiera sammanfattning",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Visa domänerna med {0}"
   },
@@ -6532,6 +6547,12 @@
     "message": "Misslyckade eller överhoppade",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Kopiera som rader"
+  },
+  "bulkFilterNone": {
+    "message": "Ingen sida matchar det här filtret."
+  },
   "bulkShowingFmt": {
     "message": "Visar {0} av {1} sidor. Exporter innehåller bara dessa.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "Kopiera som Markdown"
+  },
+  "historyCopyOneLine": {
+    "message": "Kopiera som en rad"
   },
   "presetAutoUpdateOff": {
     "message": "Automatisk sökning efter uppdateringar är av"

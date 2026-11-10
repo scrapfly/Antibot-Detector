@@ -43,5 +43,8 @@
             autoUpdate: settings.updates?.autoUpdate === true
         };
     }
-    root.SettingsTransfer = { portable, diagnostics, isHexColor };
+    // Far above what the extension writes (a backup holds History, up to 25 MB, and the rules, up to 10 MB): a bigger file is not ours
+    const MAX_SETTINGS_FILE_BYTES = 5 * 1024 * 1024;
+    const MAX_BACKUP_FILE_BYTES = 64 * 1024 * 1024;
+    root.SettingsTransfer = { portable, diagnostics, isHexColor, MAX_SETTINGS_FILE_BYTES, MAX_BACKUP_FILE_BYTES };
 })(globalThis);

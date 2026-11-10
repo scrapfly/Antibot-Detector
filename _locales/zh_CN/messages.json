@@ -214,7 +214,7 @@
     "message": "置信度描述已保存检测证据的强度，并不能证明存在指纹识别或正在进行的验证挑战。"
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} 项检测有置信度值；{1} 项没有有效评分。"
+    "message": "有置信度值的检测：{0} 项。没有有效评分：{1} 项。"
   },
   "statsProtectionColumn": {
     "message": "防护措施"
@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "标记为正则表达式的模式无效，或可能导致扫描卡住。请修正，或关闭该行的 Regex。"
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "已保存。此规则中同一模式出现了多次；可以删除多余的副本。"
+  },
   "rulesUiMethodFallback": {
     "message": "方法"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "导出 Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "无法复制摘要，请重试。",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "摘要已复制",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "复制摘要",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "显示含有 {0} 的域名"
   },
@@ -6532,6 +6547,12 @@
     "message": "失败或已跳过",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "复制为行"
+  },
+  "bulkFilterNone": {
+    "message": "没有页面符合此筛选条件。"
+  },
   "bulkShowingFmt": {
     "message": "正在显示 {1} 个页面中的 {0} 个。导出仅包含这些页面。",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "复制为 Markdown"
+  },
+  "historyCopyOneLine": {
+    "message": "复制为单行"
   },
   "presetAutoUpdateOff": {
     "message": "自动检查更新已关闭"

@@ -5,6 +5,31 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.6] - 2026-11-10
+
+### Added
+
+- History: the sort order and filter chips you chose are still there the next time you open the popup.
+- History: press / to jump to the search box.
+- History: a "Copy as one line" action in each entry menu copies the page and its protections as a single line.
+- Rules: saving a rule that holds the same pattern more than once now says so, so the extra copies can be deleted.
+- Bulk scan: the Show filter you chose is remembered, and a new "Copy as lines" button copies the shown pages as one line each.
+- Statistics: Export → Copy summary puts a short Markdown report of the shown range on the clipboard.
+
+### Fixed
+
+- History: a pinned or watched page now says so to screen readers, not only on hover.
+- Settings: importing a settings file or restoring a backup far bigger than the extension ever writes is now refused instead of freezing the popup.
+- Detection: with a search or filter on, Copy, Upload and the code exports now include only the detections shown.
+- Detection: Clear filters no longer drops keyboard focus; it moves to the search box.
+- Detection: holding Enter or Space on a result no longer opens and instantly closes its details.
+- Arabic: the Detection page arrows and scan icons now sit on the correct side.
+- Rules: deleting or restoring official rules while the list of deleted rules cannot be read no longer forgets earlier deletions, so Update will not bring them back.
+- A failed webhook delivery waiting for retry is no longer sent if the list of skipped sites cannot be read.
+- Bulk scan: a filter that matches no page now says so, and keyboard focus moves to Pause after Start instead of staying on a disabled button.
+- Statistics: the confidence and export counts no longer read as "1 detections" or a wrong plural in languages that inflect by number.
+- The on/off switch in the popup goes back to its stored position when saving fails, instead of showing a state that was not saved.
+
 ## [3.1.5] - 2026-11-09
 
 ### Added
@@ -1064,6 +1089,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.1.6]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.5...v3.1.6
 [3.1.5]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.4...v3.1.5
 [3.1.4]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.3...v3.1.4
 [3.1.3]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.2...v3.1.3

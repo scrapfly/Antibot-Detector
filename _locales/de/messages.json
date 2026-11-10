@@ -214,7 +214,7 @@
     "message": "Die Konfidenz beschreibt die Stärke der gespeicherten Erkennungshinweise, ist aber kein Beweis für Fingerprinting oder eine aktive Prüfung."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} Erkennungen haben Konfidenzwerte; {1} haben keinen gültigen Wert."
+    "message": "Erkennungen mit Konfidenzwert: {0}. Ohne gültigen Wert: {1}."
   },
   "statsProtectionColumn": {
     "message": "Schutzmaßnahme"
@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Ein als regulärer Ausdruck markiertes Muster ist ungültig oder könnte die Prüfung blockieren. Korrigiere es oder schalte Regex für diese Zeile aus."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Gespeichert. Diese Regel enthält dasselbe Muster mehrfach; die überzähligen Kopien lassen sich löschen."
+  },
   "rulesUiMethodFallback": {
     "message": "Methode"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Markdown exportieren"
   },
+  "statsExportCopyFailed": {
+    "message": "Die Zusammenfassung konnte nicht kopiert werden. Bitte erneut versuchen.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Zusammenfassung kopiert",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Zusammenfassung kopieren",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Domains mit {0} anzeigen"
   },
@@ -6532,6 +6547,12 @@
     "message": "Fehlgeschlagen oder übersprungen",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Als Zeilen kopieren"
+  },
+  "bulkFilterNone": {
+    "message": "Keine Seite entspricht diesem Filter."
+  },
   "bulkShowingFmt": {
     "message": "{0} von {1} Seiten angezeigt. Exporte enthalten nur diese.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "Als Markdown kopieren"
+  },
+  "historyCopyOneLine": {
+    "message": "Als eine Zeile kopieren"
   },
   "presetAutoUpdateOff": {
     "message": "Die automatische Suche nach Updates ist aus"

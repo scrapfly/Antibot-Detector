@@ -214,7 +214,7 @@
     "message": "ความมั่นใจแสดงความหนักแน่นของหลักฐานการตรวจจับที่บันทึกไว้ ไม่ใช่หลักฐานยืนยันว่ามี fingerprinting หรือ challenge ที่ทำงานอยู่"
   },
   "statsConfidenceKnownFmt": {
-    "message": "การตรวจจับ {0} รายการมีค่าความมั่นใจ และ {1} รายการไม่มีคะแนนที่ถูกต้อง"
+    "message": "การตรวจจับที่มีค่าความมั่นใจ: {0} รายการ ไม่มีคะแนนที่ถูกต้อง: {1} รายการ"
   },
   "statsProtectionColumn": {
     "message": "ระบบป้องกัน"
@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "รูปแบบที่ทำเครื่องหมายเป็นนิพจน์ทั่วไปไม่ถูกต้องหรืออาจทำให้การสแกนค้าง แก้ไขหรือปิด Regex สำหรับแถวนั้น"
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "บันทึกแล้ว กฎนี้มีรูปแบบเดียวกันมากกว่าหนึ่งครั้ง สามารถลบสำเนาส่วนเกินได้"
+  },
   "rulesUiMethodFallback": {
     "message": "วิธีการ"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "ส่งออก Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "ไม่สามารถคัดลอกสรุปได้ โปรดลองอีกครั้ง",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "คัดลอกสรุปแล้ว",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "คัดลอกสรุป",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "แสดงโดเมนที่มี {0}"
   },
@@ -6532,6 +6547,12 @@
     "message": "ไม่สำเร็จหรือข้าม",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "คัดลอกเป็นบรรทัด"
+  },
+  "bulkFilterNone": {
+    "message": "ไม่มีหน้าที่ตรงกับตัวกรองนี้"
+  },
   "bulkShowingFmt": {
     "message": "แสดง {0} จาก {1} หน้า การส่งออกจะรวมเฉพาะหน้าเหล่านี้",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "คัดลอกเป็น Markdown"
+  },
+  "historyCopyOneLine": {
+    "message": "คัดลอกเป็นบรรทัดเดียว"
   },
   "presetAutoUpdateOff": {
     "message": "การตรวจสอบการอัปเดตอัตโนมัติปิดอยู่"

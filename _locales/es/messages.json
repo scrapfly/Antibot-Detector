@@ -214,7 +214,7 @@
     "message": "La confianza describe la solidez de los indicios de detección guardados, no demuestra que haya identificación por huella digital ni un desafío activo."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} detecciones tienen valores de confianza; {1} no tienen una puntuación válida."
+    "message": "Detecciones con valor de confianza: {0}. Sin puntuación válida: {1}."
   },
   "statsProtectionColumn": {
     "message": "Protección"
@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Un patrón marcado como expresión regular no es válido o podría bloquear el análisis. Corrígelo o desactiva Regex en esa fila."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Guardada. Esta regla tiene el mismo patrón más de una vez; las copias sobrantes se pueden eliminar."
+  },
   "rulesUiMethodFallback": {
     "message": "Método"
   },
@@ -6172,6 +6175,18 @@
   "statsExportMarkdown": {
     "message": "Exportar Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "No se pudo copiar el resumen. Inténtalo de nuevo.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Resumen copiado",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Copiar resumen",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Mostrar los dominios con {0}"
   },
@@ -6534,6 +6549,12 @@
     "message": "Con error u omitidas",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Copiar como líneas"
+  },
+  "bulkFilterNone": {
+    "message": "Ninguna página coincide con este filtro."
+  },
   "bulkShowingFmt": {
     "message": "Mostrando {0} de {1} páginas. Las exportaciones incluyen solo estas.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6660,6 +6681,9 @@
   },
   "historyCopyMarkdown": {
     "message": "Copiar como Markdown"
+  },
+  "historyCopyOneLine": {
+    "message": "Copiar como una línea"
   },
   "presetAutoUpdateOff": {
     "message": "La comprobación automática de actualizaciones está desactivada"

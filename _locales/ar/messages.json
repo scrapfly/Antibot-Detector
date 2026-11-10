@@ -148,7 +148,7 @@
     "message": "تحتوي الصادرات على النطاقات وملخصات الكشف، وليس ملفات تعريف الارتباط أو محتوى الصفحات أو معلمات عناوين URL."
   },
   "statsExportScopeFmt": {
-    "message": "تصدير الفترة المحددة: {0} من السجلات"
+    "message": "يغطي التصدير الفترة المحددة. السجلات: {0}"
   },
   "statsExportStartedFmt": {
     "message": "بدأ التنزيل: {0}"
@@ -214,7 +214,7 @@
     "message": "تصف الثقة قوة أدلة الكشف المحفوظة، ولا تثبت وجود بصمة رقمية أو تحدٍّ نشط."
   },
   "statsConfidenceKnownFmt": {
-    "message": "تتوفر قيم ثقة لـ {0} من عمليات الكشف؛ ولا تتوفر درجة صالحة لـ {1} منها."
+    "message": "عمليات الكشف ذات قيمة ثقة: {0}. بلا درجة صالحة: {1}."
   },
   "statsProtectionColumn": {
     "message": "الحماية"
@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "نمط مُعلَّم كتعبير نمطي غير صالح أو قد يُجمّد الفحص. صحّحه أو أوقف Regex لهذا الصف."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "تم الحفظ. تحتوي هذه القاعدة على النمط نفسه أكثر من مرة؛ يمكن حذف النسخ الزائدة."
+  },
   "rulesUiMethodFallback": {
     "message": "الطريقة"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "تصدير Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "تعذر نسخ الملخص. يرجى المحاولة مرة أخرى.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "تم نسخ الملخص",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "نسخ الملخص",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "عرض النطاقات التي فيها {0}"
   },
@@ -6532,6 +6547,12 @@
     "message": "فشلت أو تم تخطيها",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "نسخ كأسطر"
+  },
+  "bulkFilterNone": {
+    "message": "لا توجد صفحة تطابق هذا المرشح."
+  },
   "bulkShowingFmt": {
     "message": "يتم عرض {0} من {1} صفحة. تشمل عمليات التصدير هذه الصفحات فقط.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "نسخ بصيغة Markdown"
+  },
+  "historyCopyOneLine": {
+    "message": "نسخ كسطر واحد"
   },
   "presetAutoUpdateOff": {
     "message": "التحقق التلقائي من التحديثات معطّل"

@@ -215,7 +215,7 @@
     "message": "Confidence describes the strength of saved detection evidence, not proof of fingerprinting or an active challenge."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} detections have confidence values; {1} have no valid score."
+    "message": "Detections with a confidence value: {0}. Without a valid score: {1}."
   },
   "statsProtectionColumn": {
     "message": "Protection"
@@ -3603,6 +3603,10 @@
     "message": "A pattern marked as a regular expression is not valid, or could freeze scanning. Fix it, or turn Regex off for that row.",
     "description": "Rules editor → Save refused: a row marked as a regex does not compile or could backtrack catastrophically"
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Saved. This rule has the same pattern more than once; the extra copies can be deleted.",
+    "description": "Rules editor: shown after a rule is saved when it holds the same pattern more than once"
+  },
   "rulesUiMethodFallback": {
     "message": "Method",
     "description": "Generic name of a detection method when its type is unknown"
@@ -6690,6 +6694,18 @@
     "message": "Export Markdown",
     "description": "Statistics → Export menu: downloads the statistics as a Markdown report (totals, protections, sites)"
   },
+  "statsExportCopyFailed": {
+    "message": "Could not copy the summary. Please try again.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Summary copied",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Copy summary",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Show the domains with {0}",
     "description": "Statistics → Protections: hover text of a protection's name, which opens the Domains list narrowed to the domains that have it. {0} = the protection's name"
@@ -7166,6 +7182,14 @@
     "message": "Failed or skipped",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Copy as lines",
+    "description": "Bulk scan: button that copies the shown pages as one line each (address and protections), for chats and tickets"
+  },
+  "bulkFilterNone": {
+    "message": "No page matches this filter.",
+    "description": "Bulk scan: the line in the results table when the chosen Show filter matches no page"
+  },
   "bulkShowingFmt": {
     "message": "Showing {0} of {1} pages. Exports include only these.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -7332,6 +7356,10 @@
   "historyCopyMarkdown": {
     "message": "Copy as Markdown",
     "description": "History entry menu: copies this entry as a Markdown heading and table, for tickets and chats"
+  },
+  "historyCopyOneLine": {
+    "message": "Copy as one line",
+    "description": "History entry menu: copies this entry as one line of text (page and protections), for chats and tickets"
   },
   "presetAutoUpdateOff": {
     "message": "Automatic update checks are off",

@@ -214,7 +214,7 @@
     "message": "Zekerheid geeft de sterkte van het opgeslagen detectiebewijs aan, geen bewijs van fingerprinting of een actieve challenge."
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} detecties hebben zekerheidswaarden; {1} hebben geen geldige score."
+    "message": "Detecties met zekerheidswaarde: {0}. Zonder geldige score: {1}."
   },
   "statsProtectionColumn": {
     "message": "Beveiliging"
@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Een patroon dat als reguliere expressie is gemarkeerd, is ongeldig of kan het scannen laten vastlopen. Pas het aan of zet Regex voor die rij uit."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Opgeslagen. Deze regel bevat hetzelfde patroon meerdere keren; de extra kopieën kunnen worden verwijderd."
+  },
   "rulesUiMethodFallback": {
     "message": "Methode"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Markdown exporteren"
   },
+  "statsExportCopyFailed": {
+    "message": "De samenvatting kon niet worden gekopieerd. Probeer het opnieuw.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Samenvatting gekopieerd",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Samenvatting kopiëren",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Domeinen met {0} tonen"
   },
@@ -6532,6 +6547,12 @@
     "message": "Mislukt of overgeslagen",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Kopiëren als regels"
+  },
+  "bulkFilterNone": {
+    "message": "Geen pagina komt overeen met dit filter."
+  },
   "bulkShowingFmt": {
     "message": "{0} van {1} pagina's getoond. Exports bevatten alleen deze.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "Kopiëren als Markdown"
+  },
+  "historyCopyOneLine": {
+    "message": "Kopiëren als één regel"
   },
   "presetAutoUpdateOff": {
     "message": "Automatisch controleren op updates staat uit"

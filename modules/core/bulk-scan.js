@@ -22,6 +22,7 @@
  *   protectionTotals()   how many scanned pages each protection was found on: the "Most seen" line of the page, and a line
  *                    of the Markdown export and a field of the JSON export (the CSV is one row per protection, as it was)
  *   build(), fileName()   the CSV, JSON and Markdown exports
+ *   oneLines()            the run as one line per page, for a chat or a ticket
  */
 (function(root) {
   'use strict';
@@ -572,6 +573,21 @@
     return `${lines.join('\n')}\n`;
   }
 
+  /** One line per page, for a chat or a ticket: "address: Cloudflare 90%, reCAPTCHA", "address: -" when nothing was found, "address: failed (load)". No query or fragment. */
+  function oneLines(run) {
+    const one = (value) => String(value == null ? '' : value).replace(/[\r\n]+/g, ' ').trim();
+    return (((run && run.items) || [])).map((item) => {
+      let what;
+      if (item.status === 'done') {
+        const found = (Array.isArray(item.detections) ? item.detections : []).map(d => `${one(d.name) || '?'}${Number.isFinite(d.confidence) ? ` ${Math.round(d.confidence)}%` : ''}`);
+        what = found.length ? found.join(', ') : '-';
+      } else {
+        what = item.reason ? `${item.status} (${one(item.reason)})` : String(item.status);
+      }
+      return `${one(addressOf(item.url))}: ${what}`;
+    }).join('\n');
+  }
+
   /**
    * @param {object} run
    * @param {{format?: 'csv'|'json'|'md', now?: number}} [options]
@@ -597,7 +613,7 @@
     MAX_URLS, TIMEOUT_S, MAX_SKIPPED_LISTED, MOST_SEEN, REASONS, FORMATS,
     capOf, timeoutOf, linesOf, normalize, isSitemap, parseSitemap, sameSite, prepare,
     createRun, isActive, nextWaiting, counts, begin, finish, fail, skip, pause, resume, stop, complete, recover, continuation, carryOver,
-    summarize, protectionTotals, build, fileName
+    summarize, protectionTotals, oneLines, build, fileName
   };
   root.BulkScan = api;
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.BulkScan = api;

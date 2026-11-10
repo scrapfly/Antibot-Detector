@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "Vzor označený jako regulární výraz je neplatný nebo by mohl zablokovat kontrolu. Opravte ho, nebo pro tento řádek vypněte Regex."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "Uloženo. Toto pravidlo obsahuje stejný vzor vícekrát; přebytečné kopie lze smazat."
+  },
   "rulesUiMethodFallback": {
     "message": "Metoda"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Exportovat Markdown"
   },
+  "statsExportCopyFailed": {
+    "message": "Souhrn se nepodařilo zkopírovat. Zkuste to znovu.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "Souhrn zkopírován",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "Kopírovat souhrn",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "Zobrazit domény s ochranou {0}"
   },
@@ -6532,6 +6547,12 @@
     "message": "Selhaly nebo přeskočeny",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "Kopírovat jako řádky"
+  },
+  "bulkFilterNone": {
+    "message": "Tomuto filtru neodpovídá žádná stránka."
+  },
   "bulkShowingFmt": {
     "message": "Zobrazeno {0} z {1} stránek. Exporty obsahují jen tyto.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "Kopírovat jako Markdown"
+  },
+  "historyCopyOneLine": {
+    "message": "Kopírovat jako jeden řádek"
   },
   "presetAutoUpdateOff": {
     "message": "Automatická kontrola aktualizací je vypnutá"

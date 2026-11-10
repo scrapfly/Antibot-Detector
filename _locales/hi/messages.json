@@ -148,7 +148,7 @@
     "message": "निर्यात में डोमेन और पहचान के सारांश होते हैं, कुकीज़, पेज की सामग्री या URL पैरामीटर नहीं।"
   },
   "statsExportScopeFmt": {
-    "message": "चुनी गई अवधि निर्यात करें: {0} प्रविष्टियाँ"
+    "message": "निर्यात में चुनी गई अवधि शामिल है। प्रविष्टियाँ: {0}"
   },
   "statsExportStartedFmt": {
     "message": "डाउनलोड शुरू हुआ: {0}"
@@ -214,7 +214,7 @@
     "message": "विश्वसनीयता सहेजे गए पहचान साक्ष्यों की मजबूती बताती है, यह फिंगरप्रिंटिंग या किसी सक्रिय चुनौती का प्रमाण नहीं है।"
   },
   "statsConfidenceKnownFmt": {
-    "message": "{0} पहचानों में विश्वसनीयता के मान हैं; {1} में मान्य स्कोर नहीं है।"
+    "message": "विश्वसनीयता मान वाली पहचानें: {0}। मान्य स्कोर के बिना: {1}।"
   },
   "statsProtectionColumn": {
     "message": "सुरक्षा उपाय"
@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "रेगुलर एक्सप्रेशन के रूप में चिह्नित एक पैटर्न अमान्य है या स्कैन को रोक सकता है। उसे ठीक करें या उस पंक्ति के लिए Regex बंद करें।"
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "सहेजा गया। इस नियम में एक ही पैटर्न एक से अधिक बार है; अतिरिक्त प्रतियाँ हटाई जा सकती हैं।"
+  },
   "rulesUiMethodFallback": {
     "message": "विधि"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Markdown निर्यात करें"
   },
+  "statsExportCopyFailed": {
+    "message": "सारांश कॉपी नहीं हो सका। कृपया फिर से प्रयास करें।",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "सारांश कॉपी हो गया",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "सारांश कॉपी करें",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "{0} वाले डोमेन दिखाएँ"
   },
@@ -6532,6 +6547,12 @@
     "message": "विफल या छोड़े गए",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "पंक्तियों के रूप में कॉपी करें"
+  },
+  "bulkFilterNone": {
+    "message": "कोई पेज इस फ़िल्टर से मेल नहीं खाता।"
+  },
   "bulkShowingFmt": {
     "message": "{1} में से {0} पेज दिख रहे हैं। एक्सपोर्ट में केवल यही शामिल होंगे।",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "Markdown के रूप में कॉपी करें"
+  },
+  "historyCopyOneLine": {
+    "message": "एक पंक्ति के रूप में कॉपी करें"
   },
   "presetAutoUpdateOff": {
     "message": "स्वचालित अद्यतन जांच बंद है"

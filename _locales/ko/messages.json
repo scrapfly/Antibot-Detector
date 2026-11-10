@@ -214,7 +214,7 @@
     "message": "신뢰도는 저장된 탐지 근거의 강도를 나타내며, 핑거프린팅이나 진행 중인 챌린지의 존재를 입증하지는 않습니다."
   },
   "statsConfidenceKnownFmt": {
-    "message": "탐지 {0}개에 신뢰도 값이 있으며, {1}개에는 유효한 점수가 없습니다."
+    "message": "신뢰도 값이 있는 탐지: {0}개. 유효한 점수가 없는 탐지: {1}개."
   },
   "statsProtectionColumn": {
     "message": "보호 기능"
@@ -3390,6 +3390,9 @@
   "rulesUiInvalidRegex": {
     "message": "정규식으로 표시된 패턴이 올바르지 않거나 스캔을 멈추게 할 수 있습니다. 수정하거나 해당 행의 Regex를 끄세요."
   },
+  "rulesUiDuplicatePatterns": {
+    "message": "저장했습니다. 이 규칙에 같은 패턴이 여러 번 있습니다. 중복된 항목은 삭제할 수 있습니다."
+  },
   "rulesUiMethodFallback": {
     "message": "방법"
   },
@@ -6170,6 +6173,18 @@
   "statsExportMarkdown": {
     "message": "Markdown 내보내기"
   },
+  "statsExportCopyFailed": {
+    "message": "요약을 복사하지 못했습니다. 다시 시도해 주세요.",
+    "description": "Statistics: shown when the clipboard refused the summary"
+  },
+  "statsExportCopied": {
+    "message": "요약을 복사했습니다",
+    "description": "Statistics: shown after the summary was copied to the clipboard"
+  },
+  "statsExportCopy": {
+    "message": "요약 복사",
+    "description": "Statistics → Export menu: copies the statistics as a short Markdown summary to the clipboard"
+  },
   "statsShowDomainsWithFmt": {
     "message": "{0}이(가) 있는 도메인 보기"
   },
@@ -6532,6 +6547,12 @@
     "message": "실패 또는 건너뜀",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkCopyLines": {
+    "message": "줄로 복사"
+  },
+  "bulkFilterNone": {
+    "message": "이 필터와 일치하는 페이지가 없습니다."
+  },
   "bulkShowingFmt": {
     "message": "{1}페이지 중 {0}페이지 표시 중. 내보내기에는 이 페이지만 포함됩니다.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
@@ -6658,6 +6679,9 @@
   },
   "historyCopyMarkdown": {
     "message": "Markdown으로 복사"
+  },
+  "historyCopyOneLine": {
+    "message": "한 줄로 복사"
   },
   "presetAutoUpdateOff": {
     "message": "자동 업데이트 확인이 꺼져 있습니다"
