@@ -13,6 +13,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - The version in the popup header opens its release notes, with a small dot until you have read them after an update.
 - History: Export can start from only the entries shown by your search and chips, and the Select bar copies entries as lines.
 - History → Compare scans: Copy summary puts what changed on one line, ready for a chat or a ticket.
+- Rules → Update: new detectors for Huawei Cloud WAF and CaptchaFox.
 - Settings → History: Backups to keep deletes older backup files from Downloads, leaving the newest 3, 7, 14 or 30; All is the default.
 
 ### Changed
