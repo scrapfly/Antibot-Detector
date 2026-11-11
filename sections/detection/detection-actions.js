@@ -615,7 +615,12 @@ DetectionActions.replayInput = async function(pageUrl) {
     };
 };
 
-/** Copy menu (Detection tab): 'overview' (what Upload shares), 'markdown', 'oneline', 'json', or the replay kit's 'curl', 'python' and 'node'. */
+/**
+ * Copy menu (Detection tab): 'overview' (what Upload shares), 'markdown', 'oneline', 'json', or the replay kit's 'curl', 'python'
+ * and 'node'. A summary of a list that the search and the chips leave empty is not copied (Upload refuses it too): the person is
+ * told so, instead of getting an empty summary under the usual "Copied". The code kinds replay this browser's headers and the
+ * page's cookies, not the list, so they stay allowed.
+ */
 DetectionActions.copyDetectionsAs = async function(kind, pageUrl) {
     if (kind === 'curl' || kind === 'python' || kind === 'node') {
       const input = await DetectionActions.replayInput.call(this, pageUrl);
@@ -626,6 +631,10 @@ DetectionActions.copyDetectionsAs = async function(kind, pageUrl) {
       }
       await FormatUtils.copyToClipboard(code);
       return code;
+    }
+    if (DetectionActions.shownResults.call(this).length === 0) {
+      NotificationHelper.warning(detectionActionsTr('historyNoResults', 'No entries match your search or filters.'));
+      return '';
     }
     const { content, payload } = DetectionActions.buildDetectionsPasteContent.call(this, pageUrl);
     const text = kind === 'markdown'

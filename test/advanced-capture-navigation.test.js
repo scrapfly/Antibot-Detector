@@ -175,6 +175,41 @@ test('a click on a card opens it, whatever part of it: its open button turns Ent
   assert.ok(calls.every(call => call[1] === 'akamai' && call[2] === 'saved'));
 });
 
+// The Copy button of a capture card: the copy shows its own toast (a compact one with the message when it worked, an error when the browser
+// refused it), so the card adds none of its own
+function copyCaptureFixture(accepted) {
+  const f = fixture(), toasts = [], copies = [];
+  const en = JSON.parse(fs.readFileSync(path.join(__dirname, '../_locales/en/messages.json'), 'utf8'));
+  Object.assign(f.context.NotificationHelper, {
+    micro: message => toasts.push(['micro', message]), success: message => toasts.push(['success', message]),
+    error: message => toasts.push(['error', message]), info: message => toasts.push(['info', message])
+  });
+  f.context.I18n = { get: key => en[key] && en[key].message };
+  f.context.AdvancedHistoryStore.getModule = async () => [f.capture];
+  f.context.AdvancedUtils = { async copyToClipboard(text, button, options = {}) {
+    copies.push({ text, button, options });
+    if (!accepted) { toasts.push(['error', en.clipboardCopyFailed.message]); return false; }
+    toasts.push(['micro', options.notificationMessage || en.advPanelCopiedToClipboard.message]);
+    return true;
+  } };
+  return { f, toasts, copies };
+}
+
+test('a capture card copy the browser refused says so once: no "Capture data copied" follows the error', async () => {
+  const { f, toasts, copies } = copyCaptureFixture(false);
+  await f.advanced.copyCaptureData('akamai', 'saved');
+  assert.equal(copies.length, 1);
+  assert.deepEqual(toasts, [['error', 'Failed to copy to clipboard']]);
+});
+
+test('a capture card copy that worked shows one toast, in the capture\'s own words, not "Copied to clipboard" and a second toast after it', async () => {
+  const { f, toasts, copies } = copyCaptureFixture(true);
+  await f.advanced.copyCaptureData('akamai', 'saved');
+  assert.equal(copies.length, 1);
+  assert.equal(copies[0].text, JSON.stringify(f.capture, null, 2), 'the capture as it is stored');
+  assert.deepEqual(toasts, [['micro', 'Capture data copied']]);
+});
+
 function loadRealHistoryModule(f) {
   delete f.context.BaseAdvancedModule;
   f.context.AdvancedUtils = { escapeHtml: value => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;') };

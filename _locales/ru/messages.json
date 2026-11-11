@@ -841,12 +841,6 @@
   "clearCacheConfirmBtn": {
     "message": "Очистить кэш"
   },
-  "clearingMsg": {
-    "message": "Очистка..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Очищено!"
-  },
   "cacheClearedToast": {
     "message": "Кэш очищен"
   },
@@ -1419,6 +1413,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Поиск доменов..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Поиск настроек..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Нет настроек, соответствующих вашему запросу."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Найдено настроек: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Очистить поиск"
   },
   "settingsBadgeColorLow": {
     "message": "Низкая"
@@ -3432,17 +3438,11 @@
   "clipboardTimestampFmt": {
     "message": "Время: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Система защиты: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Категория: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Уверенность: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Методы обнаружения: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Методы обнаружения:"
@@ -4985,7 +4985,7 @@
     "message": "{0} новых за период"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "из {0} правил"
+    "message": "Всего правил: {0}"
   },
   "statsTipPages": {
     "message": "Страницы, сохранённые в Истории за этот период. История хранит сохранённые обнаружения, а не каждое посещение в браузере."
@@ -5427,7 +5427,13 @@
     "message": "Каждый месяц"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Сохраняет копию истории в папке «Загрузки» (в подпапке Scrapfly) в выбранном выше формате экспорта."
+    "message": "Сохраняет копию истории в папке «Загрузки» (в подпапке Scrapfly) в выбранном выше формате экспорта. Обратно в историю можно импортировать только файлы JSON."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Сколько копий хранить"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "После каждой копии более старые копии сверх этого числа удаляются из папки «Загрузки» (копия, сохранённая в нескольких частях, считается за одну). Удаляются только файлы копий, сохранённые этим расширением. Если хранить все копии, ничего не удаляется."
   },
   "settingsHistoryBackupNow": {
     "message": "Создать копию сейчас"

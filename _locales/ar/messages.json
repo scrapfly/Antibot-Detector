@@ -841,12 +841,6 @@
   "clearCacheConfirmBtn": {
     "message": "مسح التخزين المؤقت"
   },
-  "clearingMsg": {
-    "message": "جارٍ المسح..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ تم المسح!"
-  },
   "cacheClearedToast": {
     "message": "تم مسح التخزين المؤقت"
   },
@@ -1419,6 +1413,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "البحث في النطاقات..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "البحث في الإعدادات..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "لا توجد إعدادات تطابق بحثك."
+  },
+  "settingsSearchCountFmt": {
+    "message": "الإعدادات المطابقة: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "مسح البحث"
   },
   "settingsBadgeColorLow": {
     "message": "منخفض"
@@ -3432,17 +3438,11 @@
   "clipboardTimestampFmt": {
     "message": "التاريخ والوقت: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "نظام الحماية: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "الفئة: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "الثقة: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "طرق الكشف: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "طرق الكشف:"
@@ -4985,7 +4985,7 @@
     "message": "{0} جديدة في هذه الفترة"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "من أصل {0} قاعدة"
+    "message": "إجمالي القواعد: {0}"
   },
   "statsTipPages": {
     "message": "الصفحات المحفوظة في السجل ضمن هذا النطاق. يحتفظ السجل بالاكتشافات المحفوظة، وليس بكل زيارة في المتصفح."
@@ -5427,7 +5427,13 @@
     "message": "كل شهر"
   },
   "settingsHistoryBackupDesc": {
-    "message": "يحفظ نسخة من السجل في مجلد التنزيلات (داخل مجلد Scrapfly)، بتنسيق التصدير المحدد أعلاه."
+    "message": "يحفظ نسخة من السجل في مجلد التنزيلات (داخل مجلد Scrapfly)، بتنسيق التصدير المحدد أعلاه. لا يمكن إعادة استيراد سوى ملفات JSON إلى السجل."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "النسخ الاحتياطية المراد الاحتفاظ بها"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "بعد كل نسخة احتياطية، تحذف النسخ الأقدم التي تتجاوز هذا العدد من مجلد التنزيلات (النسخة المحفوظة على عدة أجزاء تحتسب نسخة واحدة). لا تحذف إلا ملفات النسخ الاحتياطي التي حفظتها هذه الإضافة. وإذا احتفظت بها جميعًا فلن يحذف شيء."
   },
   "settingsHistoryBackupNow": {
     "message": "نسخ احتياطي الآن"

@@ -841,12 +841,6 @@
   "clearCacheConfirmBtn": {
     "message": "कैश साफ़ करें"
   },
-  "clearingMsg": {
-    "message": "साफ़ किया जा रहा है..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ साफ़ हो गया!"
-  },
   "cacheClearedToast": {
     "message": "कैश साफ़ कर दिया गया"
   },
@@ -1419,6 +1413,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "डोमेन खोजें..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "सेटिंग्स खोजें..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "आपकी खोज से कोई सेटिंग मेल नहीं खाती।"
+  },
+  "settingsSearchCountFmt": {
+    "message": "मिली सेटिंग्स: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "खोज साफ़ करें"
   },
   "settingsBadgeColorLow": {
     "message": "कम"
@@ -3432,17 +3438,11 @@
   "clipboardTimestampFmt": {
     "message": "समय: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "सुरक्षा प्रणाली: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "श्रेणी: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "विश्वास: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "जांच विधियां: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "जांच विधियां:"
@@ -4985,7 +4985,7 @@
     "message": "इस अवधि में {0} नए"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "कुल {0} नियमों में से"
+    "message": "कुल नियम: {0}"
   },
   "statsTipPages": {
     "message": "इस अवधि में इतिहास में सहेजे गए पेज। इतिहास में सहेजे गए डिटेक्शन रहते हैं, ब्राउज़र की हर विज़िट नहीं।"
@@ -5427,7 +5427,13 @@
     "message": "हर महीने"
   },
   "settingsHistoryBackupDesc": {
-    "message": "इतिहास की एक प्रति आपके डाउनलोड फ़ोल्डर में (Scrapfly फ़ोल्डर के अंदर), ऊपर चुने गए निर्यात फ़ॉर्मेट में सहेजता है।"
+    "message": "इतिहास की एक प्रति आपके डाउनलोड फ़ोल्डर में (Scrapfly फ़ोल्डर के अंदर), ऊपर चुने गए निर्यात फ़ॉर्मेट में सहेजता है। इतिहास में केवल JSON फ़ाइलें ही वापस आयात की जा सकती हैं।"
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "रखे जाने वाले बैकअप"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "हर बैकअप के बाद, इस संख्या से ज़्यादा पुराने बैकअप आपके डाउनलोड फ़ोल्डर से हटा दिए जाते हैं (कई हिस्सों में सहेजा गया एक बैकअप एक गिना जाता है)। केवल इस एक्सटेंशन द्वारा सहेजी गई बैकअप फ़ाइलें ही हटाई जाती हैं। सभी रखने पर कुछ भी नहीं हटाया जाता।"
   },
   "settingsHistoryBackupNow": {
     "message": "अभी बैकअप लें"

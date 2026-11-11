@@ -136,7 +136,7 @@ Les protections trouvées sur la page actuelle, chacune avec sa confiance, sa di
 
 - **Téléverser les détections** pour obtenir un lien partageable (dpaste.com par défaut ; voir [Liens de partage](#liens-de-partage))
 - **Vider le cache**, pour que la page soit analysée de nouveau au prochain chargement
-- **Copier**, un menu : le même résumé que celui partagé par le téléversement, un tableau Markdown pour un ticket ou un chat, ou du JSON (aucun n'inclut de valeurs de cookies ni d'en-têtes)
+- **Copier**, un menu : le même résumé que celui partagé par le téléversement, un tableau Markdown pour un ticket ou un chat, une ligne avec le site et ses protections, ou du JSON (aucun de ceux-ci n'inclut de valeurs de cookies ni d'en-têtes) ; ou du code qui redemande la page, sous forme de commande curl, de Python (requests) ou de Node.js (fetch), avec le User-Agent, l'Accept-Language et les client hints de ce navigateur et tous les cookies que la page envoie, y compris les HttpOnly. Ce code inclut bien les valeurs des cookies et l'adresse de la page avec sa query string : gardez-le privé
 - **Bloquer ce domaine**, pour que l'extension cesse de l'analyser
 
 ### Historique

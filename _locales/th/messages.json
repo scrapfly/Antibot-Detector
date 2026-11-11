@@ -841,12 +841,6 @@
   "clearCacheConfirmBtn": {
     "message": "ล้างแคช"
   },
-  "clearingMsg": {
-    "message": "กำลังล้าง..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ ล้างแล้ว!"
-  },
   "cacheClearedToast": {
     "message": "ล้างแคชแล้ว"
   },
@@ -1419,6 +1413,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "ค้นหาโดเมน..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "ค้นหาการตั้งค่า..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "ไม่มีการตั้งค่าที่ตรงกับการค้นหา"
+  },
+  "settingsSearchCountFmt": {
+    "message": "พบการตั้งค่า: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "ล้างการค้นหา"
   },
   "settingsBadgeColorLow": {
     "message": "ต่ำ"
@@ -3432,17 +3438,11 @@
   "clipboardTimestampFmt": {
     "message": "เวลา: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "ระบบรักษาความปลอดภัย: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "หมวดหมู่: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "ความมั่นใจ: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "วิธีการตรวจจับ: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "วิธีการตรวจจับ:"
@@ -5427,7 +5427,13 @@
     "message": "ทุกเดือน"
   },
   "settingsHistoryBackupDesc": {
-    "message": "บันทึกสำเนาของประวัติลงในโฟลเดอร์ดาวน์โหลดของคุณ (ในโฟลเดอร์ Scrapfly) ในรูปแบบการส่งออกที่เลือกไว้ด้านบน"
+    "message": "บันทึกสำเนาของประวัติลงในโฟลเดอร์ดาวน์โหลดของคุณ (ในโฟลเดอร์ Scrapfly) ในรูปแบบการส่งออกที่เลือกไว้ด้านบน สามารถนำเข้ากลับไปยังประวัติได้เฉพาะไฟล์ JSON เท่านั้น"
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "จำนวนข้อมูลสำรองที่เก็บไว้"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "หลังการสำรองข้อมูลแต่ละครั้ง ข้อมูลสำรองเก่าที่เกินจำนวนนี้จะถูกลบออกจากโฟลเดอร์ดาวน์โหลดของคุณ (ข้อมูลสำรองที่บันทึกเป็นหลายส่วนนับเป็นหนึ่งชุด) ระบบจะลบเฉพาะไฟล์สำรองที่ส่วนขยายนี้บันทึกไว้เท่านั้น หากเก็บไว้ทั้งหมดจะไม่มีการลบอะไรเลย"
   },
   "settingsHistoryBackupNow": {
     "message": "สำรองข้อมูลทันที"

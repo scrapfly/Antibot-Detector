@@ -841,12 +841,6 @@
   "clearCacheConfirmBtn": {
     "message": "Vider le cache"
   },
-  "clearingMsg": {
-    "message": "Suppression en cours..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Vidé !"
-  },
   "cacheClearedToast": {
     "message": "Cache vidé"
   },
@@ -1419,6 +1413,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Rechercher des domaines..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Rechercher dans les paramètres..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Aucun paramètre ne correspond à votre recherche."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Paramètres trouvés : {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Effacer la recherche"
   },
   "settingsBadgeColorLow": {
     "message": "Faible"
@@ -3432,17 +3438,11 @@
   "clipboardTimestampFmt": {
     "message": "Horodatage : {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Système de sécurité : {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Catégorie : {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Confiance : {0} %"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Méthodes de détection : {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Méthodes de détection :"
@@ -4985,7 +4985,7 @@
     "message": "{0} nouvelles sur cette période"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "sur {0} règles"
+    "message": "Total des règles : {0}"
   },
   "statsTipPages": {
     "message": "Pages enregistrées dans l’Historique sur cette période. L’Historique conserve les détections enregistrées, pas chaque visite du navigateur."
@@ -5427,7 +5427,13 @@
     "message": "Tous les mois"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Enregistre une copie de l’historique dans votre dossier Téléchargements (dans un dossier Scrapfly), au format d’export choisi ci-dessus."
+    "message": "Enregistre une copie de l’historique dans votre dossier Téléchargements (dans un dossier Scrapfly), au format d’export choisi ci-dessus. Seuls les fichiers JSON peuvent être réimportés dans l’historique."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Sauvegardes à conserver"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Après chaque sauvegarde, les plus anciennes au-delà de ce nombre sont supprimées de votre dossier Téléchargements (une sauvegarde enregistrée en plusieurs parties compte pour une). Seuls les fichiers de sauvegarde enregistrés par cette extension sont supprimés. Si vous les conservez toutes, rien n’est supprimé."
   },
   "settingsHistoryBackupNow": {
     "message": "Sauvegarder maintenant"

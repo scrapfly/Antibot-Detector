@@ -841,12 +841,6 @@
   "clearCacheConfirmBtn": {
     "message": "Svuota cache"
   },
-  "clearingMsg": {
-    "message": "Pulizia in corso..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Svuotata!"
-  },
   "cacheClearedToast": {
     "message": "Cache svuotata"
   },
@@ -1419,6 +1413,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Cerca domini..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Cerca impostazioni..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Nessuna impostazione corrisponde alla ricerca."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Impostazioni trovate: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Cancella la ricerca"
   },
   "settingsBadgeColorLow": {
     "message": "Basso"
@@ -3432,17 +3438,11 @@
   "clipboardTimestampFmt": {
     "message": "Data e ora: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Sistema di sicurezza: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Categoria: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Affidabilità: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Metodi di rilevamento: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Metodi di rilevamento:"
@@ -4985,7 +4985,7 @@
     "message": "{0} nuove in questo periodo"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "su {0} regole"
+    "message": "Regole totali: {0}"
   },
   "statsTipPages": {
     "message": "Pagine salvate nella Cronologia in questo periodo. La Cronologia conserva i rilevamenti salvati, non ogni visita del browser."
@@ -5427,7 +5427,13 @@
     "message": "Ogni mese"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Salva una copia della cronologia nella cartella Download (in una cartella Scrapfly), nel formato di esportazione scelto sopra."
+    "message": "Salva una copia della cronologia nella cartella Download (in una cartella Scrapfly), nel formato di esportazione scelto sopra. Solo i file JSON possono essere reimportati nella cronologia."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Backup da conservare"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Dopo ogni backup, quelli più vecchi oltre questo numero vengono eliminati dalla cartella Download (un backup salvato in più parti conta come uno). Vengono eliminati solo i file di backup salvati da questa estensione. Se li conservi tutti, non viene eliminato nulla."
   },
   "settingsHistoryBackupNow": {
     "message": "Esegui backup ora"

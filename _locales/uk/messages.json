@@ -841,12 +841,6 @@
   "clearCacheConfirmBtn": {
     "message": "Очистити кеш"
   },
-  "clearingMsg": {
-    "message": "Очищення..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Очищено!"
-  },
   "cacheClearedToast": {
     "message": "Кеш очищено"
   },
@@ -1419,6 +1413,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Пошук доменів..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Пошук налаштувань..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Жодне налаштування не відповідає пошуку."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Знайдено налаштувань: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Очистити пошук"
   },
   "settingsBadgeColorLow": {
     "message": "Низька"
@@ -3432,17 +3438,11 @@
   "clipboardTimestampFmt": {
     "message": "Позначка часу: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Система захисту: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Категорія: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Впевненість: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Методи виявлення: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Методи виявлення:"
@@ -5427,7 +5427,13 @@
     "message": "Щомісяця"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Зберігає копію історії в папці «Завантаження» (у папці Scrapfly) у вибраному вище форматі експорту."
+    "message": "Зберігає копію історії в папці «Завантаження» (у папці Scrapfly) у вибраному вище форматі експорту. Назад в історію можна імпортувати лише файли JSON."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Скільки копій зберігати"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Після кожної копії старіші копії понад це число видаляються з папки «Завантаження» (копія, збережена в кількох частинах, вважається за одну). Видаляються лише файли копій, збережені цим розширенням. Якщо зберігати всі копії, нічого не видаляється."
   },
   "settingsHistoryBackupNow": {
     "message": "Створити копію зараз"

@@ -109,7 +109,9 @@
     add(`- Cache: ${detection.cacheDuration == null ? 'default' : `${count(detection.cacheDuration)} ${String(detection.cacheUnit || 'days')}`}, ${String(detection.cacheScope || 'domain')} scope`);
     const listed = (key) => (Array.isArray(detection[key]) ? detection[key].length : 0);
     add(`- Sites: ${detection.scanMode === 'allowlist' ? `only ${listed('allowedDomains')} chosen` : `${listed('blacklistedDomains')} skipped`}; JS hooks off on ${listed('hooksOffDomains')}`);
-    add(`- History: ${onOff(history.historyEnabled !== false)}, limit ${count(history.historyLimit)} entries, up to ${count(history.historyMaxMB) || 6} MB, backup ${String(history.historyBackup || 'off')}, clear on close ${onOff(history.historyClearOnClose)}`);
+    // Backups to keep: only an offered number deletes anything (HistoryBackup.keepOf); all, the default, says nothing
+    const keeps = [3, 7, 14, 30].includes(history.historyBackupKeep) ? ` (keeps ${history.historyBackupKeep})` : '';
+    add(`- History: ${onOff(history.historyEnabled !== false)}, limit ${count(history.historyLimit)} entries, up to ${count(history.historyMaxMB) || 6} MB, backup ${String(history.historyBackup || 'off')}${keeps}, clear on close ${onOff(history.historyClearOnClose)}`);
     add(`- Detection sort: ${String(detection.sortBy || 'category')}; tools need ${count(detection.advancedToolsMinConfidence)}% confidence`);
     add();
 

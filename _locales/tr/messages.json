@@ -841,12 +841,6 @@
   "clearCacheConfirmBtn": {
     "message": "Önbelleği temizle"
   },
-  "clearingMsg": {
-    "message": "Temizleniyor..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Temizlendi!"
-  },
   "cacheClearedToast": {
     "message": "Önbellek temizlendi"
   },
@@ -1419,6 +1413,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Alan adı ara..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Ayarlarda ara..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Aramanızla eşleşen ayar yok."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Bulunan ayarlar: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Aramayı temizle"
   },
   "settingsBadgeColorLow": {
     "message": "Düşük"
@@ -3432,17 +3438,11 @@
   "clipboardTimestampFmt": {
     "message": "Zaman damgası: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Güvenlik sistemi: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategori: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Güven: %{0}"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Tespit yöntemleri: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Tespit yöntemleri:"
@@ -5427,7 +5427,13 @@
     "message": "Her ay"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Geçmişin bir kopyasını İndirilenler klasörünüze (Scrapfly klasörü içine) yukarıda seçilen dışa aktarma biçiminde kaydeder."
+    "message": "Geçmişin bir kopyasını İndirilenler klasörünüze (Scrapfly klasörü içine) yukarıda seçilen dışa aktarma biçiminde kaydeder. Geçmişe yalnızca JSON dosyaları yeniden içe aktarılabilir."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Saklanacak yedekler"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Her yedeklemeden sonra, bu sayıyı aşan eski yedekler İndirilenler klasörünüzden silinir (birkaç parça halinde kaydedilen bir yedek bir sayılır). Yalnızca bu uzantının kaydettiği yedek dosyaları silinir. Hepsini saklarsanız hiçbir şey silinmez."
   },
   "settingsHistoryBackupNow": {
     "message": "Şimdi yedekle"

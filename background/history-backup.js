@@ -10,6 +10,12 @@
  * each stay under MAX_PART_BYTES (scrapfly-history-2026-10-19-part-2.json ...;
  * every JSON part can be imported on its own).
  *
+ * Settings → History → Backups to keep (KEEP_CHOICES) deletes the files of the older backups after a new one is made; All, the
+ * default, deletes nothing. A backup is all the files one run wrote. They are found by the ids the browser gave their downloads,
+ * kept in RUNS_KEY and written before anything is deleted, and never by a name in Downloads. An id is not for ever (clearing the
+ * browser's downloads list can hand an old one to some other file), so each download is checked before it is deleted: started by
+ * this extension and a file in the Scrapfly folder named like a backup.
+ *
  * The schedule is a chrome.alarms alarm. Alarms may be cleared when the browser
  * restarts, so on every start the alarm is recreated and a backup that came due
  * while the browser was closed runs once.
@@ -21,6 +27,12 @@ const HistoryBackup = {
     FOLDER: 'Scrapfly',
     RETRY_AFTER_FAILURE_MS: 3600000,
     STATE_KEY: 'scrapfly_history_backup',
+    // What the backups saved, as { at, ids } with the ids the browser gave the downloads, oldest first (STATE_KEY holds only the last outcome)
+    RUNS_KEY: 'scrapfly_history_backup_runs',
+    // The numbers Backups to keep offers (anything else is "all")
+    KEEP_CHOICES: Object.freeze([3, 7, 14, 30]),
+    // Backups remembered at most: far above the largest choice, so it only bounds the record of a person who keeps them all
+    MAX_TRACKED_RUNS: 200,
     Messages: Object.freeze({ BACKUP_NOW: 'HISTORY_BACKUP_NOW' }),
 
     _initialized: false,
@@ -29,6 +41,15 @@ const HistoryBackup = {
     /** Minutes between backups for a frequency, or 0 when it is off or unknown. */
     periodOf(frequency) {
         return this.PERIOD_MINUTES[frequency] || 0;
+    },
+
+    /** How many backups to keep: one of KEEP_CHOICES, or 0 for all. Anything else is "all", so a value nobody chose can never delete a file. */
+    keepOf(value) {
+        return this.KEEP_CHOICES.includes(value) ? value : 0;
+    },
+
+    _warn(message, error) {
+        if (typeof Logger !== 'undefined' && Logger.warn) Logger.warn('BACKGROUND', `[HistoryBackup] ${message}`, error);
     },
 
     /** data: URL of a text, UTF-8 encoded (btoa alone fails on anything outside Latin-1). */
@@ -60,6 +81,8 @@ const HistoryBackup = {
 
     async _run(reason) {
         const now = Date.now();
+        const ids = [];
+        let remembered = false;
         try {
             const settings = await Utils.getHistorySettings();
             const items = await HistoryStore.read(chrome.storage.local);
@@ -68,23 +91,133 @@ const HistoryBackup = {
             let files = 0;
             for (let i = 0; i < parts.length; i++) {
                 const built = HistoryExport.build(parts[i], options);
-                await chrome.downloads.download({
+                const id = await chrome.downloads.download({
                     url: this.toDataUrl(built.fileText, built.type),
                     filename: `${this.FOLDER}/${HistoryExport.fileName(built.format, now, parts.length > 1 ? i + 1 : 0)}`,
                     saveAs: false,
                     conflictAction: 'uniquify'
                 });
                 files++;
+                if (Number.isInteger(id)) ids.push(id);
             }
-            const state = { at: now, ok: true, entries: items.length, files, format: HistoryExport.FORMATS.includes(options.format) ? options.format : 'json', trigger: reason };
+            // A run that wrote no file is no backup: it is not on record, so a string of them cannot push real ones out. This one
+            // is on record before anything older is deleted, so a worker that stops in between loses track of no file
+            let removed = 0;
+            if (ids.length) {
+                remembered = true;
+                const record = await this.remember({ at: now, ids });
+                if (record) removed = await this.prune(record, this.keepOf(settings.historyBackupKeep));
+            }
+            const state = { at: now, ok: true, entries: items.length, files, format: HistoryExport.FORMATS.includes(options.format) ? options.format : 'json', trigger: reason, ...(removed ? { removed } : {}) };
             await chrome.storage.local.set({ [this.STATE_KEY]: state });
             return { ok: true, entries: items.length, files };
         } catch (error) {
+            // Parts written before the failure are files these backups made: on record, though not as a backup to keep
+            if (ids.length && !remembered) await this.remember({ at: now, ids, partial: true });
             const message = String((error && error.message) || error);
             await chrome.storage.local.set({ [this.STATE_KEY]: { at: now, ok: false, error: message, trigger: reason } }).catch(() => {});
             await this.notifyFailure().catch(() => {});
-            if (typeof Logger !== 'undefined' && Logger.warn) Logger.warn('BACKGROUND', '[HistoryBackup] Backup failed:', error);
+            this._warn('Backup failed:', error);
             return { ok: false, entries: 0, files: 0, error: message };
+        }
+    },
+
+    /** The record of what backups saved ({ at, ids }, oldest first). Whatever in it is not a run of whole-number ids is left out. */
+    async record() {
+        const stored = await chrome.storage.local.get(this.RUNS_KEY);
+        const list = stored[this.RUNS_KEY];
+        const runs = [];
+        for (const run of Array.isArray(list) ? list : []) {
+            if (!run || typeof run !== 'object' || !Number.isFinite(run.at) || !Array.isArray(run.ids)) continue;
+            const ids = run.ids.filter(id => Number.isSafeInteger(id) && id >= 0);
+            if (ids.length) runs.push(run.partial === true ? { at: run.at, ids, partial: true } : { at: run.at, ids });
+        }
+        return runs;
+    },
+
+    /**
+     * Put a run on the record. Never throws.
+     * @param {{at: number, ids: number[], partial?: boolean}} run  partial: files of a backup that failed, or that could not be deleted yet
+     * @returns {Promise<Array|null>} the record, or null when it could not be read or written (then nothing is deleted)
+     */
+    async remember(run) {
+        try {
+            const runs = await this.record();
+            runs.push(run);
+            const kept = runs.slice(-this.MAX_TRACKED_RUNS);
+            await chrome.storage.local.set({ [this.RUNS_KEY]: kept });
+            return kept;
+        } catch (error) {
+            this._warn('The backup files could not be put on record:', error);
+            return null;
+        }
+    },
+
+    /**
+     * Delete the files of every backup but the newest `keep`, and take them off the record. A run that is not a whole backup (one
+     * that failed, or whose files could not be deleted yet) never counts among those kept and is tried again. Never throws.
+     * @param {Array} record  what remember() answered, the backup just made last
+     * @param {number} keep   from keepOf; 0 is all, which deletes nothing
+     * @returns {Promise<number>} how many files were deleted
+     */
+    async prune(record, keep) {
+        if (!keep) return 0;
+        try {
+            const newest = new Set(record.filter(run => !run.partial).slice(-keep));
+            if (newest.size === record.length) return 0;
+            let removed = 0;
+            const rest = [];
+            for (const run of record) {
+                if (newest.has(run)) { rest.push(run); continue; }
+                const left = [];
+                for (const id of run.ids) {
+                    const outcome = await this.discard(id);
+                    if (outcome === 'removed') removed++;
+                    else if (outcome === 'retry') left.push(id);
+                }
+                if (left.length) rest.push({ at: run.at, ids: left, partial: true });
+            }
+            await chrome.storage.local.set({ [this.RUNS_KEY]: rest });
+            return removed;
+        } catch (error) {
+            this._warn('Old backups could not be deleted:', error);
+            return 0;
+        }
+    },
+
+    /** Is this download one of ours: started by this extension, and a file in the Scrapfly folder named like a backup? */
+    madeHere(item) {
+        const own = typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.id;
+        if (!own || !item || item.byExtensionId !== own) return false;
+        // The path is the browser's, with the separators of the system; a taken name has " (1)" added before the extension
+        const folder = this.FOLDER.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return new RegExp(`[\\\\/]${folder}[\\\\/]scrapfly-history-[^\\\\/]*$`).test(String(item.filename || ''));
+    },
+
+    /**
+     * Delete one download by the id the browser gave it, and take its entry out of the browser's list. Never throws.
+     * @returns {Promise<'removed'|'gone'|'retry'>} removed: the file was deleted; gone: nothing is left to delete by this id (the file
+     *   was already deleted, the browser forgot the download, or the id now belongs to something that is not one of ours); retry: it may still be there
+     */
+    async discard(id) {
+        try {
+            const [item] = await chrome.downloads.search({ id });
+            if (!item || !this.madeHere(item)) return 'gone';
+            if (item.state === 'in_progress') return 'retry';
+            let outcome = 'gone';
+            if (item.state === 'complete' && item.exists !== false) {
+                try {
+                    await chrome.downloads.removeFile(id);
+                    outcome = 'removed';
+                } catch (error) {
+                    // Deleted already (or not in the list any more) is done; any other reason may pass
+                    if (!/already deleted|invalid download id/i.test(String((error && error.message) || error))) return 'retry';
+                }
+            }
+            await chrome.downloads.erase({ id });
+            return outcome;
+        } catch (error) {
+            return 'retry';
         }
     },
 

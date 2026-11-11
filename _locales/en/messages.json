@@ -850,12 +850,6 @@
   "clearCacheConfirmBtn": {
     "message": "Clear Cache"
   },
-  "clearingMsg": {
-    "message": "Clearing..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Cleared!"
-  },
   "cacheClearedToast": {
     "message": "Cache cleared"
   },
@@ -1437,6 +1431,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Search domains..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Search settings..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "No settings match your search."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Settings found: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Clear search"
   },
   "settingsBadgeColorLow": {
     "message": "Low"
@@ -3658,10 +3664,6 @@
     "message": "Timestamp: {0}",
     "description": "Line of a copied text report. {0} = date and time"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Security System: {0}",
-    "description": "Line of a copied text report. {0} = detector name (e.g. Akamai)"
-  },
   "clipboardCategoryFmt": {
     "message": "Category: {0}",
     "description": "Line of a copied text report. {0} = category (antibot, captcha, fingerprint)"
@@ -3669,10 +3671,6 @@
   "clipboardConfidenceFmt": {
     "message": "Confidence: {0}%",
     "description": "Line of a copied text report. {0} = percentage number (the % sign follows)"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Detection Methods: {0}",
-    "description": "Line of a copied text report. {0} = comma-separated list of methods"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Detection Methods:",
@@ -5252,7 +5250,7 @@
     "message": "{0} new this period"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "of {0} rules"
+    "message": "Total rules: {0}"
   },
   "statsTipPages": {
     "message": "Pages saved to History in this range. History keeps saved detections, not every browser visit."
@@ -5711,7 +5709,13 @@
     "description": "Option"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Saves a copy of History to your Downloads folder (in a Scrapfly folder), in the export format chosen above."
+    "message": "Saves a copy of History to your Downloads folder (in a Scrapfly folder), in the export format chosen above. Only JSON files can be imported back into History."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Backups to keep"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "After each backup, older backups beyond this number are deleted from your Downloads folder (a backup saved in several parts counts as one). Only backup files saved by this extension are removed. Keep all and nothing is deleted."
   },
   "settingsHistoryBackupNow": {
     "message": "Back up now",

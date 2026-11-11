@@ -150,8 +150,9 @@ test('all 21 fingerprint definitions have multiple graded, reachable combination
     // ratio, languages, RUM timing) scores lower, so clean pages show less noise
     // 2026-10-26: Hardware and Navigator 1.4.0 (WebGPU adapter, permission queries), Orientation 1.3.0 (sensor reads)
     // 2026-11-09: Audio, Media and WebRTC 1.2.1 / 1.3.1 / 1.2.1 (dead disabled rules removed)
-    assert.match(detector.version, /^1\.(?:2\.[01]|3\.[01]|4\.0)$/, detector.id);
-    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[378]|16|26)|11-09)$/, detector.id);
+    // 2026-11-11: Navigator 1.4.1 (CPU count and device memory left to Hardware: one read, one card)
+    assert.match(detector.version, /^1\.(?:2\.[01]|3\.[01]|4\.[01])$/, detector.id);
+    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[378]|16|26)|11-(?:09|11))$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate pattern ids`);

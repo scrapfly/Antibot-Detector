@@ -841,12 +841,6 @@
   "clearCacheConfirmBtn": {
     "message": "Cache wissen"
   },
-  "clearingMsg": {
-    "message": "Wissen..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Gewist!"
-  },
   "cacheClearedToast": {
     "message": "Cache gewist"
   },
@@ -1419,6 +1413,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Domeinen zoeken..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Instellingen zoeken..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Geen instellingen komen overeen met je zoekopdracht."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Gevonden instellingen: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Zoekopdracht wissen"
   },
   "settingsBadgeColorLow": {
     "message": "Laag"
@@ -3432,17 +3438,11 @@
   "clipboardTimestampFmt": {
     "message": "Tijdstempel: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Beveiligingssysteem: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Categorie: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Zekerheid: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Detectiemethoden: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Detectiemethoden:"
@@ -4985,7 +4985,7 @@
     "message": "{0} nieuw in deze periode"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "van {0} regels"
+    "message": "Totaal aantal regels: {0}"
   },
   "statsTipPages": {
     "message": "Pagina's die in dit bereik in Geschiedenis zijn opgeslagen. Geschiedenis bewaart opgeslagen detecties, niet elk browserbezoek."
@@ -5427,7 +5427,13 @@
     "message": "Elke maand"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Slaat een kopie van de geschiedenis op in je map Downloads (in een map Scrapfly), in de hierboven gekozen exportindeling."
+    "message": "Slaat een kopie van de geschiedenis op in je map Downloads (in een map Scrapfly), in de hierboven gekozen exportindeling. Alleen JSON-bestanden kunnen weer in de geschiedenis worden geïmporteerd."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Back-ups om te bewaren"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Na elke back-up worden oudere back-ups boven dit aantal uit je map Downloads verwijderd (een back-up die in meerdere delen is opgeslagen, telt als één). Alleen back-upbestanden die door deze extensie zijn opgeslagen, worden verwijderd. Bewaar je ze allemaal, dan wordt er niets verwijderd."
   },
   "settingsHistoryBackupNow": {
     "message": "Nu back-up maken"

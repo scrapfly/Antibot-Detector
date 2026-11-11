@@ -96,6 +96,7 @@
       "historyExcludedDomains": [],
       "historyChangeAlerts": "off",
       "historyBackup": "off",
+      "historyBackupKeep": 0,
       "historyClearOnClose": false,
       "historyFingerprintDays": 0,
       "historyAutoPinHard": false,

@@ -841,12 +841,6 @@
   "clearCacheConfirmBtn": {
     "message": "キャッシュをクリア"
   },
-  "clearingMsg": {
-    "message": "クリア中..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ クリアしました!"
-  },
   "cacheClearedToast": {
     "message": "キャッシュをクリアしました"
   },
@@ -1419,6 +1413,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "ドメインを検索..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "設定を検索..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "検索に一致する設定はありません。"
+  },
+  "settingsSearchCountFmt": {
+    "message": "見つかった設定：{0}"
+  },
+  "settingsSearchClear": {
+    "message": "検索をクリア"
   },
   "settingsBadgeColorLow": {
     "message": "低"
@@ -3432,17 +3438,11 @@
   "clipboardTimestampFmt": {
     "message": "日時: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "セキュリティシステム: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "カテゴリー: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "信頼度: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "検出方法: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "検出方法:"
@@ -5427,7 +5427,13 @@
     "message": "毎月"
   },
   "settingsHistoryBackupDesc": {
-    "message": "履歴のコピーを、上で選択したエクスポート形式で「ダウンロード」フォルダ内の Scrapfly フォルダに保存します。"
+    "message": "履歴のコピーを、上で選択したエクスポート形式で「ダウンロード」フォルダ内の Scrapfly フォルダに保存します。履歴に再度インポートできるのは JSON ファイルのみです。"
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "保持するバックアップ数"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "バックアップのたびに、この数を超える古いバックアップが「ダウンロード」フォルダから削除されます（複数のファイルに分けて保存したバックアップは1件と数えます）。削除されるのは、この拡張機能が保存したバックアップファイルだけです。すべて保持すれば、何も削除されません。"
   },
   "settingsHistoryBackupNow": {
     "message": "今すぐバックアップ"
