@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "캐시 지우기"
   },
-  "clearingMsg": {
-    "message": "지우는 중..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ 지워졌습니다!"
-  },
   "cacheClearedToast": {
     "message": "캐시가 지워졌습니다"
   },
@@ -3426,17 +3420,11 @@
   "clipboardTimestampFmt": {
     "message": "시각: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "보안 시스템: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "카테고리: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "신뢰도: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "탐지 방법: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "탐지 방법:"

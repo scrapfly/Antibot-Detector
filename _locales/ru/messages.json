@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "Очистить кэш"
   },
-  "clearingMsg": {
-    "message": "Очистка..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Очищено!"
-  },
   "cacheClearedToast": {
     "message": "Кэш очищен"
   },
@@ -3426,17 +3420,11 @@
   "clipboardTimestampFmt": {
     "message": "Время: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Система защиты: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Категория: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Уверенность: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Методы обнаружения: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Методы обнаружения:"
@@ -4979,7 +4967,7 @@
     "message": "{0} новых за период"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "из {0} правил"
+    "message": "Всего правил: {0}"
   },
   "statsTipPages": {
     "message": "Страницы, сохранённые в Истории за этот период. История хранит сохранённые обнаружения, а не каждое посещение в браузере."

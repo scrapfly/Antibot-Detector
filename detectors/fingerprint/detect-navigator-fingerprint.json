@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Fingerprint",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-26",
-  "version": "1.4.0",
+  "lastUpdated": "2026-11-11",
+  "version": "1.4.1",
   "minExtensionVersion": "2.8",
   "website": "https://developer.mozilla.org/en-US/docs/Web/API/Navigator",
   "icon": "navigator_fingerprint.png",
@@ -51,22 +51,6 @@
         "confidence": 5,
         "target": "Navigator.prototype.languages",
         "id": "navigator-languages",
-        "standalone": true
-      },
-      {
-        "description": "Reads the reported logical CPU count",
-        "enabled": true,
-        "confidence": 10,
-        "target": "Navigator.prototype.hardwareConcurrency",
-        "id": "navigator-cpu",
-        "standalone": true
-      },
-      {
-        "description": "Reads the reported approximate device memory",
-        "enabled": true,
-        "confidence": 25,
-        "target": "Navigator.prototype.deviceMemory",
-        "id": "navigator-memory",
         "standalone": true
       },
       {
@@ -148,52 +132,6 @@
         "all": [
           { "pattern": "navigator-languages" },
           { "any": [ { "pattern": "navigator-agent" }, { "pattern": "navigator-platform" } ] }
-        ]
-      }
-    },
-    {
-      "id": "navigator-hardware-profile",
-      "name": "CPU and memory capability reads",
-      "confidence": 50,
-      "when": {
-        "all": [ { "pattern": "navigator-cpu" }, { "pattern": "navigator-memory" } ]
-      }
-    },
-    {
-      "id": "navigator-device-profile",
-      "name": "Client hints request and CPU and memory capability reads",
-      "confidence": 60,
-      "when": {
-        "all": [
-          { "pattern": "navigator-hints" },
-          { "pattern": "navigator-cpu" },
-          { "pattern": "navigator-memory" }
-        ]
-      }
-    },
-    {
-      "id": "navigator-profile",
-      "name": "Automation indicator read, client hints request, and device capability read",
-      "confidence": 65,
-      "when": {
-        "all": [
-          { "pattern": "navigator-automation" },
-          { "pattern": "navigator-hints" },
-          { "any": [ { "pattern": "navigator-cpu" }, { "pattern": "navigator-memory" } ] }
-        ]
-      }
-    },
-    {
-      "id": "navigator-full-profile",
-      "name": "Automation, client hints, compute capabilities, and language preference reads",
-      "confidence": 75,
-      "when": {
-        "all": [
-          { "pattern": "navigator-automation" },
-          { "pattern": "navigator-hints" },
-          { "pattern": "navigator-cpu" },
-          { "pattern": "navigator-memory" },
-          { "pattern": "navigator-languages" }
         ]
       }
     }

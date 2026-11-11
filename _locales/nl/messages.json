@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "Cache wissen"
   },
-  "clearingMsg": {
-    "message": "Wissen..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Gewist!"
-  },
   "cacheClearedToast": {
     "message": "Cache gewist"
   },
@@ -3426,17 +3420,11 @@
   "clipboardTimestampFmt": {
     "message": "Tijdstempel: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Beveiligingssysteem: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Categorie: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Zekerheid: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Detectiemethoden: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Detectiemethoden:"
@@ -4979,7 +4967,7 @@
     "message": "{0} nieuw in deze periode"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "van {0} regels"
+    "message": "Totaal aantal regels: {0}"
   },
   "statsTipPages": {
     "message": "Pagina's die in dit bereik in Geschiedenis zijn opgeslagen. Geschiedenis bewaart opgeslagen detecties, niet elk browserbezoek."

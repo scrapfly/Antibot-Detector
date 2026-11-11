@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "清除快取"
   },
-  "clearingMsg": {
-    "message": "正在清除..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ 已清除！"
-  },
   "cacheClearedToast": {
     "message": "快取已清除"
   },
@@ -3426,17 +3420,11 @@
   "clipboardTimestampFmt": {
     "message": "時間戳記：{0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "安全系統：{0}"
-  },
   "clipboardCategoryFmt": {
     "message": "類別：{0}"
   },
   "clipboardConfidenceFmt": {
     "message": "信賴度：{0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "偵測方法：{0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "偵測方法："

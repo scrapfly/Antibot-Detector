@@ -25,6 +25,13 @@
  * A detector with neither combinations nor such patterns is untouched: every
  * match counts on its own and the confidence is the highest one, as before.
  *
+ * The score is the highest of the standalone matches and the satisfied
+ * combinations, so a tier whose evidence already holds a standalone pattern
+ * that scores at least the tier is a label, not score: a proof-grade pattern
+ * scores 100 alone, and a combination that needs one only names what was found
+ * (the checklist), it never raises the confidence. test/dead-combinations.test.js
+ * lists those combinations with this scorer and fails on a new one.
+ *
  * Evidence arrives over time (URL first, hooks later), so the score is always
  * "as of the matches seen so far": a combination that needs NOT y stops
  * counting once y shows up.

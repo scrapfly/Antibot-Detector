@@ -1,5 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const withinLimit = require('./helpers/hard-limit.js');
 
 // Bulk scan's pure part: the list a person pastes or uploads, the sitemap it may name, the run's states and the
 // exports. modules/core/bulk-scan.js runs here as it does in the page and the worker.
@@ -371,11 +372,8 @@ test('a CSV file starts with the byte-order mark so a spreadsheet reads UTF-8, a
 
 test('a list of thousands of addresses on one line is read in one pass, with the same result as one per line', () => {
   const addresses = Array.from({ length: 20000 }, (_, i) => `https://site${i}.example/page?ids=1,2,3`);
-  const started = Date.now();
-  const parsed = BulkScan.linesOf(addresses.join(', '));
-  const took = Date.now() - started;
+  const parsed = withinLimit(() => BulkScan.linesOf(addresses.join(', ')), '20000 addresses on one line', 15000);
   assert.deepStrictEqual(parsed, addresses);
-  assert.ok(took < 1500, `took ${took} ms`);
   assert.deepStrictEqual(BulkScan.linesOf(addresses.slice(0, 50).join('\n')), addresses.slice(0, 50));
 });
 

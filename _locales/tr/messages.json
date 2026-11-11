@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "Önbelleği temizle"
   },
-  "clearingMsg": {
-    "message": "Temizleniyor..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Temizlendi!"
-  },
   "cacheClearedToast": {
     "message": "Önbellek temizlendi"
   },
@@ -3426,17 +3420,11 @@
   "clipboardTimestampFmt": {
     "message": "Zaman damgası: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Güvenlik sistemi: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategori: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Güven: %{0}"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Tespit yöntemleri: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Tespit yöntemleri:"

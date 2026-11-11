@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "Xóa bộ nhớ đệm"
   },
-  "clearingMsg": {
-    "message": "Đang xóa..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Đã xóa!"
-  },
   "cacheClearedToast": {
     "message": "Đã xóa bộ nhớ đệm"
   },
@@ -3426,17 +3420,11 @@
   "clipboardTimestampFmt": {
     "message": "Dấu thời gian: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Hệ thống bảo mật: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Danh mục: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Độ tin cậy: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Phương thức phát hiện: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Phương thức phát hiện:"

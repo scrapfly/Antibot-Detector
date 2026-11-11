@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "Cache leeren"
   },
-  "clearingMsg": {
-    "message": "Wird geleert..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Geleert!"
-  },
   "cacheClearedToast": {
     "message": "Cache geleert"
   },
@@ -3426,17 +3420,11 @@
   "clipboardTimestampFmt": {
     "message": "Zeitpunkt: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Sicherheitssystem: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategorie: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Vertrauen: {0} %"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Erkennungsmethoden: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Erkennungsmethoden:"
@@ -4979,7 +4967,7 @@
     "message": "{0} neu in diesem Zeitraum"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "von {0} Regeln"
+    "message": "Regeln insgesamt: {0}"
   },
   "statsTipPages": {
     "message": "Im Verlauf gespeicherte Seiten in diesem Zeitraum. Der Verlauf enthält gespeicherte Erkennungen, nicht jeden Browser-Besuch."
