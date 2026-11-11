@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Portable JS syntax sweep: runs `node --check` on every .js file in the repo
- * (excluding node_modules/.git). Replaces the bash find|xargs one-liner so it
+ * (excluding node_modules, .git and .claude, the local agent folder whose worktrees are whole copies of the repo). Replaces the bash find|xargs one-liner so it
  * works cross-platform via `npm run check:syntax`. It also fails on a raw byte-order mark in a source file (see lib/raw-bom.js).
  */
 const { execFileSync } = require('child_process');
@@ -11,7 +11,7 @@ const { findRawBom } = require('./lib/raw-bom.js');
 
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
-    if (entry.name === 'node_modules' || entry.name === '.git') return [];
+    if (entry.name === 'node_modules' || entry.name === '.git' || entry.name === '.claude') return [];
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) return walk(full);
     return entry.name.endsWith('.js') ? [full] : [];

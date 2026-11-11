@@ -1,11 +1,11 @@
 /**
- * History → … → Select entries: pick several entries and pin, watch, export or delete them together.
+ * History → … → Select entries: pick several entries and pin, watch, copy, export or delete them together.
  * A mixin of History (loads after history.js).
  *
  * The selection is always about what the list shows: a search or a chip that hides a selected entry also
  * unselects it, so Delete can never reach an entry nobody can see. Pin, watch and delete are one message
  * each to the worker, which is the only History writer; Export builds the file here, in the format
- * chosen in Settings → History.
+ * chosen in Settings → History; Copy as lines puts one line per entry on the clipboard, in the list's order.
  */
 
 History.prototype.selectedItems = function() {
@@ -97,7 +97,7 @@ History.prototype.syncSelectBar = function() {
   const allPicked = shown.length > 0 && shown.every(item => this.selectedIds.has(item.id));
   set('#historySelectAll', allPicked ? t('historySelectNone', 'Select none') : t('historySelectAll', 'Select all'));
   const none = picked.length === 0;
-  for (const selector of ['#historySelectPin', '#historySelectWatch', '#historySelectExport', '#historySelectDelete']) {
+  for (const selector of ['#historySelectPin', '#historySelectWatch', '#historySelectCopyLines', '#historySelectExport', '#historySelectDelete']) {
     const button = bar.querySelector(selector);
     if (button) button.disabled = none;
   }
@@ -155,6 +155,20 @@ History.prototype.bulkWatch = async function() {
     Logger.warn('UI', '[History] Watch of the selection failed', error);
     NotificationHelper.error(error.message);
   }
+};
+
+/**
+ * The selected entries as one line each ("address: Cloudflare 95%, reCAPTCHA 70%"), for a chat or a ticket. They come in the order the
+ * list shows them (its sort), not the order History keeps: what the person sees is what gets pasted. No query string, no cookie or
+ * header value; the standard copy notice says it is done.
+ */
+History.prototype.bulkCopyLines = async function() {
+  const picked = this.selectedItems();
+  if (!picked.length) return;
+  const order = new Map(this.getFilteredItems().map((item, index) => [item.id, index]));
+  const rankOf = (item) => (order.has(item.id) ? order.get(item.id) : order.size);
+  const lines = HistoryExport.oneLines(picked.slice().sort((a, b) => rankOf(a) - rankOf(b)));
+  if (lines) await FormatUtils.copyToClipboard(lines);
 };
 
 /** The selected entries as one file, in the format chosen in Settings → History. */
@@ -218,6 +232,7 @@ History.prototype.setupSelectListeners = function() {
   on('#historySelectAll', () => this.toggleSelectAll());
   on('#historySelectPin', () => this.bulkPin());
   on('#historySelectWatch', () => this.bulkWatch());
+  on('#historySelectCopyLines', () => this.bulkCopyLines());
   on('#historySelectExport', () => this.bulkExport());
   on('#historySelectDelete', () => this.bulkDelete());
   // Escape ends Select mode, unless it is closing something on top of it (a menu, a dialog, the details)

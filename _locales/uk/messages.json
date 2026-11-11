@@ -245,6 +245,12 @@
     "message": ": детектор антиботів",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Примітки до версії {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Що нового у версії {0}"
+  },
   "extensionDescription": {
     "message": "Виявляє CAPTCHA, антибот-системи та технології зняття відбитків на веб-сайтах"
   },
@@ -471,7 +477,7 @@
     "message": "Сповіщення"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Показувати сповіщення, коли виявлено системи захисту"
+    "message": "Показувати сповіщення, коли змінюється захист сторінки, історія майже заповнена або не вдалося створити резервну копію історії."
   },
   "settingsCardDebug": {
     "message": "Режим налагодження"
@@ -5525,6 +5531,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Лише показані записи ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Лише закріплені сторінки"
   },
@@ -6259,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Копіювати як Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Копіювати підсумок"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Порівняння сканувань: {0}"

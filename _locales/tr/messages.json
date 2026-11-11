@@ -245,6 +245,12 @@
     "message": ": anti-bot dedektörü",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "{0} sürümü için sürüm notları"
+  },
+  "headerVersionNewFmt": {
+    "message": "{0} sürümündeki yenilikler"
+  },
   "extensionDescription": {
     "message": "Web sitelerindeki CAPTCHA'ları, anti-bot sistemlerini ve parmak izi teknolojilerini tespit edin"
   },
@@ -471,7 +477,7 @@
     "message": "Bildirimler"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Güvenlik sistemleri tespit edildiğinde uyarı göster"
+    "message": "Bir sayfanın korumaları değiştiğinde, geçmiş neredeyse dolduğunda veya geçmiş yedeklemesi başarısız olduğunda bildirim göster."
   },
   "settingsCardDebug": {
     "message": "Hata ayıklama modu"
@@ -5525,6 +5531,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Yalnızca gösterilen girdiler ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Yalnızca sabitlenen sayfalar"
   },
@@ -6259,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Markdown olarak kopyala"
+  },
+  "historyCompareCopySummary": {
+    "message": "Özeti kopyala"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Taramaları karşılaştır: {0}"

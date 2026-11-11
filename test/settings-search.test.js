@@ -187,9 +187,9 @@ test('matches a setting by its name: "cache duration" opens the Detection tab, u
 
 test('matches by description: a phrase that only a row\'s description holds finds that row among its neighbours', () => {
   const page = createPage();
-  page.type('security systems detected');
+  page.type('almost full backup fails');
   assert.equal(page.activeTab(), 'general');
-  assert.equal(page.hidden(page.unit('notificationsEnabled')), false, '"Show alerts when security systems are detected" is under Notifications');
+  assert.equal(page.hidden(page.unit('notificationsEnabled')), false, '"... History is almost full or its backup fails" is under Notifications');
   for (const other of ['languageOverride', 'themeChoice', 'debugModeGeneral']) assert.equal(page.hidden(page.unit(other)), true, `${other} is another setting`);
   assert.equal(page.hidden(page.card('autoUpdate')), true, 'and the Detector Updates card has no such text');
 });
@@ -246,7 +246,7 @@ test('a setting behind a switch or a choice is found through it: the switch is s
 test('a hint belongs to the row above it: it is shown with its row and hidden with the others', () => {
   const page = createPage();
   const hint = (text) => page.modal.querySelectorAll('.setting-row-hint').find((p) => p.textContent.includes(text));
-  page.type('protections change');
+  page.type('gains or loses a protection');
   assert.equal(page.activeTab(), 'history');
   assert.equal(page.hidden(page.unit('historyChangeAlerts')), false);
   assert.equal(page.hidden(hint('A notification when a page you scanned')), false, 'the row\'s hint stays with it');

@@ -245,6 +245,12 @@
     "message": ": detektor anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Poznámky k verzi {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Co je nového ve verzi {0}"
+  },
   "extensionDescription": {
     "message": "Detekujte CAPTCHA, anti-bot systémy a technologie fingerprintingu na webech"
   },
@@ -471,7 +477,7 @@
     "message": "Oznámení"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Zobrazovat upozornění při zjištění bezpečnostních systémů"
+    "message": "Zobrazit oznámení, když se změní ochrany stránky, historie je téměř plná nebo se nezdaří její zálohování."
   },
   "settingsCardDebug": {
     "message": "Režim ladění"
@@ -5525,6 +5531,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Jen zobrazené položky ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Jen připnuté stránky"
   },
@@ -6259,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Kopírovat jako Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Kopírovat souhrn"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Porovnání skenování: {0}"

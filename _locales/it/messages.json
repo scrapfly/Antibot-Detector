@@ -245,6 +245,12 @@
     "message": ": rilevatore anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Note di rilascio della versione {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Novità della versione {0}"
+  },
   "extensionDescription": {
     "message": "Rileva CAPTCHA, sistemi anti-bot e tecnologie di fingerprinting sui siti web"
   },
@@ -471,7 +477,7 @@
     "message": "Notifiche"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Mostra avvisi quando vengono rilevati sistemi di sicurezza"
+    "message": "Mostra una notifica quando cambiano le protezioni di una pagina, la cronologia è quasi piena o il suo backup non riesce."
   },
   "settingsCardDebug": {
     "message": "Modalità debug"
@@ -5525,6 +5531,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Solo le voci mostrate ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Solo pagine fissate"
   },
@@ -6259,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Copia come Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Copia riepilogo"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Confronto delle analisi: {0}"

@@ -245,6 +245,12 @@
     "message": ":反机器人检测器",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "版本 {0} 的发行说明"
+  },
+  "headerVersionNewFmt": {
+    "message": "版本 {0} 的更新内容"
+  },
   "extensionDescription": {
     "message": "检测网站上的验证码、反机器人系统和指纹识别技术"
   },
@@ -471,7 +477,7 @@
     "message": "通知"
   },
   "settingsCardNotificationsDesc": {
-    "message": "检测到安全系统时显示警报"
+    "message": "当页面的防护措施变化、历史记录存储空间即将占满或历史记录备份失败时，显示通知。"
   },
   "settingsCardDebug": {
     "message": "调试模式"
@@ -5525,6 +5531,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "仅显示的记录（{0} 条）"
+  },
   "historyExportPinnedOnly": {
     "message": "仅已固定的页面"
   },
@@ -6259,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "复制为 Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "复制摘要"
   },
   "historyCompareMdHeadingFmt": {
     "message": "比较扫描：{0}"

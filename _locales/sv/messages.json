@@ -245,6 +245,12 @@
     "message": ": anti-bot-detektor",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Versionsanteckningar för version {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Nytt i version {0}"
+  },
   "extensionDescription": {
     "message": "Upptäck CAPTCHA, anti-bot-system och fingerprinting-tekniker på webbplatser"
   },
@@ -471,7 +477,7 @@
     "message": "Aviseringar"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Visa varningar när skyddssystem upptäcks"
+    "message": "Visa en avisering när en sidas skydd ändras, historiken är nästan full eller dess säkerhetskopiering misslyckas."
   },
   "settingsCardDebug": {
     "message": "Felsökningsläge"
@@ -5525,6 +5531,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Endast visade poster ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Endast fästa sidor"
   },
@@ -6259,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Kopiera som Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Kopiera sammanfattning"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Jämför skanningar: {0}"

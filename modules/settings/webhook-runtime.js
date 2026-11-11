@@ -7,7 +7,9 @@
  *
  * The log is kept in storage.local, where it outlives the browser, and it names pages: a line names none that History is told
  * to keep out (History paused, or an ignored site), and the worker forgets the whole log where it forgets History's own record
- * (background/history-retention.js: Clear on close, History emptied).
+ * (background/history-retention.js: Clear on close, History emptied). A page the person leaves out after a line named it (a
+ * site added to Skipped sites or to History's ignored sites, History paused, "only these sites" chosen) stops being named by
+ * the lines already written: forgetKeptOutPages, when the settings change and once at every start.
  */
 
 SettingsRuntime.WEBHOOK_LOG_KEY = 'scrapfly_webhook_log';
@@ -51,6 +53,60 @@ SettingsRuntime._readSettings = async function() {
 SettingsRuntime._historyKeepsOut = function(settings, hostname) {
     const history = (settings && settings.history) || {};
     return history.historyEnabled === false || DomainList.matches(hostname, history.historyExcludedDomains);
+};
+
+/**
+ * Is this page one that the record must not name: History keeps it out, or the scan is refused for it (a skipped site, or a site
+ * outside "only these sites"), judged as the scan judges it (Utils.isUrlBlacklisted: ScanScope, and the old flat list of skipped sites)?
+ * A host that cannot be judged is not kept out: it stays as written.
+ */
+SettingsRuntime._pageKeptOut = async function(settings, hostname) {
+    if (SettingsRuntime._historyKeepsOut(settings, hostname)) return true;
+    try {
+        return (await Utils.isUrlBlacklisted(`https://${hostname}/`)) === true;
+    } catch (_) {
+        return false;
+    }
+};
+
+/**
+ * Blanks the page of every line of the record that names a page the person has left out since the line was written (only the
+ * lines written after that were blanked: sendWebhookIfEnabled). What happened, when and the status stay.
+ * Runs inside the record's queue, so no line written meanwhile is lost, and writes only when a line changed. The settings are
+ * read as they are stored now, whatever change brought us here: two quick changes end in the same record, and a change that
+ * could not be acted on is made up for at the next one. Settings that cannot be read are not "nothing is left out": nothing is
+ * blanked, and it says so (the lines are judged again at the next change or start). Never throws.
+ * @returns {Promise<number>} how many lines were blanked
+ */
+SettingsRuntime.forgetKeptOutPages = function() {
+    const pass = async () => {
+        try {
+            const key = SettingsRuntime.WEBHOOK_LOG_KEY;
+            const log = (await chrome.storage.local.get(key))[key];
+            if (!Array.isArray(log) || !log.some((line) => line && line.page)) return 0;
+            const settings = await SettingsRuntime._readSettings();
+            if (!settings) {
+                Logger.warn('NETWORK', 'The settings could not be read, so the record of webhook deliveries keeps its lines as they are');
+                return 0;
+            }
+            // Each page is judged once, before the log is walked: the check waits for the settings, and WebhookLog.forget asks at once
+            const keptOut = new Map();
+            for (const line of log) {
+                const page = line && line.page ? String(line.page) : '';
+                if (page && !keptOut.has(page)) keptOut.set(page, await SettingsRuntime._pageKeptOut(settings, page));
+            }
+            const next = WebhookLog.forget(log, (page) => keptOut.get(page) === true);
+            if (next === log) return 0;
+            await chrome.storage.local.set({ [key]: next });
+            return next.filter((line, index) => line !== log[index]).length;
+        } catch (error) {
+            // Only the kind of failure: nothing of the record or the settings
+            Logger.warn('NETWORK', 'The record of webhook deliveries could not be checked against the settings', error && error.name);
+            return 0;
+        }
+    };
+    webhookLogQueue = webhookLogQueue.then(pass, pass);
+    return webhookLogQueue;
 };
 
 // A failed delivery's page data, in memory only (storage.session: gone when the browser closes), so it can be retried:
@@ -276,6 +332,19 @@ SettingsRuntime.runDueWebhookRetries = async function() {
         try { await SettingsRuntime.retryWebhook(id, { manual: false }); } catch (_) { /* the next one still runs */ }
     }
     await SettingsRuntime._scheduleWebhookRetries();
+};
+
+/**
+ * Registered in the worker's first turn (background/init.js): a settings change takes the pages it leaves out off the record, and
+ * so does every start, for the lines an earlier version wrote and for a change made while no worker was listening.
+ */
+SettingsRuntime.initWebhookLogScope = function() {
+    if (SettingsRuntime._logScopeInitialized || !chrome.storage || !chrome.storage.onChanged) return;
+    SettingsRuntime._logScopeInitialized = true;
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+        if (namespace === 'local' && changes && changes.scrapfly_settings) SettingsRuntime.forgetKeptOutPages();
+    });
+    SettingsRuntime.forgetKeptOutPages();
 };
 
 /** Registered in the worker's first turn (background/init.js). */
