@@ -91,12 +91,56 @@ body {
   min-width: 0;
 }
 
+/* The version is a link to its release notes that looks like the plain text it was. The padding makes a target about 24px high and the
+   negative margin gives the room back, so the text stays where it was; align-self keeps the target to the text, not the whole column. */
 .app-version {
+  position: relative;
+  align-self: flex-start;
+  padding: 5px 6px;
+  margin: -4px -6px -5px;
+  border-radius: 4px;
   font-size: 11px;
   font-weight: 400;
   color: var(--text-secondary);
-  margin-top: 1px;
   letter-spacing: 0.2px;
+  text-decoration: none;
+}
+
+.app-version:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Drawn inside the larger target, so the ring hugs the text instead of reaching the wordmark above */
+.app-version:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+}
+
+/* The notes of this version have not been opened: a small dot after the text, drawn beside it and out of the flow, so nothing moves when
+   it appears or goes. inset-inline-end puts it on the end side in Arabic too; --accent is the theme's own blue in the dark and the light theme. */
+.app-version.has-news::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: -7px;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  pointer-events: none;
+}
+
+/* A forced-colours theme (Windows high contrast) repaints backgrounds: the dot keeps the system's highlight colour */
+@media (forced-colors: active) {
+  .app-version.has-news::after {
+    forced-color-adjust: none;
+    background: Highlight;
+    box-shadow: none;
+  }
 }
 
 .header-controls {

@@ -245,6 +245,12 @@
     "message": "：反機器人偵測器",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "版本 {0} 的發行說明"
+  },
+  "headerVersionNewFmt": {
+    "message": "版本 {0} 的更新內容"
+  },
   "extensionDescription": {
     "message": "偵測網站上的 CAPTCHA、反機器人系統和指紋辨識技術"
   },

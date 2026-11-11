@@ -245,6 +245,12 @@
     "message": ": 안티봇 탐지기",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "버전 {0} 릴리스 노트"
+  },
+  "headerVersionNewFmt": {
+    "message": "버전 {0}의 새로운 기능"
+  },
   "extensionDescription": {
     "message": "웹사이트의 CAPTCHA, 안티봇 시스템 및 핑거프린팅 기술 감지"
   },

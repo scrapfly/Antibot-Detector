@@ -245,6 +245,12 @@
     "message": ": detector anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Notas da versão {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Novidades da versão {0}"
+  },
   "extensionDescription": {
     "message": "Detecta CAPTCHAs, sistemas anti-bot e técnicas de fingerprinting em sites"
   },

@@ -247,6 +247,14 @@
     "message": ": anti-bot detector",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Release notes for version {0}",
+    "description": "Hover text and screen reader name of the version number in the popup header, which opens that version's release notes on GitHub. {0} = the version, e.g. 3.1.7"
+  },
+  "headerVersionNewFmt": {
+    "message": "What's new in version {0}",
+    "description": "The same link's name while a small dot says its release notes have not been opened yet (after an update). {0} = the version, e.g. 3.1.7"
+  },
   "extensionDescription": {
     "message": "Detect CAPTCHAs, anti-bot systems and fingerprinting technologies on websites",
     "description": "Tagline"

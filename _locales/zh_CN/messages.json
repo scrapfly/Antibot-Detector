@@ -245,6 +245,12 @@
     "message": ":反机器人检测器",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "版本 {0} 的发行说明"
+  },
+  "headerVersionNewFmt": {
+    "message": "版本 {0} 的更新内容"
+  },
   "extensionDescription": {
     "message": "检测网站上的验证码、反机器人系统和指纹识别技术"
   },
