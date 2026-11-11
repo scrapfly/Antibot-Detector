@@ -19,6 +19,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - Settings → History: the automatic backup text now says only JSON backup files can be imported back into History.
 - Settings → Notifications now says what it controls: changed protections, a nearly full History and failed backups.
+- Detection and History details: a matched combination's name is now the size of the text under it, not a second title.
 
 ### Fixed
 
