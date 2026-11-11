@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "Rensa cache"
   },
-  "clearingMsg": {
-    "message": "Rensar..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Rensat!"
-  },
   "cacheClearedToast": {
     "message": "Cachen rensades"
   },
@@ -3414,17 +3408,11 @@
   "clipboardTimestampFmt": {
     "message": "Tidsstämpel: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Skyddssystem: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategori: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Säkerhet: {0} %"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Upptäcktsmetoder: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Upptäcktsmetoder:"

@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "Svuota cache"
   },
-  "clearingMsg": {
-    "message": "Pulizia in corso..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Svuotata!"
-  },
   "cacheClearedToast": {
     "message": "Cache svuotata"
   },
@@ -3414,17 +3408,11 @@
   "clipboardTimestampFmt": {
     "message": "Data e ora: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Sistema di sicurezza: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Categoria: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Affidabilità: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Metodi di rilevamento: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Metodi di rilevamento:"
