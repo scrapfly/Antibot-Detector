@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "Hapus cache"
   },
-  "clearingMsg": {
-    "message": "Menghapus..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Dihapus!"
-  },
   "cacheClearedToast": {
     "message": "Cache dihapus"
   },
@@ -3414,17 +3408,11 @@
   "clipboardTimestampFmt": {
     "message": "Stempel waktu: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Sistem keamanan: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategori: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Kepercayaan: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Metode deteksi: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Metode deteksi:"
@@ -5409,7 +5397,13 @@
     "message": "Setiap bulan"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Menyimpan salinan riwayat ke folder Unduhan Anda (di dalam folder Scrapfly), dalam format ekspor yang dipilih di atas."
+    "message": "Menyimpan salinan riwayat ke folder Unduhan Anda (di dalam folder Scrapfly), dalam format ekspor yang dipilih di atas. Hanya file JSON yang dapat diimpor kembali ke riwayat."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Jumlah cadangan yang disimpan"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Setelah setiap pencadangan, cadangan lama di atas jumlah ini dihapus dari folder Unduhan Anda (cadangan yang disimpan dalam beberapa bagian dihitung satu). Hanya file cadangan yang disimpan oleh ekstensi ini yang dihapus. Jika semuanya disimpan, tidak ada yang dihapus."
   },
   "settingsHistoryBackupNow": {
     "message": "Cadangkan sekarang"

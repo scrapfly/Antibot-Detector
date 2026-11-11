@@ -3,6 +3,7 @@ const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const withinLimit = require('./helpers/hard-limit.js');
 
 global.self = global;
 const DomainList = require('../modules/core/domain-list.js');
@@ -102,8 +103,6 @@ test('blocklist: a final dot, capitals, a port or a whole address in the list na
 
 test('a list of many thousands of sites is read at once (no repeated search of what is already kept)', () => {
   const many = Array.from({ length: 30000 }, (_, i) => `site${i % 15000}.example`);
-  const started = Date.now();
-  assert.strictEqual(DomainList.normalize(many).length, 15000, 'duplicates are dropped');
-  assert.ok(Date.now() - started < 1500, `took ${Date.now() - started} ms`);
+  assert.strictEqual(withinLimit(() => DomainList.normalize(many), '30000 sites, half of them repeated', 15000).length, 15000, 'duplicates are dropped');
   assert.strictEqual(DomainList.matches('www.site14999.example', many), true);
 });

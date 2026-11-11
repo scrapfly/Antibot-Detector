@@ -711,9 +711,10 @@ async function scenario(name, fn) {
     await page.$eval('.tab-btn[data-tab="history"]', el => el.click());
     await page.waitForSelector('#historyList', { state: 'attached', timeout: 15000 });
     const made = await page.evaluate(async () => {
-      const def = Object.values(window.popupInstance.detectorManager.getAllDetectors().fingerprint || {}).find(d => d.id === 'detect-navigator-fingerprint');
+      // The Hardware fingerprint: CPU, memory and touch reads fire three combinations (Navigator's CPU and memory hooks moved here in 3.1.7)
+      const def = Object.values(window.popupInstance.detectorManager.getAllDetectors().fingerprint || {}).find(d => d.id === 'detect-hardware-fingerprint');
       const hook = (id) => { const rule = def.detection.js_hooks.find(r => r.id === id); return { type: 'js_hooks', patternId: id, pattern: rule.target, value: rule.target, confidence: rule.confidence, description: rule.description }; };
-      const scored = DetectionCombinations.score(def, [hook('navigator-languages'), hook('navigator-agent'), hook('navigator-platform'), hook('navigator-cpu'), hook('navigator-memory')]);
+      const scored = DetectionCombinations.score(def, [hook('hardware-cpu'), hook('hardware-memory'), hook('hardware-touch')]);
       const entry = HistoryStore.slimEntry({ id: 'qw-card', url: 'https://shop.example.test/', hostname: 'shop.example.test', title: 'Shop', timestamp: Date.now(), detections: [
         { detector: { id: def.id, name: def.name }, name: def.name, category: 'fingerprint', confidence: scored.confidence, combinations: scored.combinations, matches: scored.matches },
         { detector: { id: 'detect-cloudflare', name: 'Cloudflare' }, name: 'Cloudflare', category: 'antibot', confidence: 100, matches: [] }] });
@@ -738,7 +739,7 @@ async function scenario(name, fn) {
     const made = await page.evaluate(async () => {
       const def = Object.values(window.popupInstance.detectorManager.getAllDetectors().fingerprint || {}).find(d => d.id === 'detect-navigator-fingerprint');
       const hook = (id) => { const rule = def.detection.js_hooks.find(r => r.id === id); return { type: 'js_hooks', patternId: id, pattern: rule.target, value: rule.target, confidence: rule.confidence, description: rule.description }; };
-      const scored = DetectionCombinations.score(def, [hook('navigator-languages'), hook('navigator-agent'), hook('navigator-platform'), hook('navigator-cpu'), hook('navigator-memory')]);
+      const scored = DetectionCombinations.score(def, [hook('navigator-languages'), hook('navigator-agent'), hook('navigator-platform')]);
       const withCombos = HistoryStore.slimEntry({ id: 'qw-chip-a', url: 'https://combos.example.test/', hostname: 'combos.example.test', title: 'With combinations', timestamp: Date.now(), detections: [
         { detector: { id: def.id, name: def.name }, name: def.name, category: 'fingerprint', confidence: scored.confidence, combinations: scored.combinations, matches: scored.matches }] });
       const plain = HistoryStore.slimEntry({ id: 'qw-chip-b', url: 'https://plain.example.test/', hostname: 'plain.example.test', title: 'Plain', timestamp: Date.now() - 1000, detections: [

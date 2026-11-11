@@ -136,7 +136,7 @@ Die auf der aktuellen Seite gefundenen Schutzmaßnahmen, jeweils mit Konfidenz, 
 
 - **Erkennungen hochladen**, um einen teilbaren Link zu erhalten (standardmäßig dpaste.com; siehe [Links zum Teilen](#links-zum-teilen))
 - **Cache leeren**, damit die Seite beim nächsten Laden erneut gescannt wird
-- **Kopieren**, ein Menü: dieselbe Zusammenfassung, die der Upload teilt, eine Markdown-Tabelle für ein Ticket oder einen Chat oder JSON (keines enthält Cookie- oder Header-Werte)
+- **Kopieren**, ein Menü: dieselbe Zusammenfassung, die der Upload teilt, eine Markdown-Tabelle für ein Ticket oder einen Chat, eine Zeile mit der Website und ihren Schutzmaßnahmen oder JSON (keines davon enthält Cookie- oder Header-Werte); oder Code, der die Seite erneut abruft, als curl-Befehl, Python (requests) oder Node.js (fetch), mit User-Agent, Accept-Language und Client Hints dieses Browsers und allen Cookies, die die Seite sendet, auch den HttpOnly-Cookies. Dieser Code enthält die Cookie-Werte und die Adresse der Seite mit ihrem Query-String; geben Sie ihn daher nicht weiter
 - **Diese Domain blockieren**, damit die Erweiterung sie nicht mehr scannt
 
 ### Verlauf

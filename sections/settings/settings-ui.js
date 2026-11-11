@@ -547,6 +547,8 @@ SettingsUI.updateSettingsUI = function() {
       }
       choose('historyChangeAlerts', ['pinned', 'all'].includes(h.historyChangeAlerts) ? h.historyChangeAlerts : 'off');
       choose('historyBackup', ['daily', 'weekly', 'monthly'].includes(h.historyBackup) ? h.historyBackup : 'off');
+      // Only an offered number deletes anything (HistoryBackup.keepOf); anything else shows, and is saved as, All
+      choose('historyBackupKeep', [3, 7, 14, 30].includes(h.historyBackupKeep) ? h.historyBackupKeep : 0);
       choose('historyExcludedDomains', (Array.isArray(h.historyExcludedDomains) ? h.historyExcludedDomains : []).join('\n'));
     }
 
@@ -701,6 +703,7 @@ SettingsUI.getSettingsFromUI = function() {
       historyExcludedDomains: SettingsUI.readSiteList('#historyExcludedDomains', this.settings.history?.historyExcludedDomains),
       historyChangeAlerts: document.querySelector('#historyChangeAlerts')?.value ?? this.settings.history?.historyChangeAlerts ?? 'off',
       historyBackup: document.querySelector('#historyBackup')?.value ?? this.settings.history?.historyBackup ?? 'off',
+      historyBackupKeep: parseInt(document.querySelector('#historyBackupKeep')?.value ?? this.settings.history?.historyBackupKeep ?? 0, 10),
       historyClearOnClose: document.querySelector('#historyClearOnClose')?.checked ?? this.settings.history?.historyClearOnClose ?? false
     };
 
@@ -849,7 +852,8 @@ SettingsUI.validateSettings = function(settings) {
     // older version allowed does not block an unrelated Save
     const savedSettings = (this && this.settingsBaseline) || {};
     const CHOICES = [['updates', 'checkIntervalHours', [6, 12, 24, 48, 168], '#checkIntervalHours'], ['history', 'exportFormat', ['json', 'csv', 'txt', 'md'], '#exportFormat'],
-      ['history', 'historyBackup', ['off', 'daily', 'weekly', 'monthly'], '#historyBackup'], ['duplicatePrevention', 'duplicateUnit', ['minutes', 'hours', 'days'], '#duplicateUnit'],
+      ['history', 'historyBackup', ['off', 'daily', 'weekly', 'monthly'], '#historyBackup'], ['history', 'historyBackupKeep', [0, 3, 7, 14, 30], '#historyBackupKeep'],
+      ['duplicatePrevention', 'duplicateUnit', ['minutes', 'hours', 'days'], '#duplicateUnit'],
       ['duplicatePrevention', 'duplicateScope', ['full_url', 'domain', 'path'], '#duplicateScope'], ['duplicatePrevention', 'duplicateAction', ['skip', 'update'], '#duplicateAction'],
       ['detection', 'cacheScope', ['domain', 'path', 'full'], '#cacheScope']];
     for (const [group, key, allowed, field] of CHOICES) {

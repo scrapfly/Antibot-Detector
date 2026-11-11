@@ -80,7 +80,11 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
                 if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tab.id, 'found', detections);
               } else {
                 chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tab.id }).catch(() => {});
-                if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.reset(chrome, tab.id);
+                // A saved scan that found nothing reads 'No protections found'; a page with no saved scan keeps the default text
+                if (typeof ToolbarTitle !== 'undefined') {
+                  if (storedData) ToolbarTitle.apply(chrome, tab.id, 'clean');
+                  else ToolbarTitle.reset(chrome, tab.id);
+                }
               }
             } catch (e) {
               // Tab might be closing

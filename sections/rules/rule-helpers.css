@@ -966,18 +966,28 @@
   display: none;
 }
 
+/* The corner is on the line's end side, so the chevron points along the reading direction while folded (left in Arabic) and
+   down when open. In Arabic the corner is on the left, so both turns are the other way round; the open one is the most specific. */
 .pt-cheat summary::before {
   content: '';
   width: 6px;
   height: 6px;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
+  border-inline-end: 1.5px solid currentColor;
+  border-block-end: 1.5px solid currentColor;
   transform: rotate(-45deg);
   transition: transform 0.15s ease;
 }
 
+[dir="rtl"] .pt-cheat summary::before {
+  transform: rotate(45deg);
+}
+
 .pt-cheat[open] summary::before {
   transform: rotate(45deg);
+}
+
+[dir="rtl"] .pt-cheat[open] summary::before {
+  transform: rotate(-45deg);
 }
 
 .pt-cheat .rh-ref {

@@ -63,22 +63,28 @@ SettingsUI._setupLogListeners = function() {
     const _tLog = (typeof I18n !== 'undefined') ? I18n : null;
     const _trLog = (key, fallback) => (_tLog && _tLog.get(key)) || fallback;
 
+    // Only the worker's own "success" is success. Its error answer, "unknown" from a worker that predates the message
+    // (an unpacked extension edited without a reload), no answer and a closed port all mean the logs were not handled.
+    const workerDid = async (type) => {
+      try {
+        const response = await chrome.runtime.sendMessage({ type });
+        return Boolean(response) && response.status === 'success';
+      } catch (_) {
+        return false;
+      }
+    };
+    const exportLogs = async (type) => {
+      if (!await workerDid(type)) NotificationHelper.error(_trLog('failedExportLogs', 'Failed to export logs'));
+    };
+
     const exportLogsJsonBtn = document.querySelector('#exportLogsJsonBtn');
     if (exportLogsJsonBtn) {
-      exportLogsJsonBtn.addEventListener('click', () => {
-        chrome.runtime.sendMessage({ type: WorkerMessages.LOG_COLLECTOR_EXPORT_JSON }).catch(() => {
-          NotificationHelper.error(_trLog('failedExportLogs', 'Failed to export logs'));
-        });
-      });
+      exportLogsJsonBtn.addEventListener('click', () => exportLogs(WorkerMessages.LOG_COLLECTOR_EXPORT_JSON));
     }
 
     const exportLogsTextBtn = document.querySelector('#exportLogsTextBtn');
     if (exportLogsTextBtn) {
-      exportLogsTextBtn.addEventListener('click', () => {
-        chrome.runtime.sendMessage({ type: WorkerMessages.LOG_COLLECTOR_EXPORT_TEXT }).catch(() => {
-          NotificationHelper.error(_trLog('failedExportLogs', 'Failed to export logs'));
-        });
-      });
+      exportLogsTextBtn.addEventListener('click', () => exportLogs(WorkerMessages.LOG_COLLECTOR_EXPORT_TEXT));
     }
 
     const clearLogsBtn = document.querySelector('#clearLogsBtn');
@@ -94,15 +100,15 @@ SettingsUI._setupLogListeners = function() {
         });
 
         if (confirmed) {
-          chrome.runtime.sendMessage({ type: WorkerMessages.LOG_COLLECTOR_CLEAR }).then(() => {
+          if (await workerDid(WorkerMessages.LOG_COLLECTOR_CLEAR)) {
             const logCountValue = document.querySelector('#logCountValue');
             if (logCountValue) {
               logCountValue.textContent = '0';
             }
             NotificationHelper.success(_trLog('logsCleared', 'Logs cleared'));
-          }).catch(() => {
+          } else {
             NotificationHelper.error(_trLog('failedClearLogs', 'Failed to clear logs'));
-          });
+          }
         }
       });
     }

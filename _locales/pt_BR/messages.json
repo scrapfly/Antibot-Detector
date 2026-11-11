@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "Limpar cache"
   },
-  "clearingMsg": {
-    "message": "Limpando..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Limpo!"
-  },
   "cacheClearedToast": {
     "message": "Cache limpo"
   },
@@ -3414,17 +3408,11 @@
   "clipboardTimestampFmt": {
     "message": "Data e hora: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Sistema de segurança: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Categoria: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Confiança: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Métodos de detecção: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Métodos de detecção:"
@@ -4967,7 +4955,7 @@
     "message": "{0} novas neste período"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "de {0} regras"
+    "message": "Total de regras: {0}"
   },
   "statsTipPages": {
     "message": "Páginas salvas no Histórico neste período. O Histórico guarda as detecções salvas, não cada visita do navegador."
@@ -5409,7 +5397,13 @@
     "message": "Todo mês"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Salva uma cópia do histórico na sua pasta Downloads (dentro de uma pasta Scrapfly), no formato de exportação escolhido acima."
+    "message": "Salva uma cópia do histórico na sua pasta Downloads (dentro de uma pasta Scrapfly), no formato de exportação escolhido acima. Somente arquivos JSON podem ser importados de volta para o histórico."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Backups a manter"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Após cada backup, os mais antigos além deste número são excluídos da sua pasta Downloads (um backup salvo em várias partes conta como um). Somente arquivos de backup salvos por esta extensão são excluídos. Se você mantiver todos, nada é excluído."
   },
   "settingsHistoryBackupNow": {
     "message": "Fazer backup agora"

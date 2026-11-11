@@ -412,6 +412,8 @@ class Utils {
       historyMaxMB: historySettings.historyMaxMB,
       // The watchlist (HistoryPolicy.watchModeOf reads it: off, daily or weekly)
       historyWatch: historySettings.historyWatch,
+      // How many backups stay in Downloads (HistoryBackup.keepOf reads it: 0 or nothing is all, and all deletes nothing)
+      historyBackupKeep: historySettings.historyBackupKeep,
       // The settings could not be read, so everything above is a default and not what the person chose. A reader that only draws
       // from it ignores this; one that decides something (records a page, opens a page, moves an alarm) must stay off
       ...(settings.settingsUnreadable === true ? { settingsUnreadable: true } : {})

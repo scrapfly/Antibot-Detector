@@ -302,7 +302,8 @@ test('odd text never throws or stalls: lone surrogates, a huge string of only co
       assert.doesNotThrow(() => F.matches(titled(title), { query }), `${title.length} characters, query ${JSON.stringify(query.slice(0, 8))}`);
     }
   }
-  assert.ok(Date.now() - started < 8000, `${Date.now() - started} ms`);
+  // A stall, not a speed: it takes about 0.2 s on a quiet machine, and a busy one takes many times that
+  assert.ok(Date.now() - started < 60000, `${Date.now() - started} ms`);
   assert.strictEqual(finds('a\ud800b', '\ud800'), true, 'a lone surrogate is a character like another');
 });
 

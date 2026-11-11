@@ -5,6 +5,30 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.7] - 2026-11-11
+
+### Added
+
+- Settings → History: Backups to keep deletes older backup files from Downloads, leaving the newest 3, 7, 14 or 30; All is the default.
+
+### Changed
+
+- Settings → History: the automatic backup text now says only JSON backup files can be imported back into History.
+
+### Fixed
+
+- Advanced → Captures: Copy on a capture shows one message, and no longer says the data was copied when the browser refused the copy.
+- Bulk scan: Copy as lines says the copy failed when the browser refuses it, instead of saying Copied.
+- Scrape with Scrapfly: an option set to 0, such as Wait after load, shows 0 when the window reopens, not an empty box.
+- Settings → Log collector: Clear no longer says Logs cleared, and Export no longer stays silent, when the extension reports an error.
+- Arabic: the icon picker's search icon no longer covers your text, and the statistics description and Regex cheat sheet arrow sit on the correct side.
+- Detection: Copy no longer puts an empty summary on the clipboard when the search or filters match nothing; it says so instead.
+- Statistics: "60 minutes ago" and "24 hours ago" now read "1 hour ago" and "yesterday"; the rules count no longer reads "of 1 rules".
+- Changing the cache scope no longer shows a page whose saved scan found nothing as unscanned; the toolbar keeps its clean state.
+- Turning the extension back on shows "No protections found" on the toolbar icon of pages whose saved scan found nothing.
+- Analyze Scripts no longer ends early, or saves an empty list, when the page was still finishing loading as you started it.
+- Fingerprint: a page that reads the CPU count and device memory now shows one card (Hardware) instead of two (Hardware and Navigator).
+
 ## [3.1.6] - 2026-11-10
 
 ### Added

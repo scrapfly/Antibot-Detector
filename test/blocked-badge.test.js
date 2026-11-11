@@ -206,6 +206,26 @@ for (const cached of [null, { detectionCount: 0, detectionResults: [] },
     });
 }
 
+test('production global enable gives a page with a clean saved scan the clean hover text, and a page with none the default', async () => {
+    for (const [saved, expected] of [[{ detectionCount: 0, detectionResults: [] }, 'Scrapfly: No protections found'], [null, null]]) {
+        const h = harness();
+        vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'modules/core/toolbar-title.js'), 'utf8'), h.context, { filename: 'modules/core/toolbar-title.js' });
+        h.context.chrome.action.setTitle = async (details) => { h.calls.push({ method: 'setTitle', ...details }); };
+        h.state.enabled = false;
+        h.state.blacklisted = false;
+        h.context.Engine.getStoredDetection = async () => saved;
+        await h.context.Settings.handleEnableToggle(true, {
+            DetectionEngineManager: h.context.Engine,
+            CategoryManager: h.context.CategoryManager,
+            categoryManager: h.context.categoryManager
+        });
+        await new Promise((resolve) => setTimeout(resolve, 30));
+        const title = h.last('setTitle');
+        if (expected) assert.equal(title && title.title, expected, 'a saved scan that found nothing reads No protections found');
+        else assert.notEqual(title && title.title, 'Scrapfly: No protections found', 'no saved scan keeps the default text');
+    }
+});
+
 test('production global disable replaces the pause glyph with readable black OFF on orange', async () => {
     const h = harness();
     await h.context.setBadgeForDetections(7, 'https://example.com', []);
