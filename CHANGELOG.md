@@ -7,6 +7,14 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.1.7] - 2026-11-11
 
+### Added
+
+- Settings → History: Backups to keep deletes older backup files from Downloads, leaving the newest 3, 7, 14 or 30; All is the default.
+
+### Changed
+
+- Settings → History: the automatic backup text now says only JSON backup files can be imported back into History.
+
 ### Fixed
 
 - Advanced → Captures: Copy on a capture shows one message, and no longer says the data was copied when the browser refused the copy.
