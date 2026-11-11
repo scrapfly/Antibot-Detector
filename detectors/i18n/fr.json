@@ -1112,5 +1112,14 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Constantes du défi SG-CAPTCHA (sgchallenge, sgsubmit_url) dans les scripts de la page",
   "sg-captcha header on the SG-CAPTCHA challenge page": "En-tête sg-captcha sur la page de défi SG-CAPTCHA",
   "sg-captcha header with the challenge constants in the page's scripts": "En-tête sg-captcha avec les constantes du défi dans les scripts de la page",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Page de défi SG-CAPTCHA avec ses constantes dans les scripts de la page"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Page de défi SG-CAPTCHA avec ses constantes dans les scripts de la page",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "Service CAPTCHA axé sur la vie privée avec un widget JavaScript, un mode caché et une vérification côté serveur",
+  "Official CaptchaFox widget script api.js on its CDN": "Script officiel du widget CaptchaFox api.js sur son CDN",
+  "Widget container with the class captchafox, possibly unconfigured": "Conteneur du widget avec la classe captchafox, peut-être non configuré",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "Conteneur du widget avec la classe captchafox et un attribut sitekey, sans validité de la clé",
+  "Hidden response token field named cf-captcha-response, added after a verification": "Champ caché du jeton de réponse nommé cf-captcha-response, ajouté après une vérification",
+  "Documented captchafox window object with its render method, not execution": "Objet window documenté captchafox avec sa méthode render, pas l'exécution",
+  "Configured widget and the captchafox window object": "Widget configuré et l'objet window captchafox",
+  "Configured widget and the response token field": "Widget configuré et le champ du jeton de réponse",
+  "Configured widget, window object and response token field": "Widget configuré, objet window et champ du jeton de réponse"
 }

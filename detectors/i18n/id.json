@@ -1112,5 +1112,14 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Konstanta challenge SG-CAPTCHA (sgchallenge, sgsubmit_url) di script halaman",
   "sg-captcha header on the SG-CAPTCHA challenge page": "Header sg-captcha pada halaman challenge SG-CAPTCHA",
   "sg-captcha header with the challenge constants in the page's scripts": "Header sg-captcha beserta konstanta challenge di script halaman",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Halaman challenge SG-CAPTCHA beserta konstantanya di script halaman"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Halaman challenge SG-CAPTCHA beserta konstantanya di script halaman",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "Layanan CAPTCHA yang mengutamakan privasi dengan widget JavaScript, mode tersembunyi, dan verifikasi di sisi server",
+  "Official CaptchaFox widget script api.js on its CDN": "Skrip widget CaptchaFox resmi api.js di CDN-nya",
+  "Widget container with the class captchafox, possibly unconfigured": "Kontainer widget dengan kelas captchafox, mungkin belum dikonfigurasi",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "Kontainer widget dengan kelas captchafox dan atribut sitekey, bukan validitas kunci",
+  "Hidden response token field named cf-captcha-response, added after a verification": "Kolom token respons tersembunyi bernama cf-captcha-response, ditambahkan setelah verifikasi",
+  "Documented captchafox window object with its render method, not execution": "Objek window captchafox yang terdokumentasi dengan metode render, bukan eksekusi",
+  "Configured widget and the captchafox window object": "Widget terkonfigurasi dan objek window captchafox",
+  "Configured widget and the response token field": "Widget terkonfigurasi dan kolom token respons",
+  "Configured widget, window object and response token field": "Widget terkonfigurasi, objek window, dan kolom token respons"
 }

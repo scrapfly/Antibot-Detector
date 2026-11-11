@@ -1112,5 +1112,14 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "ค่าคงที่ challenge ของ SG-CAPTCHA (sgchallenge, sgsubmit_url) ในสคริปต์ของหน้า",
   "sg-captcha header on the SG-CAPTCHA challenge page": "เฮดเดอร์ sg-captcha บนหน้า challenge ของ SG-CAPTCHA",
   "sg-captcha header with the challenge constants in the page's scripts": "เฮดเดอร์ sg-captcha พร้อมค่าคงที่ challenge ในสคริปต์ของหน้า",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "หน้า challenge ของ SG-CAPTCHA พร้อมค่าคงที่ของมันในสคริปต์ของหน้า"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "หน้า challenge ของ SG-CAPTCHA พร้อมค่าคงที่ของมันในสคริปต์ของหน้า",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "บริการ CAPTCHA ที่เน้นความเป็นส่วนตัว พร้อมวิดเจ็ต JavaScript โหมดซ่อน และการตรวจสอบฝั่งเซิร์ฟเวอร์",
+  "Official CaptchaFox widget script api.js on its CDN": "สคริปต์วิดเจ็ตทางการของ CaptchaFox api.js บน CDN ของตน",
+  "Widget container with the class captchafox, possibly unconfigured": "คอนเทนเนอร์วิดเจ็ตที่มีคลาส captchafox อาจยังไม่ได้กำหนดค่า",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "คอนเทนเนอร์วิดเจ็ตที่มีคลาส captchafox และแอตทริบิวต์ sitekey ไม่ได้ยืนยันความถูกต้องของคีย์",
+  "Hidden response token field named cf-captcha-response, added after a verification": "ฟิลด์ซ่อนสำหรับโทเค็นการตอบกลับชื่อ cf-captcha-response ซึ่งเพิ่มหลังการตรวจสอบ",
+  "Documented captchafox window object with its render method, not execution": "ออบเจ็กต์ window ที่มีเอกสารชื่อ captchafox พร้อมเมธอด render ไม่ใช่การทำงานจริง",
+  "Configured widget and the captchafox window object": "วิดเจ็ตที่กำหนดค่าแล้วและออบเจ็กต์ window ชื่อ captchafox",
+  "Configured widget and the response token field": "วิดเจ็ตที่กำหนดค่าแล้วและฟิลด์โทเค็นการตอบกลับ",
+  "Configured widget, window object and response token field": "วิดเจ็ตที่กำหนดค่าแล้ว ออบเจ็กต์ window และฟิลด์โทเค็นการตอบกลับ"
 }

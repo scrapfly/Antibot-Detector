@@ -1112,5 +1112,14 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Constantes do desafio do SG-CAPTCHA (sgchallenge, sgsubmit_url) nos scripts da página",
   "sg-captcha header on the SG-CAPTCHA challenge page": "Cabeçalho sg-captcha na página de desafio do SG-CAPTCHA",
   "sg-captcha header with the challenge constants in the page's scripts": "Cabeçalho sg-captcha com as constantes do desafio nos scripts da página",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Página de desafio do SG-CAPTCHA com suas constantes nos scripts da página"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Página de desafio do SG-CAPTCHA com suas constantes nos scripts da página",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "Serviço de CAPTCHA focado em privacidade com widget JavaScript, modo oculto e verificação no servidor",
+  "Official CaptchaFox widget script api.js on its CDN": "Script oficial do widget do CaptchaFox api.js na sua CDN",
+  "Widget container with the class captchafox, possibly unconfigured": "Contêiner do widget com a classe captchafox, possivelmente sem configuração",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "Contêiner do widget com a classe captchafox e um atributo sitekey, não a validade da chave",
+  "Hidden response token field named cf-captcha-response, added after a verification": "Campo oculto do token de resposta chamado cf-captcha-response, adicionado após uma verificação",
+  "Documented captchafox window object with its render method, not execution": "Objeto window documentado captchafox com o método render, não a execução",
+  "Configured widget and the captchafox window object": "Widget configurado e o objeto window captchafox",
+  "Configured widget and the response token field": "Widget configurado e o campo do token de resposta",
+  "Configured widget, window object and response token field": "Widget configurado, objeto window e campo do token de resposta"
 }

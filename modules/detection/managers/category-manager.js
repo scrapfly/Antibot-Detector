@@ -97,7 +97,8 @@ class CategoryManager {
                     'detect-basilisk',
                     'detect-altcha',
                     'detect-capjs',
-                    'detect-lemin'
+                    'detect-lemin',
+                    'detect-captchafox'
                 ]
             },
             fingerprint: {

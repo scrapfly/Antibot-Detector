@@ -197,5 +197,12 @@
     "lemin-reference": {"source": "const values = window.leminCroppedCaptcha.getCaptcha().getCaptchaValue();"},
     "lemin-widget": {"dom": {"tagName": "div", "id": "lemin-cropped-captcha", "attributes": {"id": "lemin-cropped-captcha"}}},
     "lemin-runtime": {"runtimeType": "function"}
+  },
+  "detect-captchafox": {
+    "cfox-sdk-url": {"url": "https://cdn.captchafox.com/api.js"},
+    "cfox-container": {"dom": {"tagName": "div", "class": "captchafox", "attributes": {"class": "captchafox"}}},
+    "cfox-configured-widget": {"dom": {"tagName": "div", "class": "captchafox", "attributes": {"class": "captchafox", "data-sitekey": "sk_YOUR_SITEKEY"}}},
+    "cfox-response-field": {"dom": {"tagName": "input", "attributes": {"type": "hidden", "name": "cf-captcha-response"}}},
+    "cfox-runtime-render": {"runtimeType": "function"}
   }
 }

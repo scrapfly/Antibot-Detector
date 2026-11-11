@@ -1112,5 +1112,14 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "페이지 스크립트의 SG-CAPTCHA 챌린지 상수 (sgchallenge, sgsubmit_url)",
   "sg-captcha header on the SG-CAPTCHA challenge page": "SG-CAPTCHA 챌린지 페이지의 sg-captcha 헤더",
   "sg-captcha header with the challenge constants in the page's scripts": "sg-captcha 헤더와 페이지 스크립트 내 챌린지 상수",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA 챌린지 페이지와 페이지 스크립트 내 해당 상수"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA 챌린지 페이지와 페이지 스크립트 내 해당 상수",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "JavaScript 위젯, 숨김 모드, 서버 측 검증을 갖춘 개인정보 중심 CAPTCHA 서비스",
+  "Official CaptchaFox widget script api.js on its CDN": "CDN에 있는 CaptchaFox 공식 위젯 스크립트 api.js",
+  "Widget container with the class captchafox, possibly unconfigured": "captchafox 클래스를 가진 위젯 컨테이너, 설정되지 않았을 수 있음",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "captchafox 클래스와 sitekey 속성을 가진 위젯 컨테이너, 키의 유효성은 아님",
+  "Hidden response token field named cf-captcha-response, added after a verification": "검증 후 추가되는 cf-captcha-response라는 이름의 숨겨진 응답 토큰 필드",
+  "Documented captchafox window object with its render method, not execution": "문서화된 captchafox window 객체와 render 메서드, 실행은 아님",
+  "Configured widget and the captchafox window object": "설정된 위젯과 captchafox window 객체",
+  "Configured widget and the response token field": "설정된 위젯과 응답 토큰 필드",
+  "Configured widget, window object and response token field": "설정된 위젯, window 객체, 응답 토큰 필드"
 }

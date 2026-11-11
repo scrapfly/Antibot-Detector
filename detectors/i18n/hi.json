@@ -1112,5 +1112,14 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "पेज की स्क्रिप्ट में SG-CAPTCHA चैलेंज कॉन्स्टेंट (sgchallenge, sgsubmit_url)",
   "sg-captcha header on the SG-CAPTCHA challenge page": "SG-CAPTCHA चैलेंज पेज पर sg-captcha हेडर",
   "sg-captcha header with the challenge constants in the page's scripts": "पेज की स्क्रिप्ट में चैलेंज कॉन्स्टेंट के साथ sg-captcha हेडर",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "पेज की स्क्रिप्ट में अपने कॉन्स्टेंट के साथ SG-CAPTCHA चैलेंज पेज"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "पेज की स्क्रिप्ट में अपने कॉन्स्टेंट के साथ SG-CAPTCHA चैलेंज पेज",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "गोपनीयता-केंद्रित CAPTCHA सेवा, जिसमें JavaScript विजेट, छिपा मोड और सर्वर-साइड सत्यापन है",
+  "Official CaptchaFox widget script api.js on its CDN": "CaptchaFox की आधिकारिक विजेट स्क्रिप्ट api.js, उसके CDN पर",
+  "Widget container with the class captchafox, possibly unconfigured": "captchafox क्लास वाला विजेट कंटेनर, संभवतः अकॉन्फ़िगर",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "captchafox क्लास और sitekey एट्रिब्यूट वाला विजेट कंटेनर, कुंजी की वैधता नहीं",
+  "Hidden response token field named cf-captcha-response, added after a verification": "cf-captcha-response नाम का छिपा प्रतिक्रिया टोकन फ़ील्ड, सत्यापन के बाद जोड़ा गया",
+  "Documented captchafox window object with its render method, not execution": "दस्तावेज़ित captchafox window ऑब्जेक्ट और उसकी render मेथड, निष्पादन नहीं",
+  "Configured widget and the captchafox window object": "कॉन्फ़िगर किया गया विजेट और captchafox window ऑब्जेक्ट",
+  "Configured widget and the response token field": "कॉन्फ़िगर किया गया विजेट और प्रतिक्रिया टोकन फ़ील्ड",
+  "Configured widget, window object and response token field": "कॉन्फ़िगर किया गया विजेट, window ऑब्जेक्ट और प्रतिक्रिया टोकन फ़ील्ड"
 }

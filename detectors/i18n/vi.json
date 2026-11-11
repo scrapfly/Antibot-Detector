@@ -1112,5 +1112,14 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Hằng số thử thách của SG-CAPTCHA (sgchallenge, sgsubmit_url) trong script của trang",
   "sg-captcha header on the SG-CAPTCHA challenge page": "Header sg-captcha trên trang thử thách SG-CAPTCHA",
   "sg-captcha header with the challenge constants in the page's scripts": "Header sg-captcha cùng các hằng số thử thách trong script của trang",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Trang thử thách SG-CAPTCHA cùng các hằng số của nó trong script của trang"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Trang thử thách SG-CAPTCHA cùng các hằng số của nó trong script của trang",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "Dịch vụ CAPTCHA chú trọng quyền riêng tư với tiện ích JavaScript, chế độ ẩn và xác minh phía máy chủ",
+  "Official CaptchaFox widget script api.js on its CDN": "Tập lệnh tiện ích chính thức của CaptchaFox api.js trên CDN của nó",
+  "Widget container with the class captchafox, possibly unconfigured": "Vùng chứa tiện ích có lớp captchafox, có thể chưa được cấu hình",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "Vùng chứa tiện ích có lớp captchafox và thuộc tính sitekey, không phải tính hợp lệ của khóa",
+  "Hidden response token field named cf-captcha-response, added after a verification": "Trường ẩn chứa mã phản hồi tên cf-captcha-response, được thêm sau khi xác minh",
+  "Documented captchafox window object with its render method, not execution": "Đối tượng window captchafox đã được tài liệu hóa cùng phương thức render, không phải việc thực thi",
+  "Configured widget and the captchafox window object": "Tiện ích đã cấu hình và đối tượng window captchafox",
+  "Configured widget and the response token field": "Tiện ích đã cấu hình và trường mã phản hồi",
+  "Configured widget, window object and response token field": "Tiện ích đã cấu hình, đối tượng window và trường mã phản hồi"
 }

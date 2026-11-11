@@ -1112,5 +1112,14 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Константы проверки SG-CAPTCHA (sgchallenge, sgsubmit_url) в скриптах страницы",
   "sg-captcha header on the SG-CAPTCHA challenge page": "Заголовок sg-captcha на странице проверки SG-CAPTCHA",
   "sg-captcha header with the challenge constants in the page's scripts": "Заголовок sg-captcha с константами проверки в скриптах страницы",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Страница проверки SG-CAPTCHA с её константами в скриптах страницы"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Страница проверки SG-CAPTCHA с её константами в скриптах страницы",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "CAPTCHA-сервис с упором на приватность: виджет на JavaScript, скрытый режим и проверка на стороне сервера",
+  "Official CaptchaFox widget script api.js on its CDN": "Официальный скрипт виджета CaptchaFox api.js на его CDN",
+  "Widget container with the class captchafox, possibly unconfigured": "Контейнер виджета с классом captchafox, возможно без настройки",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "Контейнер виджета с классом captchafox и атрибутом sitekey, без проверки действительности ключа",
+  "Hidden response token field named cf-captcha-response, added after a verification": "Скрытое поле токена ответа с именем cf-captcha-response, добавляется после проверки",
+  "Documented captchafox window object with its render method, not execution": "Документированный объект window captchafox с методом render, а не выполнение",
+  "Configured widget and the captchafox window object": "Настроенный виджет и объект window captchafox",
+  "Configured widget and the response token field": "Настроенный виджет и поле токена ответа",
+  "Configured widget, window object and response token field": "Настроенный виджет, объект window и поле токена ответа"
 }

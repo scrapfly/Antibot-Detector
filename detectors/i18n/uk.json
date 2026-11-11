@@ -1112,5 +1112,14 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Константи перевірки SG-CAPTCHA (sgchallenge, sgsubmit_url) у скриптах сторінки",
   "sg-captcha header on the SG-CAPTCHA challenge page": "Заголовок sg-captcha на сторінці перевірки SG-CAPTCHA",
   "sg-captcha header with the challenge constants in the page's scripts": "Заголовок sg-captcha з константами перевірки у скриптах сторінки",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Сторінка перевірки SG-CAPTCHA з її константами у скриптах сторінки"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Сторінка перевірки SG-CAPTCHA з її константами у скриптах сторінки",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "CAPTCHA-сервіс із акцентом на приватність: віджет на JavaScript, прихований режим і перевірка на боці сервера",
+  "Official CaptchaFox widget script api.js on its CDN": "Офіційний скрипт віджета CaptchaFox api.js на його CDN",
+  "Widget container with the class captchafox, possibly unconfigured": "Контейнер віджета з класом captchafox, можливо без налаштування",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "Контейнер віджета з класом captchafox і атрибутом sitekey, без перевірки дійсності ключа",
+  "Hidden response token field named cf-captcha-response, added after a verification": "Приховане поле токена відповіді з іменем cf-captcha-response, додається після перевірки",
+  "Documented captchafox window object with its render method, not execution": "Задокументований об'єкт window captchafox з методом render, а не виконання",
+  "Configured widget and the captchafox window object": "Налаштований віджет і об'єкт window captchafox",
+  "Configured widget and the response token field": "Налаштований віджет і поле токена відповіді",
+  "Configured widget, window object and response token field": "Налаштований віджет, об'єкт window і поле токена відповіді"
 }

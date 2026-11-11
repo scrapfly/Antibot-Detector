@@ -1112,5 +1112,14 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "網頁指令碼中的 SG-CAPTCHA 挑戰常數（sgchallenge、sgsubmit_url）",
   "sg-captcha header on the SG-CAPTCHA challenge page": "SG-CAPTCHA 挑戰頁面上的 sg-captcha 標頭",
   "sg-captcha header with the challenge constants in the page's scripts": "sg-captcha 標頭與網頁指令碼中的挑戰常數",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA 挑戰頁面與網頁指令碼中的相應常數"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA 挑戰頁面與網頁指令碼中的相應常數",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "注重隱私的 CAPTCHA 服務，提供 JavaScript 小工具、隱藏模式和伺服器端驗證",
+  "Official CaptchaFox widget script api.js on its CDN": "其 CDN 上的 CaptchaFox 官方小工具指令碼 api.js",
+  "Widget container with the class captchafox, possibly unconfigured": "帶有 captchafox 類別的小工具容器，可能尚未設定",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "帶有 captchafox 類別和 sitekey 屬性的小工具容器，並不代表金鑰有效",
+  "Hidden response token field named cf-captcha-response, added after a verification": "名為 cf-captcha-response 的隱藏回應權杖欄位，驗證後新增",
+  "Documented captchafox window object with its render method, not execution": "文件記載的 captchafox window 物件及其 render 方法，並非已執行",
+  "Configured widget and the captchafox window object": "已設定的小工具和 captchafox window 物件",
+  "Configured widget and the response token field": "已設定的小工具和回應權杖欄位",
+  "Configured widget, window object and response token field": "已設定的小工具、window 物件和回應權杖欄位"
 }
