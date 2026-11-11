@@ -125,10 +125,12 @@ function registerSettingsHandlers(registry, context) {
                     setTimeout(() => recentlyClearedTabs.delete(tab.id), Constants.RECENTLY_CLEARED_TAB_TIMEOUT);
                     Logger.background(`[Background] Added tab ${tab.id} to recentlyClearedTabs`);
 
-                    if (storedData && storedData.detectionCount > 0) {
+                    if (storedData) {
+                        // A saved scan that found nothing (a count of 0) is a finished scan too: it gets the clean state, as on any
+                        // cache hit, never the gray cleared mark, which the popup reads as "no scan yet"
                         const detections = Array.isArray(storedData.detectionResults) ? storedData.detectionResults : [];
                         await setBadgeForDetections(tab.id, tab.url, detections);
-                        Logger.background(`[Background] Badge updated with cached data: ${storedData.detectionCount} detections (scope change)`);
+                        Logger.background(`[Background] Badge updated with cached data: ${detections.length} detections (scope change)`);
                     } else {
                         await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tab.id });
                         await setBadgeTextColor(tab.id, false, BADGE.COLORS.CLEARED);

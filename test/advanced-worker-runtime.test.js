@@ -123,6 +123,7 @@ test('analysis observes once for five seconds, persists while popup is closed, a
     const f = fixture();
     const started = analysis(f, 'cloudflare');
     f.context.chrome.tabs.onUpdated.emit(7, { url: 'https://example.test/', status: 'loading' });
+    f.context.chrome.webRequest.onBeforeRequest.emit({ tabId: 7, type: 'main_frame', url: 'https://example.test/' });
     f.context.chrome.webRequest.onBeforeRequest.emit({ tabId: 8, url: 'https://cloudflare.test/wrong.js' });
     f.context.chrome.webRequest.onBeforeRequest.emit({ tabId: 7, url: 'https://cloudflare.test/api.js' });
     f.context.chrome.webNavigation.onCompleted.emit({ tabId: 7, frameId: 0 });
@@ -138,6 +139,51 @@ test('analysis observes once for five seconds, persists while popup is closed, a
     assert.equal(f.messages[0].operation, 'analysis');
     await f.tick(30000);
     assert.equal(f.messages.length, 1);
+});
+
+// The popup waits 500 ms and deletes its cookies before it reloads the tab, so the page as it was can still finish loading after the
+// analysis began. That load is not the one to observe: the five seconds start when the reloaded page finishes.
+const fiveSecondWindows = f => Array.from(f.timers.values()).filter(timer => timer.delay === 5000).length;
+
+test('a load that completes before the reload does not open the five-second window: the reloaded page gets its own', async () => {
+    const f = fixture();
+    const onBeforeRequest = f.context.chrome.webRequest.onBeforeRequest, onCompleted = f.context.chrome.webNavigation.onCompleted;
+    const started = analysis(f, 'cloudflare');
+    // The page as it was, finishing its load while the popup is still deleting cookies
+    onCompleted.emit({ tabId: 7, frameId: 0 });
+    assert.equal(fiveSecondWindows(f), 0, 'no window: nothing has been reloaded');
+    await f.tick(5000);
+    assert.equal(f.context.AdvancedJobManager.state(7, 'cloudflare', 'analysis').status, 'running', 'not over five seconds after a load that was not the reload');
+    assert.equal(f.messages.length, 0);
+    assert.equal(f.writes.length, 0, 'no short or empty list saved to Advanced history');
+    // The reload: its request, a script it loads, then its own load; a frame, or another tab, finishing is not it
+    onBeforeRequest.emit({ tabId: 7, type: 'main_frame', url: 'https://example.test/' });
+    onBeforeRequest.emit({ tabId: 7, type: 'script', url: 'https://cloudflare.test/api.js' });
+    onCompleted.emit({ tabId: 7, frameId: 2 });
+    onCompleted.emit({ tabId: 8, frameId: 0 });
+    assert.equal(fiveSecondWindows(f), 0, 'the reloaded page has not finished');
+    onCompleted.emit({ tabId: 7, frameId: 0 });
+    assert.equal(fiveSecondWindows(f), 1, 'the reloaded page\'s load opens the window');
+    await f.tick(5000);
+    assert.equal(f.messages.length, 1);
+    assert.equal(f.messages[0].status, 'completed');
+    assert.equal(f.messages[0].requestId, started.requestId);
+    assert.deepEqual(Array.from(f.messages[0].data.scripts, script => script.url), ['https://cloudflare.test/api.js']);
+    assert.equal(f.saved().cloudflare.length, 1);
+});
+
+test('a page that finished loading but is never reloaded ends as a timeout, not as an empty completed result', async () => {
+    const f = fixture();
+    analysis(f, 'turnstile');
+    f.context.chrome.webNavigation.onCompleted.emit({ tabId: 7, frameId: 0 });
+    await f.tick(5000);
+    assert.equal(f.messages.length, 0, 'five seconds after that load ends nothing');
+    await f.tick(30000);
+    assert.equal(f.messages.length, 1);
+    assert.equal(f.messages[0].status, 'timeout');
+    assert.equal(f.writes.length, 0, 'a timeout is not a completed-empty result');
+    assert.equal(f.context.chrome.webNavigation.onCompleted.listeners.size, 0);
+    assert.equal(f.timers.size, 0);
 });
 
 test('navigating elsewhere cancels an analysis but its expected same-page reload survives', async () => {
@@ -218,6 +264,7 @@ test('analysis storage failure reports failure and still removes worker listener
     const f = fixture();
     analysis(f, 'cloudflare');
     f.fail();
+    f.context.chrome.webRequest.onBeforeRequest.emit({ tabId: 7, type: 'main_frame', url: 'https://example.test/' });
     f.context.chrome.webNavigation.onCompleted.emit({ tabId: 7, frameId: 0 });
     await f.tick(5000);
     assert.equal(f.messages[0].status, 'error');
