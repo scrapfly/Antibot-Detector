@@ -549,7 +549,8 @@ async function scenario(name, fn) {
     const popup = await popupFor(null);
     await popup.$eval('.tab-btn[data-tab="rules"]', el => el.click());
     await popup.waitForFunction(() => { const r = window.popupInstance.rules; return r && r.initialized && r.allDetectors.length > 20 && document.querySelector('#rulesFilters .history-filter-chip svg'); }, null, { polling: 250, timeout: 30000 });
-    const chips = '#rulesFilters .history-filter-chip';
+    // The six chips with words; the Recently updated chip (3.1.7) is an icon with a name of its own, checked on its own
+    const chips = '#rulesFilters .history-filter-chip:not([data-filter="updated"])';
     const chip = (key) => `#rulesFilters .history-filter-chip[data-filter="${key}"]`;
     const click = (key) => popup.$eval(chip(key), el => el.click());
     const names = () => popup.evaluate(() => window.popupInstance.rules.filteredDetectors.map(e => e.detector.displayName || e.detectorName));
@@ -563,6 +564,7 @@ async function scenario(name, fn) {
     assert.deepEqual(await pressed(popup, chips), ['antibot:false', 'captcha:false', 'fingerprint:false', 'custom:false', 'edited:false', 'disabled:false']);
     assert.equal(await popup.evaluate(() => document.querySelector('#rulesSearch').getBoundingClientRect().bottom <= document.querySelector('#rulesFilters').getBoundingClientRect().top), true, 'under the search');
     assert.equal(await popup.$$eval(`${chips} svg`, els => els.length), 6, 'every chip has an icon');
+    assert.deepEqual(await popup.$eval(chip('updated'), el => [el.textContent.trim(), el.getAttribute('aria-label'), !!el.querySelector('svg')]), ['', 'Recently updated', true], 'the Recently updated chip is an icon with a name');
     assert.deepEqual(await popup.$$eval(chips, els => els.slice(0, 3).map(el => el.style.getPropertyValue('--chip-color'))), ['#FF5733', '#33C3FF', '#3b82f6'], 'the Settings → Category colours');
     const metrics = await rowMetrics(popup, '#rulesFilters');
     console.log(`      rules row: ${JSON.stringify(metrics)}`);
@@ -869,7 +871,8 @@ async function scenario(name, fn) {
         await popup.$eval('.tab-btn[data-tab="rules"]', el => el.click());
         await popup.waitForFunction(() => document.querySelector('#rulesFilters .history-filter-chip svg'), null, { polling: 250, timeout: 30000 });
         assert.equal(await popup.$eval('#rulesFilters', el => el.getAttribute('aria-label')), say('rulesFiltersLabel'), `${locale}: the Rules row's name`);
-        assert.deepEqual(await popup.$$eval('#rulesFilters .history-filter-chip', els => els.map(el => el.textContent.trim())),
+        assert.equal(await popup.$eval('#rulesFilters .history-filter-chip[data-filter="updated"]', el => el.getAttribute('aria-label')), say('rulesRecentlyUpdated'), `${locale}: the Recently updated chip's name`);
+        assert.deepEqual(await popup.$$eval('#rulesFilters .history-filter-chip:not([data-filter="updated"])', els => els.map(el => el.textContent.trim())),
           [say('categoryAntibot'), say('categoryCaptcha'), say('categoryFingerprint'), say('statsRulesCustom'), say('ruleEditedTag'), say('statsRulesDisabled')], `${locale}: the Rules chips`);
         const rules = await rowMetrics(popup, '#rulesFilters');
         assert.equal(rules.spills, false, `${locale}: the Rules row stays inside the header: ${JSON.stringify(rules)}`);

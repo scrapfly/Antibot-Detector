@@ -1493,7 +1493,7 @@ async function scenario(name, fn) {
       // browser has since given to something else): it has the right extension and the wrong name, so it must stay
       const noteId = await W(() => chrome.downloads.download({ url: 'data:text/plain;charset=utf-8,keep%20me', filename: 'Scrapfly/notes.txt', saveAs: false, conflictAction: 'uniquify' }));
       await settled();
-      await W((id) => chrome.storage.local.set({ scrapfly_history_backup_runs: [{ at: Date.now() - 10 * DAY, ids: [id] }] }), noteId);
+      await W(({ id, at }) => chrome.storage.local.set({ scrapfly_history_backup_runs: [{ at, ids: [id] }] }), { id: noteId, at: Date.now() - 10 * DAY });
       await historySettings({ exportFormat: 'json', includeTimestamps: true, historyBackupKeep: 3 });
       for (let run = 1; run <= 6; run++) {
         const result = await W(() => HistoryBackup.run('manual'));

@@ -99,9 +99,9 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
     });
 
     await check('what is found by its description, and by words from the card title and the row together', async () => {
-      await type('security systems detected');
+      await type('almost full backup fails');
       assert.equal(await openTab(), 'general');
-      assert.equal(await shown('#notificationsEnabled'), true);
+      assert.equal(await shown('label:has(> #notificationsEnabled)'), true);
       assert.equal(await shown('#themeChoice'), false);
       assert.equal(await shown('#debugModeGeneral'), false);
       await shot('03-description');
@@ -111,7 +111,8 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
       const before = await values();
       await type('webhook secret');
       assert.equal(await openTab(), 'detection');
-      assert.equal(await shown('#enableWebhook'), true, 'the switch that turns the fields on');
+      // The checkbox of a switch has no size (the slider beside it is what shows), so the switch is its label
+      assert.equal(await shown('label:has(> #enableWebhook)'), true, 'the switch that turns the fields on');
       assert.equal(await shown('#webhookSecret'), false, 'still off: the page decides that, not the search');
       await shot('04-webhook-off');
       await page.locator('#enableWebhook').evaluate((el) => el.closest('label').click()); // the visible part of the switch is its label
@@ -207,8 +208,8 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     await check('the light theme: the box looks like the other fields', async () => {
       await page.evaluate(() => ScrapflyTheme.set('light'));
-      await sleep(150);
       await page.locator('#settingsTab-detection').click();
+      await sleep(500); // the box's border colour eases over 0.2s; read it once it has settled
       const look = await page.evaluate(() => {
         const style = (selector) => getComputedStyle(document.querySelector(selector));
         const [search, field] = [style('#settingsSearchInput'), style('#cacheDuration')];
