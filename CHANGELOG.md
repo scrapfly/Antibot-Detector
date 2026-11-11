@@ -9,6 +9,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
+- Settings: a search box above the tabs finds any setting by name or description, in any language, and opens its tab and card.
 - Settings → History: Backups to keep deletes older backup files from Downloads, leaving the newest 3, 7, 14 or 30; All is the default.
 
 ### Changed
