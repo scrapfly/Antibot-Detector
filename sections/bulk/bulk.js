@@ -408,7 +408,11 @@
     if (!state.run) return;
     const text = BulkScan.oneLines(BulkFilter.apply(state.run, state.filter));
     if (!text) return;
-    await FormatUtils.copyToClipboard(text, { notify: false });
+    // notify:false leaves the words to this page, so a copy the browser refused must not be announced as Copied
+    if (!await FormatUtils.copyToClipboard(text, { notify: false })) {
+      notice(tr('clipboardCopyFailed', 'Failed to copy to clipboard'), 'warn');
+      return;
+    }
     notice(tr('copiedNotification', 'Copied'));
   }
 

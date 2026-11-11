@@ -20,8 +20,9 @@ const sitemapIndex = (...locs) => `<?xml version="1.0"?><sitemapindex xmlns="htt
  * @param {object} options
  *   sitemaps: address -> xml, or { body, url (where a redirect ended), status }; any other address fails like an unreachable host
  *   run: the run the worker answers to BULK_SCAN_STATE
+ *   clipboardAccepts: false when the browser refuses a copy (FormatUtils.copyToClipboard answers false)
  */
-function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [] } = {}) {
+function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [], clipboardAccepts = true } = {}) {
   const elements = new Map();
   const handlers = {};
   const sent = [];
@@ -53,7 +54,7 @@ function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [] } = {
   };
   const ctx = vm.createContext({
     console, URL, Intl, Date, Math, JSON, Promise, Map, Set, setTimeout, clearTimeout, AbortController, Blob, document, I18n, localStorage,
-    FormatUtils: { categoryIconSvg: () => '', localDay: () => '2026-11-05', copyToClipboard: async (text) => { clipboard.push(text); } },
+    FormatUtils: { categoryIconSvg: () => '', localDay: () => '2026-11-05', copyToClipboard: async (text) => { clipboard.push(text); return clipboardAccepts; } },
     StorageManager: { readRaw: async () => ({}), normalizeSettings: (value) => value || {} },
     fetch: async (url) => {
       fetched.push(url);
@@ -289,6 +290,31 @@ test('Copy as lines writes one line per shown page, and nothing for a filter tha
   page.handlers.bulkFilter.change({ target: page.byId('bulkFilter') });
   await page.handlers.bulkCopyLinesBtn.click();
   assert.equal(page.clipboard[1], 'https://a.example/p: Cloudflare 90%\nhttps://b.example/: -\nhttps://c.example/: failed (timeout)');
+});
+
+test('Copy as lines says Copied only when the browser took the text: a refused copy says so, as a warning', async () => {
+  const items = [finished('https://a.example/', [{ name: 'Cloudflare', category: 'antibot', confidence: 90 }])];
+  const copy = async (options) => {
+    const page = pageWorld({ run: runOf(items), ...options });
+    await page.open();
+    const notice = page.byId('bulkNotice'), tones = [];
+    notice.classList.toggle = (name, on) => tones.push([name, on]);
+    await page.handlers.bulkCopyLinesBtn.click();
+    return { page, notice, tones };
+  };
+
+  const taken = await copy({});
+  assert.deepEqual(taken.page.clipboard, ['https://a.example/: Cloudflare 90%']);
+  assert.equal(taken.notice.textContent, en.copiedNotification.message);
+  assert.equal(taken.notice.hidden, false);
+  assert.deepEqual(taken.tones, [['bulk-notice--warn', false]]);
+
+  const refused = await copy({ clipboardAccepts: false });
+  assert.deepEqual(refused.page.clipboard, ['https://a.example/: Cloudflare 90%'], 'the page did ask for the copy');
+  assert.equal(refused.notice.textContent, en.clipboardCopyFailed.message);
+  assert.notEqual(refused.notice.textContent, en.copiedNotification.message);
+  assert.equal(refused.notice.hidden, false);
+  assert.deepEqual(refused.tones, [['bulk-notice--warn', true]], 'the page\'s warning look, like its other things that did not work');
 });
 
 test('a filter that matches no page says so in the table instead of leaving it blank', async () => {
