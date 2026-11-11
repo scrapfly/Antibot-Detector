@@ -1399,6 +1399,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "Pesquisar domínios..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "Buscar configurações..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Nenhuma configuração corresponde à sua pesquisa."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Configurações encontradas: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Limpar pesquisa"
+  },
   "settingsBadgeColorLow": {
     "message": "Baixo"
   },

@@ -1399,6 +1399,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "Sök domäner..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "Sök inställningar..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Inga inställningar matchar din sökning."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Hittade inställningar: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Rensa sökning"
+  },
   "settingsBadgeColorLow": {
     "message": "Låg"
   },

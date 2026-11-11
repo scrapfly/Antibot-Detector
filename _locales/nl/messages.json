@@ -1399,6 +1399,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "Domeinen zoeken..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "Instellingen zoeken..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Geen instellingen komen overeen met je zoekopdracht."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Gevonden instellingen: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Zoekopdracht wissen"
+  },
   "settingsBadgeColorLow": {
     "message": "Laag"
   },

@@ -1399,6 +1399,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "Szukaj domen..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "Szukaj w ustawieniach..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Żadne ustawienie nie pasuje do wyszukiwania."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Znalezione ustawienia: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Wyczyść wyszukiwanie"
+  },
   "settingsBadgeColorLow": {
     "message": "Niska"
   },

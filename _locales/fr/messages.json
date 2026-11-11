@@ -1399,6 +1399,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "Rechercher des domaines..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "Rechercher dans les paramètres..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Aucun paramètre ne correspond à votre recherche."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Paramètres trouvés : {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Effacer la recherche"
+  },
   "settingsBadgeColorLow": {
     "message": "Faible"
   },

@@ -1399,6 +1399,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "搜索域名..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "搜索设置..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "没有与搜索条件匹配的设置。"
+  },
+  "settingsSearchCountFmt": {
+    "message": "找到的设置：{0}"
+  },
+  "settingsSearchClear": {
+    "message": "清除搜索"
+  },
   "settingsBadgeColorLow": {
     "message": "低"
   },

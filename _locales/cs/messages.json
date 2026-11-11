@@ -1399,6 +1399,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "Hledat domény..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "Hledat v nastavení..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Vašemu hledání neodpovídá žádné nastavení."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Nalezená nastavení: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Vymazat hledání"
+  },
   "settingsBadgeColorLow": {
     "message": "Nízká"
   },
