@@ -10,11 +10,15 @@ Each line says what changed for the user. Technical detail lives in the commit h
 ### Added
 
 - Settings: a search box above the tabs finds any setting by name or description, in any language, and opens its tab and card.
+- The version in the popup header opens its release notes, with a small dot until you have read them after an update.
+- History: Export can start from only the entries shown by your search and chips, and the Select bar copies entries as lines.
+- History → Compare scans: Copy summary puts what changed on one line, ready for a chat or a ticket.
 - Settings → History: Backups to keep deletes older backup files from Downloads, leaving the newest 3, 7, 14 or 30; All is the default.
 
 ### Changed
 
 - Settings → History: the automatic backup text now says only JSON backup files can be imported back into History.
+- Settings → Notifications now says what it controls: changed protections, a nearly full History and failed backups.
 
 ### Fixed
 
