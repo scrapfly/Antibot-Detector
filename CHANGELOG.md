@@ -5,6 +5,41 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.7] - 2026-11-11
+
+### Added
+
+- Settings: a search box above the tabs finds any setting by name or description, in any language, and opens its tab and card.
+- The version in the popup header opens its release notes, with a small dot until you have read them after an update.
+- History: Export can start from only the entries shown by your search and chips, and the Select bar copies entries as lines.
+- History → Compare scans: Copy summary puts what changed on one line, ready for a chat or a ticket.
+- Rules → Update: new detectors for Huawei Cloud WAF and CaptchaFox.
+- Rules: sort by default order, name A to Z or most recently updated, from a dropdown beside the search; your choice is remembered.
+- Rules: a clock chip shows only rules updated in the last 30 days, and saving warns when a pattern is also in another rule.
+- Settings → History: Backups to keep deletes older backup files from Downloads, leaving the newest 3, 7, 14 or 30; All is the default.
+
+### Changed
+
+- Settings → History: the automatic backup text now says only JSON backup files can be imported back into History.
+- Settings → Notifications now says what it controls: changed protections, a nearly full History and failed backups.
+- Detection and History details: a matched combination's name is now the size of the text under it, not a second title.
+
+### Fixed
+
+- Popup: a tab clicked while the popup was still opening no longer loses its sort, search, chips and menu the next time it is opened.
+- Advanced → Captures: Copy on a capture shows one message, and no longer says the data was copied when the browser refused the copy.
+- Bulk scan: Copy as lines says the copy failed when the browser refuses it, instead of saying Copied.
+- Scrape with Scrapfly: an option set to 0, such as Wait after load, shows 0 when the window reopens, not an empty box.
+- Settings → Log collector: Clear no longer says Logs cleared, and Export no longer stays silent, when the extension reports an error.
+- Arabic: the icon picker's search icon no longer covers your text, and the statistics description and Regex cheat sheet arrow sit on the correct side.
+- Detection: Copy no longer puts an empty summary on the clipboard when the search or filters match nothing; it says so instead.
+- Statistics: "60 minutes ago" and "24 hours ago" now read "1 hour ago" and "yesterday"; the rules count no longer reads "of 1 rules".
+- Changing the cache scope no longer shows a page whose saved scan found nothing as unscanned; the toolbar keeps its clean state.
+- Turning the extension back on shows "No protections found" on the toolbar icon of pages whose saved scan found nothing.
+- Analyze Scripts no longer ends early, or saves an empty list, when the page was still finishing loading as you started it.
+- Fingerprint: a page that reads the CPU count and device memory now shows one card (Hardware) instead of two (Hardware and Navigator).
+- Webhook Recent deliveries: a site you skip, ignore in History or leave out of "Only these sites" no longer shows in lines already listed.
+
 ## [3.1.6] - 2026-11-10
 
 ### Added
@@ -1089,6 +1124,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.1.7]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.6...v3.1.7
 [3.1.6]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.5...v3.1.6
 [3.1.5]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.4...v3.1.5
 [3.1.4]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.3...v3.1.4

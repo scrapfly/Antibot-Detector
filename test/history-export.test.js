@@ -223,3 +223,61 @@ test('the "site contains" filter finds a Unicode host by the letters, too', () =
   assert.deepStrictEqual(E.filter(stored, { domain: 'bücher.de' }, NOW).map(i => i.id), ['u']);
   assert.deepStrictEqual(E.filter(stored, { domain: 'xn--bcher' }, NOW).map(i => i.id), ['u'], 'the stored spelling still works');
 });
+
+// ---- Copy as lines (the Select bar): one line per entry, for a chat or a ticket ------------------------------------------
+
+test('oneLines: one line per entry, its address without the query, then each protection with its confidence', () => {
+  const lines = E.oneLines([
+    item('a', 'shop.example.com', 1, [det('Cloudflare', 'Anti-Bot', 94.6), det('reCAPTCHA', 'CAPTCHA', 70)]),
+    item('b', 'news.example.org', 2, [])
+  ]);
+  assert.strictEqual(lines, 'https://shop.example.com/p: Cloudflare 95%, reCAPTCHA 70%\nhttps://news.example.org/p: -', 'nothing found: a dash, as the other one-line copies write it');
+  assert.strictEqual(E.oneLines([items[0]]), 'https://shop.example.com/p: Cloudflare 95%', 'one entry is one line, with no line break after it');
+});
+
+test('oneLines: the query, the fragment and the login of an address never reach a line', () => {
+  const secret = [
+    { url: 'https://user:hunter2@shop.example/reset?token=SECRET123&code=abc#frag', detections: [det('Akamai', 'Anti-Bot', 90)] },
+    { url: 'not a url?token=SECRET123#frag', detections: [] },
+    { url: 'file:///C:/pages/a.html?token=SECRET123#frag', detections: [] },
+    { url: '', hostname: 'only-a-host.example', detections: [] }
+  ];
+  const lines = E.oneLines(secret);
+  assert.strictEqual(lines, 'https://shop.example/reset: Akamai 90%\nnot a url: -\nfile:///C:/pages/a.html: -\nonly-a-host.example: -');
+  assert.ok(!/SECRET123|hunter2|code=abc|frag/.test(lines), lines);
+});
+
+test('oneLines: a line break in a name or an address cannot make a second line (one line each, so the count of lines is the count of entries)', () => {
+  const odd = [
+    item('a', 'a.example', 0, [det('Two\nlines\r\nname', 'Anti-Bot', 80), det('Sep\u2028arated\u2029name', 'Anti-Bot', 70)]),
+    { url: '', hostname: 'h\nost.example', detections: [] },
+    { url: 'not a url\nsecond line', detections: [det('Kasada', 'Anti-Bot', 60)] }
+  ];
+  const lines = E.oneLines(odd).split('\n');
+  assert.deepStrictEqual(lines, ['https://a.example/p: Two lines name 80%, Sep arated name 70%', 'h ost.example: -', 'not a url second line: Kasada 60%']);
+});
+
+test('oneLines: a protection with no name or no score, damaged entries and nothing at all do not break it', () => {
+  const lines = E.oneLines([{ url: 'https://x.example/', detections: [null, {}, 'junk', { name: 'Kasada' }, { name: 'Akamai', confidence: null }, { name: 'DataDome', confidence: '85' }, { name: 'PerimeterX', confidence: 'high' }] }]);
+  assert.strictEqual(lines, 'https://x.example/: ?, Kasada, Akamai, DataDome 85%, PerimeterX', 'a missing score is no score, not 0%');
+  assert.strictEqual(E.oneLines([null, 7, undefined, 'x']), '');
+  assert.strictEqual(E.oneLines([{ id: 'z' }]), '?: -');
+  assert.strictEqual(E.oneLines([{ id: 'y', detections: { a: 1 } }]), '?: -');
+  for (const nothing of [[], undefined, null, 'text', 5]) assert.strictEqual(E.oneLines(nothing), '');
+});
+
+test('oneLines never changes the entries it is given, and keeps their order', () => {
+  const before = JSON.stringify(items);
+  const lines = E.oneLines(items).split('\n');
+  assert.strictEqual(JSON.stringify(items), before);
+  assert.deepStrictEqual(lines.map(line => line.split(': ')[0]), ['https://shop.example.com/p', 'https://news.example.org/p', 'https://old.example.net/p', 'https://bank.test/p']);
+});
+
+test('oneLines writes the protections as the per-entry "Copy as one line" does (the Detection tab\'s line)', () => {
+  const { oneLine } = require('../modules/core/detection-summary.js');
+  const entry = item('a', 'shop.example.com', 1, [det('Cloudflare', 'Anti-Bot', 94.6), det('reCAPTCHA', 'CAPTCHA', 70), det('Canvas', 'Fingerprint', 30)]);
+  const single = oneLine({ host: 'shop.example.com', detections: entry.detections.map(d => ({ name: d.detector.name, confidence: d.confidence })) });
+  const rest = (line) => line.split(': ').slice(1).join(': ');
+  assert.strictEqual(rest(E.oneLines([entry])), rest(single));
+  assert.strictEqual(rest(E.oneLines([entry])), 'Cloudflare 95%, reCAPTCHA 70%, Canvas 30%');
+});

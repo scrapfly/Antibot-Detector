@@ -21,7 +21,7 @@ const fixtures = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/captc
 // hosts (Alibaba's punish page, Cloudflare's challenge frames) never do.
 const PROOF = new Set([
   'detect-aliyun/aliyun-captcha-api', 'detect-aliyun/aliyun-dynamic-resource', 'detect-aliyun/aliyun-sdk-resource', 'detect-altcha/altcha-cloud-challenge',
-  'detect-basilisk/basilisk-check-site', 'detect-binance-captcha/binance-captcha-sdk', 'detect-captchaeu/captchaeu-challenge-request',
+  'detect-basilisk/basilisk-check-site', 'detect-binance-captcha/binance-captcha-sdk', 'detect-captchaeu/captchaeu-challenge-request', 'detect-captchafox/cfox-sdk-url',
   'detect-captchaeu/captchaeu-sdk-url', 'detect-capy/capy-image-resource', 'detect-capy/capy-sdk-resource',
   'detect-dingxiang/dingxiang-captcha-api', 'detect-dingxiang/dingxiang-engine-resource', 'detect-dingxiang/dingxiang-sdk-resource',
   'detect-friendlycaptcha/frc-v1-puzzle-url', 'detect-friendlycaptcha/frc-v2-captcha-url', 'detect-funcaptcha/arkose-client-api',
@@ -208,16 +208,16 @@ test('combination AST rejects malformed and unreachable alternatives', () => {
     assert.throws(() => validate(node, new Set(['a']), 'invalid'));
   }
 });
-test('all twenty-two definitions have explicit IDs, conservative standalone evidence and three graded combinations', () => {
+test('all twenty-three definitions have explicit IDs, conservative standalone evidence and three graded combinations', () => {
   assert.deepEqual(Object.keys(captcha).sort(), ['detect-aliexpress', 'detect-aliyun', 'detect-altcha', 'detect-basilisk', 'detect-binance-captcha',
-    'detect-capjs', 'detect-captchaeu', 'detect-capy', 'detect-dingxiang', 'detect-friendlycaptcha', 'detect-funcaptcha', 'detect-geetest',
+    'detect-capjs', 'detect-captchaeu', 'detect-captchafox', 'detect-capy', 'detect-dingxiang', 'detect-friendlycaptcha', 'detect-funcaptcha', 'detect-geetest',
     'detect-hcaptcha', 'detect-lemin', 'detect-mtcaptcha', 'detect-prosopo', 'detect-qcloud', 'detect-recaptcha', 'detect-shumei',
     'detect-smartcaptcha', 'detect-turnstile', 'detect-yidun']);
   for (const detector of Object.values(captcha)) {
     // Semver: bump the minor version whenever rules change, so Rules → Update offers it
     assert.match(detector.version, /^1\.\d+\.\d+$/, detector.id);
-    // 2026-11-04: Turnstile 1.2.1 (response-body rules need the 2.8.8 engine)
-    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[3-9]|1[0-7]|26)|11-04)$/, detector.id);
+    // 2026-11-04: Turnstile 1.2.1 (response-body rules need the 2.8.8 engine); 2026-11-11: CaptchaFox 1.0.0
+    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[3-9]|1[0-7]|26)|11-(?:04|11))$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate IDs`);

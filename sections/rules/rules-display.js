@@ -75,9 +75,9 @@ Rules.prototype.displayRules = async function({ keepPage = false } = {}) {
     }
   }
 
-  // Sort by: enabled status, then the category order chosen in Settings →
-  // Detection order (the one the Detection list and History use), then date
-  // (newest first), then name
+  // The Default order: enabled status, then the category order chosen in
+  // Settings → Detection order (the one the Detection list and History use),
+  // then date (newest first), then name
   let categoryOrder = [...Categories.KEYS];
   try {
     const settings = await Utils.getSettings();
@@ -105,6 +105,9 @@ Rules.prototype.displayRules = async function({ keepPage = false } = {}) {
     const bName = (b.detector.displayName || b.detectorName || '').toLowerCase();
     return aName.localeCompare(bName);
   });
+
+  // The order chosen from the dropdown beside the chips: Default keeps the one above, the others re-order it (rules that tie keep their place)
+  this.allDetectors = RulesSort.sort(this.allDetectors, this.sortKey);
 
   // Keep the text in the search box and the chips applied after a delete / restore / clear
   const query = document.querySelector('#rulesSearch')?.value || '';

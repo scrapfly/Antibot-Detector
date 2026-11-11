@@ -395,9 +395,12 @@ async function scenario(name, fn) {
       return { expanded: toggle.getAttribute('aria-expanded'), shown: getComputedStyle(list).display !== 'none', open: !!document.querySelector('.notification-confirm'), copied: globalThis.__copied.length, focus: document.activeElement.className };
     });
     assert.equal(await page.evaluate(() => document.activeElement.tagName), 'SELECT', 'the dialog opens on the list');
-    // The result is a keyboard stop of its own (it scrolls when long), so Tab from the list reaches it before the button inside it
+    // Copy summary (3.1.7) sits under the counts, so it comes first; the result is a keyboard stop of its own (it scrolls when long),
+    // so Tab reaches it before the button inside it
     await page.keyboard.press('Tab');
-    assert.match((await state()).focus, /history-compare-result/, 'Tab from the list goes to the result');
+    assert.match((await state()).focus, /history-compare-copy/, 'Tab from the list goes to Copy summary');
+    await page.keyboard.press('Tab');
+    assert.match((await state()).focus, /history-compare-result/, 'Tab from Copy summary goes to the result');
     await page.keyboard.press('Tab');
     assert.match((await state()).focus, /history-compare-toggle/, 'Tab from the result goes to the Unchanged button');
     await page.keyboard.press('Enter');
@@ -416,11 +419,11 @@ async function scenario(name, fn) {
     // Focus order
     await page.focus('.history-compare select');
     const order = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 7; i++) {
       await page.keyboard.press('Tab');
-      order.push(await page.evaluate(() => { const a = document.activeElement; return a.tagName === 'SELECT' ? 'select' : (a.className.match(/history-compare-result|history-compare-toggle|notification-btn-cancel|notification-btn-confirm|notification-confirm-close/) || [a.className])[0]; }));
+      order.push(await page.evaluate(() => { const a = document.activeElement; return a.tagName === 'SELECT' ? 'select' : (a.className.match(/history-compare-copy|history-compare-result|history-compare-toggle|notification-btn-cancel|notification-btn-confirm|notification-confirm-close/) || [a.className])[0]; }));
     }
-    assert.deepEqual(order, ['history-compare-result', 'history-compare-toggle', 'notification-btn-cancel', 'notification-btn-confirm', 'notification-confirm-close', 'select'], 'the dialog keeps focus inside, in reading order');
+    assert.deepEqual(order, ['history-compare-copy', 'history-compare-result', 'history-compare-toggle', 'notification-btn-cancel', 'notification-btn-confirm', 'notification-confirm-close', 'select'], 'the dialog keeps focus inside, in reading order');
     // Enter on the Copy button still copies and closes
     await page.focus('.notification-btn-confirm');
     await page.keyboard.press('Enter');

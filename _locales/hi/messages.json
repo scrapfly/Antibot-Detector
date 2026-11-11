@@ -245,6 +245,12 @@
     "message": ": एंटी-बॉट डिटेक्टर",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "संस्करण {0} के रिलीज़ नोट्स"
+  },
+  "headerVersionNewFmt": {
+    "message": "संस्करण {0} में नया क्या है"
+  },
   "extensionDescription": {
     "message": "वेबसाइटों पर CAPTCHA, एंटी-बॉट सिस्टम और फ़िंगरप्रिंटिंग तकनीकों का पता लगाएं"
   },
@@ -316,6 +322,21 @@
   },
   "rulesFiltersLabel": {
     "message": "नियम फ़िल्टर करें"
+  },
+  "rulesSortLabel": {
+    "message": "नियमों को क्रमबद्ध करें"
+  },
+  "rulesSortDefault": {
+    "message": "डिफ़ॉल्ट"
+  },
+  "rulesSortName": {
+    "message": "नाम A से Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "हाल ही में अपडेट किए गए"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "पिछले 30 दिनों में अपडेट किए गए"
   },
   "paginationPrev": {
     "message": "पिछला पृष्ठ"
@@ -456,7 +477,7 @@
     "message": "सूचनाएं"
   },
   "settingsCardNotificationsDesc": {
-    "message": "जब सुरक्षा प्रणालियों का पता चले तो अलर्ट दिखाएं"
+    "message": "जब किसी पेज के सुरक्षा उपाय बदलें, इतिहास लगभग भर जाए या उसका बैकअप विफल हो, तब सूचना दिखाएं।"
   },
   "settingsCardDebug": {
     "message": "डीबग मोड"
@@ -825,12 +846,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "कैश साफ़ करें"
-  },
-  "clearingMsg": {
-    "message": "साफ़ किया जा रहा है..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ साफ़ हो गया!"
   },
   "cacheClearedToast": {
     "message": "कैश साफ़ कर दिया गया"
@@ -1404,6 +1419,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "डोमेन खोजें..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "सेटिंग्स खोजें..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "आपकी खोज से कोई सेटिंग मेल नहीं खाती।"
+  },
+  "settingsSearchCountFmt": {
+    "message": "मिली सेटिंग्स: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "खोज साफ़ करें"
   },
   "settingsBadgeColorLow": {
     "message": "कम"
@@ -3393,6 +3420,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "सहेजा गया। इस नियम में एक ही पैटर्न एक से अधिक बार है; अतिरिक्त प्रतियाँ हटाई जा सकती हैं।"
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "सहेजा गया। इस नियम का एक पैटर्न {0} में भी है। अगर यह जानबूझकर है तो कोई समस्या नहीं।"
+  },
   "rulesUiMethodFallback": {
     "message": "विधि"
   },
@@ -3414,17 +3444,11 @@
   "clipboardTimestampFmt": {
     "message": "समय: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "सुरक्षा प्रणाली: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "श्रेणी: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "विश्वास: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "जांच विधियां: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "जांच विधियां:"
@@ -4967,7 +4991,7 @@
     "message": "इस अवधि में {0} नए"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "कुल {0} नियमों में से"
+    "message": "कुल नियम: {0}"
   },
   "statsTipPages": {
     "message": "इस अवधि में इतिहास में सहेजे गए पेज। इतिहास में सहेजे गए डिटेक्शन रहते हैं, ब्राउज़र की हर विज़िट नहीं।"
@@ -5409,7 +5433,13 @@
     "message": "हर महीने"
   },
   "settingsHistoryBackupDesc": {
-    "message": "इतिहास की एक प्रति आपके डाउनलोड फ़ोल्डर में (Scrapfly फ़ोल्डर के अंदर), ऊपर चुने गए निर्यात फ़ॉर्मेट में सहेजता है।"
+    "message": "इतिहास की एक प्रति आपके डाउनलोड फ़ोल्डर में (Scrapfly फ़ोल्डर के अंदर), ऊपर चुने गए निर्यात फ़ॉर्मेट में सहेजता है। इतिहास में केवल JSON फ़ाइलें ही वापस आयात की जा सकती हैं।"
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "रखे जाने वाले बैकअप"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "हर बैकअप के बाद, इस संख्या से ज़्यादा पुराने बैकअप आपके डाउनलोड फ़ोल्डर से हटा दिए जाते हैं (कई हिस्सों में सहेजा गया एक बैकअप एक गिना जाता है)। केवल इस एक्सटेंशन द्वारा सहेजी गई बैकअप फ़ाइलें ही हटाई जाती हैं। सभी रखने पर कुछ भी नहीं हटाया जाता।"
   },
   "settingsHistoryBackupNow": {
     "message": "अभी बैकअप लें"
@@ -5500,6 +5530,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "सिर्फ़ दिख रही प्रविष्टियाँ ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "सिर्फ़ पिन किए गए पेज"
@@ -6235,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Markdown के रूप में कॉपी करें"
+  },
+  "historyCompareCopySummary": {
+    "message": "सारांश कॉपी करें"
   },
   "historyCompareMdHeadingFmt": {
     "message": "स्कैन की तुलना: {0}"

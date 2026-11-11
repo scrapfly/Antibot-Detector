@@ -2,7 +2,7 @@
 
 # Antibot Detector가 인식하는 안티봇 보호 기술
 
-[Scrapfly Anti-bot Detector](../../README.ko.md) 확장 프로그램의 안티봇 탐지기 43개 각각에 대해 한 페이지씩 제공합니다. 보호 기술이 무엇인지, 이를 드러내는 공개 신호, 난이도 평가, 웹 스크래핑에 대체로 어떤 의미인지를 다룹니다. 페이지는 `detectors/antibot/`의 탐지 규칙에서 생성됩니다. 안티봇 시스템을 대규모로 통과하려면 Scrapfly의 [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection)를 참고하세요.
+[Scrapfly Anti-bot Detector](../../README.ko.md) 확장 프로그램의 안티봇 탐지기 44개 각각에 대해 한 페이지씩 제공합니다. 보호 기술이 무엇인지, 이를 드러내는 공개 신호, 난이도 평가, 웹 스크래핑에 대체로 어떤 의미인지를 다룹니다. 페이지는 `detectors/antibot/`의 탐지 규칙에서 생성됩니다. 안티봇 시스템을 대규모로 통과하려면 Scrapfly의 [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection)를 참고하세요.
 
 | 보호 기술 | 난이도 | 페이지 |
 | --- | --- | --- |
@@ -24,6 +24,7 @@
 | FingerprintJS | 낮음 | [FingerprintJS](fingerprintjs.md) |
 | Forter | 보통 | [Forter](forter.md) |
 | Google BotGuard | 높음 | [Google BotGuard](botguard.md) |
+| Huawei Cloud WAF | 낮음 | [Huawei Cloud WAF](huaweicloud-waf.md) |
 | HUMAN (PerimeterX) | 높음 | [HUMAN (PerimeterX)](perimeterx.md) |
 | Hunt | 높음 | [Hunt](hunt.md) |
 | Incapsula (Imperva) | 보통 | [Incapsula (Imperva)](incapsula.md) |

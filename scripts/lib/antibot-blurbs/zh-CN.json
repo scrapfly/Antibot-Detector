@@ -18,6 +18,7 @@
   "fastly": "Fastly Bot Management 是边缘云提供商 Fastly 的机器人检测产品。它通过 Fastly 的边缘网络提供，并且根据其检测器的判断，可能还会运行客户端检查。",
   "fingerprintjs": "FingerprintJS 是一个浏览器指纹库，有开源版本，也有 Fingerprint 提供的商业 Pro 服务。其 BotD 库是另一个独立的开源机器人检测工具。发现它只说明网站在收集设备信号，不一定意味着它会拦截机器人。",
   "forter": "Forter 是面向在线商务的欺诈防范厂商。它的脚本会对浏览器进行指纹识别，网站则在结账和登录决策时一并发送由此得到的令牌。",
+  "huaweicloud-waf": "Huawei Cloud WAF 是华为云的 Web 应用防火墙。站点接入后，它会在访客请求中加入会话 Cookie，其 CC 攻击防护和反爬虫规则用这些 Cookie 来统计和跟踪请求。",
   "hunt": "Hunt 是一些博彩平台上出现的反爬系统。它会收集浏览器指纹，并在决定拦截时可能接着出示交互式验证码。",
   "incapsula": "Incapsula 是 Imperva 云 Web 应用防火墙和 CDN 的旧名称。它把 WAF 规则与机器人防护结合在一起，通常可以通过其 Cookie 识别。",
   "iovation": "iovation 是一项设备识别和欺诈防范服务，现已作为 TruValidate 并入 TransUnion。它的脚本会收集设备 blackbox 数据，网站在敏感操作时一并提交。",

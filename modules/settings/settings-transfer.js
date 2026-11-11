@@ -11,7 +11,7 @@
         share: ['provider', 'dpasteComDays', 'dpasteOrgExpires', 'pastebinExpire', 'customExpiryDays'],
         history: ['historyLimit', 'historyAutoDelete', 'historyAutoDeleteDays', 'exportFormat', 'includeTimestamps', 'historyBypassCache',
             'historyEnabled', 'historySkipIncognito', 'historyMinConfidence', 'historySkipFingerprintOnly',
-            'historyExcludedDomains', 'historyChangeAlerts', 'historyBackup', 'historyClearOnClose',
+            'historyExcludedDomains', 'historyChangeAlerts', 'historyBackup', 'historyBackupKeep', 'historyClearOnClose',
             'historyFingerprintDays', 'historyAutoPinHard', 'historyAutoPinVendors', 'historyAutoPinMinConfidence', 'historyMaxMB', 'historyWatch'],
         duplicatePrevention: ['preventDuplicates', 'duplicateScope', 'duplicateDuration', 'duplicateUnit', 'duplicateAction'],
         updates: ['autoUpdate', 'checkIntervalHours']

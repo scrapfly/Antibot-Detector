@@ -245,6 +245,12 @@
     "message": ": wykrywacz anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Informacje o wersji {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Co nowego w wersji {0}"
+  },
   "extensionDescription": {
     "message": "Wykrywaj CAPTCHA, systemy anti-bot i technologie fingerprintingu na stronach internetowych"
   },
@@ -316,6 +322,21 @@
   },
   "rulesFiltersLabel": {
     "message": "Filtruj reguły"
+  },
+  "rulesSortLabel": {
+    "message": "Sortuj reguły"
+  },
+  "rulesSortDefault": {
+    "message": "Domyślnie"
+  },
+  "rulesSortName": {
+    "message": "Nazwa od A do Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Ostatnio zaktualizowane"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Zaktualizowane w ciągu ostatnich 30 dni"
   },
   "paginationPrev": {
     "message": "Poprzednia strona"
@@ -456,7 +477,7 @@
     "message": "Powiadomienia"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Pokazuj alerty po wykryciu systemów zabezpieczeń"
+    "message": "Pokazuj powiadomienie, gdy zmienia się ochrona strony, historia jest prawie pełna lub nie udaje się utworzyć jej kopii zapasowej."
   },
   "settingsCardDebug": {
     "message": "Tryb debugowania"
@@ -825,12 +846,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "Wyczyść pamięć podręczną"
-  },
-  "clearingMsg": {
-    "message": "Czyszczenie..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Wyczyszczono!"
   },
   "cacheClearedToast": {
     "message": "Wyczyszczono pamięć podręczną"
@@ -1404,6 +1419,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Szukaj domen..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Szukaj w ustawieniach..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Żadne ustawienie nie pasuje do wyszukiwania."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Znalezione ustawienia: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Wyczyść wyszukiwanie"
   },
   "settingsBadgeColorLow": {
     "message": "Niska"
@@ -3393,6 +3420,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Zapisano. Ta reguła zawiera ten sam wzorzec więcej niż raz; nadmiarowe kopie można usunąć."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Zapisano. Wzorzec z tej reguły występuje także w: {0}. To w porządku, jeśli jest zamierzone."
+  },
   "rulesUiMethodFallback": {
     "message": "Metoda"
   },
@@ -3414,17 +3444,11 @@
   "clipboardTimestampFmt": {
     "message": "Znacznik czasu: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "System zabezpieczeń: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategoria: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Pewność: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Metody wykrywania: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Metody wykrywania:"
@@ -4967,7 +4991,7 @@
     "message": "Nowe w tym okresie: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "z {0} reguł"
+    "message": "Łączna liczba reguł: {0}"
   },
   "statsTipPages": {
     "message": "Strony zapisane w Historii w tym zakresie. Historia przechowuje zapisane wykrycia, a nie każdą wizytę w przeglądarce."
@@ -5409,7 +5433,13 @@
     "message": "Co miesiąc"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Zapisuje kopię historii w folderze Pobrane (w folderze Scrapfly) w wybranym powyżej formacie eksportu."
+    "message": "Zapisuje kopię historii w folderze Pobrane (w folderze Scrapfly) w wybranym powyżej formacie eksportu. Do historii można ponownie zaimportować tylko pliki JSON."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Kopie zapasowe do zachowania"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Po każdej kopii starsze kopie ponad tę liczbę są usuwane z folderu Pobrane (kopia zapisana w kilku częściach liczy się jako jedna). Usuwane są tylko pliki kopii zapisane przez to rozszerzenie. Jeśli zachowasz wszystkie, nic nie zostanie usunięte."
   },
   "settingsHistoryBackupNow": {
     "message": "Utwórz kopię teraz"
@@ -5500,6 +5530,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Tylko pokazane wpisy ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Tylko przypięte strony"
@@ -6235,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Kopiuj jako Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Kopiuj podsumowanie"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Porównanie skanów: {0}"

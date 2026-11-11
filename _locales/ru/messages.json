@@ -245,6 +245,12 @@
     "message": ": детектор анти-бот",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Примечания к версии {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Что нового в версии {0}"
+  },
   "extensionDescription": {
     "message": "Обнаружение CAPTCHA, систем анти-бот и технологий снятия отпечатков на сайтах"
   },
@@ -316,6 +322,21 @@
   },
   "rulesFiltersLabel": {
     "message": "Фильтр правил"
+  },
+  "rulesSortLabel": {
+    "message": "Сортировка правил"
+  },
+  "rulesSortDefault": {
+    "message": "По умолчанию"
+  },
+  "rulesSortName": {
+    "message": "Название от А до Я"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Недавно обновлённые"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Обновлены за последние 30 дней"
   },
   "paginationPrev": {
     "message": "Предыдущая страница"
@@ -456,7 +477,7 @@
     "message": "Уведомления"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Показывать оповещения при обнаружении систем безопасности"
+    "message": "Показывать уведомление, когда меняется защита страницы, история почти заполнена или не удалось создать резервную копию истории."
   },
   "settingsCardDebug": {
     "message": "Режим отладки"
@@ -825,12 +846,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "Очистить кэш"
-  },
-  "clearingMsg": {
-    "message": "Очистка..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Очищено!"
   },
   "cacheClearedToast": {
     "message": "Кэш очищен"
@@ -1404,6 +1419,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Поиск доменов..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Поиск настроек..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Нет настроек, соответствующих вашему запросу."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Найдено настроек: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Очистить поиск"
   },
   "settingsBadgeColorLow": {
     "message": "Низкая"
@@ -3393,6 +3420,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Сохранено. В этом правиле один и тот же шаблон встречается несколько раз; лишние копии можно удалить."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Сохранено. Шаблон этого правила есть и в других правилах: {0}. Это нормально, если так задумано."
+  },
   "rulesUiMethodFallback": {
     "message": "Метод"
   },
@@ -3414,17 +3444,11 @@
   "clipboardTimestampFmt": {
     "message": "Время: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Система защиты: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Категория: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Уверенность: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Методы обнаружения: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Методы обнаружения:"
@@ -4967,7 +4991,7 @@
     "message": "{0} новых за период"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "из {0} правил"
+    "message": "Всего правил: {0}"
   },
   "statsTipPages": {
     "message": "Страницы, сохранённые в Истории за этот период. История хранит сохранённые обнаружения, а не каждое посещение в браузере."
@@ -5409,7 +5433,13 @@
     "message": "Каждый месяц"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Сохраняет копию истории в папке «Загрузки» (в подпапке Scrapfly) в выбранном выше формате экспорта."
+    "message": "Сохраняет копию истории в папке «Загрузки» (в подпапке Scrapfly) в выбранном выше формате экспорта. Обратно в историю можно импортировать только файлы JSON."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Сколько копий хранить"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "После каждой копии более старые копии сверх этого числа удаляются из папки «Загрузки» (копия, сохранённая в нескольких частях, считается за одну). Удаляются только файлы копий, сохранённые этим расширением. Если хранить все копии, ничего не удаляется."
   },
   "settingsHistoryBackupNow": {
     "message": "Создать копию сейчас"
@@ -5500,6 +5530,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Только показанные записи ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Только закреплённые страницы"
@@ -6235,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Копировать как Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Копировать сводку"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Сравнение сканирований: {0}"

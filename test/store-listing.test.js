@@ -64,7 +64,7 @@ test('a listing keeps the English length bounds, sections, bullets and numbers',
     assert.ok(has(listing((text) => text.replace('add a detector there.', `add a detector there.${' x'.repeat(8000)}`)), 'at most'));
     assert.ok(has(listing((text) => text.replace(/• One card per protection[^\n]*\n/, '')), 'has the blocks'));
     assert.ok(has(listing((text) => text.replace('Privacy\n', 'Privacy\nSecond line.\n')), 'has the blocks'));
-    assert.ok(has(listing((text) => text.replace('86 detectors', '87 detectors')), 'numbers are'));
+    assert.ok(has(listing((text) => text.replace('88 detectors', '89 detectors')), 'numbers are'));
     assert.ok(has(listing((text) => text.replace('22 interface languages', 'many interface languages')), 'numbers are'));
 });
 
@@ -178,7 +178,7 @@ test('the checkers run from the command line and fail with exit code 1', () => {
     const passing = run('check-store-listing.js', ...args);
     assert.strictEqual(passing.status, 0, passing.stdout + passing.stderr);
 
-    fs.writeFileSync(path.join(scratch, 'listing', 'en.txt'), english.replace('86 detectors', '87 detectors'));
+    fs.writeFileSync(path.join(scratch, 'listing', 'en.txt'), english.replace('88 detectors', '89 detectors'));
     const failing = run('check-store-listing.js', ...args);
     assert.strictEqual(failing.status, 1);
     assert.match(failing.stdout, /numbers are/);

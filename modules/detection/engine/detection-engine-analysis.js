@@ -126,12 +126,14 @@ function demPrecomputePriorities() {
             // Priority: 3=fast (cookie/url/header), 2=medium (content), 1=slow (DOM)
             let priority = 0;
             const detection = detector.detection || {};
+            // A rule that is off is no fast rule (demAnalyzeUsedMethods and the other readers leave it out the same way)
+            const on = (method) => demEnabledRules(detection, method).length > 0;
 
-            if (detection.cookie?.length > 0) priority = Math.max(priority, 3);
-            if (detection.url?.length > 0) priority = Math.max(priority, 3);
-            if (detection.header?.length > 0) priority = Math.max(priority, 3);
-            if (detection.content?.length > 0) priority = Math.max(priority, 2);
-            if (detection.dom?.length > 0) priority = Math.max(priority, 1);
+            if (on('cookie')) priority = Math.max(priority, 3);
+            if (on('url')) priority = Math.max(priority, 3);
+            if (on('header')) priority = Math.max(priority, 3);
+            if (on('content')) priority = Math.max(priority, 2);
+            if (on('dom')) priority = Math.max(priority, 1);
 
             priorities.push({
                 category,

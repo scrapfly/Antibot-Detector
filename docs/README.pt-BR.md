@@ -22,7 +22,7 @@
 
 O Scrapfly Anti-bot Detector é uma extensão gratuita do Chrome que mostra como um site se protege contra tráfego automatizado. Navegue como de costume: o número no ícone da barra de ferramentas indica quantas proteções a página usa, e o popup as lista com a confiança, a dificuldade e os sinais que as denunciaram.
 
-Ele reconhece 86 tecnologias de fábrica: 43 sistemas anti-bot, 22 CAPTCHAs e 21 técnicas de fingerprinting de navegador. Cada detector é um arquivo JSON simples que você pode ler, alterar ou estender, e as novas regras chegam a cada versão deste repositório, então **Regras → Atualizar** pode instalá-las antes mesmo de o Chrome atualizar a própria extensão.
+Ele reconhece 88 tecnologias de fábrica: 44 sistemas anti-bot, 23 CAPTCHAs e 21 técnicas de fingerprinting de navegador. Cada detector é um arquivo JSON simples que você pode ler, alterar ou estender, e as novas regras chegam a cada versão deste repositório, então **Regras → Atualizar** pode instalá-las antes mesmo de o Chrome atualizar a própria extensão.
 
 Nós a criamos na [Scrapfly](https://scrapfly.io) porque todo projeto de scraping começa com a mesma pergunta: o que protege esta página? Ela é igualmente útil para ver como a proteção anti-bot do seu próprio site aparece de fora, ou para pesquisa de segurança.
 
@@ -105,18 +105,18 @@ Estas listas são os detectores que acompanham a extensão. Você pode desativar
 Cada sistema antibot tem a sua própria página, com os cookies, cabeçalhos e scripts que o denunciam: [páginas de detecção antibot](antibots/pt-BR/README.md).
 
 <details>
-<summary><b>Sistemas anti-bot (43)</b></summary>
+<summary><b>Sistemas anti-bot (44)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHAs (22)</b></summary>
+<summary><b>CAPTCHAs (23)</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 
@@ -136,7 +136,7 @@ As proteções encontradas na página atual, cada uma com sua confiança, sua di
 
 - **Enviar detecções** para obter um link compartilhável (dpaste.com por padrão; veja [Links de compartilhamento](#links-de-compartilhamento))
 - **Limpar cache**, para que a página seja analisada de novo no próximo carregamento
-- **Copiar**, um menu: o mesmo resumo que o envio compartilha, uma tabela Markdown para um ticket ou chat, ou JSON (nenhum inclui valores de cookies ou de cabeçalhos)
+- **Copiar**, um menu: o mesmo resumo que o envio compartilha, uma tabela Markdown para um ticket ou chat, uma linha com o site e suas proteções, ou JSON (nenhum destes inclui valores de cookies ou de cabeçalhos); ou código que pede a página de novo, como comando curl, Python (requests) ou Node.js (fetch), com o User-Agent, o Accept-Language e as client hints deste navegador e todos os cookies que a página envia, inclusive os HttpOnly. O código inclui, sim, os valores dos cookies e o endereço da página com a query string, então mantenha-o em sigilo
 - **Bloquear este domínio**, para que a extensão deixe de analisá-lo
 
 ### Histórico

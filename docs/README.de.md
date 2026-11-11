@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector ist eine kostenlose Chrome-Erweiterung, die zeigt, wie sich eine Website vor automatisiertem Datenverkehr schützt. Surfen Sie wie gewohnt: Die Zahl auf dem Symbol in der Symbolleiste gibt an, wie viele Schutzmaßnahmen die Seite einsetzt, und das Popup listet sie mit Konfidenz, Schwierigkeit und den verräterischen Signalen auf.
 
-Sie erkennt von Haus aus 86 Technologien: 43 Anti-Bot-Systeme, 22 CAPTCHAs und 21 Browser-Fingerprinting-Techniken. Jeder Detektor ist eine einfache JSON-Datei, die Sie lesen, ändern oder erweitern können, und neue Regeln kommen mit jeder Version dieses Repositorys. **Regeln → Aktualisieren** kann sie also installieren, noch bevor Chrome die Erweiterung selbst aktualisiert.
+Sie erkennt von Haus aus 88 Technologien: 44 Anti-Bot-Systeme, 23 CAPTCHAs und 21 Browser-Fingerprinting-Techniken. Jeder Detektor ist eine einfache JSON-Datei, die Sie lesen, ändern oder erweitern können, und neue Regeln kommen mit jeder Version dieses Repositorys. **Regeln → Aktualisieren** kann sie also installieren, noch bevor Chrome die Erweiterung selbst aktualisiert.
 
 Wir haben sie bei [Scrapfly](https://scrapfly.io) gebaut, weil jedes Scraping-Projekt mit derselben Frage beginnt: Was schützt diese Seite? Genauso nützlich ist sie, um zu sehen, wie der Anti-Bot-Schutz der eigenen Website von außen aussieht, oder für Sicherheitsforschung.
 
@@ -105,18 +105,18 @@ Diese Listen sind die Detektoren, die mit der Erweiterung ausgeliefert werden. S
 Jedes Anti-Bot-System hat eine eigene Seite mit den Cookies, Headern und Skripten, die es verraten: [Seiten zur Anti-Bot-Erkennung](antibots/de/README.md).
 
 <details>
-<summary><b>Anti-Bot-Systeme (43)</b></summary>
+<summary><b>Anti-Bot-Systeme (44)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHAs (22)</b></summary>
+<summary><b>CAPTCHAs (23)</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 
@@ -136,7 +136,7 @@ Die auf der aktuellen Seite gefundenen Schutzmaßnahmen, jeweils mit Konfidenz, 
 
 - **Erkennungen hochladen**, um einen teilbaren Link zu erhalten (standardmäßig dpaste.com; siehe [Links zum Teilen](#links-zum-teilen))
 - **Cache leeren**, damit die Seite beim nächsten Laden erneut gescannt wird
-- **Kopieren**, ein Menü: dieselbe Zusammenfassung, die der Upload teilt, eine Markdown-Tabelle für ein Ticket oder einen Chat oder JSON (keines enthält Cookie- oder Header-Werte)
+- **Kopieren**, ein Menü: dieselbe Zusammenfassung, die der Upload teilt, eine Markdown-Tabelle für ein Ticket oder einen Chat, eine Zeile mit der Website und ihren Schutzmaßnahmen oder JSON (keines davon enthält Cookie- oder Header-Werte); oder Code, der die Seite erneut abruft, als curl-Befehl, Python (requests) oder Node.js (fetch), mit User-Agent, Accept-Language und Client Hints dieses Browsers und allen Cookies, die die Seite sendet, auch den HttpOnly-Cookies. Dieser Code enthält die Cookie-Werte und die Adresse der Seite mit ihrem Query-String; geben Sie ihn daher nicht weiter
 - **Diese Domain blockieren**, damit die Erweiterung sie nicht mehr scannt
 
 ### Verlauf

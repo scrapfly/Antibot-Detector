@@ -1112,5 +1112,21 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "SG-CAPTCHA:s utmaningskonstanter (sgchallenge, sgsubmit_url) i sidans skript",
   "sg-captcha header on the SG-CAPTCHA challenge page": "Headern sg-captcha på SG-CAPTCHA:s utmaningssida",
   "sg-captcha header with the challenge constants in the page's scripts": "Headern sg-captcha med utmaningskonstanterna i sidans skript",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA:s utmaningssida med dess konstanter i sidans skript"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA:s utmaningssida med dess konstanter i sidans skript",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "Integritetsfokuserad CAPTCHA-tjänst med en JavaScript-widget, ett dolt läge och verifiering på serversidan",
+  "Official CaptchaFox widget script api.js on its CDN": "Officiellt CaptchaFox-widgetskript api.js på dess CDN",
+  "Widget container with the class captchafox, possibly unconfigured": "Widgetbehållare med klassen captchafox, möjligen inte konfigurerad",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "Widgetbehållare med klassen captchafox och ett sitekey-attribut, inte nyckelns giltighet",
+  "Hidden response token field named cf-captcha-response, added after a verification": "Dolt fält för svarstoken med namnet cf-captcha-response, läggs till efter en verifiering",
+  "Documented captchafox window object with its render method, not execution": "Dokumenterat window-objekt captchafox med metoden render, inte körning",
+  "Configured widget and the captchafox window object": "Konfigurerad widget och window-objektet captchafox",
+  "Configured widget and the response token field": "Konfigurerad widget och fältet för svarstoken",
+  "Configured widget, window object and response token field": "Konfigurerad widget, window-objekt och fält för svarstoken",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "Huawei Clouds Web Application Firewall som märker förfrågningar med cookies HWWAFSESID och HWWAFSESTIME",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Sessions-ID-cookien HWWAFSESID som Huawei Cloud WAF lägger in för att märka förfrågningar (Huawei Cloud-hjälp)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Sessionstidsstämpelcookien HWWAFSESTIME som Huawei Cloud WAF lägger in för att märka förfrågningar (Huawei Cloud-hjälp)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "Server-huvudet HuaweiCloudWAF, listat av verktyget WAFW00F med öppen källkod; endast stödjande signal",
+  "Both WAF session cookies": "Båda WAF-sessionscookies",
+  "Session ID cookie with the WAF server header": "Sessions-ID-cookie med WAF:ens serverhuvud",
+  "Session timestamp cookie with the WAF server header": "Sessionstidsstämpelcookie med WAF:ens serverhuvud"
 }

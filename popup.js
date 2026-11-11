@@ -66,6 +66,75 @@ class ScrapflyPopup {
     NotificationHelper.error(FormatUtils.t('rulesUnreadableHint', 'The stored rules could not be read: the built-in rules are in use and rule changes are not saved. To replace the stored rules, import a rules file in the Rules tab and choose Replace All.'));
   }
 
+  /**
+   * The extension's own repository. A version's release notes are the text of its GitHub release (the tag is v<version>): the release
+   * is built from that version's section of CHANGELOG.md, which is not in the package.
+   */
+  static RELEASES_URL = 'https://github.com/scrapfly/Antibot-Detector/releases';
+
+  /** localStorage: the version whose release notes the person opened (or that was running when the popup first ran in this browser). */
+  static RELEASE_NOTES_SEEN_KEY = 'lastSeenVersion';
+
+  /** Where the release notes of `version` are. Anything that is not a plain version number is not put into an address: the list of releases instead. */
+  static releaseNotesUrl(version) {
+    const text = typeof version === 'string' ? version : '';
+    return /^\d+(?:\.\d+){0,3}$/.test(text) ? `${ScrapflyPopup.RELEASES_URL}/tag/v${text}` : ScrapflyPopup.RELEASES_URL;
+  }
+
+  /** The page's localStorage, or null when the browser does not give it (with site data blocked, reaching it throws). */
+  static notesStorage() {
+    try { return localStorage || null; } catch (_) { return null; }
+  }
+
+  /**
+   * Whether the release notes of `version` are still unopened (the dot in the header). The first run in a browser has no version
+   * stored: it records this one and shows no dot, because a new install has no notes to catch up on. A storage that cannot be read
+   * or written says nothing, so no dot.
+   */
+  static releaseNotesUnseen(version, storage) {
+    try {
+      const seen = storage.getItem(ScrapflyPopup.RELEASE_NOTES_SEEN_KEY);
+      if (seen === null) {
+        storage.setItem(ScrapflyPopup.RELEASE_NOTES_SEEN_KEY, version);
+        return false;
+      }
+      return seen !== version;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /** The person opened the notes of `version`: remember it, so the dot stays away from the next popups. */
+  static markReleaseNotesSeen(version, storage) {
+    try { storage.setItem(ScrapflyPopup.RELEASE_NOTES_SEEN_KEY, version); } catch (_) { /* the dot comes back at the next popup */ }
+  }
+
+  /**
+   * The header's version: "v<version>" as a link to its release notes, with a small dot until the person has opened them (a click, or
+   * a middle click, which opens the same tab). What the dot says to the eye the link's name says to a screen reader.
+   */
+  setupVersionLink(element, version) {
+    if (!element || !version) return;
+    const storage = ScrapflyPopup.notesStorage();
+    element.textContent = `v${version}`;
+    element.setAttribute('href', ScrapflyPopup.releaseNotesUrl(version));
+    const show = (unseen) => {
+      element.classList.toggle('has-news', unseen);
+      const name = unseen
+        ? FormatUtils.t('headerVersionNewFmt', "What's new in version {0}", version)
+        : FormatUtils.t('headerVersionLinkFmt', 'Release notes for version {0}', version);
+      element.setAttribute('aria-label', name);
+      element.setAttribute('title', name);
+    };
+    show(storage ? ScrapflyPopup.releaseNotesUnseen(version, storage) : false);
+    const opened = () => {
+      if (storage) ScrapflyPopup.markReleaseNotesSeen(version, storage);
+      show(false);
+    };
+    element.addEventListener('click', opened);
+    element.addEventListener('auxclick', (event) => { if (event.button === 1) opened(); });
+  }
+
   async initialize() {
     try {
       if (typeof Logger !== 'undefined') {
@@ -77,11 +146,11 @@ class ScrapflyPopup {
       this.warnIfWorkerOutdated();
       this.warnIfSettingsUnreadable();
 
-      // Set version from manifest
-      const manifest = chrome.runtime.getManifest();
-      const versionElement = document.querySelector('#appVersion');
-      if (versionElement && manifest.version) {
-        versionElement.textContent = `v${manifest.version}`;
+      // The header's version: a link to its release notes, with a dot until they have been opened (nothing here may stop the popup)
+      try {
+        this.setupVersionLink(document.querySelector('#appVersion'), chrome.runtime.getManifest().version);
+      } catch (error) {
+        Logger.warn('UI', 'The version link could not be set up:', error);
       }
 
       this.setupEventListeners();
@@ -120,13 +189,9 @@ class ScrapflyPopup {
       // Other sections will be lazy-loaded on first access
       await this.settings.initialize();
 
-      // Mark other sections as NOT initialized - they'll load on-demand
-      this.detection.initialized = false;
-      this.history.initialized = false;
-      this.rules.initialized = false;
-      if (this.advanced) {
-        this.advanced.initialized = false;
-      }
+      // The other sections start uninitialized and load on first use. They are not reset here: a tab clicked while the rules were
+      // still loading has already set itself up, and marking it uninitialized made its next opening load the markup again without
+      // its listeners (sort, search, chips and menus did nothing until the popup was reopened)
     } catch (error) {
       Logger.error('UI', 'Failed to initialize sections:', error);
     }

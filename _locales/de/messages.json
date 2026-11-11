@@ -245,6 +245,12 @@
     "message": ": Anti-Bot-Detektor",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Versionshinweise zu Version {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Neu in Version {0}"
+  },
   "extensionDescription": {
     "message": "Erkennt CAPTCHAs, Anti-Bot-Systeme und Fingerprinting-Technologien auf Websites"
   },
@@ -316,6 +322,21 @@
   },
   "rulesFiltersLabel": {
     "message": "Regeln filtern"
+  },
+  "rulesSortLabel": {
+    "message": "Regeln sortieren"
+  },
+  "rulesSortDefault": {
+    "message": "Standard"
+  },
+  "rulesSortName": {
+    "message": "Name A bis Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Zuletzt aktualisiert"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "In den letzten 30 Tagen aktualisiert"
   },
   "paginationPrev": {
     "message": "Vorherige Seite"
@@ -456,7 +477,7 @@
     "message": "Benachrichtigungen"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Warnungen anzeigen, wenn Sicherheitssysteme erkannt werden"
+    "message": "Eine Benachrichtigung anzeigen, wenn sich die Schutzmaßnahmen einer Seite ändern, der Verlauf fast voll ist oder dessen Sicherung fehlschlägt."
   },
   "settingsCardDebug": {
     "message": "Debug-Modus"
@@ -825,12 +846,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "Cache leeren"
-  },
-  "clearingMsg": {
-    "message": "Wird geleert..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Geleert!"
   },
   "cacheClearedToast": {
     "message": "Cache geleert"
@@ -1404,6 +1419,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Domains suchen..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Einstellungen suchen..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Keine Einstellungen entsprechen deiner Suche."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Gefundene Einstellungen: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Suche leeren"
   },
   "settingsBadgeColorLow": {
     "message": "Niedrig"
@@ -3393,6 +3420,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Gespeichert. Diese Regel enthält dasselbe Muster mehrfach; die überzähligen Kopien lassen sich löschen."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Gespeichert. Ein Muster dieser Regel steckt auch in {0}. Das ist in Ordnung, wenn es Absicht ist."
+  },
   "rulesUiMethodFallback": {
     "message": "Methode"
   },
@@ -3414,17 +3444,11 @@
   "clipboardTimestampFmt": {
     "message": "Zeitpunkt: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Sicherheitssystem: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategorie: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Vertrauen: {0} %"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Erkennungsmethoden: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Erkennungsmethoden:"
@@ -4967,7 +4991,7 @@
     "message": "{0} neu in diesem Zeitraum"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "von {0} Regeln"
+    "message": "Regeln insgesamt: {0}"
   },
   "statsTipPages": {
     "message": "Im Verlauf gespeicherte Seiten in diesem Zeitraum. Der Verlauf enthält gespeicherte Erkennungen, nicht jeden Browser-Besuch."
@@ -5409,7 +5433,13 @@
     "message": "Monatlich"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Speichert eine Kopie des Verlaufs in deinem Downloads-Ordner (in einem Ordner „Scrapfly“) im oben gewählten Exportformat."
+    "message": "Speichert eine Kopie des Verlaufs in deinem Downloads-Ordner (in einem Ordner „Scrapfly“) im oben gewählten Exportformat. Nur JSON-Dateien lassen sich wieder in den Verlauf importieren."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Sicherungen behalten"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Nach jeder Sicherung werden ältere Sicherungen über dieser Anzahl aus deinem Downloads-Ordner gelöscht (eine in mehreren Teilen gespeicherte Sicherung zählt als eine). Entfernt werden nur Sicherungsdateien, die diese Erweiterung gespeichert hat. Wenn du alle behältst, wird nichts gelöscht."
   },
   "settingsHistoryBackupNow": {
     "message": "Jetzt sichern"
@@ -5500,6 +5530,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Nur die angezeigten Einträge ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Nur angeheftete Seiten"
@@ -6235,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Als Markdown kopieren"
+  },
+  "historyCompareCopySummary": {
+    "message": "Zusammenfassung kopieren"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Scan-Vergleich: {0}"

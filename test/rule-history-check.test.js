@@ -1,5 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert');
+const withinLimit = require('./helpers/hard-limit.js');
 
 // Rule editor → Check against History: each pattern and combination of the
 // rule as edited, counted over the evidence History saved.
@@ -71,8 +72,6 @@ test('a plain header name matches as detection reads it (names containing it); a
   assert.equal(C.patternMatches('header', { name: 'x-cache' }, match), true);
   assert.equal(C.patternMatches('header', { name: 'X-CACHE-STATUS' }, match), true);
   assert.equal(C.patternMatches('header', { name: 'server' }, match), false);
-  const started = Date.now();
-  assert.equal(C.textMatches('^(a+)+$', `${'a'.repeat(40)}!`, { regex: true }), false);
-  assert.ok(Date.now() - started < 200);
+  assert.equal(withinLimit(() => C.textMatches('^(a+)+$', `${'a'.repeat(40)}!`, { regex: true }), 'a dangerous regex'), false);
   delete global.isLikelyEvilRegex;
 });

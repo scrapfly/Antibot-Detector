@@ -245,6 +245,12 @@
     "message": ": ตัวตรวจจับ anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "บันทึกประจำรุ่นสำหรับเวอร์ชัน {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "มีอะไรใหม่ในเวอร์ชัน {0}"
+  },
   "extensionDescription": {
     "message": "ตรวจจับ CAPTCHA ระบบ anti-bot และเทคโนโลยี fingerprinting บนเว็บไซต์"
   },
@@ -316,6 +322,21 @@
   },
   "rulesFiltersLabel": {
     "message": "กรองกฎ"
+  },
+  "rulesSortLabel": {
+    "message": "เรียงลำดับกฎ"
+  },
+  "rulesSortDefault": {
+    "message": "ค่าเริ่มต้น"
+  },
+  "rulesSortName": {
+    "message": "ชื่อ ก ถึง ฮ"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "อัปเดตล่าสุด"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "อัปเดตใน 30 วันที่ผ่านมา"
   },
   "paginationPrev": {
     "message": "หน้าก่อนหน้า"
@@ -456,7 +477,7 @@
     "message": "การแจ้งเตือน"
   },
   "settingsCardNotificationsDesc": {
-    "message": "แสดงการแจ้งเตือนเมื่อตรวจพบระบบรักษาความปลอดภัย"
+    "message": "แสดงการแจ้งเตือนเมื่อระบบป้องกันของหน้าเปลี่ยนแปลง ประวัติใกล้เต็ม หรือสำรองข้อมูลประวัติไม่สำเร็จ"
   },
   "settingsCardDebug": {
     "message": "โหมดดีบัก"
@@ -825,12 +846,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "ล้างแคช"
-  },
-  "clearingMsg": {
-    "message": "กำลังล้าง..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ ล้างแล้ว!"
   },
   "cacheClearedToast": {
     "message": "ล้างแคชแล้ว"
@@ -1404,6 +1419,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "ค้นหาโดเมน..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "ค้นหาการตั้งค่า..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "ไม่มีการตั้งค่าที่ตรงกับการค้นหา"
+  },
+  "settingsSearchCountFmt": {
+    "message": "พบการตั้งค่า: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "ล้างการค้นหา"
   },
   "settingsBadgeColorLow": {
     "message": "ต่ำ"
@@ -3393,6 +3420,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "บันทึกแล้ว กฎนี้มีรูปแบบเดียวกันมากกว่าหนึ่งครั้ง สามารถลบสำเนาส่วนเกินได้"
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "บันทึกแล้ว รูปแบบหนึ่งของกฎนี้มีอยู่ใน {0} ด้วย ไม่เป็นไรหากตั้งใจ"
+  },
   "rulesUiMethodFallback": {
     "message": "วิธีการ"
   },
@@ -3414,17 +3444,11 @@
   "clipboardTimestampFmt": {
     "message": "เวลา: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "ระบบรักษาความปลอดภัย: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "หมวดหมู่: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "ความมั่นใจ: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "วิธีการตรวจจับ: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "วิธีการตรวจจับ:"
@@ -5409,7 +5433,13 @@
     "message": "ทุกเดือน"
   },
   "settingsHistoryBackupDesc": {
-    "message": "บันทึกสำเนาของประวัติลงในโฟลเดอร์ดาวน์โหลดของคุณ (ในโฟลเดอร์ Scrapfly) ในรูปแบบการส่งออกที่เลือกไว้ด้านบน"
+    "message": "บันทึกสำเนาของประวัติลงในโฟลเดอร์ดาวน์โหลดของคุณ (ในโฟลเดอร์ Scrapfly) ในรูปแบบการส่งออกที่เลือกไว้ด้านบน สามารถนำเข้ากลับไปยังประวัติได้เฉพาะไฟล์ JSON เท่านั้น"
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "จำนวนข้อมูลสำรองที่เก็บไว้"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "หลังการสำรองข้อมูลแต่ละครั้ง ข้อมูลสำรองเก่าที่เกินจำนวนนี้จะถูกลบออกจากโฟลเดอร์ดาวน์โหลดของคุณ (ข้อมูลสำรองที่บันทึกเป็นหลายส่วนนับเป็นหนึ่งชุด) ระบบจะลบเฉพาะไฟล์สำรองที่ส่วนขยายนี้บันทึกไว้เท่านั้น หากเก็บไว้ทั้งหมดจะไม่มีการลบอะไรเลย"
   },
   "settingsHistoryBackupNow": {
     "message": "สำรองข้อมูลทันที"
@@ -5500,6 +5530,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "เฉพาะรายการที่แสดง ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "เฉพาะหน้าที่ปักหมุด"
@@ -6235,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "คัดลอกเป็น Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "คัดลอกสรุป"
   },
   "historyCompareMdHeadingFmt": {
     "message": "เปรียบเทียบการสแกน: {0}"

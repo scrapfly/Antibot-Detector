@@ -245,6 +245,12 @@
     "message": ": детектор антиботів",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Примітки до версії {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Що нового у версії {0}"
+  },
   "extensionDescription": {
     "message": "Виявляє CAPTCHA, антибот-системи та технології зняття відбитків на веб-сайтах"
   },
@@ -316,6 +322,21 @@
   },
   "rulesFiltersLabel": {
     "message": "Фільтр правил"
+  },
+  "rulesSortLabel": {
+    "message": "Сортування правил"
+  },
+  "rulesSortDefault": {
+    "message": "Типово"
+  },
+  "rulesSortName": {
+    "message": "Назва від А до Я"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Нещодавно оновлені"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Оновлено за останні 30 днів"
   },
   "paginationPrev": {
     "message": "Попередня сторінка"
@@ -456,7 +477,7 @@
     "message": "Сповіщення"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Показувати сповіщення, коли виявлено системи захисту"
+    "message": "Показувати сповіщення, коли змінюється захист сторінки, історія майже заповнена або не вдалося створити резервну копію історії."
   },
   "settingsCardDebug": {
     "message": "Режим налагодження"
@@ -825,12 +846,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "Очистити кеш"
-  },
-  "clearingMsg": {
-    "message": "Очищення..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Очищено!"
   },
   "cacheClearedToast": {
     "message": "Кеш очищено"
@@ -1404,6 +1419,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Пошук доменів..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Пошук налаштувань..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Жодне налаштування не відповідає пошуку."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Знайдено налаштувань: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Очистити пошук"
   },
   "settingsBadgeColorLow": {
     "message": "Низька"
@@ -3393,6 +3420,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Збережено. У цьому правилі один і той самий шаблон трапляється кілька разів; зайві копії можна видалити."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Збережено. Шаблон цього правила є також в інших правилах: {0}. Це нормально, якщо так задумано."
+  },
   "rulesUiMethodFallback": {
     "message": "Метод"
   },
@@ -3414,17 +3444,11 @@
   "clipboardTimestampFmt": {
     "message": "Позначка часу: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Система захисту: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Категорія: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Впевненість: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Методи виявлення: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Методи виявлення:"
@@ -5409,7 +5433,13 @@
     "message": "Щомісяця"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Зберігає копію історії в папці «Завантаження» (у папці Scrapfly) у вибраному вище форматі експорту."
+    "message": "Зберігає копію історії в папці «Завантаження» (у папці Scrapfly) у вибраному вище форматі експорту. Назад в історію можна імпортувати лише файли JSON."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Скільки копій зберігати"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Після кожної копії старіші копії понад це число видаляються з папки «Завантаження» (копія, збережена в кількох частинах, вважається за одну). Видаляються лише файли копій, збережені цим розширенням. Якщо зберігати всі копії, нічого не видаляється."
   },
   "settingsHistoryBackupNow": {
     "message": "Створити копію зараз"
@@ -5500,6 +5530,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Лише показані записи ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Лише закріплені сторінки"
@@ -6235,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Копіювати як Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Копіювати підсумок"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Порівняння сканувань: {0}"

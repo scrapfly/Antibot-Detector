@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector는 웹사이트가 자동화된 트래픽으로부터 스스로를 어떻게 보호하는지 보여 주는 무료 Chrome 확장 프로그램입니다. 평소처럼 탐색하기만 하면 됩니다. 도구 모음 아이콘의 숫자가 페이지가 사용하는 보호 기술의 수를 알려 주고, 팝업에는 각 보호 기술이 신뢰도, 난이도, 그리고 이를 드러낸 신호와 함께 나열됩니다.
 
-기본으로 86가지 기술을 인식합니다. 안티봇 시스템 43개, CAPTCHA 22개, 브라우저 핑거프린팅 기법 21개입니다. 각 탐지기는 읽고, 바꾸고, 확장할 수 있는 단순한 JSON 파일이며, 새 규칙은 이 저장소의 버전마다 함께 배포됩니다. 따라서 Chrome이 확장 프로그램 자체를 업데이트하기 전에도 **규칙 → 업데이트**로 설치할 수 있습니다.
+기본으로 88가지 기술을 인식합니다. 안티봇 시스템 44개, CAPTCHA 23개, 브라우저 핑거프린팅 기법 21개입니다. 각 탐지기는 읽고, 바꾸고, 확장할 수 있는 단순한 JSON 파일이며, 새 규칙은 이 저장소의 버전마다 함께 배포됩니다. 따라서 Chrome이 확장 프로그램 자체를 업데이트하기 전에도 **규칙 → 업데이트**로 설치할 수 있습니다.
 
 [Scrapfly](https://scrapfly.io)에서 이 도구를 만든 이유는 모든 스크래핑 프로젝트가 같은 질문에서 시작하기 때문입니다. 이 페이지를 무엇이 보호하고 있는가? 내 사이트의 안티봇 보호가 바깥에서 어떻게 보이는지 확인하거나 보안 연구를 할 때도 똑같이 유용합니다.
 
@@ -105,18 +105,18 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 각 안티봇 시스템마다 이를 알아볼 수 있는 쿠키, 헤더, 스크립트를 담은 전용 페이지가 있습니다: [안티봇 감지 페이지](antibots/ko/README.md).
 
 <details>
-<summary><b>안티봇 시스템 (43)</b></summary>
+<summary><b>안티봇 시스템 (44)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHA (22)</b></summary>
+<summary><b>CAPTCHA (23)</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 
@@ -136,7 +136,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 - **탐지 결과 업로드**로 공유 링크 받기(기본값은 dpaste.com, [공유 링크](#공유-링크) 참고)
 - **캐시 지우기**로 다음 로드 때 페이지를 다시 스캔하기
-- **복사** 메뉴: 업로드가 공유하는 것과 같은 요약, 티켓이나 채팅용 Markdown 표, 또는 JSON(어느 쪽에도 쿠키나 헤더 값은 포함되지 않습니다)
+- **복사** 메뉴: 업로드가 공유하는 것과 같은 요약, 티켓이나 채팅용 Markdown 표, 사이트와 보호 기술을 담은 한 줄, 또는 JSON(이들에는 쿠키나 헤더 값이 포함되지 않습니다). 또한 페이지를 다시 요청하는 코드를 curl 명령, Python (requests), Node.js (fetch)로 복사할 수도 있으며, 이 브라우저의 User-Agent, Accept-Language, client hints와 페이지가 보내는 모든 쿠키(HttpOnly 포함)가 들어갑니다. 이 코드에는 쿠키 값과 쿼리 문자열이 있는 페이지 주소가 들어 있으므로 외부에 공유하지 마세요
 - **이 도메인 차단**으로 확장 프로그램이 해당 도메인을 더 이상 스캔하지 않게 하기
 
 ### 기록

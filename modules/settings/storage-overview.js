@@ -23,7 +23,7 @@
     { id: 'captures', labelKey: 'storageCaptures', label: 'Tool captures', clear: 'captures',
       keys: ['scrapfly_advanced_history'] },
     { id: 'history', labelKey: 'storageHistory', label: 'History', clear: 'history',
-      keys: ['scrapfly_history', 'scrapfly_history_backup', 'scrapfly_history_storage_notice', 'scrapfly_history_watch'] },
+      keys: ['scrapfly_history', 'scrapfly_history_backup', 'scrapfly_history_backup_runs', 'scrapfly_history_storage_notice', 'scrapfly_history_watch'] },
     { id: 'rules', labelKey: 'storageRules', label: 'Rules and categories', clear: null,
       keys: ['scrapfly_detectors', 'scrapfly_categories', 'scrapfly_rule_i18n', 'scrapfly_remote_official_ids', 'scrapfly_deleted_official_detectors',
         'scrapfly_last_update_check', 'scrapfly_rules_rev'] },

@@ -245,6 +245,12 @@
     "message": ": detektor anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Catatan rilis versi {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Yang baru di versi {0}"
+  },
   "extensionDescription": {
     "message": "Mendeteksi CAPTCHA, sistem anti-bot, dan teknologi fingerprinting di situs web"
   },
@@ -316,6 +322,21 @@
   },
   "rulesFiltersLabel": {
     "message": "Filter aturan"
+  },
+  "rulesSortLabel": {
+    "message": "Urutkan aturan"
+  },
+  "rulesSortDefault": {
+    "message": "Bawaan"
+  },
+  "rulesSortName": {
+    "message": "Nama A ke Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Baru diperbarui"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Diperbarui dalam 30 hari terakhir"
   },
   "paginationPrev": {
     "message": "Halaman sebelumnya"
@@ -456,7 +477,7 @@
     "message": "Notifikasi"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Tampilkan peringatan saat sistem keamanan terdeteksi"
+    "message": "Tampilkan notifikasi saat proteksi suatu halaman berubah, riwayat hampir penuh, atau pencadangannya gagal."
   },
   "settingsCardDebug": {
     "message": "Mode debug"
@@ -825,12 +846,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "Hapus cache"
-  },
-  "clearingMsg": {
-    "message": "Menghapus..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Dihapus!"
   },
   "cacheClearedToast": {
     "message": "Cache dihapus"
@@ -1404,6 +1419,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Cari domain..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Cari pengaturan..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Tidak ada pengaturan yang cocok dengan pencarian Anda."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Pengaturan ditemukan: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Hapus pencarian"
   },
   "settingsBadgeColorLow": {
     "message": "Rendah"
@@ -3393,6 +3420,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Tersimpan. Aturan ini memiliki pola yang sama lebih dari sekali; salinan tambahannya bisa dihapus."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Tersimpan. Satu pola aturan ini juga ada di {0}. Tidak masalah jika memang disengaja."
+  },
   "rulesUiMethodFallback": {
     "message": "Metode"
   },
@@ -3414,17 +3444,11 @@
   "clipboardTimestampFmt": {
     "message": "Stempel waktu: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Sistem keamanan: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategori: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Kepercayaan: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Metode deteksi: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Metode deteksi:"
@@ -5409,7 +5433,13 @@
     "message": "Setiap bulan"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Menyimpan salinan riwayat ke folder Unduhan Anda (di dalam folder Scrapfly), dalam format ekspor yang dipilih di atas."
+    "message": "Menyimpan salinan riwayat ke folder Unduhan Anda (di dalam folder Scrapfly), dalam format ekspor yang dipilih di atas. Hanya file JSON yang dapat diimpor kembali ke riwayat."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Jumlah cadangan yang disimpan"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Setelah setiap pencadangan, cadangan lama di atas jumlah ini dihapus dari folder Unduhan Anda (cadangan yang disimpan dalam beberapa bagian dihitung satu). Hanya file cadangan yang disimpan oleh ekstensi ini yang dihapus. Jika semuanya disimpan, tidak ada yang dihapus."
   },
   "settingsHistoryBackupNow": {
     "message": "Cadangkan sekarang"
@@ -5500,6 +5530,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Hanya entri yang ditampilkan ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Hanya halaman yang disematkan"
@@ -6235,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Salin sebagai Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Salin ringkasan"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Perbandingan pindaian: {0}"

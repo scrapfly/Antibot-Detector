@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector est une extension Chrome gratuite qui montre comment un site web se protège du trafic automatisé. Naviguez comme d'habitude : le nombre affiché sur l'icône de la barre d'outils indique combien de protections la page utilise, et le popup les liste avec leur confiance, leur difficulté et les signaux qui les ont trahies.
 
-Elle reconnaît 86 technologies d'origine : 43 systèmes anti-bot, 22 CAPTCHA et 21 techniques de fingerprinting du navigateur. Chaque détecteur est un simple fichier JSON que vous pouvez lire, modifier ou étendre, et les nouvelles règles arrivent avec chaque version de ce dépôt, de sorte que **Règles → Mettre à jour** peut les installer avant même que Chrome ne mette à jour l'extension elle-même.
+Elle reconnaît 88 technologies d'origine : 44 systèmes anti-bot, 23 CAPTCHA et 21 techniques de fingerprinting du navigateur. Chaque détecteur est un simple fichier JSON que vous pouvez lire, modifier ou étendre, et les nouvelles règles arrivent avec chaque version de ce dépôt, de sorte que **Règles → Mettre à jour** peut les installer avant même que Chrome ne mette à jour l'extension elle-même.
 
 Nous l'avons créée chez [Scrapfly](https://scrapfly.io) parce que tout projet de scraping commence par la même question : qu'est-ce qui protège cette page ? Elle est tout aussi utile pour voir à quoi ressemble, de l'extérieur, la protection anti-bot de votre propre site, ou pour la recherche en sécurité.
 
@@ -105,18 +105,18 @@ Ces listes sont les détecteurs fournis avec l'extension. Vous pouvez désactive
 Chaque système anti-bot a sa propre page, avec les cookies, en-têtes et scripts qui le trahissent : [pages de détection anti-bot](antibots/fr/README.md).
 
 <details>
-<summary><b>Systèmes anti-bot (43)</b></summary>
+<summary><b>Systèmes anti-bot (44)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHA (22)</b></summary>
+<summary><b>CAPTCHA (23)</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 
@@ -136,7 +136,7 @@ Les protections trouvées sur la page actuelle, chacune avec sa confiance, sa di
 
 - **Téléverser les détections** pour obtenir un lien partageable (dpaste.com par défaut ; voir [Liens de partage](#liens-de-partage))
 - **Vider le cache**, pour que la page soit analysée de nouveau au prochain chargement
-- **Copier**, un menu : le même résumé que celui partagé par le téléversement, un tableau Markdown pour un ticket ou un chat, ou du JSON (aucun n'inclut de valeurs de cookies ni d'en-têtes)
+- **Copier**, un menu : le même résumé que celui partagé par le téléversement, un tableau Markdown pour un ticket ou un chat, une ligne avec le site et ses protections, ou du JSON (aucun de ceux-ci n'inclut de valeurs de cookies ni d'en-têtes) ; ou du code qui redemande la page, sous forme de commande curl, de Python (requests) ou de Node.js (fetch), avec le User-Agent, l'Accept-Language et les client hints de ce navigateur et tous les cookies que la page envoie, y compris les HttpOnly. Ce code inclut bien les valeurs des cookies et l'adresse de la page avec sa query string : gardez-le privé
 - **Bloquer ce domaine**, pour que l'extension cesse de l'analyser
 
 ### Historique

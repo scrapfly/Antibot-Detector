@@ -245,6 +245,12 @@
     "message": ": rilevatore anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Note di rilascio della versione {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Novità della versione {0}"
+  },
   "extensionDescription": {
     "message": "Rileva CAPTCHA, sistemi anti-bot e tecnologie di fingerprinting sui siti web"
   },
@@ -316,6 +322,21 @@
   },
   "rulesFiltersLabel": {
     "message": "Filtra le regole"
+  },
+  "rulesSortLabel": {
+    "message": "Ordina regole"
+  },
+  "rulesSortDefault": {
+    "message": "Predefinito"
+  },
+  "rulesSortName": {
+    "message": "Nome da A a Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Aggiornate di recente"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Aggiornate negli ultimi 30 giorni"
   },
   "paginationPrev": {
     "message": "Pagina precedente"
@@ -456,7 +477,7 @@
     "message": "Notifiche"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Mostra avvisi quando vengono rilevati sistemi di sicurezza"
+    "message": "Mostra una notifica quando cambiano le protezioni di una pagina, la cronologia è quasi piena o il suo backup non riesce."
   },
   "settingsCardDebug": {
     "message": "Modalità debug"
@@ -825,12 +846,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "Svuota cache"
-  },
-  "clearingMsg": {
-    "message": "Pulizia in corso..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Svuotata!"
   },
   "cacheClearedToast": {
     "message": "Cache svuotata"
@@ -1404,6 +1419,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Cerca domini..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Cerca impostazioni..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Nessuna impostazione corrisponde alla ricerca."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Impostazioni trovate: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Cancella la ricerca"
   },
   "settingsBadgeColorLow": {
     "message": "Basso"
@@ -3393,6 +3420,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Salvata. Questa regola ha lo stesso schema più volte; le copie in più si possono eliminare."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Salvata. Uno schema di questa regola è presente anche in {0}. Va bene se è voluto."
+  },
   "rulesUiMethodFallback": {
     "message": "Metodo"
   },
@@ -3414,17 +3444,11 @@
   "clipboardTimestampFmt": {
     "message": "Data e ora: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Sistema di sicurezza: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Categoria: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Affidabilità: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Metodi di rilevamento: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Metodi di rilevamento:"
@@ -4967,7 +4991,7 @@
     "message": "{0} nuove in questo periodo"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "su {0} regole"
+    "message": "Regole totali: {0}"
   },
   "statsTipPages": {
     "message": "Pagine salvate nella Cronologia in questo periodo. La Cronologia conserva i rilevamenti salvati, non ogni visita del browser."
@@ -5409,7 +5433,13 @@
     "message": "Ogni mese"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Salva una copia della cronologia nella cartella Download (in una cartella Scrapfly), nel formato di esportazione scelto sopra."
+    "message": "Salva una copia della cronologia nella cartella Download (in una cartella Scrapfly), nel formato di esportazione scelto sopra. Solo i file JSON possono essere reimportati nella cronologia."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Backup da conservare"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Dopo ogni backup, quelli più vecchi oltre questo numero vengono eliminati dalla cartella Download (un backup salvato in più parti conta come uno). Vengono eliminati solo i file di backup salvati da questa estensione. Se li conservi tutti, non viene eliminato nulla."
   },
   "settingsHistoryBackupNow": {
     "message": "Esegui backup ora"
@@ -5500,6 +5530,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Solo le voci mostrate ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Solo pagine fissate"
@@ -6235,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Copia come Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Copia riepilogo"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Confronto delle analisi: {0}"

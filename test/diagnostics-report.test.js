@@ -42,6 +42,14 @@ test('the report names the versions, the counts and the switches', () => {
   assert.match(report, /Background part: up to date/);
 });
 
+test('the History line says how many backups are kept when a number is chosen, and nothing for All', () => {
+  const line = (history) => D.build(env, { ...settings, history: { ...settings.history, ...history } }).split('\n').find(text => text.startsWith('- History:'));
+  assert.match(line({ historyBackupKeep: 7 }), /backup weekly \(keeps 7\), clear on close off/);
+  assert.match(line({ historyBackup: 'off', historyBackupKeep: 30 }), /backup off \(keeps 30\), clear on close off/, 'Back up now deletes old backups too');
+  // All is the default and a value the worker does not offer is All as well, so the report says what the browser does
+  for (const keep of [0, undefined, null, 5, '7', 1.5, 'all']) assert.match(line({ historyBackupKeep: keep }), /backup weekly, clear on close off/, String(keep));
+});
+
 test('nothing private reaches the report: no site, address, header, key or History content', () => {
   const report = D.build(env, settings);
   for (const secret of ['SYNTHETIC', 'hooks.example', 'upload.example', 'secret-site', 'private.example', 'bank.example', 'Authorization', 'user@mail', 'github_gist', '10.1.2.3', 'https://']) {

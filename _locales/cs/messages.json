@@ -245,6 +245,12 @@
     "message": ": detektor anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Poznámky k verzi {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Co je nového ve verzi {0}"
+  },
   "extensionDescription": {
     "message": "Detekujte CAPTCHA, anti-bot systémy a technologie fingerprintingu na webech"
   },
@@ -316,6 +322,21 @@
   },
   "rulesFiltersLabel": {
     "message": "Filtrovat pravidla"
+  },
+  "rulesSortLabel": {
+    "message": "Řazení pravidel"
+  },
+  "rulesSortDefault": {
+    "message": "Výchozí"
+  },
+  "rulesSortName": {
+    "message": "Název A až Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Nedávno aktualizovaná"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Aktualizováno za posledních 30 dní"
   },
   "paginationPrev": {
     "message": "Předchozí stránka"
@@ -456,7 +477,7 @@
     "message": "Oznámení"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Zobrazovat upozornění při zjištění bezpečnostních systémů"
+    "message": "Zobrazit oznámení, když se změní ochrany stránky, historie je téměř plná nebo se nezdaří její zálohování."
   },
   "settingsCardDebug": {
     "message": "Režim ladění"
@@ -825,12 +846,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "Vymazat mezipaměť"
-  },
-  "clearingMsg": {
-    "message": "Mazání..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Vymazáno!"
   },
   "cacheClearedToast": {
     "message": "Mezipaměť vymazána"
@@ -1404,6 +1419,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Hledat domény..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Hledat v nastavení..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Vašemu hledání neodpovídá žádné nastavení."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Nalezená nastavení: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Vymazat hledání"
   },
   "settingsBadgeColorLow": {
     "message": "Nízká"
@@ -3393,6 +3420,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Uloženo. Toto pravidlo obsahuje stejný vzor vícekrát; přebytečné kopie lze smazat."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Uloženo. Stejný vzor mají i další pravidla: {0}. V pořádku, pokud je to záměr."
+  },
   "rulesUiMethodFallback": {
     "message": "Metoda"
   },
@@ -3414,17 +3444,11 @@
   "clipboardTimestampFmt": {
     "message": "Časové razítko: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Bezpečnostní systém: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategorie: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Spolehlivost: {0} %"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Metody detekce: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Metody detekce:"
@@ -5409,7 +5433,13 @@
     "message": "Každý měsíc"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Uloží kopii historie do složky Stažené soubory (do složky Scrapfly) ve výše zvoleném formátu exportu."
+    "message": "Uloží kopii historie do složky Stažené soubory (do složky Scrapfly) ve výše zvoleném formátu exportu. Zpět do historie lze importovat pouze soubory JSON."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Kolik záloh ponechat"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Po každé záloze se starší zálohy nad tento počet odstraní ze složky Stažené soubory (záloha uložená ve více částech se počítá jako jedna). Odstraňují se jen soubory záloh uložené tímto rozšířením. Pokud ponecháte všechny, nic se nesmaže."
   },
   "settingsHistoryBackupNow": {
     "message": "Zálohovat nyní"
@@ -5500,6 +5530,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Jen zobrazené položky ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Jen připnuté stránky"
@@ -6235,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Kopírovat jako Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Kopírovat souhrn"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Porovnání skenování: {0}"

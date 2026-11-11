@@ -245,6 +245,12 @@
     "message": ": anti-bot dedektörü",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "{0} sürümü için sürüm notları"
+  },
+  "headerVersionNewFmt": {
+    "message": "{0} sürümündeki yenilikler"
+  },
   "extensionDescription": {
     "message": "Web sitelerindeki CAPTCHA'ları, anti-bot sistemlerini ve parmak izi teknolojilerini tespit edin"
   },
@@ -316,6 +322,21 @@
   },
   "rulesFiltersLabel": {
     "message": "Kuralları filtrele"
+  },
+  "rulesSortLabel": {
+    "message": "Kuralları sırala"
+  },
+  "rulesSortDefault": {
+    "message": "Varsayılan"
+  },
+  "rulesSortName": {
+    "message": "Ad A’dan Z’ye"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Yakın zamanda güncellenenler"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Son 30 günde güncellendi"
   },
   "paginationPrev": {
     "message": "Önceki sayfa"
@@ -456,7 +477,7 @@
     "message": "Bildirimler"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Güvenlik sistemleri tespit edildiğinde uyarı göster"
+    "message": "Bir sayfanın korumaları değiştiğinde, geçmiş neredeyse dolduğunda veya geçmiş yedeklemesi başarısız olduğunda bildirim göster."
   },
   "settingsCardDebug": {
     "message": "Hata ayıklama modu"
@@ -825,12 +846,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "Önbelleği temizle"
-  },
-  "clearingMsg": {
-    "message": "Temizleniyor..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Temizlendi!"
   },
   "cacheClearedToast": {
     "message": "Önbellek temizlendi"
@@ -1404,6 +1419,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Alan adı ara..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Ayarlarda ara..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Aramanızla eşleşen ayar yok."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Bulunan ayarlar: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Aramayı temizle"
   },
   "settingsBadgeColorLow": {
     "message": "Düşük"
@@ -3393,6 +3420,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Kaydedildi. Bu kuralda aynı desen birden fazla kez var; fazla kopyalar silinebilir."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Kaydedildi. Bu kuraldaki bir desen {0} içinde de var. Bilerek yapıldıysa sorun değil."
+  },
   "rulesUiMethodFallback": {
     "message": "Yöntem"
   },
@@ -3414,17 +3444,11 @@
   "clipboardTimestampFmt": {
     "message": "Zaman damgası: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Güvenlik sistemi: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategori: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Güven: %{0}"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Tespit yöntemleri: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Tespit yöntemleri:"
@@ -5409,7 +5433,13 @@
     "message": "Her ay"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Geçmişin bir kopyasını İndirilenler klasörünüze (Scrapfly klasörü içine) yukarıda seçilen dışa aktarma biçiminde kaydeder."
+    "message": "Geçmişin bir kopyasını İndirilenler klasörünüze (Scrapfly klasörü içine) yukarıda seçilen dışa aktarma biçiminde kaydeder. Geçmişe yalnızca JSON dosyaları yeniden içe aktarılabilir."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Saklanacak yedekler"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Her yedeklemeden sonra, bu sayıyı aşan eski yedekler İndirilenler klasörünüzden silinir (birkaç parça halinde kaydedilen bir yedek bir sayılır). Yalnızca bu uzantının kaydettiği yedek dosyaları silinir. Hepsini saklarsanız hiçbir şey silinmez."
   },
   "settingsHistoryBackupNow": {
     "message": "Şimdi yedekle"
@@ -5500,6 +5530,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Yalnızca gösterilen girdiler ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Yalnızca sabitlenen sayfalar"
@@ -6235,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Markdown olarak kopyala"
+  },
+  "historyCompareCopySummary": {
+    "message": "Özeti kopyala"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Taramaları karşılaştır: {0}"

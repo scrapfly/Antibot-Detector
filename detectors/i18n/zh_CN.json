@@ -1112,5 +1112,21 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "页面脚本中的 SG-CAPTCHA 挑战常量（sgchallenge、sgsubmit_url）",
   "sg-captcha header on the SG-CAPTCHA challenge page": "SG-CAPTCHA 挑战页上的 sg-captcha 标头",
   "sg-captcha header with the challenge constants in the page's scripts": "sg-captcha 标头与页面脚本中的挑战常量",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA 挑战页与页面脚本中的相应常量"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA 挑战页与页面脚本中的相应常量",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "注重隐私的 CAPTCHA 服务，提供 JavaScript 小组件、隐藏模式和服务端验证",
+  "Official CaptchaFox widget script api.js on its CDN": "其 CDN 上的 CaptchaFox 官方小组件脚本 api.js",
+  "Widget container with the class captchafox, possibly unconfigured": "带有 captchafox 类的小组件容器，可能尚未配置",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "带有 captchafox 类和 sitekey 属性的小组件容器，并不代表密钥有效",
+  "Hidden response token field named cf-captcha-response, added after a verification": "名为 cf-captcha-response 的隐藏响应令牌字段，验证后添加",
+  "Documented captchafox window object with its render method, not execution": "文档记载的 captchafox window 对象及其 render 方法，并非已执行",
+  "Configured widget and the captchafox window object": "已配置的小组件和 captchafox window 对象",
+  "Configured widget and the response token field": "已配置的小组件和响应令牌字段",
+  "Configured widget, window object and response token field": "已配置的小组件、window 对象和响应令牌字段",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "用 HWWAFSESID 和 HWWAFSESTIME Cookie 标记请求的华为云 Web 应用防火墙",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "华为云 WAF 为标记请求而插入的会话 ID Cookie HWWAFSESID（华为云帮助）",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "华为云 WAF 为标记请求而插入的会话时间戳 Cookie HWWAFSESTIME（华为云帮助）",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "开源工具 WAFW00F 列出的 Server 头 HuaweiCloudWAF，仅作辅助信号",
+  "Both WAF session cookies": "WAF 的两个会话 Cookie",
+  "Session ID cookie with the WAF server header": "会话 ID Cookie 与 WAF 的服务器头",
+  "Session timestamp cookie with the WAF server header": "会话时间戳 Cookie 与 WAF 的服务器头"
 }

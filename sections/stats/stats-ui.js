@@ -72,14 +72,16 @@
   const startOfDay = ts => { const d = new Date(ts); d.setHours(0, 0, 0, 0); return d.getTime(); };
   /** Whole local calendar days between a time and now (0 = today). */
   const daysAgo = (ts, now) => Math.round((startOfDay(now) - startOfDay(ts)) / 86400000);
-  /** "5 minutes ago", "in 20 minutes", "yesterday": the unit follows the distance. */
+  /** "5 minutes ago", "in 20 minutes", "yesterday": the unit follows the distance, rounded first (59.6 minutes is "1 hour ago", never "60 minutes ago"). */
   function relative(ts, now) {
     const f = intl('RelativeTimeFormat', { numeric: 'auto' });
     if (!f) return dateText(ts);
-    const diff = ts - now, abs = Math.abs(diff);
-    if (abs < 60000) return f.format(0, 'second');
-    if (abs < 3600000) return f.format(Math.round(diff / 60000), 'minute');
-    if (abs < 86400000) return f.format(Math.round(diff / 3600000), 'hour');
+    const diff = ts - now;
+    if (Math.abs(diff) < 60000) return f.format(0, 'second');
+    const minutes = Math.round(diff / 60000);
+    if (Math.abs(minutes) < 60) return f.format(minutes, 'minute');
+    const hours = Math.round(diff / 3600000);
+    if (Math.abs(hours) < 24) return f.format(hours, 'hour');
     return f.format(-daysAgo(ts, now), 'day');
   }
   const hourLabel = hour => {

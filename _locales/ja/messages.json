@@ -245,6 +245,12 @@
     "message": ":アンチボット検出器",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "バージョン {0} のリリースノート"
+  },
+  "headerVersionNewFmt": {
+    "message": "バージョン {0} の新機能"
+  },
   "extensionDescription": {
     "message": "ウェブサイト上のCAPTCHA、アンチボットシステム、フィンガープリント技術を検出"
   },
@@ -316,6 +322,21 @@
   },
   "rulesFiltersLabel": {
     "message": "ルールをフィルター"
+  },
+  "rulesSortLabel": {
+    "message": "ルールの並べ替え"
+  },
+  "rulesSortDefault": {
+    "message": "既定"
+  },
+  "rulesSortName": {
+    "message": "名前順"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "最近更新"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "過去30日以内に更新"
   },
   "paginationPrev": {
     "message": "前のページ"
@@ -456,7 +477,7 @@
     "message": "通知"
   },
   "settingsCardNotificationsDesc": {
-    "message": "セキュリティシステムが検出されたときに通知を表示"
+    "message": "ページの保護機能が変化したとき、履歴がほぼいっぱいになったとき、履歴のバックアップに失敗したときに通知します。"
   },
   "settingsCardDebug": {
     "message": "デバッグモード"
@@ -825,12 +846,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "キャッシュをクリア"
-  },
-  "clearingMsg": {
-    "message": "クリア中..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ クリアしました!"
   },
   "cacheClearedToast": {
     "message": "キャッシュをクリアしました"
@@ -1404,6 +1419,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "ドメインを検索..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "設定を検索..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "検索に一致する設定はありません。"
+  },
+  "settingsSearchCountFmt": {
+    "message": "見つかった設定：{0}"
+  },
+  "settingsSearchClear": {
+    "message": "検索をクリア"
   },
   "settingsBadgeColorLow": {
     "message": "低"
@@ -3393,6 +3420,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "保存しました。このルールには同じパターンが複数あります。余分なコピーは削除できます。"
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "保存しました。このルールのパターンが {0} にもあります。意図したものなら問題ありません。"
+  },
   "rulesUiMethodFallback": {
     "message": "方法"
   },
@@ -3414,17 +3444,11 @@
   "clipboardTimestampFmt": {
     "message": "日時: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "セキュリティシステム: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "カテゴリー: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "信頼度: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "検出方法: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "検出方法:"
@@ -5409,7 +5433,13 @@
     "message": "毎月"
   },
   "settingsHistoryBackupDesc": {
-    "message": "履歴のコピーを、上で選択したエクスポート形式で「ダウンロード」フォルダ内の Scrapfly フォルダに保存します。"
+    "message": "履歴のコピーを、上で選択したエクスポート形式で「ダウンロード」フォルダ内の Scrapfly フォルダに保存します。履歴に再度インポートできるのは JSON ファイルのみです。"
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "保持するバックアップ数"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "バックアップのたびに、この数を超える古いバックアップが「ダウンロード」フォルダから削除されます（複数のファイルに分けて保存したバックアップは1件と数えます）。削除されるのは、この拡張機能が保存したバックアップファイルだけです。すべて保持すれば、何も削除されません。"
   },
   "settingsHistoryBackupNow": {
     "message": "今すぐバックアップ"
@@ -5500,6 +5530,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "表示中の項目のみ（{0} 件）"
   },
   "historyExportPinnedOnly": {
     "message": "ピン留めしたページのみ"
@@ -6235,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Markdown としてコピー"
+  },
+  "historyCompareCopySummary": {
+    "message": "サマリーをコピー"
   },
   "historyCompareMdHeadingFmt": {
     "message": "スキャンの比較: {0}"

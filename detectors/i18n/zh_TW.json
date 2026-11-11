@@ -1112,5 +1112,21 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "網頁指令碼中的 SG-CAPTCHA 挑戰常數（sgchallenge、sgsubmit_url）",
   "sg-captcha header on the SG-CAPTCHA challenge page": "SG-CAPTCHA 挑戰頁面上的 sg-captcha 標頭",
   "sg-captcha header with the challenge constants in the page's scripts": "sg-captcha 標頭與網頁指令碼中的挑戰常數",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA 挑戰頁面與網頁指令碼中的相應常數"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA 挑戰頁面與網頁指令碼中的相應常數",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "注重隱私的 CAPTCHA 服務，提供 JavaScript 小工具、隱藏模式和伺服器端驗證",
+  "Official CaptchaFox widget script api.js on its CDN": "其 CDN 上的 CaptchaFox 官方小工具指令碼 api.js",
+  "Widget container with the class captchafox, possibly unconfigured": "帶有 captchafox 類別的小工具容器，可能尚未設定",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "帶有 captchafox 類別和 sitekey 屬性的小工具容器，並不代表金鑰有效",
+  "Hidden response token field named cf-captcha-response, added after a verification": "名為 cf-captcha-response 的隱藏回應權杖欄位，驗證後新增",
+  "Documented captchafox window object with its render method, not execution": "文件記載的 captchafox window 物件及其 render 方法，並非已執行",
+  "Configured widget and the captchafox window object": "已設定的小工具和 captchafox window 物件",
+  "Configured widget and the response token field": "已設定的小工具和回應權杖欄位",
+  "Configured widget, window object and response token field": "已設定的小工具、window 物件和回應權杖欄位",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "以 HWWAFSESID 和 HWWAFSESTIME Cookie 標記請求的華為雲 Web 應用程式防火牆",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "華為雲 WAF 為標記請求而插入的工作階段 ID Cookie HWWAFSESID（華為雲說明）",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "華為雲 WAF 為標記請求而插入的工作階段時間戳記 Cookie HWWAFSESTIME（華為雲說明）",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "開源工具 WAFW00F 列出的 Server 標頭 HuaweiCloudWAF，僅作輔助訊號",
+  "Both WAF session cookies": "WAF 的兩個工作階段 Cookie",
+  "Session ID cookie with the WAF server header": "工作階段 ID Cookie 與 WAF 的伺服器標頭",
+  "Session timestamp cookie with the WAF server header": "工作階段時間戳記 Cookie 與 WAF 的伺服器標頭"
 }

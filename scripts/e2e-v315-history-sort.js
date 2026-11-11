@@ -53,8 +53,9 @@ const SEED = [
     await page.goto(`chrome-extension://${extId}/popup.html`);
     await page.bringToFront();
     await page.waitForFunction(() => window.popupInstance && window.popupInstance.detectorManager && window.popupInstance.detectorManager.initialized, null, { timeout: 30000 });
-    await page.click('.tab-button[data-tab="history"], [data-tab="history"]');
-    await page.waitForFunction(() => { const t = document.querySelector('#historyTab'); return t && t.getBoundingClientRect().height > 0; }, null, { timeout: 20000 });
+    // The popup chooses its default tab after the rules are ready (popup.js, loadAndApplyDefaultTab), so a click that comes first can be
+    // switched back to Detection: click History until it is the tab on screen
+    await page.waitForFunction(() => { const t = document.querySelector('#historyTab'); if (t && t.getBoundingClientRect().height > 0) return true; const b = document.querySelector('.tab-btn[data-tab="history"]'); if (b) b.click(); return false; }, null, { polling: 300, timeout: 20000 });
     await page.waitForSelector('.history-item', { state: 'attached', timeout: 20000 }); await sleep(500);
     await page.evaluate((t) => window.ScrapflyTheme.apply(t), theme);
     await page.waitForFunction(() => { const r = document.querySelector('#historyTab .history-filters'); return r && !r.hidden && r.getBoundingClientRect().height > 0; }, null, { timeout: 20000 });
@@ -81,10 +82,12 @@ const SEED = [
   await check('sorting changes the order and keeps the row numbers sensible', async () => {
     const page = await open('en', 'dark');
     const hosts = () => page.evaluate(() => [...document.querySelectorAll('.history-item')].map(i => (i.textContent.match(/(alpha|bravo|charlie)\.example/) || [])[0]));
-    assert.deepEqual(await hosts(), ['bravo.example', 'alpha.example', 'charlie.example']);
+    let order = await hosts();
+    assert.deepEqual(order, ['bravo.example', 'alpha.example', 'charlie.example'], `newest first: ${JSON.stringify(order)}`);
     await page.selectOption('#historySort', 'host');
     await sleep(300);
-    assert.deepEqual(await hosts(), ['alpha.example', 'bravo.example', 'charlie.example']);
+    order = await hosts();
+    assert.deepEqual(order, ['alpha.example', 'bravo.example', 'charlie.example'], `by site: ${JSON.stringify(order)}`);
     await page.selectOption('#historySort', 'detections');
     await sleep(300);
     assert.equal((await hosts())[0], 'alpha.example');

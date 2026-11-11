@@ -70,8 +70,12 @@ test('a scope change drops the results saved under any other scope, and keeps th
   assert.equal(await Engine.dropOtherScopes('nonsense'), 0, 'a scope that is not one drops nothing');
 });
 
-test('the worker drops them when Settings says the scope changed (the address-less clear Settings also sends cleared nothing)', async () => {
-  const dropped = [];
+// The worker's answer to Settings saying the scope changed: the results of the old scopes go, then the tab on screen gets the badge
+// of its own saved result. `tab` is that tab (none: no active tab) and `stored` what the cache lookup finds for it (null: nothing).
+// setBadgeForDetections is what the worker paints a result with (background/utilities.js: the count, or the clean state and the
+// icon's hover text); `badge` collects what the handler writes itself.
+function scopeChangeWorker({ tab = null, stored = null } = {}) {
+  const dropped = [], painted = [], badge = [];
   const context = vm.createContext({
     Promise, Map, Set, console, setTimeout: () => 0,
     MessageSender: require('../modules/core/message-sender.js'),
@@ -80,14 +84,53 @@ test('the worker drops them when Settings says the scope changed (the address-le
     Logger: { background() {}, warn() {}, error() {}, debug() {} },
     UrlUtils: { clearUrlHashCache() {} },
     Utils: { getCacheScope: async () => 'domain' },
-    DetectionEngineManager: { dropOtherScopes: async (scope) => { dropped.push(scope); return 2; }, getStoredDetection: async () => null },
-    chrome: { tabs: { query: async () => [] } }
+    Constants: { RECENTLY_CLEARED_TAB_TIMEOUT: 10000 },
+    recentlyClearedTabs: new Set(), activeDetections: new Map(),
+    DetectionEngineManager: { dropOtherScopes: async (scope) => { dropped.push(scope); return 2; }, getStoredDetection: async () => stored },
+    setBadgeForDetections: async (tabId, url, results) => { painted.push({ tabId, url, results: JSON.parse(JSON.stringify(results)) }); },
+    chrome: { tabs: { query: async () => (tab ? [tab] : []) }, action: {
+      setBadgeText: async ({ tabId, text }) => { badge.push({ tabId, text }); },
+      setBadgeBackgroundColor: async ({ tabId, color }) => { badge.push({ tabId, color }); }
+    } }
   });
+  vm.runInContext(read('modules/core/badge-constants.js'), context, { filename: 'badge-constants.js' });
   vm.runInContext(read('background/handlers/messages-settings.js'), context, { filename: 'messages-settings.js' });
   const registry = {};
   context.registerSettingsHandlers(registry, {});
   // (a sender with no tab and no address is another extension context, as the popup's message reads here)
-  const answer = await new Promise((resolve) => registry.CACHE_SCOPE_CHANGED({ request: {}, sender: {}, sendResponse: resolve, context: {} }));
+  const changeScope = () => new Promise((resolve) => registry.CACHE_SCOPE_CHANGED({ request: {}, sender: {}, sendResponse: resolve, context: {} }));
+  return { BADGE: context.BADGE, dropped, painted, badge, changeScope };
+}
+
+test('the worker drops them when Settings says the scope changed (the address-less clear Settings also sends cleared nothing)', async () => {
+  const worker = scopeChangeWorker();
+  const answer = await worker.changeScope();
   assert.equal(answer.success, true);
-  assert.deepEqual(dropped, ['domain'], 'the results of the old scope are dropped for the scope now in force');
+  assert.deepEqual(worker.dropped, ['domain'], 'the results of the old scope are dropped for the scope now in force');
+});
+
+// A scan that found nothing is saved with a count of 0: it is a finished scan like any other. The popup reads the gray cleared mark
+// as "no scan yet", so a page left on it after the scope change was shown as unscanned although its result is saved.
+const TAB = { id: 7, url: 'https://shop.test/', incognito: false };
+
+test('a scope change leaves a page whose saved result found nothing on the clean state, not on the gray cleared mark', async () => {
+  const worker = scopeChangeWorker({ tab: TAB, stored: { url: TAB.url, detectionCount: 0, detectionResults: [] } });
+  assert.equal((await worker.changeScope()).success, true);
+  assert.deepEqual(worker.painted, [{ tabId: 7, url: TAB.url, results: [] }], 'painted as a cache hit paints it: the clean state');
+  assert.deepEqual(worker.badge, [], 'the cleared mark is not written over it');
+});
+
+test('a scope change paints the detections of a saved result that has some; the cleared mark is for a page with nothing saved', async () => {
+  const found = [{ id: 'a' }, { id: 'b' }];
+  // (an older entry without a count field is judged by its results)
+  for (const stored of [{ url: TAB.url, detectionCount: 2, detectionResults: found }, { url: TAB.url, detectionResults: found }]) {
+    const worker = scopeChangeWorker({ tab: TAB, stored });
+    await worker.changeScope();
+    assert.deepEqual(worker.painted, [{ tabId: 7, url: TAB.url, results: found }], JSON.stringify(stored));
+    assert.deepEqual(worker.badge, [], 'no cleared mark over a page that has a result');
+  }
+  const none = scopeChangeWorker({ tab: TAB, stored: null });
+  assert.equal((await none.changeScope()).success, true);
+  assert.deepEqual(none.painted, [], 'nothing saved: nothing to paint');
+  assert.deepEqual(none.badge, [{ tabId: 7, text: none.BADGE.TEXT.CLEARED }, { tabId: 7, color: none.BADGE.COLORS.CLEARED }], 'the cleared mark');
 });

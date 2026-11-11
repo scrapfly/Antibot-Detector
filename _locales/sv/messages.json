@@ -245,6 +245,12 @@
     "message": ": anti-bot-detektor",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Versionsanteckningar för version {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Nytt i version {0}"
+  },
   "extensionDescription": {
     "message": "Upptäck CAPTCHA, anti-bot-system och fingerprinting-tekniker på webbplatser"
   },
@@ -316,6 +322,21 @@
   },
   "rulesFiltersLabel": {
     "message": "Filtrera regler"
+  },
+  "rulesSortLabel": {
+    "message": "Sortera regler"
+  },
+  "rulesSortDefault": {
+    "message": "Standard"
+  },
+  "rulesSortName": {
+    "message": "Namn A till Ö"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Nyligen uppdaterade"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Uppdaterade de senaste 30 dagarna"
   },
   "paginationPrev": {
     "message": "Föregående sida"
@@ -456,7 +477,7 @@
     "message": "Aviseringar"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Visa varningar när skyddssystem upptäcks"
+    "message": "Visa en avisering när en sidas skydd ändras, historiken är nästan full eller dess säkerhetskopiering misslyckas."
   },
   "settingsCardDebug": {
     "message": "Felsökningsläge"
@@ -825,12 +846,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "Rensa cache"
-  },
-  "clearingMsg": {
-    "message": "Rensar..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Rensat!"
   },
   "cacheClearedToast": {
     "message": "Cachen rensades"
@@ -1404,6 +1419,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Sök domäner..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Sök inställningar..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Inga inställningar matchar din sökning."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Hittade inställningar: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Rensa sökning"
   },
   "settingsBadgeColorLow": {
     "message": "Låg"
@@ -3393,6 +3420,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Sparad. Den här regeln har samma mönster flera gånger; de extra kopiorna kan tas bort."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Sparad. Ett mönster i den här regeln finns även i {0}. Det är okej om det är avsiktligt."
+  },
   "rulesUiMethodFallback": {
     "message": "Metod"
   },
@@ -3414,17 +3444,11 @@
   "clipboardTimestampFmt": {
     "message": "Tidsstämpel: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Skyddssystem: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategori: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Säkerhet: {0} %"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Upptäcktsmetoder: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Upptäcktsmetoder:"
@@ -4967,7 +4991,7 @@
     "message": "Nya under perioden: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "av {0} regler"
+    "message": "Totalt antal regler: {0}"
   },
   "statsTipPages": {
     "message": "Sidor som sparats i Historik i det här intervallet. Historik sparar upptäckter, inte varje webbläsarbesök."
@@ -5409,7 +5433,13 @@
     "message": "Varje månad"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Sparar en kopia av historiken i mappen Nedladdningar (i en Scrapfly-mapp), i exportformatet som valts ovan."
+    "message": "Sparar en kopia av historiken i mappen Nedladdningar (i en Scrapfly-mapp), i exportformatet som valts ovan. Bara JSON-filer kan importeras tillbaka till historiken."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Säkerhetskopior att behålla"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Efter varje säkerhetskopia tas äldre säkerhetskopior utöver detta antal bort från mappen Nedladdningar (en säkerhetskopia som sparats i flera delar räknas som en). Bara säkerhetskopiefiler som det här tillägget har sparat tas bort. Behåller du alla tas ingenting bort."
   },
   "settingsHistoryBackupNow": {
     "message": "Säkerhetskopiera nu"
@@ -5500,6 +5530,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Endast visade poster ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Endast fästa sidor"
@@ -6235,6 +6268,9 @@
   },
   "historyCompareCopy": {
     "message": "Kopiera som Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Kopiera sammanfattning"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Jämför skanningar: {0}"

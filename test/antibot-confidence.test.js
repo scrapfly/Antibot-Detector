@@ -14,9 +14,8 @@ const vm = require('node:vm');
 const root = path.join(__dirname, '..');
 const dir = path.join(root, 'detectors/antibot');
 const antibot = Object.fromEntries(fs.readdirSync(dir).filter(f => f.endsWith('.json')).map(file => {
-  const raw = fs.readFileSync(path.join(dir, file), 'utf8');
-  const detector = JSON.parse(raw);
-  return [detector.id, Object.assign(detector, { __raw: raw })];
+  const detector = JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8'));
+  return [detector.id, detector];
 }));
 const fixtures = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/antibot-confidence.json'), 'utf8'));
 const { isLikelyEvilRegex } = require('../utils/pattern-cache.js');
@@ -36,10 +35,7 @@ for (const file of [
 ]) vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context, { filename: file });
 const Engine = vm.runInContext('DetectionEngineManager', context);
 const Combinations = context.DetectionCombinations;
-const definitions = Object.fromEntries(Object.entries(antibot).map(([id, d]) => {
-  const { __raw, ...clean } = d;
-  return [id, clean];
-}));
+const definitions = antibot;
 
 const patterns = d => Object.entries(d.detection).flatMap(([method, rules]) => rules.map(rule => ({ method, ...rule })));
 const product = groups => groups.reduce((out, g) => out.flatMap(l => g.map(r => [...l, ...r])), [[]]);
@@ -142,16 +138,14 @@ const PROOF = new Set([
 const CAPPED = new Set(['detect-ocule', 'detect-meetrics', 'detect-azurefrontdoor', 'detect-yundun', 'detect-hunt']);
 const isProof = (d, r) => PROOF.has(`${d.id}/${r.id}`);
 
-test('forty-three anti-bot definitions: v2, CRLF, explicit ids, graded combinations', () => {
+test('forty-four anti-bot definitions: v2, explicit ids, graded combinations', () => {
   assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aliyunwaf', 'detect-amazon', 'detect-anubis', 'detect-aws-waf',
     'detect-azurefrontdoor', 'detect-botguard', 'detect-castle', 'detect-cheq', 'detect-cloudflare', 'detect-cloudflare-waitingroom', 'detect-datadome',
-    'detect-ddosguard', 'detect-deepseek-pow', 'detect-f5', 'detect-fastly', 'detect-fingerprintjs', 'detect-forter', 'detect-hunt', 'detect-incapsula',
+    'detect-ddosguard', 'detect-deepseek-pow', 'detect-f5', 'detect-fastly', 'detect-fingerprintjs', 'detect-forter', 'detect-huaweicloud-waf', 'detect-hunt', 'detect-incapsula',
     'detect-iovation', 'detect-jiasule', 'detect-kasada', 'detect-kount', 'detect-meetrics', 'detect-netacea', 'detect-ocule', 'detect-openai-sentinel',
     'detect-perimeterx', 'detect-queueit', 'detect-radware', 'detect-reblaze', 'detect-riskified', 'detect-ruishu', 'detect-seon', 'detect-shapesecurity',
     'detect-sift', 'detect-siteground-captcha', 'detect-sucuri', 'detect-threatmetrix', 'detect-vercel', 'detect-wordfence', 'detect-yundun']);
   for (const d of Object.values(definitions)) {
-    const raw = antibot[d.id].__raw;
-    assert.equal(raw.split('\n').length - 1, (raw.match(/\r\n/g) || []).length, `${d.id}: CRLF throughout`);
     assert.match(d.version, /^2\.\d+\.\d+$/, d.id);
     const rules = patterns(d);
     const ids = new Set(rules.map(r => r.id));

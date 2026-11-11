@@ -1112,5 +1112,21 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "Stałe wyzwania SG-CAPTCHA (sgchallenge, sgsubmit_url) w skryptach strony",
   "sg-captcha header on the SG-CAPTCHA challenge page": "Nagłówek sg-captcha na stronie wyzwania SG-CAPTCHA",
   "sg-captcha header with the challenge constants in the page's scripts": "Nagłówek sg-captcha ze stałymi wyzwania w skryptach strony",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Strona wyzwania SG-CAPTCHA z jej stałymi w skryptach strony"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "Strona wyzwania SG-CAPTCHA z jej stałymi w skryptach strony",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "Usługa CAPTCHA nastawiona na prywatność z widżetem JavaScript, trybem ukrytym i weryfikacją po stronie serwera",
+  "Official CaptchaFox widget script api.js on its CDN": "Oficjalny skrypt widżetu CaptchaFox api.js w jego CDN",
+  "Widget container with the class captchafox, possibly unconfigured": "Kontener widżetu z klasą captchafox, być może nieskonfigurowany",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "Kontener widżetu z klasą captchafox i atrybutem sitekey, nie ważność klucza",
+  "Hidden response token field named cf-captcha-response, added after a verification": "Ukryte pole tokenu odpowiedzi o nazwie cf-captcha-response, dodawane po weryfikacji",
+  "Documented captchafox window object with its render method, not execution": "Udokumentowany obiekt window captchafox z metodą render, nie wykonanie",
+  "Configured widget and the captchafox window object": "Skonfigurowany widżet i obiekt window captchafox",
+  "Configured widget and the response token field": "Skonfigurowany widżet i pole tokenu odpowiedzi",
+  "Configured widget, window object and response token field": "Skonfigurowany widżet, obiekt window i pole tokenu odpowiedzi",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "Zapora aplikacji internetowych Huawei Cloud, która oznacza żądania plikami cookie HWWAFSESID i HWWAFSESTIME",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Plik cookie HWWAFSESID z identyfikatorem sesji, który Huawei Cloud WAF wstawia do oznaczania żądań (pomoc Huawei Cloud)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Plik cookie HWWAFSESTIME ze znacznikiem czasu sesji, który Huawei Cloud WAF wstawia do oznaczania żądań (pomoc Huawei Cloud)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "Nagłówek Server HuaweiCloudWAF, wymieniony w narzędziu open source WAFW00F; tylko sygnał pomocniczy",
+  "Both WAF session cookies": "Oba pliki cookie sesji WAF",
+  "Session ID cookie with the WAF server header": "Plik cookie z identyfikatorem sesji i nagłówek serwera WAF",
+  "Session timestamp cookie with the WAF server header": "Plik cookie ze znacznikiem czasu sesji i nagłówek serwera WAF"
 }

@@ -63,6 +63,21 @@ test('dates and times: relative to now, a range that crosses a year names it', a
   assert.equal(U.relative(at(-180), now), '3 hours ago');
   assert.equal(U.relative(now - 86400000, now), 'yesterday');
   assert.equal(U.relative(now - 5 * 86400000, now), '5 days ago');
+  // The unit follows the rounded distance: 59.6 minutes is an hour and 23.6 hours is a day, never "60 minutes" or "24 hours"
+  assert.equal(U.relative(at(-59.4), now), '59 minutes ago');
+  assert.equal(U.relative(at(-59.6), now), '1 hour ago');
+  assert.equal(U.relative(at(59.6), now), 'in 1 hour');
+  assert.equal(U.relative(now - 23.4 * 3600000, now), '23 hours ago');
+  assert.equal(U.relative(now - 23.6 * 3600000, now), 'yesterday', 'the harness clock is mid-afternoon, so a day back is the day before');
+  assert.equal(U.relative(now + 23.6 * 3600000, now), 'tomorrow');
+  for (const sign of [-1, 1]) {
+    for (const mins of [59.5, 59.6, 59.75, 59.99]) assert.doesNotMatch(U.relative(at(sign * mins), now), /\b60 minutes/, `${sign * mins} minutes`);
+    for (const hours of [23.5, 23.6, 23.75, 23.99]) assert.doesNotMatch(U.relative(now + sign * hours * 3600000, now), /\b24 hours/, `${sign * hours} hours`);
+  }
+  // Every distance in between, a third of a minute apart, on both sides of now
+  for (let seconds = 1; seconds <= 50 * 3600; seconds += 20) {
+    for (const sign of [-1, 1]) assert.doesNotMatch(U.relative(now + sign * seconds * 1000, now), /\b(60 minutes|24 hours)/, `${sign * seconds} seconds`);
+  }
   assert.equal(U.daysAgo(new Date(2026, 9, 17, 0, 5).getTime(), new Date(2026, 9, 17, 23, 55).getTime()), 0);
   assert.equal(U.daysAgo(new Date(2026, 9, 16, 23, 55).getTime(), new Date(2026, 9, 17, 0, 5).getTime()), 1, 'ten minutes apart, but a calendar day');
   assert.equal(U.daysAgo(new Date(2026, 2, 28, 12).getTime(), new Date(2026, 2, 30, 12).getTime()), 2, 'a daylight-saving change does not shift the count');

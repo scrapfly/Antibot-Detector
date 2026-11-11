@@ -247,6 +247,14 @@
     "message": ": anti-bot detector",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Release notes for version {0}",
+    "description": "Hover text and screen reader name of the version number in the popup header, which opens that version's release notes on GitHub. {0} = the version, e.g. 3.1.7"
+  },
+  "headerVersionNewFmt": {
+    "message": "What's new in version {0}",
+    "description": "The same link's name while a small dot says its release notes have not been opened yet (after an update). {0} = the version, e.g. 3.1.7"
+  },
   "extensionDescription": {
     "message": "Detect CAPTCHAs, anti-bot systems and fingerprinting technologies on websites",
     "description": "Tagline"
@@ -320,6 +328,26 @@
   "rulesFiltersLabel": {
     "message": "Filter rules",
     "description": "Accessible name of the row of filter chips under the Rules search"
+  },
+  "rulesSortLabel": {
+    "message": "Sort rules",
+    "description": "Accessible name of the sort dropdown at the end of the Rules chip row"
+  },
+  "rulesSortDefault": {
+    "message": "Default",
+    "description": "Sort option in Rules: the order the list always had (switched-off rules last, the category order from Settings, newest update, name)"
+  },
+  "rulesSortName": {
+    "message": "Name A to Z",
+    "description": "Sort option in Rules: by rule name, A to Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Recently updated",
+    "description": "Rules: the chip that keeps the rules updated in the last 30 days, and the sort option that puts the most recently updated rule first"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Updated in the last 30 days",
+    "description": "Rules: hover text of the Recently updated chip"
   },
   "paginationPrev": {
     "message": "Previous page"
@@ -460,7 +488,7 @@
     "message": "Notifications"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Show alerts when security systems are detected"
+    "message": "Show a notification when a page's protections change, History is almost full or its backup fails."
   },
   "settingsCardDebug": {
     "message": "Debug Mode"
@@ -829,12 +857,6 @@
   },
   "clearCacheConfirmBtn": {
     "message": "Clear Cache"
-  },
-  "clearingMsg": {
-    "message": "Clearing..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Cleared!"
   },
   "cacheClearedToast": {
     "message": "Cache cleared"
@@ -1417,6 +1439,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Search domains..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Search settings..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "No settings match your search."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Settings found: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Clear search"
   },
   "settingsBadgeColorLow": {
     "message": "Low"
@@ -3607,6 +3641,10 @@
     "message": "Saved. This rule has the same pattern more than once; the extra copies can be deleted.",
     "description": "Rules editor: shown after a rule is saved when it holds the same pattern more than once"
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Saved. A pattern of this rule is also in {0}. That is fine if it is on purpose.",
+    "description": "Rules editor: shown after a rule is saved when one of its patterns is also in other rules; {0} is their names (up to two, then \"N more\")"
+  },
   "rulesUiMethodFallback": {
     "message": "Method",
     "description": "Generic name of a detection method when its type is unknown"
@@ -3634,10 +3672,6 @@
     "message": "Timestamp: {0}",
     "description": "Line of a copied text report. {0} = date and time"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Security System: {0}",
-    "description": "Line of a copied text report. {0} = detector name (e.g. Akamai)"
-  },
   "clipboardCategoryFmt": {
     "message": "Category: {0}",
     "description": "Line of a copied text report. {0} = category (antibot, captcha, fingerprint)"
@@ -3645,10 +3679,6 @@
   "clipboardConfidenceFmt": {
     "message": "Confidence: {0}%",
     "description": "Line of a copied text report. {0} = percentage number (the % sign follows)"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Detection Methods: {0}",
-    "description": "Line of a copied text report. {0} = comma-separated list of methods"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Detection Methods:",
@@ -5228,7 +5258,7 @@
     "message": "{0} new this period"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "of {0} rules"
+    "message": "Total rules: {0}"
   },
   "statsTipPages": {
     "message": "Pages saved to History in this range. History keeps saved detections, not every browser visit."
@@ -5687,7 +5717,13 @@
     "description": "Option"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Saves a copy of History to your Downloads folder (in a Scrapfly folder), in the export format chosen above."
+    "message": "Saves a copy of History to your Downloads folder (in a Scrapfly folder), in the export format chosen above. Only JSON files can be imported back into History."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Backups to keep"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "After each backup, older backups beyond this number are deleted from your Downloads folder (a backup saved in several parts counts as one). Only backup files saved by this extension are removed. Keep all and nothing is deleted."
   },
   "settingsHistoryBackupNow": {
     "message": "Back up now",
@@ -5802,6 +5838,10 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Only the entries shown ({0})",
+    "description": "Checkbox in the History export dialog: export only the entries the History list shows now (what its search and filter chips leave, in the list's order) instead of every entry. {0} = how many entries are shown, a number"
   },
   "historyExportPinnedOnly": {
     "message": "Pinned pages only",
@@ -6773,6 +6813,10 @@
   "historyCompareCopy": {
     "message": "Copy as Markdown",
     "description": "Compare dialog button: copies the comparison as a Markdown report (for a ticket or a chat). Keep Markdown as written"
+  },
+  "historyCompareCopySummary": {
+    "message": "Copy summary",
+    "description": "Compare dialog button: copies what changed between the two scans as one line (the site, the protections added, removed and changed, how many are unchanged), for a chat or a ticket"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Compare scans: {0}",

@@ -412,9 +412,10 @@ ScrapflyExport.optionsHtml = function(options, tr) {
         </div>`);
       }
       case 'int':
+        // String(v): the escaper turns every falsy value into an empty string, and 0 is a value here (renderingWait)
         return row(field, `${head(field, id)}
         <span class="scrapfly-export-num">
-          <input type="number" class="scrapfly-export-input" id="${id}" data-option="${field.key}" min="${field.min}" max="${field.max}" step="1" inputmode="numeric" value="${attr(v)}" placeholder="${attr(field.placeholder || '')}">
+          <input type="number" class="scrapfly-export-input" id="${id}" data-option="${field.key}" min="${field.min}" max="${field.max}" step="1" inputmode="numeric" value="${attr(String(v))}" placeholder="${attr(field.placeholder || '')}">
           ${field.unit ? `<span class="scrapfly-export-unit">${esc(field.unit)}</span>` : ''}
         </span>`);
       case 'text':

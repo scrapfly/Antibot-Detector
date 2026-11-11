@@ -1112,5 +1112,21 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "ページのスクリプト内の SG-CAPTCHA チャレンジ定数 (sgchallenge, sgsubmit_url)",
   "sg-captcha header on the SG-CAPTCHA challenge page": "SG-CAPTCHA チャレンジページ上の sg-captcha ヘッダー",
   "sg-captcha header with the challenge constants in the page's scripts": "sg-captcha ヘッダーとページのスクリプト内のチャレンジ定数",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA チャレンジページとページのスクリプト内のその定数"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA チャレンジページとページのスクリプト内のその定数",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "JavaScript ウィジェット、非表示モード、サーバー側検証を備えた、プライバシー重視の CAPTCHA サービス",
+  "Official CaptchaFox widget script api.js on its CDN": "CDN 上の CaptchaFox 公式ウィジェットスクリプト api.js",
+  "Widget container with the class captchafox, possibly unconfigured": "クラス captchafox を持つウィジェットのコンテナ。未設定の可能性あり",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "クラス captchafox と sitekey 属性を持つウィジェットのコンテナ。キーの有効性ではない",
+  "Hidden response token field named cf-captcha-response, added after a verification": "検証後に追加される、cf-captcha-response という名前の非表示のレスポンストークンフィールド",
+  "Documented captchafox window object with its render method, not execution": "ドキュメントにある captchafox window オブジェクトと render メソッド。実行ではない",
+  "Configured widget and the captchafox window object": "設定済みウィジェットと captchafox window オブジェクト",
+  "Configured widget and the response token field": "設定済みウィジェットとレスポンストークンフィールド",
+  "Configured widget, window object and response token field": "設定済みウィジェット、window オブジェクト、レスポンストークンフィールド",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "HWWAFSESID と HWWAFSESTIME の Cookie でリクエストに印を付ける Huawei Cloud Web Application Firewall",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Huawei Cloud WAF がリクエストに印を付けるために挿入する、セッション ID の Cookie HWWAFSESID（Huawei Cloud ヘルプ）",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Huawei Cloud WAF がリクエストに印を付けるために挿入する、セッションタイムスタンプの Cookie HWWAFSESTIME（Huawei Cloud ヘルプ）",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "オープンソースツール WAFW00F に記載された Server ヘッダー HuaweiCloudWAF。補助的なシグナルのみ",
+  "Both WAF session cookies": "WAF の両方のセッション Cookie",
+  "Session ID cookie with the WAF server header": "セッション ID の Cookie と WAF の Server ヘッダー",
+  "Session timestamp cookie with the WAF server header": "セッションタイムスタンプの Cookie と WAF の Server ヘッダー"
 }

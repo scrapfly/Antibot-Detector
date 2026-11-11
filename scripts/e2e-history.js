@@ -16,7 +16,8 @@
  *                      id, pin and note kept, Changed mark and notification), a page that flips between two scans or ends
  *                      somewhere else is not reported, skipped sites are not visited, tabs are closed, the menu and Settings
  *   Export              the dialog (format, protections, period, site, pinned only), the real file for each format
- *   Backup              Back up now and the alarm write real files to Downloads, in parts when large; the schedule
+ *   Backup              Back up now and the alarm write real files to Downloads, in parts when large; the schedule; Backups to
+ *                       keep deletes the older backups' files and the browser's entries for them, and nothing that is not a backup
  *   Storage             the warning near the limit and the record of what was removed
  *   Clear on close      a second browser window closing keeps History; closing the browser clears it (restart check)
  *
@@ -171,7 +172,7 @@ async function scenario(name, fn) {
   const HistoryStore_usage = () => W(async () => HistoryStore.usage(chrome.storage.local, 99 * 1024 * 1024));
   const readHistory = async () => JSON.parse((await W(() => chrome.storage.local.get('scrapfly_history'))).scrapfly_history || '{"items":[]}');
   const items = async () => (await readHistory()).items;
-  const resetHistory = () => W(() => chrome.storage.local.remove(['scrapfly_history', 'scrapfly_history_storage_notice', 'scrapfly_history_backup', 'scrapfly_history_watch']));
+  const resetHistory = () => W(() => chrome.storage.local.remove(['scrapfly_history', 'scrapfly_history_storage_notice', 'scrapfly_history_backup', 'scrapfly_history_backup_runs', 'scrapfly_history_watch']));
   const setHistory = (list, container = {}) => W((value) => chrome.storage.local.set({ scrapfly_history: JSON.stringify(value) }), { items: list, ...container });
   const notes = () => W(() => globalThis.__notes.slice());
   const clearNotes = () => W(() => { globalThis.__notes = []; });
@@ -252,7 +253,7 @@ async function scenario(name, fn) {
   await W(() => chrome.storage.local.set({ scrapfly_language_override: 'en' }));
   await W(() => { UpdateManager.runAutoUpdate = async () => ({ testOnly: true }); });
 
-  const baseline = { historyBypassCache: false, historyEnabled: true, historySkipIncognito: true, historyMinConfidence: 0, historySkipFingerprintOnly: false, historyExcludedDomains: [], historyChangeAlerts: 'off', historyBackup: 'off', historyClearOnClose: false, historyLimit: 0, historyAutoDelete: false, exportFormat: 'json', includeTimestamps: true,
+  const baseline = { historyBypassCache: false, historyEnabled: true, historySkipIncognito: true, historyMinConfidence: 0, historySkipFingerprintOnly: false, historyExcludedDomains: [], historyChangeAlerts: 'off', historyBackup: 'off', historyBackupKeep: 0, historyClearOnClose: false, historyLimit: 0, historyAutoDelete: false, exportFormat: 'json', includeTimestamps: true,
     historyFingerprintDays: 0, historyAutoPinHard: false, historyAutoPinVendors: [], historyAutoPinMinConfidence: 80, historyMaxMB: 6, historyWatch: 'off' };
   const baseDup = { preventDuplicates: false, duplicateAction: 'skip', duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'hours' };
   const resetSettings = async () => { await historySettings(baseline, baseDup); await W(() => { globalThis.__incognitoMatch = ''; }); };
@@ -302,10 +303,10 @@ async function scenario(name, fn) {
     });
     try {
       await open();
-      const defaults = { '#historyEnabled': true, '#historySkipIncognito': true, '#historyMinConfidence': '0', '#historySkipFingerprintOnly': false, '#historyExcludedDomains': '', '#historyChangeAlerts': 'off', '#historyBackup': 'off', '#historyClearOnClose': false, '#duplicateAction': 'skip' };
+      const defaults = { '#historyEnabled': true, '#historySkipIncognito': true, '#historyMinConfidence': '0', '#historySkipFingerprintOnly': false, '#historyExcludedDomains': '', '#historyChangeAlerts': 'off', '#historyBackup': 'off', '#historyBackupKeep': '0', '#historyClearOnClose': false, '#duplicateAction': 'skip' };
       for (const [selector, expected] of Object.entries(defaults)) assert.equal(await read(selector), expected, `default of ${selector}`);
 
-      const wanted = { '#historyEnabled': false, '#historySkipIncognito': false, '#historyMinConfidence': '55', '#historySkipFingerprintOnly': true, '#historyExcludedDomains': 'Bank.com\nhttps://shop.example.org:8443/x, *.cdn.net', '#historyChangeAlerts': 'pinned', '#historyBackup': 'weekly', '#historyClearOnClose': true, '#duplicateAction': 'update' };
+      const wanted = { '#historyEnabled': false, '#historySkipIncognito': false, '#historyMinConfidence': '55', '#historySkipFingerprintOnly': true, '#historyExcludedDomains': 'Bank.com\nhttps://shop.example.org:8443/x, *.cdn.net', '#historyChangeAlerts': 'pinned', '#historyBackup': 'weekly', '#historyBackupKeep': '7', '#historyClearOnClose': true, '#duplicateAction': 'update' };
       for (const [selector, value] of Object.entries(wanted)) await field(selector, value);
       await click('#saveSettingsBtn');
       await page.waitForFunction(() => !document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250, timeout: 10000 }).catch(async (error) => {
@@ -324,6 +325,7 @@ async function scenario(name, fn) {
       assert.deepEqual(saved.history.historyExcludedDomains, ['bank.com', 'shop.example.org', 'cdn.net']);
       assert.equal(saved.history.historyChangeAlerts, 'pinned');
       assert.equal(saved.history.historyBackup, 'weekly');
+      assert.equal(saved.history.historyBackupKeep, 7, 'Backups to keep is saved as a number');
       assert.equal(saved.history.historyClearOnClose, true);
       assert.equal(saved.duplicatePrevention.duplicateAction, 'update');
 
@@ -334,6 +336,7 @@ async function scenario(name, fn) {
       assert.equal(await read('#historyExcludedDomains'), 'bank.com\nshop.example.org\ncdn.net');
       assert.equal(await read('#historyChangeAlerts'), 'pinned');
       assert.equal(await read('#historyBackup'), 'weekly');
+      assert.equal(await read('#historyBackupKeep'), '7');
       assert.equal(await read('#duplicateAction'), 'update');
 
       // A value out of range is refused and nothing is saved
@@ -1462,6 +1465,60 @@ async function scenario(name, fn) {
     assert.equal(state.trigger, 'alarm');
     assert.equal(state.ok, true);
     await W(() => chrome.alarms.clear('scrapfly-history-backup'));
+  });
+
+  await scenario('Backups to keep: with a number chosen, older backups leave Downloads and the browser list, and a download that is not a backup stays', async () => {
+    await setHistory(exportSeed());
+    await W(() => chrome.storage.local.remove(['scrapfly_history_backup', 'scrapfly_history_backup_runs']));
+    // Playwright keeps every download under a random name of its own; the browser's way (the real name in Downloads/Scrapfly) is what
+    // the clean-up checks, so the browser is put back to it for this scenario
+    const switcher = await openExtensionPage();
+    try { await (await ctx.newCDPSession(switcher)).send('Browser.setDownloadBehavior', { behavior: 'default' }); } finally { await switcher.close(); }
+    const folder = path.join(downloads, 'Scrapfly');
+    const backups = () => (fs.existsSync(folder) ? fs.readdirSync(folder) : []).filter(name => /^scrapfly-history-.*\.json$/.test(name));
+    // The downloads this scenario started (the ones before it were kept by Playwright)
+    const since = new Date().toISOString();
+    const mine = () => W(async (startedAfter) => (await chrome.downloads.search({ startedAfter })).map(d => ({ id: d.id, state: d.state, file: d.filename })), since);
+    const settled = async () => {
+      for (let i = 0; i < 80; i++) {
+        const list = await mine();
+        assert.ok(!list.some(d => d.state === 'interrupted'), `a download was interrupted: ${JSON.stringify(list)}`);
+        if (list.every(d => d.state === 'complete')) return;
+        await sleep(250);
+      }
+      throw new Error(`the downloads did not finish: ${JSON.stringify(await mine())}`);
+    };
+    try {
+      // This extension's own download in the same folder that is not a backup, and a record that still points at it (an old id the
+      // browser has since given to something else): it has the right extension and the wrong name, so it must stay
+      const noteId = await W(() => chrome.downloads.download({ url: 'data:text/plain;charset=utf-8,keep%20me', filename: 'Scrapfly/notes.txt', saveAs: false, conflictAction: 'uniquify' }));
+      await settled();
+      await W(({ id, at }) => chrome.storage.local.set({ scrapfly_history_backup_runs: [{ at, ids: [id] }] }), { id: noteId, at: Date.now() - 10 * DAY });
+      await historySettings({ exportFormat: 'json', includeTimestamps: true, historyBackupKeep: 3 });
+      for (let run = 1; run <= 6; run++) {
+        const result = await W(() => HistoryBackup.run('manual'));
+        assert.equal(result.ok, true, `backup ${run}: ${JSON.stringify(result)}`);
+        await settled();
+        assert.ok(backups().length <= 3, `backup ${run}: ${backups().length} backups in Downloads/Scrapfly`);
+      }
+      const state = (await W(() => chrome.storage.local.get('scrapfly_history_backup'))).scrapfly_history_backup;
+      assert.equal(state.removed, 1, 'the last backup deleted the one file that was one too many');
+      assert.equal(backups().length, 3, `the newest three backups stay: ${backups().join(', ')}`);
+      assert.ok(fs.existsSync(path.join(folder, 'notes.txt')), 'a download that is not a backup is never deleted, even when the record points at it');
+      for (const name of backups()) assert.equal(JSON.parse(fs.readFileSync(path.join(folder, name), 'utf8')).itemsCount, 4, `${name} is a whole backup`);
+      // The browser's list holds the three backups and the note, and nothing of the three that were deleted
+      const listed = (await mine()).map(d => d.file.split(/[\\/]/).pop());
+      assert.equal(listed.filter(name => /^scrapfly-history-/.test(name)).length, 3, listed.join(', '));
+      assert.ok(listed.includes('notes.txt'));
+      const record = (await W(() => chrome.storage.local.get('scrapfly_history_backup_runs'))).scrapfly_history_backup_runs;
+      assert.equal(record.length, 3, 'only the newest three backups are on record');
+      assert.ok(record.every(run => run.ids.length === 1 && !run.partial), JSON.stringify(record));
+      // And with All chosen again nothing more is deleted
+      await historySettings({ historyBackupKeep: 0 });
+      assert.equal((await W(() => HistoryBackup.run('manual'))).ok, true);
+      await settled();
+      assert.equal(backups().length, 4, 'All keeps every backup');
+    } finally { await resetSettings(); }
   });
 
   // ===============================================================================================
