@@ -29,6 +29,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Turning the extension back on shows "No protections found" on the toolbar icon of pages whose saved scan found nothing.
 - Analyze Scripts no longer ends early, or saves an empty list, when the page was still finishing loading as you started it.
 - Fingerprint: a page that reads the CPU count and device memory now shows one card (Hardware) instead of two (Hardware and Navigator).
+- Webhook Recent deliveries: a site you skip, ignore in History or leave out of "Only these sites" no longer shows in lines already listed.
 
 ## [3.1.6] - 2026-11-10
 
