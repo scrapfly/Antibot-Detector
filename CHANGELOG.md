@@ -14,6 +14,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History: Export can start from only the entries shown by your search and chips, and the Select bar copies entries as lines.
 - History → Compare scans: Copy summary puts what changed on one line, ready for a chat or a ticket.
 - Rules → Update: new detectors for Huawei Cloud WAF and CaptchaFox.
+- Rules: sort by default order, name A to Z or most recently updated, from a dropdown beside the search; your choice is remembered.
+- Rules: a clock chip shows only rules updated in the last 30 days, and saving warns when a pattern is also in another rule.
 - Settings → History: Backups to keep deletes older backup files from Downloads, leaving the newest 3, 7, 14 or 30; All is the default.
 
 ### Changed
