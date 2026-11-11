@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector は、ウェブサイトが自動化されたトラフィックからどのように身を守っているかを表示する、無料の Chrome 拡張機能です。普段どおりにブラウズするだけで、ツールバーアイコンの数字がそのページで使われている保護の数を示し、ポップアップには各保護の信頼度、難易度、そして見つかった手がかりが一覧表示されます。
 
-標準で 86 の技術を認識します。43 のアンチボットシステム、22 の CAPTCHA、21 のブラウザフィンガープリント技術です。各検出器は、読んで、変更して、拡張できるシンプルな JSON ファイルです。新しいルールはこのリポジトリのリリースごとに届くため、Chrome が拡張機能自体を更新するより前に、**ルール → 更新** でインストールできます。
+標準で 88 の技術を認識します。44 のアンチボットシステム、23 の CAPTCHA、21 のブラウザフィンガープリント技術です。各検出器は、読んで、変更して、拡張できるシンプルな JSON ファイルです。新しいルールはこのリポジトリのリリースごとに届くため、Chrome が拡張機能自体を更新するより前に、**ルール → 更新** でインストールできます。
 
 [Scrapfly](https://scrapfly.io) がこれを作ったのは、スクレイピングのプロジェクトがどれも同じ疑問から始まるからです。このページは何に守られているのか。自分のサイトのアンチボット保護が外からどう見えるかを確認したいときや、セキュリティ調査にも同じように役立ちます。
 
@@ -105,18 +105,18 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 各アンチボットシステムには専用ページがあり、見分けるための Cookie、ヘッダー、スクリプトを載せています：[アンチボット検出ページ](antibots/ja/README.md)。
 
 <details>
-<summary><b>アンチボットシステム（43）</b></summary>
+<summary><b>アンチボットシステム（44）</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHA（22）</b></summary>
+<summary><b>CAPTCHA（23）</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 

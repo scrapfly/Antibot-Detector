@@ -3,7 +3,7 @@ Bekijk hoe elke website zich beschermt tegen bots. Scrapfly anti-botdetector too
 Wat je ziet
 • Een getal op het pictogram in de werkbalk: hoeveel beveiligingen de pagina gebruikt.
 • Eén kaart per beveiliging met de zekerheid, de moeilijkheid en de signalen die haar verraadden: URL's, cookies, headers, paginacode, pagina-elementen, aanroepen van browser-API's en de inhoud van verzoeken.
-• 86 detectors inbegrepen: 43 anti-botsystemen, 22 CAPTCHA's en 21 fingerprintingtechnieken. Elke detector is een gewoon JSON-bestand dat je kunt lezen, bewerken of uitbreiden.
+• 88 detectors inbegrepen: 44 anti-botsystemen, 23 CAPTCHA's en 21 fingerprintingtechnieken. Elke detector is een gewoon JSON-bestand dat je kunt lezen, bewerken of uitbreiden.
 
 In de pop-up
 • Detectie: wat de huidige pagina gebruikt, met het bewijs voor elke treffer.
