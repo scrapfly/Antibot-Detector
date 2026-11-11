@@ -472,6 +472,8 @@ test('the worker routes every vendor\'s Analyze Scripts and reports only that ve
   const replies = [];
   registry.PROSOPO_START_ANALYSIS({ request: { type: 'PROSOPO_START_ANALYSIS', tabId: 7, url: 'https://shop.example/', vendorId: 'prosopo' }, sendResponse: reply => replies.push(reply) });
   assert.equal(replies[0].status, 'started');
+  // The reload the popup asks for: its request, then what the reloaded page loads, then its own load ends the watch
+  context.chrome.webRequest.onBeforeRequest.emit({ tabId: 7, url: 'https://shop.example/', type: 'main_frame' });
   for (const [url, type] of [['https://js.prosopo.io/js/procaptcha.bundle.js', 'script'], ['https://js.prosopo.io.evil.example/js/x.js', 'script'],
     ['https://pronode4.prosopo.io/v1/prosopo/provider/client/captcha/x', 'xmlhttprequest'], ['https://js.prosopo.io/js/logo.png', 'image']]) {
     context.chrome.webRequest.onBeforeRequest.emit({ tabId: 7, url, type });

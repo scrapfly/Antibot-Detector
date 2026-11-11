@@ -37,8 +37,11 @@
             if (type) captured.set(details.url, { url: details.url, type, resourceType: details.type || '', source: 'network' });
         };
         let observationStarted = false;
+        // The five seconds open when the reloaded page finishes loading. The popup reloads the tab only after 500 ms and its cookie
+        // deletions, so the page as it was can still finish loading after this started: counting that load would end the analysis
+        // before the reload (an empty list saved as completed) or leave the reloaded page less than five seconds
         const navigationListener = details => {
-            if (job.finished || observationStarted || details.tabId !== tabId || details.frameId !== 0) return;
+            if (!reloaded || job.finished || observationStarted || details.tabId !== tabId || details.frameId !== 0) return;
             observationStarted = true;
             job.setTimer(() => job.finish('completed'), 5000);
         };
