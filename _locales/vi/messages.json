@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "Lọc quy tắc"
   },
+  "rulesSortLabel": {
+    "message": "Sắp xếp quy tắc"
+  },
+  "rulesSortDefault": {
+    "message": "Mặc định"
+  },
+  "rulesSortName": {
+    "message": "Tên A đến Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Mới cập nhật"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Đã cập nhật trong 30 ngày qua"
+  },
   "paginationPrev": {
     "message": "Trang trước"
   },

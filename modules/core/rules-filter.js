@@ -2,7 +2,8 @@
  * Rules tab: which rules the search box and the filter chips leave on the list.
  * Pure (no browser APIs), so the popup and the tests share it.
  *
- *   FLAGS             the on/off chips, in the order of the row: 'custom', 'edited', 'disabled'
+ *   FLAGS             the on/off chips, in the order of the row: 'custom', 'edited', 'disabled', 'updated'
+ *   RECENT_DAYS       how far back "Recently updated" looks: 30 days
  *   CATEGORIES        the category chips, one per category, in the category order
  *   normalizeChips()  the chips as the popup keeps them, whatever was passed (nothing gives every chip off)
  *   isActive()        whether any chip is on
@@ -15,21 +16,29 @@
  *   Custom     a rule that is not one of Scrapfly's (isOfficial: the popup passes DetectionUtils.isOfficialDetector)
  *   Edited     a shipped rule the person changed, not only translated (isEdited: the popup passes DetectorManager.isUserEdited)
  *   Disabled   a rule the person switched off
+ *   Updated    a rule whose last update (lastUpdated: what the card shows, what saving a rule or Rules -> Update writes) is in the
+ *              last RECENT_DAYS days; one with no readable date is not. options.now sets the moment it is measured from (the clock
+ *              unless the caller says: the tests do)
  *   categories Anti-bot, Captcha, Fingerprint
  * Several categories together mean "any of them". Custom and Edited are two sources a rule can come from (never both), so
- * together they keep the rules of either: the ones the person made or changed. Every kind of chip narrows the others, and all
- * of them combine with the search with AND. The search looks in the name, the category (as the card shows it too), the
- * description and the detection method types, and puts the rule named like it first.
+ * together they keep the rules of either: the ones the person made or changed. Every kind of chip narrows the others (Disabled and
+ * Updated too), and all of them combine with the search with AND. The search looks in the name, the category (as the card shows it
+ * too), the description and the detection method types, and puts the rule named like it first.
  */
 (function(root) {
   'use strict';
 
-  // Loaded before this file in the popup; under Node it sits next to it
+  // Loaded before this file in the popup; under Node they sit next to it
   const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
+  // The date the card shows and the Rules sort reads: one reading of lastUpdated for both
+  const RulesSort = root.RulesSort || (typeof require === 'function' ? require('./rules-sort.js') : undefined);
 
   const CATEGORIES = Categories.KEYS;
   // The on/off chips; the category chips are a list of their own
-  const FLAGS = Object.freeze(['custom', 'edited', 'disabled']);
+  const FLAGS = Object.freeze(['custom', 'edited', 'disabled', 'updated']);
+  // "Recently updated" keeps the rules whose last update is this many days old at most
+  const RECENT_DAYS = 30;
+  const DAY_MS = 24 * 60 * 60 * 1000;
 
   const isEntry = (entry) => !!entry && typeof entry === 'object' && !!entry.detector && typeof entry.detector === 'object';
   /** A rule the person switched off: the same test as the card's switch. */
@@ -37,6 +46,16 @@
   /** What the card shows for an edited rule when the popup has no better reader. */
   const marked = (entry) => !!(entry.detector.userModified && entry.detector.officialSnapshot);
   const categoryKey = (entry) => Categories.keyOf(entry.category || entry.detector.category);
+  /** The moment "recent" is measured from: the one the caller gave (milliseconds or a Date), else the clock. */
+  const nowOf = (value) => {
+    const ms = value instanceof Date ? value.getTime() : (typeof value === 'number' ? value : NaN);
+    return Number.isFinite(ms) ? ms : Date.now();
+  };
+  /** A rule updated in the last RECENT_DAYS days (or later than `now`: a clock a little behind the author's); one with no readable date is not. */
+  const isRecent = (entry, now) => {
+    const time = RulesSort.timeOf(entry.detector.lastUpdated);
+    return time > 0 && time >= now - RECENT_DAYS * DAY_MS;
+  };
 
   /** The chips as the popup keeps them, whatever was passed: booleans and known categories only, each once. */
   function normalizeChips(chips) {
@@ -45,6 +64,7 @@
       custom: value.custom === true,
       edited: value.edited === true,
       disabled: value.disabled === true,
+      updated: value.updated === true,
       categories: [...new Set((Array.isArray(value.categories) ? value.categories : []).filter(key => CATEGORIES.includes(key)))]
     };
   }
@@ -85,10 +105,11 @@
 
   /**
    * @param {object} entry  a rule, { category, detectorName, detector }
-   * @param {{query?: string, chips?: object, isOfficial?: function, isEdited?: function, categoryOf?: function, categoryLabelOf?: function}} [options]
+   * @param {{query?: string, chips?: object, now?: number|Date, isOfficial?: function, isEdited?: function, categoryOf?: function, categoryLabelOf?: function}} [options]
    *   isOfficial / isEdited read a rule's origin (the popup passes its own: they are what the card's tip and Edited tag use); without
    *   isOfficial no rule counts as custom, and without isEdited a rule counts as edited when it is marked and has its shipped version
-   *   to go back to. categoryOf reads the category key, categoryLabelOf the category as the card shows it.
+   *   to go back to. categoryOf reads the category key, categoryLabelOf the category as the card shows it. now is the moment
+   *   "Recently updated" is measured from (the clock when it is not given).
    */
   function matches(entry, options = {}) {
     if (!isEntry(entry)) return false;
@@ -102,6 +123,7 @@
       if (!custom && !edited) return false;
     }
     if (chips.disabled && !isDisabled(entry)) return false;
+    if (chips.updated && !isRecent(entry, nowOf(options.now))) return false;
 
     const query = queryOf(options.query);
     return !query || matchesQuery(entry, query, options.categoryLabelOf ? options.categoryLabelOf(entry) : '');
@@ -129,7 +151,7 @@
       .map(({ entry }) => entry);
   }
 
-  const api = { FLAGS, CATEGORIES, normalizeChips, isActive, isChip, toggle, matches, filter };
+  const api = { FLAGS, CATEGORIES, RECENT_DAYS, normalizeChips, isActive, isChip, toggle, matches, filter };
   root.RulesFilter = api;
   // The popup's other scripts name it as a plain global: a page has one (self is globalThis), a test sandbox may not
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.RulesFilter = api;

@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "규칙 필터"
   },
+  "rulesSortLabel": {
+    "message": "규칙 정렬"
+  },
+  "rulesSortDefault": {
+    "message": "기본"
+  },
+  "rulesSortName": {
+    "message": "이름 가나다순"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "최근 업데이트됨"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "최근 30일 이내에 업데이트됨"
+  },
   "paginationPrev": {
     "message": "이전 페이지"
   },

@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "नियम फ़िल्टर करें"
   },
+  "rulesSortLabel": {
+    "message": "नियमों को क्रमबद्ध करें"
+  },
+  "rulesSortDefault": {
+    "message": "डिफ़ॉल्ट"
+  },
+  "rulesSortName": {
+    "message": "नाम A से Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "हाल ही में अपडेट किए गए"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "पिछले 30 दिनों में अपडेट किए गए"
+  },
   "paginationPrev": {
     "message": "पिछला पृष्ठ"
   },

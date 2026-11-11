@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "Filtrera regler"
   },
+  "rulesSortLabel": {
+    "message": "Sortera regler"
+  },
+  "rulesSortDefault": {
+    "message": "Standard"
+  },
+  "rulesSortName": {
+    "message": "Namn A till Ö"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Nyligen uppdaterade"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Uppdaterade de senaste 30 dagarna"
+  },
   "paginationPrev": {
     "message": "Föregående sida"
   },

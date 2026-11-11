@@ -138,6 +138,48 @@
   --chip-color: var(--text-muted);
 }
 
+/* The sort dropdown ends the chip row, drawn as History's is (history.css, which scopes it to its own tab): the same pill, height and
+   border as a chip, and the shared arrow of select.ui-select */
+.rules-filters select.rules-sort {
+  flex: 0 0 auto;
+  width: 136px; /* beside the last chips on their row, not a row of its own; a longer word is cut with an ellipsis */
+  min-width: 0;
+  max-width: 100%;
+  margin-inline-start: auto;
+  height: 24px;
+  min-height: 0;
+  padding: 0 26px 0 10px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--text-secondary);
+  background-color: transparent;
+  background-position: right 9px center;
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 999px;
+  box-shadow: none;
+  text-overflow: ellipsis;
+}
+
+.rules-filters select.rules-sort:hover {
+  color: var(--text-primary);
+}
+
+.rules-filters select.rules-sort:focus {
+  box-shadow: none;
+}
+
+.rules-filters select.rules-sort:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+[dir="rtl"] .rules-filters select.rules-sort {
+  padding: 0 10px 0 26px;
+  background-position: left 9px center;
+}
+
 /* What the search and the chips leave, said to a screen reader: out of the layout and the eye, not hidden from the reader */
 .rules-results-status {
   position: absolute;

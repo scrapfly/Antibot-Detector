@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "ルールをフィルター"
   },
+  "rulesSortLabel": {
+    "message": "ルールの並べ替え"
+  },
+  "rulesSortDefault": {
+    "message": "既定"
+  },
+  "rulesSortName": {
+    "message": "名前順"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "最近更新"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "過去30日以内に更新"
+  },
   "paginationPrev": {
     "message": "前のページ"
   },

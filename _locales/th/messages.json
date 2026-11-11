@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "กรองกฎ"
   },
+  "rulesSortLabel": {
+    "message": "เรียงลำดับกฎ"
+  },
+  "rulesSortDefault": {
+    "message": "ค่าเริ่มต้น"
+  },
+  "rulesSortName": {
+    "message": "ชื่อ ก ถึง ฮ"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "อัปเดตล่าสุด"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "อัปเดตใน 30 วันที่ผ่านมา"
+  },
   "paginationPrev": {
     "message": "หน้าก่อนหน้า"
   },

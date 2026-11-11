@@ -20,6 +20,24 @@ class Rules {
     this.filteredDetectors = [];
     // The filter chips under the search (RulesFilter): kept while the popup is open
     this.activeChips = RulesFilter.normalizeChips();
+    // The list's order (RulesSort), chosen from the dropdown beside the chips; it comes back the next time the popup opens
+    this.sortKey = 'default';
+    this.restoreViewPrefs();
+  }
+
+  /** The order the person left on, from the browser's own storage (a per-person convenience: nothing there is fine). */
+  restoreViewPrefs() {
+    try {
+      const key = localStorage.getItem('rulesSortKey');
+      if (RulesSort.isKey(key)) this.sortKey = key;
+    } catch (_) { /* storage blocked or unreadable: the default stands */ }
+  }
+
+  /** Remember the order for the next time the popup opens. */
+  saveViewPrefs() {
+    try {
+      localStorage.setItem('rulesSortKey', this.sortKey);
+    } catch (_) { /* storage blocked or full: the choice lasts until the popup closes */ }
   }
 
   /**
@@ -102,6 +120,17 @@ class Rules {
       filterRow.addEventListener('click', (e) => {
         const chip = e.target.closest('.history-filter-chip');
         if (chip) this.toggleFilterChip(chip.dataset.filter);
+      });
+    }
+    const sortSelect = document.querySelector('#rulesSort');
+    if (sortSelect) {
+      // The order kept from the last time the popup was open
+      if (RulesSort.isKey(this.sortKey)) sortSelect.value = this.sortKey;
+      sortSelect.addEventListener('change', () => {
+        this.sortKey = RulesSort.isKey(sortSelect.value) ? sortSelect.value : 'default';
+        this.saveViewPrefs();
+        // From page 1: the list starts again in its new order
+        this.displayRules();
       });
     }
     const clearFiltersBtn = document.querySelector('#rulesClearFilters');

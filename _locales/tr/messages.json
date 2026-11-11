@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "Kuralları filtrele"
   },
+  "rulesSortLabel": {
+    "message": "Kuralları sırala"
+  },
+  "rulesSortDefault": {
+    "message": "Varsayılan"
+  },
+  "rulesSortName": {
+    "message": "Ad A’dan Z’ye"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Yakın zamanda güncellenenler"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Son 30 günde güncellendi"
+  },
   "paginationPrev": {
     "message": "Önceki sayfa"
   },

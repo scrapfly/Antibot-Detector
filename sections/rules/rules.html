@@ -77,7 +77,7 @@
       <input type="text" id="rulesSearch" class="search-input" placeholder="Search detectors..." data-i18n-placeholder="searchDetectors">
     </div>
 
-    <!-- Filter chips under the search: the categories (any of the chosen ones), Custom and Edited (either), Disabled; each narrows the others and the search -->
+    <!-- Filter chips under the search: the categories (any of the chosen ones), Custom and Edited (either), Disabled, Recently updated (the last 30 days); each narrows the others and the search. The sort dropdown ends the row, as History's does -->
     <div id="rulesFilters" class="rules-filters" role="group" aria-label="Filter rules" data-i18n-aria-label="rulesFiltersLabel">
       <button type="button" class="history-filter-chip" data-filter="antibot" data-category="antibot" aria-pressed="false">
         <span class="history-filter-icon category-icon" aria-hidden="true"></span>
@@ -109,6 +109,17 @@
         </span>
         <span data-i18n="statsRulesDisabled">Disabled</span>
       </button>
+      <button type="button" class="history-filter-chip" data-filter="updated" aria-pressed="false" title="Updated in the last 30 days" data-i18n-title="rulesRecentlyUpdatedTip">
+        <span class="history-filter-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </span>
+        <span data-i18n="rulesRecentlyUpdated">Recently updated</span>
+      </button>
+      <select id="rulesSort" class="select-field ui-select rules-sort" aria-label="Sort rules" data-i18n-aria-label="rulesSortLabel">
+        <option value="default" data-i18n="rulesSortDefault">Default</option>
+        <option value="name" data-i18n="rulesSortName">Name A to Z</option>
+        <option value="updated" data-i18n="rulesRecentlyUpdated">Recently updated</option>
+      </select>
     </div>
 
     <!-- Said to a screen reader, not shown: what the search and the chips leave (Rules.syncResultsStatus). Always in the page, since a region that appears with its text is not announced -->

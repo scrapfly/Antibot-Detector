@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "Filtrer les règles"
   },
+  "rulesSortLabel": {
+    "message": "Trier les règles"
+  },
+  "rulesSortDefault": {
+    "message": "Par défaut"
+  },
+  "rulesSortName": {
+    "message": "Nom de A à Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Mises à jour récemment"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Mises à jour au cours des 30 derniers jours"
+  },
   "paginationPrev": {
     "message": "Page précédente"
   },

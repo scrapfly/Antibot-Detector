@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "Regels filteren"
   },
+  "rulesSortLabel": {
+    "message": "Regels sorteren"
+  },
+  "rulesSortDefault": {
+    "message": "Standaard"
+  },
+  "rulesSortName": {
+    "message": "Naam A tot Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Onlangs bijgewerkt"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Bijgewerkt in de afgelopen 30 dagen"
+  },
   "paginationPrev": {
     "message": "Vorige pagina"
   },

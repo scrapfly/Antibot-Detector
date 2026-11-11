@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "تصفية القواعد"
   },
+  "rulesSortLabel": {
+    "message": "ترتيب القواعد"
+  },
+  "rulesSortDefault": {
+    "message": "الافتراضي"
+  },
+  "rulesSortName": {
+    "message": "الاسم من أ إلى ي"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "حُدّثت مؤخراً"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "حُدّثت خلال آخر 30 يوماً"
+  },
   "paginationPrev": {
     "message": "الصفحة السابقة"
   },

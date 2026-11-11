@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "Filtrovat pravidla"
   },
+  "rulesSortLabel": {
+    "message": "Řazení pravidel"
+  },
+  "rulesSortDefault": {
+    "message": "Výchozí"
+  },
+  "rulesSortName": {
+    "message": "Název A až Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Nedávno aktualizovaná"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Aktualizováno za posledních 30 dní"
+  },
   "paginationPrev": {
     "message": "Předchozí stránka"
   },

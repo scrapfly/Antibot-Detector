@@ -159,37 +159,12 @@ Rules.prototype.formatLastUpdated = function(rawTimestamp) {
 };
 
 /**
- * Get timestamp for sorting
+ * Get timestamp for sorting: the one reading of a rule's date the Default order, the Rules sort and the Recently updated chip share
  * @param {string|number} rawTimestamp - Raw timestamp value
- * @returns {number} Timestamp in milliseconds
+ * @returns {number} Timestamp in milliseconds (0 when there is none or it cannot be read)
  */
 Rules.prototype.getSortTimestamp = function(rawTimestamp) {
-  if (!rawTimestamp) {
-    return 0;
-  }
-
-  if (typeof rawTimestamp === 'number') {
-    return rawTimestamp;
-  }
-
-  if (typeof rawTimestamp === 'string') {
-    let normalized = rawTimestamp.trim();
-
-    if (/^\d{4}-\d{2}-\d{2}$/.test(normalized)) {
-      normalized = `${normalized}T00:00:00`;
-    }
-
-    if (normalized.includes(' ') && !normalized.includes('T')) {
-      normalized = normalized.replace(' ', 'T');
-    }
-
-    const parsed = new Date(normalized);
-    if (!Number.isNaN(parsed.getTime())) {
-      return parsed.getTime();
-    }
-  }
-
-  return 0;
+  return RulesSort.timeOf(rawTimestamp);
 };
 
 // ============================================

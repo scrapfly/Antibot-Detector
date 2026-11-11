@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "Фільтр правил"
   },
+  "rulesSortLabel": {
+    "message": "Сортування правил"
+  },
+  "rulesSortDefault": {
+    "message": "Типово"
+  },
+  "rulesSortName": {
+    "message": "Назва від А до Я"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Нещодавно оновлені"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Оновлено за останні 30 днів"
+  },
   "paginationPrev": {
     "message": "Попередня сторінка"
   },

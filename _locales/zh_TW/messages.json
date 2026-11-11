@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "篩選規則"
   },
+  "rulesSortLabel": {
+    "message": "對規則排序"
+  },
+  "rulesSortDefault": {
+    "message": "預設"
+  },
+  "rulesSortName": {
+    "message": "名稱 A 到 Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "最近更新"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "最近 30 天內更新"
+  },
   "paginationPrev": {
     "message": "上一頁"
   },

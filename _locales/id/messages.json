@@ -317,6 +317,21 @@
   "rulesFiltersLabel": {
     "message": "Filter aturan"
   },
+  "rulesSortLabel": {
+    "message": "Urutkan aturan"
+  },
+  "rulesSortDefault": {
+    "message": "Bawaan"
+  },
+  "rulesSortName": {
+    "message": "Nama A ke Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Baru diperbarui"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Diperbarui dalam 30 hari terakhir"
+  },
   "paginationPrev": {
     "message": "Halaman sebelumnya"
   },
