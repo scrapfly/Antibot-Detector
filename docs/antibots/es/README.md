@@ -2,7 +2,7 @@
 
 # Protecciones anti-bot que reconoce Antibot Detector
 
-Una página por cada uno de los 43 detectores anti-bot de la extensión [Scrapfly Anti-bot Detector](../../README.es.md): qué es la protección, las señales públicas que la delatan, qué dificultad tiene asignada y qué suele significar para el web scraping. Las páginas se generan a partir de las reglas de detección de `detectors/antibot/`. Para superar sistemas anti-bot a gran escala, consulta [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) de Scrapfly.
+Una página por cada uno de los 44 detectores anti-bot de la extensión [Scrapfly Anti-bot Detector](../../README.es.md): qué es la protección, las señales públicas que la delatan, qué dificultad tiene asignada y qué suele significar para el web scraping. Las páginas se generan a partir de las reglas de detección de `detectors/antibot/`. Para superar sistemas anti-bot a gran escala, consulta [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) de Scrapfly.
 
 | Protección | Dificultad | Página |
 | --- | --- | --- |
@@ -24,6 +24,7 @@ Una página por cada uno de los 43 detectores anti-bot de la extensión [Scrapfl
 | FingerprintJS | Baja | [FingerprintJS](fingerprintjs.md) |
 | Forter | Media | [Forter](forter.md) |
 | Google BotGuard | Alta | [Google BotGuard](botguard.md) |
+| Huawei Cloud WAF | Baja | [Huawei Cloud WAF](huaweicloud-waf.md) |
 | HUMAN (PerimeterX) | Alta | [HUMAN (PerimeterX)](perimeterx.md) |
 | Hunt | Alta | [Hunt](hunt.md) |
 | Incapsula (Imperva) | Media | [Incapsula (Imperva)](incapsula.md) |

@@ -1,0 +1,81 @@
+{
+  "id": "detect-captchafox",
+  "name": "CaptchaFox",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "Low",
+  "lastUpdated": "2026-11-11",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://captchafox.com/",
+  "icon": "custom.png",
+  "description": "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification",
+  "detection": {
+    "url": [
+      {
+        "id": "cfox-sdk-url",
+        "confidence": 100,
+        "description": "Official CaptchaFox widget script api.js on its CDN",
+        "text": "^https://cdn\\.captchafox\\.com/api\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": true
+      }
+    ],
+    "dom": [
+      {
+        "id": "cfox-container",
+        "selector": ".captchafox",
+        "confidence": 20,
+        "description": "Widget container with the class captchafox, possibly unconfigured",
+        "standalone": true
+      },
+      {
+        "id": "cfox-configured-widget",
+        "selector": ".captchafox[data-sitekey]",
+        "confidence": 45,
+        "description": "Widget container with the class captchafox and a sitekey attribute, not key validity",
+        "standalone": true
+      },
+      {
+        "id": "cfox-response-field",
+        "selector": "input[type='hidden'][name='cf-captcha-response']",
+        "confidence": 50,
+        "description": "Hidden response token field named cf-captcha-response, added after a verification",
+        "standalone": true
+      }
+    ],
+    "window": [
+      {
+        "id": "cfox-runtime-render",
+        "path": "captchafox.render",
+        "condition": "typeof function",
+        "confidence": 50,
+        "description": "Documented captchafox window object with its render method, not execution",
+        "standalone": true
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "cfox-widget-runtime",
+      "name": "Configured widget and the captchafox window object",
+      "when": { "all": [{ "pattern": "cfox-configured-widget" }, { "pattern": "cfox-runtime-render" }] },
+      "confidence": 70
+    },
+    {
+      "id": "cfox-widget-response",
+      "name": "Configured widget and the response token field",
+      "when": { "all": [{ "pattern": "cfox-configured-widget" }, { "pattern": "cfox-response-field" }] },
+      "confidence": 85
+    },
+    {
+      "id": "cfox-complete-integration",
+      "name": "Configured widget, window object and response token field",
+      "when": { "all": [{ "pattern": "cfox-configured-widget" }, { "pattern": "cfox-runtime-render" }, { "pattern": "cfox-response-field" }] },
+      "confidence": 100
+    }
+  ]
+}

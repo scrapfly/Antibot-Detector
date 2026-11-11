@@ -1112,5 +1112,21 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "ثوابت تحدي SG-CAPTCHA (sgchallenge، sgsubmit_url) في سكربتات الصفحة",
   "sg-captcha header on the SG-CAPTCHA challenge page": "ترويسة sg-captcha في صفحة تحدي SG-CAPTCHA",
   "sg-captcha header with the challenge constants in the page's scripts": "ترويسة sg-captcha مع ثوابت التحدي في سكربتات الصفحة",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "صفحة تحدي SG-CAPTCHA مع ثوابتها في سكربتات الصفحة"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "صفحة تحدي SG-CAPTCHA مع ثوابتها في سكربتات الصفحة",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "خدمة CAPTCHA تركز على الخصوصية مع أداة JavaScript ووضع مخفي وتحقق من جهة الخادم",
+  "Official CaptchaFox widget script api.js on its CDN": "سكربت أداة CaptchaFox الرسمي api.js على شبكة CDN الخاصة بها",
+  "Widget container with the class captchafox, possibly unconfigured": "حاوية الأداة بالفئة captchafox، وقد تكون غير مهيأة",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "حاوية الأداة بالفئة captchafox مع سمة sitekey، وليس صلاحية المفتاح",
+  "Hidden response token field named cf-captcha-response, added after a verification": "حقل مخفي لرمز الاستجابة باسم cf-captcha-response، يُضاف بعد التحقق",
+  "Documented captchafox window object with its render method, not execution": "كائن window الموثق captchafox مع الدالة render، وليس التنفيذ",
+  "Configured widget and the captchafox window object": "أداة مهيأة وكائن window الخاص captchafox",
+  "Configured widget and the response token field": "أداة مهيأة وحقل رمز الاستجابة",
+  "Configured widget, window object and response token field": "أداة مهيأة وكائن window وحقل رمز الاستجابة",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "جدار حماية تطبيقات الويب من Huawei Cloud الذي يعلّم الطلبات بملفي تعريف الارتباط HWWAFSESID وHWWAFSESTIME",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "ملف تعريف الارتباط HWWAFSESID لمعرّف الجلسة الذي يضيفه Huawei Cloud WAF لتعليم الطلبات (مساعدة Huawei Cloud)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "ملف تعريف الارتباط HWWAFSESTIME للطابع الزمني للجلسة الذي يضيفه Huawei Cloud WAF لتعليم الطلبات (مساعدة Huawei Cloud)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "ترويسة Server بالقيمة HuaweiCloudWAF، مدرجة في أداة WAFW00F مفتوحة المصدر؛ إشارة داعمة فقط",
+  "Both WAF session cookies": "ملفا تعريف ارتباط الجلسة لجدار WAF معاً",
+  "Session ID cookie with the WAF server header": "ملف تعريف ارتباط معرّف الجلسة مع ترويسة الخادم الخاصة بـ WAF",
+  "Session timestamp cookie with the WAF server header": "ملف تعريف ارتباط الطابع الزمني للجلسة مع ترويسة الخادم الخاصة بـ WAF"
 }

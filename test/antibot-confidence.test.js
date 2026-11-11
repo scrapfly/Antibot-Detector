@@ -138,10 +138,10 @@ const PROOF = new Set([
 const CAPPED = new Set(['detect-ocule', 'detect-meetrics', 'detect-azurefrontdoor', 'detect-yundun', 'detect-hunt']);
 const isProof = (d, r) => PROOF.has(`${d.id}/${r.id}`);
 
-test('forty-three anti-bot definitions: v2, explicit ids, graded combinations', () => {
+test('forty-four anti-bot definitions: v2, explicit ids, graded combinations', () => {
   assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aliyunwaf', 'detect-amazon', 'detect-anubis', 'detect-aws-waf',
     'detect-azurefrontdoor', 'detect-botguard', 'detect-castle', 'detect-cheq', 'detect-cloudflare', 'detect-cloudflare-waitingroom', 'detect-datadome',
-    'detect-ddosguard', 'detect-deepseek-pow', 'detect-f5', 'detect-fastly', 'detect-fingerprintjs', 'detect-forter', 'detect-hunt', 'detect-incapsula',
+    'detect-ddosguard', 'detect-deepseek-pow', 'detect-f5', 'detect-fastly', 'detect-fingerprintjs', 'detect-forter', 'detect-huaweicloud-waf', 'detect-hunt', 'detect-incapsula',
     'detect-iovation', 'detect-jiasule', 'detect-kasada', 'detect-kount', 'detect-meetrics', 'detect-netacea', 'detect-ocule', 'detect-openai-sentinel',
     'detect-perimeterx', 'detect-queueit', 'detect-radware', 'detect-reblaze', 'detect-riskified', 'detect-ruishu', 'detect-seon', 'detect-shapesecurity',
     'detect-sift', 'detect-siteground-captcha', 'detect-sucuri', 'detect-threatmetrix', 'detect-vercel', 'detect-wordfence', 'detect-yundun']);

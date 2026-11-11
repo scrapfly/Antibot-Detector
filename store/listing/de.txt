@@ -3,7 +3,7 @@ Sieh dir an, wie sich jede Website gegen Bots wehrt. Scrapfly Anti-Bot-Detektor 
 Was du siehst
 • Eine Zahl am Symbol in der Symbolleiste: wie viele Schutzmaßnahmen die Seite nutzt.
 • Eine Karte pro Schutzmaßnahme mit Konfidenz, Schwierigkeit und den Signalen, die sie verraten haben: URLs, Cookies, Header, Seitencode, Seitenelemente, Browser-API-Aufrufe und Anfrageinhalte.
-• 86 Detektoren sind enthalten: 43 Anti-Bot-Systeme, 22 CAPTCHAs und 21 Fingerprinting-Techniken. Jeder ist eine einfache JSON-Datei, die du lesen, bearbeiten oder erweitern kannst.
+• 88 Detektoren sind enthalten: 44 Anti-Bot-Systeme, 23 CAPTCHAs und 21 Fingerprinting-Techniken. Jeder ist eine einfache JSON-Datei, die du lesen, bearbeiten oder erweitern kannst.
 
 Im Popup
 • Erkennung: was die aktuelle Seite nutzt, samt den Belegen für jeden Treffer.

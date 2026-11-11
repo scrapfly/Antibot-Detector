@@ -1112,5 +1112,21 @@
   "SG-CAPTCHA challenge constants (sgchallenge, sgsubmit_url) in the page's scripts": "SG-CAPTCHA-challengeconstanten (sgchallenge, sgsubmit_url) in de scripts van de pagina",
   "sg-captcha header on the SG-CAPTCHA challenge page": "Header sg-captcha op de SG-CAPTCHA-challengepagina",
   "sg-captcha header with the challenge constants in the page's scripts": "Header sg-captcha met de challengeconstanten in de scripts van de pagina",
-  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA-challengepagina met de bijbehorende constanten in de scripts van de pagina"
+  "SG-CAPTCHA challenge page with its constants in the page's scripts": "SG-CAPTCHA-challengepagina met de bijbehorende constanten in de scripts van de pagina",
+  "Privacy-focused CAPTCHA service with a JavaScript widget, a hidden mode and server-side verification": "Privacygerichte CAPTCHA-dienst met een JavaScript-widget, een verborgen modus en verificatie aan de serverkant",
+  "Official CaptchaFox widget script api.js on its CDN": "Officieel CaptchaFox-widgetscript api.js op de CDN",
+  "Widget container with the class captchafox, possibly unconfigured": "Widgetcontainer met de klasse captchafox, mogelijk niet geconfigureerd",
+  "Widget container with the class captchafox and a sitekey attribute, not key validity": "Widgetcontainer met de klasse captchafox en een sitekey-attribuut, geen sleutelgeldigheid",
+  "Hidden response token field named cf-captcha-response, added after a verification": "Verborgen veld voor het antwoordtoken met de naam cf-captcha-response, toegevoegd na een verificatie",
+  "Documented captchafox window object with its render method, not execution": "Gedocumenteerd window-object captchafox met de methode render, geen uitvoering",
+  "Configured widget and the captchafox window object": "Geconfigureerde widget en het window-object captchafox",
+  "Configured widget and the response token field": "Geconfigureerde widget en het veld voor het antwoordtoken",
+  "Configured widget, window object and response token field": "Geconfigureerde widget, window-object en veld voor het antwoordtoken",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "Huawei Cloud Web Application Firewall die verzoeken markeert met de cookies HWWAFSESID en HWWAFSESTIME",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Sessie-ID-cookie HWWAFSESID die Huawei Cloud WAF invoegt om verzoeken te markeren (Huawei Cloud-help)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Sessietijdstempelcookie HWWAFSESTIME die Huawei Cloud WAF invoegt om verzoeken te markeren (Huawei Cloud-help)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "Server-header HuaweiCloudWAF, vermeld door de opensourcetool WAFW00F; alleen ondersteunend signaal",
+  "Both WAF session cookies": "Beide WAF-sessiecookies",
+  "Session ID cookie with the WAF server header": "Sessie-ID-cookie met de serverheader van de WAF",
+  "Session timestamp cookie with the WAF server header": "Sessietijdstempelcookie met de serverheader van de WAF"
 }

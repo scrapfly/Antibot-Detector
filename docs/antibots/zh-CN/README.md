@@ -2,7 +2,7 @@
 
 # Antibot Detector 可识别的反爬防护
 
-[Scrapfly Anti-bot Detector](../../README.zh-CN.md) 扩展中的 43 个反爬检测器各有一个页面：说明该防护是什么、暴露它的公开特征、它的难度评级，以及它通常对网页抓取意味着什么。这些页面由 `detectors/antibot/` 中的检测规则生成。如需大规模绕过反爬系统，请参阅 Scrapfly 的 [反抓取防护（Anti Scraping Protection）](https://scrapfly.io/docs/scrape-api/anti-scraping-protection)。
+[Scrapfly Anti-bot Detector](../../README.zh-CN.md) 扩展中的 44 个反爬检测器各有一个页面：说明该防护是什么、暴露它的公开特征、它的难度评级，以及它通常对网页抓取意味着什么。这些页面由 `detectors/antibot/` 中的检测规则生成。如需大规模绕过反爬系统，请参阅 Scrapfly 的 [反抓取防护（Anti Scraping Protection）](https://scrapfly.io/docs/scrape-api/anti-scraping-protection)。
 
 | 防护 | 难度 | 页面 |
 | --- | --- | --- |
@@ -24,6 +24,7 @@
 | FingerprintJS | 低 | [FingerprintJS](fingerprintjs.md) |
 | Forter | 中 | [Forter](forter.md) |
 | Google BotGuard | 高 | [Google BotGuard](botguard.md) |
+| Huawei Cloud WAF | 低 | [Huawei Cloud WAF](huaweicloud-waf.md) |
 | HUMAN (PerimeterX) | 高 | [HUMAN (PerimeterX)](perimeterx.md) |
 | Hunt | 高 | [Hunt](hunt.md) |
 | Incapsula (Imperva) | 中 | [Incapsula (Imperva)](incapsula.md) |

@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector es una extensión gratuita de Chrome que muestra cómo se protege un sitio web del tráfico automatizado. Navega como siempre: el número del icono de la barra de herramientas indica cuántas protecciones usa la página, y el popup las enumera con su confianza, su dificultad y las señales que las delataron.
 
-Reconoce 86 tecnologías de serie: 43 sistemas anti-bot, 22 CAPTCHAs y 21 técnicas de fingerprinting del navegador. Cada detector es un archivo JSON sencillo que puedes leer, cambiar o ampliar, y las reglas nuevas llegan con cada versión de este repositorio, así que **Reglas → Actualizar** puede instalarlas antes de que Chrome actualice la propia extensión.
+Reconoce 88 tecnologías de serie: 44 sistemas anti-bot, 23 CAPTCHAs y 21 técnicas de fingerprinting del navegador. Cada detector es un archivo JSON sencillo que puedes leer, cambiar o ampliar, y las reglas nuevas llegan con cada versión de este repositorio, así que **Reglas → Actualizar** puede instalarlas antes de que Chrome actualice la propia extensión.
 
 La creamos en [Scrapfly](https://scrapfly.io) porque todo proyecto de scraping empieza con la misma pregunta: ¿qué protege esta página? Es igual de útil para ver cómo se ve desde fuera la protección anti-bot de tu propio sitio, o para investigación de seguridad.
 
@@ -105,18 +105,18 @@ Estas listas son los detectores que vienen con la extensión. Puedes desactivar 
 Cada sistema anti-bot tiene su propia página, con las cookies, cabeceras y scripts que lo delatan: [páginas de detección anti-bot](antibots/es/README.md).
 
 <details>
-<summary><b>Sistemas anti-bot (43)</b></summary>
+<summary><b>Sistemas anti-bot (44)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHAs (22)</b></summary>
+<summary><b>CAPTCHAs (23)</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 

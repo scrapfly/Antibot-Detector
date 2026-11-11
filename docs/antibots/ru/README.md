@@ -2,7 +2,7 @@
 
 # Анти-бот защиты, которые распознаёт Antibot Detector
 
-По одной странице для каждого из 43 анти-бот детекторов в расширении [Scrapfly Anti-bot Detector](../../README.ru.md): что это за защита, какие публичные признаки её выдают, насколько сложной она оценена и что обычно означает для парсинга сайтов. Страницы создаются из правил обнаружения в `detectors/antibot/`. Чтобы обходить анти-бот системы в больших объёмах, см. [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) от Scrapfly.
+По одной странице для каждого из 44 анти-бот детекторов в расширении [Scrapfly Anti-bot Detector](../../README.ru.md): что это за защита, какие публичные признаки её выдают, насколько сложной она оценена и что обычно означает для парсинга сайтов. Страницы создаются из правил обнаружения в `detectors/antibot/`. Чтобы обходить анти-бот системы в больших объёмах, см. [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) от Scrapfly.
 
 | Защита | Сложность | Страница |
 | --- | --- | --- |
@@ -24,6 +24,7 @@
 | FingerprintJS | Низкая | [FingerprintJS](fingerprintjs.md) |
 | Forter | Средняя | [Forter](forter.md) |
 | Google BotGuard | Высокая | [Google BotGuard](botguard.md) |
+| Huawei Cloud WAF | Низкая | [Huawei Cloud WAF](huaweicloud-waf.md) |
 | HUMAN (PerimeterX) | Высокая | [HUMAN (PerimeterX)](perimeterx.md) |
 | Hunt | Высокая | [Hunt](hunt.md) |
 | Incapsula (Imperva) | Средняя | [Incapsula (Imperva)](incapsula.md) |

@@ -3,7 +3,7 @@ Xem bất kỳ trang web nào tự bảo vệ mình trước bot ra sao. Scrapfl
 Bạn sẽ thấy gì
 • Một con số trên biểu tượng ở thanh công cụ cho biết trang dùng bao nhiêu biện pháp bảo vệ.
 • Mỗi biện pháp bảo vệ có một thẻ riêng, hiển thị độ tin cậy, độ khó và các tín hiệu để lộ sự hiện diện của nó: URL, cookie, header, mã nguồn trang, phần tử trên trang, lệnh gọi API của trình duyệt và nội dung yêu cầu.
-• Có sẵn 86 trình phát hiện: 43 hệ thống anti-bot, 22 CAPTCHA và 21 kỹ thuật thu thập dấu vân tay. Mỗi trình phát hiện là một tệp JSON đơn giản mà bạn có thể đọc, chỉnh sửa hoặc mở rộng.
+• Có sẵn 88 trình phát hiện: 44 hệ thống anti-bot, 23 CAPTCHA và 21 kỹ thuật thu thập dấu vân tay. Mỗi trình phát hiện là một tệp JSON đơn giản mà bạn có thể đọc, chỉnh sửa hoặc mở rộng.
 
 Bên trong popup
 • Phát hiện: những gì trang hiện tại đang dùng, kèm bằng chứng cho từng kết quả.

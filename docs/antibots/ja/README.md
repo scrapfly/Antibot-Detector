@@ -2,7 +2,7 @@
 
 # Antibot Detector が認識するアンチボット対策
 
-[Scrapfly Anti-bot Detector](../../README.ja.md) 拡張機能の 43 件のアンチボット検出ごとに 1 ページずつ用意しています。対策の概要、それを見分ける公開シグナル、評価された難易度、そしてウェブスクレイピングにとって通常何を意味するかを説明します。ページは `detectors/antibot/` の検出ルールから生成されています。アンチボットシステムを大規模に突破するには、Scrapfly の [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) をご覧ください。
+[Scrapfly Anti-bot Detector](../../README.ja.md) 拡張機能の 44 件のアンチボット検出ごとに 1 ページずつ用意しています。対策の概要、それを見分ける公開シグナル、評価された難易度、そしてウェブスクレイピングにとって通常何を意味するかを説明します。ページは `detectors/antibot/` の検出ルールから生成されています。アンチボットシステムを大規模に突破するには、Scrapfly の [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) をご覧ください。
 
 | 対策 | 難易度 | ページ |
 | --- | --- | --- |
@@ -24,6 +24,7 @@
 | FingerprintJS | 低 | [FingerprintJS](fingerprintjs.md) |
 | Forter | 中 | [Forter](forter.md) |
 | Google BotGuard | 高 | [Google BotGuard](botguard.md) |
+| Huawei Cloud WAF | 低 | [Huawei Cloud WAF](huaweicloud-waf.md) |
 | HUMAN (PerimeterX) | 高 | [HUMAN (PerimeterX)](perimeterx.md) |
 | Hunt | 高 | [Hunt](hunt.md) |
 | Incapsula (Imperva) | 中 | [Incapsula (Imperva)](incapsula.md) |

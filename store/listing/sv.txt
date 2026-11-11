@@ -3,7 +3,7 @@ Se hur valfri webbplats försvarar sig mot botar. Scrapfly anti-bot-detektor vis
 Det här ser du
 • En siffra på ikonen i verktygsfältet: hur många skydd sidan använder.
 • Ett kort per skydd med dess säkerhet, svårighet och de signaler som avslöjade det: URL:er, cookies, headers, sidans kod, sidelement, anrop till webbläsar-API:er och innehållet i begäranden.
-• 86 detektorer ingår: 43 anti-bot-system, 22 CAPTCHA och 21 fingerprinting-tekniker. Var och en är en vanlig JSON-fil som du kan läsa, redigera eller utöka.
+• 88 detektorer ingår: 44 anti-bot-system, 23 CAPTCHA och 21 fingerprinting-tekniker. Var och en är en vanlig JSON-fil som du kan läsa, redigera eller utöka.
 
 I popup-fönstret
 • Upptäckt: vad den aktuella sidan använder, med belägg för varje träff.
