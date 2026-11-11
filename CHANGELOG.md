@@ -1124,6 +1124,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.1.7]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.6...v3.1.7
 [3.1.6]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.5...v3.1.6
 [3.1.5]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.4...v3.1.5
 [3.1.4]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.3...v3.1.4
