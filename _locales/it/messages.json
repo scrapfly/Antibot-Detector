@@ -5501,6 +5501,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Solo le voci mostrate ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Solo pagine fissate"
   },

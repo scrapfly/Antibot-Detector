@@ -5501,6 +5501,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Hanya entri yang ditampilkan ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Hanya halaman yang disematkan"
   },

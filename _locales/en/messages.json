@@ -5803,6 +5803,10 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Only the entries shown ({0})",
+    "description": "Checkbox in the History export dialog: export only the entries the History list shows now (what its search and filter chips leave, in the list's order) instead of every entry. {0} = how many entries are shown, a number"
+  },
   "historyExportPinnedOnly": {
     "message": "Pinned pages only",
     "description": "Checkbox"

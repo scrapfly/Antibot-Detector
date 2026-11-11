@@ -5501,6 +5501,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Chỉ các mục đang hiển thị ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Chỉ trang đã ghim"
   },

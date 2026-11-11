@@ -5501,6 +5501,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Jen zobrazené položky ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Jen připnuté stránky"
   },

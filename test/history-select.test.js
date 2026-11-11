@@ -13,14 +13,18 @@ function load() {
   const els = {};
   const stub = (id) => (els[id] = els[id] || { id, textContent: '', disabled: false, hidden: true, children: {}, classList: { toggle() {}, add() {}, remove() {} }, querySelector(sel) { return this.children[sel] || null; } });
   const bar = stub('#historySelectBar');
-  for (const sel of ['#historySelectCount', '#historySelectAll', '#historySelectPin', '#historySelectWatch', '#historySelectExport', '#historySelectDelete', '#historySelectPin span', '#historySelectWatch span']) bar.children[sel] = stub(sel);
+  for (const sel of ['#historySelectCount', '#historySelectAll', '#historySelectPin', '#historySelectWatch', '#historySelectCopyLines', '#historySelectExport', '#historySelectDelete', '#historySelectPin span', '#historySelectWatch span']) bar.children[sel] = stub(sel);
   const toasts = [];
   const confirms = [];
+  const copies = [];
   const state = { confirm: true, settings: {} };
   const context = vm.createContext({
     console, Date, JSON, Math, Set, Map, URL, Intl, Object, Array, String, Number, Promise,
     Logger: new Proxy({}, { get: () => () => {} }),
-    FormatUtils: Object.assign(Object.create(require('../utils/format-utils.js')), { t: (key, fallback, ...args) => fallback.replace(/\{(\d)\}/g, (_, i) => args[i]) }),
+    FormatUtils: Object.assign(Object.create(require('../utils/format-utils.js')), {
+      t: (key, fallback, ...args) => fallback.replace(/\{(\d)\}/g, (_, i) => args[i]),
+      copyToClipboard: async (text, options) => { copies.push({ text, options }); return true; }
+    }),
     NotificationHelper: {
       success: (m) => toasts.push(['success', m]), error: (m) => toasts.push(['error', m]),
       confirm: async (options) => { confirms.push(options); return state.confirm; }
@@ -52,7 +56,7 @@ function load() {
   };
   view.loadHistoryFromStorage = async () => {};
   view.renderHistory = () => {};
-  return { view, els, toasts, confirms, state, sent, setReply: (r) => { reply = r; } };
+  return { view, els, toasts, confirms, copies, context, state, sent, setReply: (r) => { reply = r; } };
 }
 
 test('selectedItems() follows the ids, in the list\'s order', () => {
@@ -190,4 +194,75 @@ test('Clear All while selecting ends Select mode, so no "N selected" bar is left
   assert.equal(view.selectMode, false);
   assert.equal(view.selectedIds.size, 0);
   assert.equal(els['#historySelectBar'].hidden, true);
+});
+
+// ---- Copy as lines: the selected entries as one line each, for a chat or a ticket -------------------------------------------
+
+const page = (id, host, detections) => ({ id, url: `https://${host}/p?token=SECRET`, hostname: host, title: id, timestamp: 1, detections });
+const found = (name, category, confidence) => ({ detector: { name }, category, confidence });
+const withPages = (view) => {
+  view.historyItems = [
+    page('a', 'a.example', [found('Cloudflare', 'Anti-Bot', 95)]),
+    page('b', 'b.example', [found('reCAPTCHA', 'CAPTCHA', 70), found('Canvas', 'Fingerprint', 30)]),
+    page('c', 'c.example', []),
+    page('d', 'd.example', [found('Akamai', 'Anti-Bot', 80)])
+  ];
+  view.shown = view.historyItems;
+};
+
+test('Copy as lines copies the selected entries, one line each, in the order the list shows them, with no query string', async () => {
+  const { view, copies } = load();
+  withPages(view);
+  const [a, b, c, d] = view.historyItems;
+  view.shown = [d, b, a, c]; // the list sorted another way than History keeps it
+  view.selectedIds = new Set(['a', 'b', 'd']);
+  await view.bulkCopyLines();
+  assert.equal(copies.length, 1);
+  assert.equal(copies[0].text, 'https://d.example/p: Akamai 80%\nhttps://b.example/p: reCAPTCHA 70%, Canvas 30%\nhttps://a.example/p: Cloudflare 95%');
+  assert.ok(!/SECRET|token/.test(copies[0].text), 'no query string');
+  assert.equal(copies[0].options, undefined, 'the standard copy: its "Copied" notice comes with it');
+  assert.equal(view.selectedIds.size, 3, 'the selection stays, as after Export');
+});
+
+test('Copy as lines does nothing, and says nothing, when nothing is selected', async () => {
+  const { view, copies, toasts } = load();
+  withPages(view);
+  view.selectedIds = new Set();
+  await view.bulkCopyLines();
+  assert.deepEqual(copies, []);
+  assert.deepEqual(toasts, []);
+});
+
+test('the bar keeps Copy as lines off until something is selected, like Pin, Watch, Export and Delete', () => {
+  const { view, els } = load();
+  withPages(view);
+  view.selectedIds = new Set();
+  view.syncSelectBar();
+  assert.equal(els['#historySelectCopyLines'].disabled, true);
+  view.selectedIds = new Set(['c']);
+  view.syncSelectBar();
+  assert.equal(els['#historySelectCopyLines'].disabled, false);
+  assert.equal(els['#historySelectExport'].disabled, false);
+});
+
+test('the button is in the bar, named, after Watch and before Export, and a click on it copies the selection', async () => {
+  const html = fs.readFileSync(path.join(root, 'sections/history/history.html'), 'utf8');
+  const bar = html.slice(html.indexOf('id="historySelectBar"'), html.indexOf('id="historyList"'));
+  const ids = [...bar.matchAll(/<button\b[^>]*\bid="(historySelect\w+)"/g)].map(m => m[1]);
+  assert.deepEqual(ids, ['historySelectAll', 'historySelectDone', 'historySelectPin', 'historySelectWatch', 'historySelectCopyLines', 'historySelectExport', 'historySelectDelete']);
+  const button = bar.match(/<button\b[^>]*\bid="historySelectCopyLines"[\s\S]*?<\/button>/)[0];
+  assert.ok(/type="button"/.test(button) && /\bdisabled\b/.test(button), 'a plain button, off until something is selected');
+  assert.ok(/<span data-i18n="bulkCopyLines">Copy as lines<\/span>/.test(button), 'the words of Bulk scan\'s button, already translated');
+  assert.ok(/aria-hidden="true"/.test(button), 'its icon is decoration: the text is its name');
+
+  const { view, context, copies } = load();
+  withPages(view);
+  const clicks = {};
+  context.document.addEventListener = () => {};
+  context.document.querySelector = (selector) => ({ addEventListener: (type, handler) => { if (type === 'click') clicks[selector] = handler; } });
+  view.setupSelectListeners();
+  assert.equal(typeof clicks['#historySelectCopyLines'], 'function', 'the click is wired');
+  view.selectedIds = new Set(['c']);
+  await clicks['#historySelectCopyLines']();
+  assert.deepEqual(copies.map(copy => copy.text), ['https://c.example/p: -']);
 });

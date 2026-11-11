@@ -5501,6 +5501,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Nur die angezeigten Einträge ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Nur angeheftete Seiten"
   },

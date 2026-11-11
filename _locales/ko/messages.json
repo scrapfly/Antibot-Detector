@@ -5501,6 +5501,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "표시된 항목만({0}개)"
+  },
   "historyExportPinnedOnly": {
     "message": "고정한 페이지만"
   },

@@ -5501,6 +5501,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "เฉพาะรายการที่แสดง ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "เฉพาะหน้าที่ปักหมุด"
   },

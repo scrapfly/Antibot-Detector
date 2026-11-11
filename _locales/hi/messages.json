@@ -5501,6 +5501,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "सिर्फ़ दिख रही प्रविष्टियाँ ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "सिर्फ़ पिन किए गए पेज"
   },

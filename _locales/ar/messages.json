@@ -5501,6 +5501,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "الإدخالات المعروضة فقط ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "الصفحات المثبّتة فقط"
   },

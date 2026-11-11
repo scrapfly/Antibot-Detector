@@ -5501,6 +5501,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "僅限顯示的項目（{0} 筆）"
+  },
   "historyExportPinnedOnly": {
     "message": "僅限已釘選的網頁"
   },

@@ -5501,6 +5501,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "仅显示的记录（{0} 条）"
+  },
   "historyExportPinnedOnly": {
     "message": "仅已固定的页面"
   },

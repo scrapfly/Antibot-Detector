@@ -897,6 +897,11 @@ class History {
     return HistorySort.sort(shown, this.sortKey);
   }
 
+  /** Whether a search or a chip narrows the list: what it shows is then not every entry. */
+  isNarrowed() {
+    return !!this.searchQuery || HistoryFilter.isActive(this.activeChips);
+  }
+
   /**
    * History keeps detections without icons: take them from the installed
    * detectors (by id, else by category and name, as the cards do)
@@ -2185,6 +2190,8 @@ class History {
   /**
    * Export History: ask for the format and what to include, then download one file.
    * The format and timestamps start from Settings → History; JSON always keeps every field.
+   * "Only the entries shown" starts from what the list shows (its search, its chips, its sort), and is checked when a search or a
+   * chip narrows the list: pasting "these 12 pages" into a ticket needs no filters typed in again. The dialog's own choices apply on top.
    */
   async exportHistory() {
     const saved = await Utils.getHistorySettings().catch(() => ({}));
@@ -2209,7 +2216,7 @@ class History {
       el.value = String(value);
       return el;
     };
-    const check = (labelKey, labelFallback, checked) => {
+    const check = (labelKey, labelFallback, checked, ...args) => {
       const row = document.createElement('label');
       row.className = 'history-dialog-check';
       const box = document.createElement('input');
@@ -2217,9 +2224,9 @@ class History {
       box.className = 'ui-checkbox';
       box.checked = checked;
       const text = document.createElement('span');
-      text.textContent = FormatUtils.t(labelKey, labelFallback);
+      text.textContent = FormatUtils.t(labelKey, labelFallback, ...args);
       row.append(box, text);
-      return { row, box };
+      return { row, box, text };
     };
 
     const format = select(HistoryExport.FORMATS.map(f => [f, f === 'txt' ? 'TXT' : f === 'md' ? 'Markdown' : f.toUpperCase()]), HistoryExport.FORMATS.includes(saved.exportFormat) ? saved.exportFormat : 'json');
@@ -2243,20 +2250,25 @@ class History {
     domain.autocomplete = 'off';
     const pinned = check('historyExportPinnedOnly', 'Pinned pages only', false);
     const changed = check('historyExportChangedOnly', 'Changed pages only', false);
+    // The entries the list shows now, in its order; counted when the dialog opens and again whenever a choice changes
+    const shownItems = () => this.getFilteredItems();
+    const shown = check('historyExportShownFmt', 'Only the entries shown ({0})', this.isNarrowed(), shownItems().length);
     const count = document.createElement('div');
     count.className = 'history-dialog-count';
     count.setAttribute('role', 'status');
 
     const filters = () => ({ category: category.value, days: parseInt(period.value, 10), domain: domain.value, pinnedOnly: pinned.box.checked, changedOnly: changed.box.checked });
-    const matching = () => HistoryExport.filter(this.historyItems, filters());
+    const matching = (list) => HistoryExport.filter(shown.box.checked ? list : this.historyItems, filters());
     const refresh = () => {
-      const n = matching().length;
+      const listed = shownItems();
+      shown.text.textContent = FormatUtils.t('historyExportShownFmt', 'Only the entries shown ({0})', listed.length);
+      const n = matching(listed).length;
       count.textContent = n
         ? FormatUtils.t('historyExportCountFmt', '{0} of {1} entries will be exported', n, this.historyItems.length)
         : FormatUtils.t('historyExportNone', 'No entries match these filters');
       count.classList.toggle('is-empty', n === 0);
     };
-    [category, period, domain, pinned.box, changed.box].forEach(el => el.addEventListener(el === domain ? 'input' : 'change', refresh));
+    [category, period, domain, pinned.box, changed.box, shown.box].forEach(el => el.addEventListener(el === domain ? 'input' : 'change', refresh));
     refresh();
 
     const form = document.createElement('div');
@@ -2268,6 +2280,7 @@ class History {
       field('historyExportDomain', 'Site contains', domain),
       pinned.row,
       changed.row,
+      shown.row,
       count
     );
 
@@ -2280,7 +2293,7 @@ class History {
     });
     if (!confirmed) return;
 
-    const items = matching();
+    const items = matching(shownItems());
     if (!items.length) {
       NotificationHelper.error(FormatUtils.t('historyExportNone', 'No entries match these filters'));
       return;
