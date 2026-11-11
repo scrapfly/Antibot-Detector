@@ -14,6 +14,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Scrape with Scrapfly: an option set to 0, such as Wait after load, shows 0 when the window reopens, not an empty box.
 - Settings → Log collector: Clear no longer says Logs cleared, and Export no longer stays silent, when the extension reports an error.
 - Arabic: the icon picker's search icon no longer covers your text, and the statistics description and Regex cheat sheet arrow sit on the correct side.
+- Detection: Copy no longer puts an empty summary on the clipboard when the search or filters match nothing; it says so instead.
+- Statistics: "60 minutes ago" and "24 hours ago" now read "1 hour ago" and "yesterday"; the rules count no longer reads "of 1 rules".
 
 ## [3.1.6] - 2026-11-10
 
