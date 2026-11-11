@@ -1121,5 +1121,12 @@
   "Documented captchafox window object with its render method, not execution": "Belgelenmiş captchafox window nesnesi ve render yöntemi, yürütme değil",
   "Configured widget and the captchafox window object": "Yapılandırılmış bileşen ve captchafox window nesnesi",
   "Configured widget and the response token field": "Yapılandırılmış bileşen ve yanıt belirteci alanı",
-  "Configured widget, window object and response token field": "Yapılandırılmış bileşen, window nesnesi ve yanıt belirteci alanı"
+  "Configured widget, window object and response token field": "Yapılandırılmış bileşen, window nesnesi ve yanıt belirteci alanı",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "İstekleri HWWAFSESID ve HWWAFSESTIME çerezleriyle işaretleyen Huawei Cloud Web Application Firewall",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Huawei Cloud WAF'ın istekleri işaretlemek için eklediği HWWAFSESID oturum kimliği çerezi (Huawei Cloud yardımı)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Huawei Cloud WAF'ın istekleri işaretlemek için eklediği HWWAFSESTIME oturum zaman damgası çerezi (Huawei Cloud yardımı)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "Açık kaynaklı WAFW00F aracının listelediği Server başlığı HuaweiCloudWAF; yalnızca destekleyici sinyal",
+  "Both WAF session cookies": "WAF'ın her iki oturum çerezi",
+  "Session ID cookie with the WAF server header": "Oturum kimliği çerezi ve WAF'ın sunucu başlığı",
+  "Session timestamp cookie with the WAF server header": "Oturum zaman damgası çerezi ve WAF'ın sunucu başlığı"
 }

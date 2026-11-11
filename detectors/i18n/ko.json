@@ -1121,5 +1121,12 @@
   "Documented captchafox window object with its render method, not execution": "문서화된 captchafox window 객체와 render 메서드, 실행은 아님",
   "Configured widget and the captchafox window object": "설정된 위젯과 captchafox window 객체",
   "Configured widget and the response token field": "설정된 위젯과 응답 토큰 필드",
-  "Configured widget, window object and response token field": "설정된 위젯, window 객체, 응답 토큰 필드"
+  "Configured widget, window object and response token field": "설정된 위젯, window 객체, 응답 토큰 필드",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "HWWAFSESID와 HWWAFSESTIME 쿠키로 요청을 표시하는 Huawei Cloud 웹 애플리케이션 방화벽",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Huawei Cloud WAF가 요청을 표시하기 위해 삽입하는 세션 ID 쿠키 HWWAFSESID (Huawei Cloud 도움말)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Huawei Cloud WAF가 요청을 표시하기 위해 삽입하는 세션 타임스탬프 쿠키 HWWAFSESTIME (Huawei Cloud 도움말)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "오픈소스 도구 WAFW00F에 나열된 Server 헤더 HuaweiCloudWAF, 보조 신호일 뿐",
+  "Both WAF session cookies": "WAF 세션 쿠키 둘 다",
+  "Session ID cookie with the WAF server header": "세션 ID 쿠키와 WAF 서버 헤더",
+  "Session timestamp cookie with the WAF server header": "세션 타임스탬프 쿠키와 WAF 서버 헤더"
 }

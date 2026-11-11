@@ -1121,5 +1121,12 @@
   "Documented captchafox window object with its render method, not execution": "Objeto window documentado captchafox con su método render, no la ejecución",
   "Configured widget and the captchafox window object": "Widget configurado y el objeto window captchafox",
   "Configured widget and the response token field": "Widget configurado y el campo del token de respuesta",
-  "Configured widget, window object and response token field": "Widget configurado, objeto window y campo del token de respuesta"
+  "Configured widget, window object and response token field": "Widget configurado, objeto window y campo del token de respuesta",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "Web Application Firewall de Huawei Cloud que marca las peticiones con las cookies HWWAFSESID y HWWAFSESTIME",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Cookie de ID de sesión HWWAFSESID que Huawei Cloud WAF inserta para marcar las peticiones (ayuda de Huawei Cloud)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Cookie de marca de tiempo de sesión HWWAFSESTIME que Huawei Cloud WAF inserta para marcar las peticiones (ayuda de Huawei Cloud)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "Cabecera Server HuaweiCloudWAF, incluida en la herramienta de código abierto WAFW00F; solo señal de apoyo",
+  "Both WAF session cookies": "Ambas cookies de sesión del WAF",
+  "Session ID cookie with the WAF server header": "Cookie de ID de sesión con la cabecera de servidor del WAF",
+  "Session timestamp cookie with the WAF server header": "Cookie de marca de tiempo de sesión con la cabecera de servidor del WAF"
 }

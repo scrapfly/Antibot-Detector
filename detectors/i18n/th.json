@@ -1121,5 +1121,12 @@
   "Documented captchafox window object with its render method, not execution": "ออบเจ็กต์ window ที่มีเอกสารชื่อ captchafox พร้อมเมธอด render ไม่ใช่การทำงานจริง",
   "Configured widget and the captchafox window object": "วิดเจ็ตที่กำหนดค่าแล้วและออบเจ็กต์ window ชื่อ captchafox",
   "Configured widget and the response token field": "วิดเจ็ตที่กำหนดค่าแล้วและฟิลด์โทเค็นการตอบกลับ",
-  "Configured widget, window object and response token field": "วิดเจ็ตที่กำหนดค่าแล้ว ออบเจ็กต์ window และฟิลด์โทเค็นการตอบกลับ"
+  "Configured widget, window object and response token field": "วิดเจ็ตที่กำหนดค่าแล้ว ออบเจ็กต์ window และฟิลด์โทเค็นการตอบกลับ",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "Huawei Cloud Web Application Firewall ที่ทำเครื่องหมายคำขอด้วยคุกกี้ HWWAFSESID และ HWWAFSESTIME",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "คุกกี้ไอดีเซสชัน HWWAFSESID ที่ Huawei Cloud WAF แทรกเพื่อทำเครื่องหมายคำขอ (วิธีใช้ของ Huawei Cloud)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "คุกกี้การประทับเวลาเซสชัน HWWAFSESTIME ที่ Huawei Cloud WAF แทรกเพื่อทำเครื่องหมายคำขอ (วิธีใช้ของ Huawei Cloud)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "เฮดเดอร์ Server HuaweiCloudWAF ซึ่งระบุไว้ในเครื่องมือโอเพนซอร์ส WAFW00F เป็นสัญญาณสนับสนุนเท่านั้น",
+  "Both WAF session cookies": "คุกกี้เซสชันของ WAF ทั้งสองตัว",
+  "Session ID cookie with the WAF server header": "คุกกี้ไอดีเซสชันพร้อมเฮดเดอร์เซิร์ฟเวอร์ของ WAF",
+  "Session timestamp cookie with the WAF server header": "คุกกี้การประทับเวลาเซสชันพร้อมเฮดเดอร์เซิร์ฟเวอร์ของ WAF"
 }

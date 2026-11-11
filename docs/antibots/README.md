@@ -2,7 +2,7 @@
 
 # Anti-bot protections the Antibot Detector recognises
 
-One page for each of the 43 anti-bot detectors in the [Scrapfly Anti-bot Detector](../../README.md) extension: what the protection is, the public signals that reveal it, how hard it is rated, and what it usually means for web scraping. Pages are generated from the detection rules in `detectors/antibot/`. To get past anti-bot systems at scale, see Scrapfly's [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection).
+One page for each of the 44 anti-bot detectors in the [Scrapfly Anti-bot Detector](../../README.md) extension: what the protection is, the public signals that reveal it, how hard it is rated, and what it usually means for web scraping. Pages are generated from the detection rules in `detectors/antibot/`. To get past anti-bot systems at scale, see Scrapfly's [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection).
 
 | Protection | Difficulty | Page |
 | --- | --- | --- |
@@ -24,6 +24,7 @@ One page for each of the 43 anti-bot detectors in the [Scrapfly Anti-bot Detecto
 | FingerprintJS | Low | [FingerprintJS](fingerprintjs.md) |
 | Forter | Medium | [Forter](forter.md) |
 | Google BotGuard | High | [Google BotGuard](botguard.md) |
+| Huawei Cloud WAF | Low | [Huawei Cloud WAF](huaweicloud-waf.md) |
 | HUMAN (PerimeterX) | High | [HUMAN (PerimeterX)](perimeterx.md) |
 | Hunt | High | [Hunt](hunt.md) |
 | Incapsula (Imperva) | Medium | [Incapsula (Imperva)](incapsula.md) |

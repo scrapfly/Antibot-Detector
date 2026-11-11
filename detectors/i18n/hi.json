@@ -1121,5 +1121,12 @@
   "Documented captchafox window object with its render method, not execution": "दस्तावेज़ित captchafox window ऑब्जेक्ट और उसकी render मेथड, निष्पादन नहीं",
   "Configured widget and the captchafox window object": "कॉन्फ़िगर किया गया विजेट और captchafox window ऑब्जेक्ट",
   "Configured widget and the response token field": "कॉन्फ़िगर किया गया विजेट और प्रतिक्रिया टोकन फ़ील्ड",
-  "Configured widget, window object and response token field": "कॉन्फ़िगर किया गया विजेट, window ऑब्जेक्ट और प्रतिक्रिया टोकन फ़ील्ड"
+  "Configured widget, window object and response token field": "कॉन्फ़िगर किया गया विजेट, window ऑब्जेक्ट और प्रतिक्रिया टोकन फ़ील्ड",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "Huawei Cloud वेब एप्लिकेशन फ़ायरवॉल, जो अनुरोधों को HWWAFSESID और HWWAFSESTIME कुकीज़ से चिह्नित करता है",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "HWWAFSESID सेशन ID कुकी, जिसे Huawei Cloud WAF अनुरोधों को चिह्नित करने के लिए जोड़ता है (Huawei Cloud सहायता)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "HWWAFSESTIME सेशन टाइमस्टैम्प कुकी, जिसे Huawei Cloud WAF अनुरोधों को चिह्नित करने के लिए जोड़ता है (Huawei Cloud सहायता)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "Server हेडर HuaweiCloudWAF, ओपन-सोर्स टूल WAFW00F में सूचीबद्ध; केवल सहायक संकेत",
+  "Both WAF session cookies": "दोनों WAF सेशन कुकीज़",
+  "Session ID cookie with the WAF server header": "सेशन ID कुकी और WAF का सर्वर हेडर",
+  "Session timestamp cookie with the WAF server header": "सेशन टाइमस्टैम्प कुकी और WAF का सर्वर हेडर"
 }

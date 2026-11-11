@@ -1121,5 +1121,12 @@
   "Documented captchafox window object with its render method, not execution": "Dokumenterat window-objekt captchafox med metoden render, inte körning",
   "Configured widget and the captchafox window object": "Konfigurerad widget och window-objektet captchafox",
   "Configured widget and the response token field": "Konfigurerad widget och fältet för svarstoken",
-  "Configured widget, window object and response token field": "Konfigurerad widget, window-objekt och fält för svarstoken"
+  "Configured widget, window object and response token field": "Konfigurerad widget, window-objekt och fält för svarstoken",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "Huawei Clouds Web Application Firewall som märker förfrågningar med cookies HWWAFSESID och HWWAFSESTIME",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Sessions-ID-cookien HWWAFSESID som Huawei Cloud WAF lägger in för att märka förfrågningar (Huawei Cloud-hjälp)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Sessionstidsstämpelcookien HWWAFSESTIME som Huawei Cloud WAF lägger in för att märka förfrågningar (Huawei Cloud-hjälp)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "Server-huvudet HuaweiCloudWAF, listat av verktyget WAFW00F med öppen källkod; endast stödjande signal",
+  "Both WAF session cookies": "Båda WAF-sessionscookies",
+  "Session ID cookie with the WAF server header": "Sessions-ID-cookie med WAF:ens serverhuvud",
+  "Session timestamp cookie with the WAF server header": "Sessionstidsstämpelcookie med WAF:ens serverhuvud"
 }

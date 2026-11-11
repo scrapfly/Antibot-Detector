@@ -1121,5 +1121,12 @@
   "Documented captchafox window object with its render method, not execution": "كائن window الموثق captchafox مع الدالة render، وليس التنفيذ",
   "Configured widget and the captchafox window object": "أداة مهيأة وكائن window الخاص captchafox",
   "Configured widget and the response token field": "أداة مهيأة وحقل رمز الاستجابة",
-  "Configured widget, window object and response token field": "أداة مهيأة وكائن window وحقل رمز الاستجابة"
+  "Configured widget, window object and response token field": "أداة مهيأة وكائن window وحقل رمز الاستجابة",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "جدار حماية تطبيقات الويب من Huawei Cloud الذي يعلّم الطلبات بملفي تعريف الارتباط HWWAFSESID وHWWAFSESTIME",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "ملف تعريف الارتباط HWWAFSESID لمعرّف الجلسة الذي يضيفه Huawei Cloud WAF لتعليم الطلبات (مساعدة Huawei Cloud)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "ملف تعريف الارتباط HWWAFSESTIME للطابع الزمني للجلسة الذي يضيفه Huawei Cloud WAF لتعليم الطلبات (مساعدة Huawei Cloud)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "ترويسة Server بالقيمة HuaweiCloudWAF، مدرجة في أداة WAFW00F مفتوحة المصدر؛ إشارة داعمة فقط",
+  "Both WAF session cookies": "ملفا تعريف ارتباط الجلسة لجدار WAF معاً",
+  "Session ID cookie with the WAF server header": "ملف تعريف ارتباط معرّف الجلسة مع ترويسة الخادم الخاصة بـ WAF",
+  "Session timestamp cookie with the WAF server header": "ملف تعريف ارتباط الطابع الزمني للجلسة مع ترويسة الخادم الخاصة بـ WAF"
 }

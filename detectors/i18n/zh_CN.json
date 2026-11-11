@@ -1121,5 +1121,12 @@
   "Documented captchafox window object with its render method, not execution": "文档记载的 captchafox window 对象及其 render 方法，并非已执行",
   "Configured widget and the captchafox window object": "已配置的小组件和 captchafox window 对象",
   "Configured widget and the response token field": "已配置的小组件和响应令牌字段",
-  "Configured widget, window object and response token field": "已配置的小组件、window 对象和响应令牌字段"
+  "Configured widget, window object and response token field": "已配置的小组件、window 对象和响应令牌字段",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "用 HWWAFSESID 和 HWWAFSESTIME Cookie 标记请求的华为云 Web 应用防火墙",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "华为云 WAF 为标记请求而插入的会话 ID Cookie HWWAFSESID（华为云帮助）",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "华为云 WAF 为标记请求而插入的会话时间戳 Cookie HWWAFSESTIME（华为云帮助）",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "开源工具 WAFW00F 列出的 Server 头 HuaweiCloudWAF，仅作辅助信号",
+  "Both WAF session cookies": "WAF 的两个会话 Cookie",
+  "Session ID cookie with the WAF server header": "会话 ID Cookie 与 WAF 的服务器头",
+  "Session timestamp cookie with the WAF server header": "会话时间戳 Cookie 与 WAF 的服务器头"
 }

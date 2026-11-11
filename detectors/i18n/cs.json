@@ -1121,5 +1121,12 @@
   "Documented captchafox window object with its render method, not execution": "Zdokumentovaný objekt window captchafox s metodou render, nikoli provedení",
   "Configured widget and the captchafox window object": "Nakonfigurovaný widget a objekt window captchafox",
   "Configured widget and the response token field": "Nakonfigurovaný widget a pole s tokenem odpovědi",
-  "Configured widget, window object and response token field": "Nakonfigurovaný widget, objekt window a pole s tokenem odpovědi"
+  "Configured widget, window object and response token field": "Nakonfigurovaný widget, objekt window a pole s tokenem odpovědi",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "Webový aplikační firewall Huawei Cloud, který označuje požadavky cookies HWWAFSESID a HWWAFSESTIME",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Cookie HWWAFSESID s ID relace, kterou Huawei Cloud WAF vkládá k označení požadavků (nápověda Huawei Cloud)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Cookie HWWAFSESTIME s časovým razítkem relace, kterou Huawei Cloud WAF vkládá k označení požadavků (nápověda Huawei Cloud)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "Hlavička Server s hodnotou HuaweiCloudWAF, uvedená v open-source nástroji WAFW00F; pouze podpůrný signál",
+  "Both WAF session cookies": "Obě cookies relace WAF",
+  "Session ID cookie with the WAF server header": "Cookie s ID relace spolu s hlavičkou serveru WAF",
+  "Session timestamp cookie with the WAF server header": "Cookie s časovým razítkem relace spolu s hlavičkou serveru WAF"
 }

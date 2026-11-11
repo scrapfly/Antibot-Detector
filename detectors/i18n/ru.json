@@ -1121,5 +1121,12 @@
   "Documented captchafox window object with its render method, not execution": "Документированный объект window captchafox с методом render, а не выполнение",
   "Configured widget and the captchafox window object": "Настроенный виджет и объект window captchafox",
   "Configured widget and the response token field": "Настроенный виджет и поле токена ответа",
-  "Configured widget, window object and response token field": "Настроенный виджет, объект window и поле токена ответа"
+  "Configured widget, window object and response token field": "Настроенный виджет, объект window и поле токена ответа",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "Веб-брандмауэр Huawei Cloud, который помечает запросы cookie HWWAFSESID и HWWAFSESTIME",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Cookie HWWAFSESID с идентификатором сессии, которую Huawei Cloud WAF вставляет для пометки запросов (справка Huawei Cloud)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Cookie HWWAFSESTIME с временной меткой сессии, которую Huawei Cloud WAF вставляет для пометки запросов (справка Huawei Cloud)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "Заголовок Server HuaweiCloudWAF, указанный в открытом инструменте WAFW00F; только вспомогательный сигнал",
+  "Both WAF session cookies": "Обе сессионные cookie WAF",
+  "Session ID cookie with the WAF server header": "Cookie с идентификатором сессии и серверный заголовок WAF",
+  "Session timestamp cookie with the WAF server header": "Cookie с временной меткой сессии и серверный заголовок WAF"
 }

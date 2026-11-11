@@ -70,7 +70,8 @@ class CategoryManager {
                     'detect-fastly',
                     'detect-kount',
                     'detect-riskified',
-                    'detect-siteground-captcha'
+                    'detect-siteground-captcha',
+                    'detect-huaweicloud-waf'
                 ]
             },
             captcha: {

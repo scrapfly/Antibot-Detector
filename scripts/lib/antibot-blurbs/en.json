@@ -18,6 +18,7 @@
   "fastly": "Fastly Bot Management is the bot detection product of Fastly, an edge cloud provider. It is delivered through Fastly's edge network and, per its detector, may also run client-side checks.",
   "fingerprintjs": "FingerprintJS is a browser fingerprinting library, available as an open-source version and a commercial Pro service from Fingerprint. Its BotD library is a separate open-source bot detection tool. Finding it shows a site collects device signals, not necessarily that it blocks bots.",
   "forter": "Forter is a fraud prevention vendor for online commerce. Its script fingerprints the browser and the site sends the resulting token with checkout and login decisions.",
+  "huaweicloud-waf": "Huawei Cloud WAF is the web application firewall of Huawei Cloud. On a connected site it adds session cookies to visitors' requests, which its CC attack protection and anti-crawler rules use to count and track requests.",
   "hunt": "Hunt is an anti-bot system seen on some betting platforms. It collects a browser fingerprint and may follow up with an interactive captcha when it decides to block.",
   "incapsula": "Incapsula is the former name of the Imperva cloud web application firewall and CDN. It combines WAF rules with bot protection and is often recognised by its cookies.",
   "iovation": "iovation is a device recognition and fraud prevention service now part of TransUnion as TruValidate. Its script collects a device blackbox that the site submits with sensitive actions.",

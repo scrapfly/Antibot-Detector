@@ -1121,5 +1121,12 @@
   "Documented captchafox window object with its render method, not execution": "Đối tượng window captchafox đã được tài liệu hóa cùng phương thức render, không phải việc thực thi",
   "Configured widget and the captchafox window object": "Tiện ích đã cấu hình và đối tượng window captchafox",
   "Configured widget and the response token field": "Tiện ích đã cấu hình và trường mã phản hồi",
-  "Configured widget, window object and response token field": "Tiện ích đã cấu hình, đối tượng window và trường mã phản hồi"
+  "Configured widget, window object and response token field": "Tiện ích đã cấu hình, đối tượng window và trường mã phản hồi",
+  "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies": "Tường lửa ứng dụng web Huawei Cloud đánh dấu yêu cầu bằng cookie HWWAFSESID và HWWAFSESTIME",
+  "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Cookie ID phiên HWWAFSESID mà Huawei Cloud WAF chèn vào để đánh dấu yêu cầu (trợ giúp Huawei Cloud)",
+  "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)": "Cookie dấu thời gian phiên HWWAFSESTIME mà Huawei Cloud WAF chèn vào để đánh dấu yêu cầu (trợ giúp Huawei Cloud)",
+  "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only": "Tiêu đề Server HuaweiCloudWAF, được công cụ mã nguồn mở WAFW00F liệt kê; chỉ là tín hiệu hỗ trợ",
+  "Both WAF session cookies": "Cả hai cookie phiên của WAF",
+  "Session ID cookie with the WAF server header": "Cookie ID phiên cùng tiêu đề máy chủ của WAF",
+  "Session timestamp cookie with the WAF server header": "Cookie dấu thời gian phiên cùng tiêu đề máy chủ của WAF"
 }

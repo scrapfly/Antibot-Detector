@@ -1,0 +1,85 @@
+{
+  "id": "detect-huaweicloud-waf",
+  "name": "Huawei Cloud WAF",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Low",
+  "lastUpdated": "2026-11-11",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.huaweicloud.com/intl/en-us/product/waf.html",
+  "icon": "custom.png",
+  "description": "Huawei Cloud Web Application Firewall that marks requests with the HWWAFSESID and HWWAFSESTIME cookies",
+  "detection": {
+    "cookie": [
+      {
+        "id": "hwwafsesid-cookie",
+        "name": "^HWWAFSESID$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "HWWAFSESID session ID cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "hwwafsestime-cookie",
+        "name": "^HWWAFSESTIME$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "HWWAFSESTIME session timestamp cookie that Huawei Cloud WAF inserts to mark requests (Huawei Cloud help)",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "header": [
+      {
+        "id": "huaweicloud-server-header",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "HuaweiCloudWAF",
+        "valueRegex": true,
+        "confidence": 40,
+        "description": "Server header HuaweiCloudWAF, listed by the open-source WAFW00F tool; supporting signal only",
+        "standalone": false,
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "huaweicloud-session-cookies",
+      "name": "Both WAF session cookies",
+      "confidence": 100,
+      "when": {
+        "all": [
+          { "pattern": "hwwafsesid-cookie" },
+          { "pattern": "hwwafsestime-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "huaweicloud-session-id-server",
+      "name": "Session ID cookie with the WAF server header",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "hwwafsesid-cookie" },
+          { "pattern": "huaweicloud-server-header" }
+        ]
+      }
+    },
+    {
+      "id": "huaweicloud-session-time-server",
+      "name": "Session timestamp cookie with the WAF server header",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "hwwafsestime-cookie" },
+          { "pattern": "huaweicloud-server-header" }
+        ]
+      }
+    }
+  ]
+}
