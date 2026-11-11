@@ -6239,6 +6239,9 @@
   "historyCompareCopy": {
     "message": "คัดลอกเป็น Markdown"
   },
+  "historyCompareCopySummary": {
+    "message": "คัดลอกสรุป"
+  },
   "historyCompareMdHeadingFmt": {
     "message": "เปรียบเทียบการสแกน: {0}"
   },

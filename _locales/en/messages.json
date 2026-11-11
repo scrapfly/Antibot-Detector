@@ -6778,6 +6778,10 @@
     "message": "Copy as Markdown",
     "description": "Compare dialog button: copies the comparison as a Markdown report (for a ticket or a chat). Keep Markdown as written"
   },
+  "historyCompareCopySummary": {
+    "message": "Copy summary",
+    "description": "Compare dialog button: copies what changed between the two scans as one line (the site, the protections added, removed and changed, how many are unchanged), for a chat or a ticket"
+  },
   "historyCompareMdHeadingFmt": {
     "message": "Compare scans: {0}",
     "description": "Heading of the copied Markdown comparison. {0} = the site's host name"

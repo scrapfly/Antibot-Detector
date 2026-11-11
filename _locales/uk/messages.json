@@ -6239,6 +6239,9 @@
   "historyCompareCopy": {
     "message": "Копіювати як Markdown"
   },
+  "historyCompareCopySummary": {
+    "message": "Копіювати підсумок"
+  },
   "historyCompareMdHeadingFmt": {
     "message": "Порівняння сканувань: {0}"
   },

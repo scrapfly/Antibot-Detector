@@ -6239,6 +6239,9 @@
   "historyCompareCopy": {
     "message": "Copier en Markdown"
   },
+  "historyCompareCopySummary": {
+    "message": "Copier le résumé"
+  },
   "historyCompareMdHeadingFmt": {
     "message": "Comparaison des analyses : {0}"
   },

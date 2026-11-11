@@ -6239,6 +6239,9 @@
   "historyCompareCopy": {
     "message": "نسخ بتنسيق Markdown"
   },
+  "historyCompareCopySummary": {
+    "message": "نسخ الملخص"
+  },
   "historyCompareMdHeadingFmt": {
     "message": "مقارنة عمليات الفحص: {0}"
   },

@@ -6239,6 +6239,9 @@
   "historyCompareCopy": {
     "message": "Markdown के रूप में कॉपी करें"
   },
+  "historyCompareCopySummary": {
+    "message": "सारांश कॉपी करें"
+  },
   "historyCompareMdHeadingFmt": {
     "message": "स्कैन की तुलना: {0}"
   },

@@ -6239,6 +6239,9 @@
   "historyCompareCopy": {
     "message": "Kopiera som Markdown"
   },
+  "historyCompareCopySummary": {
+    "message": "Kopiera sammanfattning"
+  },
   "historyCompareMdHeadingFmt": {
     "message": "Jämför skanningar: {0}"
   },

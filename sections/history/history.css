@@ -1763,6 +1763,41 @@
 .history-compare-chip.is-removed .history-compare-chip-count { color: var(--p-fca5a5); }
 .history-compare-chip.is-changed .history-compare-chip-count { color: var(--p-fcd34d); }
 
+/* "Copy summary": the select bar's small button, on a row of its own under the four counts it sums up */
+.history-compare-copy {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  padding: 5px 9px;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 16px;
+  text-align: start;
+  color: var(--g-e0e0e0);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--g-424242);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.history-compare-copy-icon {
+  display: inline-flex;
+  flex: none;
+}
+
+.history-compare-copy:hover {
+  border-color: var(--accent);
+  color: var(--text-primary);
+}
+
+.history-compare-copy:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .history-compare-result {
   display: flex;
   flex-direction: column;

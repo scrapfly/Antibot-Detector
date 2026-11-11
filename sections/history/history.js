@@ -1124,7 +1124,8 @@ class History {
    * changed between the two (HistoryCompare): protections added, removed, changed in confidence or evidence, unchanged.
    * A scan in the list is one short line (date without seconds, count); when it is of another address its page path shows
    * under the list. Four counts sum the result up, then the protections in groups; Unchanged is folded when it is long.
-   * "Copy as Markdown" copies that report; Close leaves.
+   * "Copy as Markdown" copies that report and closes; "Copy summary", a button of the content under the counts, copies what changed
+   * as one line for a chat or a ticket and leaves the dialog open (another scan can be picked next); Close leaves.
    * @param {object} item - History entry
    * @returns {Promise<boolean>} false when the page has no other scan
    */
@@ -1155,6 +1156,9 @@ class History {
     };
     const uid = `history-compare-${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`;
     const CHEVRON = '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+    const COPY = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>';
+    // The site the copies name: the entry's own host (never its address: a query or a fragment may hold a token)
+    const siteHost = item.hostname || this.getDomainFromUrl(item.url);
 
     // The scans to pick from, one short line each: a long one would wrap inside the closed dropdown
     const select = make('select', 'select-field history-dialog-input ui-select');
@@ -1188,8 +1192,16 @@ class History {
     result.tabIndex = 0;
     result.setAttribute('role', 'region');
     result.setAttribute('aria-label', t('historyCompareTitle', 'Compare scans'));
+    // "Copy summary": what changed, as one line. The dialog's footer has room for Close and Copy as Markdown only, so it is a button of
+    // the content, under the four counts it sums up: in the Tab order (the list, this button, the results, then the footer)
+    const copySummary = make('button', 'history-compare-copy');
+    copySummary.setAttribute('type', 'button');
+    const copyIcon = make('span', 'history-compare-copy-icon');
+    copyIcon.setAttribute('aria-hidden', 'true');
+    copyIcon.innerHTML = COPY;
+    copySummary.append(copyIcon, make('span', 'history-compare-copy-text', t('historyCompareCopySummary', 'Copy summary')));
     const form = make('div', 'history-dialog-form history-compare');
-    form.append(pick, range, summary, result);
+    form.append(pick, range, summary, copySummary, result);
 
     let current = null;
     let unchangedOpen = null; // what the person chose for Unchanged (true = open), kept when another scan is picked
@@ -1283,13 +1295,17 @@ class History {
     };
     select.addEventListener('change', refresh);
     refresh();
+    // The summary of the scan picked now; the dialog stays open, so the other copy and another scan are still there
+    copySummary.addEventListener('click', async () => {
+      if (current) await FormatUtils.copyToClipboard(HistoryCompare.toOneLine(current, { host: siteHost, t, methodLabel }));
+    });
 
-    // The dialog answers Enter by closing with "Copy as Markdown": Enter on the Unchanged button is that button's own
-    const keepEnterOnToggle = (event) => {
+    // The dialog answers Enter by closing with "Copy as Markdown": Enter on a button of the content (Unchanged, Copy summary) is that button's own
+    const keepEnterOnButtons = (event) => {
       const active = document.activeElement;
-      if (event.key === 'Enter' && active && active.classList && active.classList.contains('history-compare-toggle')) event.stopImmediatePropagation();
+      if (event.key === 'Enter' && active && (active === copySummary || (active.classList && active.classList.contains('history-compare-toggle')))) event.stopImmediatePropagation();
     };
-    window.addEventListener('keydown', keepEnterOnToggle, true);
+    window.addEventListener('keydown', keepEnterOnButtons, true);
     let copy;
     try {
       copy = await NotificationHelper.form({
@@ -1300,14 +1316,14 @@ class History {
         focus: select
       });
     } finally {
-      window.removeEventListener('keydown', keepEnterOnToggle, true);
+      window.removeEventListener('keydown', keepEnterOnButtons, true);
     }
     // The list may have been drawn again under the dialog (a scan saved): the "…" button it came from is gone, and the focus
     // would fall to the page
     this.refocusEntry(item.id);
     if (copy && current) {
       await FormatUtils.copyToClipboard(HistoryCompare.toMarkdown(current, {
-        host: item.hostname || this.getDomainFromUrl(item.url), address: String(item.url || '').replace(/[?#].*$/s, ''),
+        host: siteHost, address: String(item.url || '').replace(/[?#].*$/s, ''),
         t, methodLabel, categoryLabel, dateText
       }));
     }

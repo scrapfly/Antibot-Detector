@@ -6239,6 +6239,9 @@
   "historyCompareCopy": {
     "message": "Kopírovat jako Markdown"
   },
+  "historyCompareCopySummary": {
+    "message": "Kopírovat souhrn"
+  },
   "historyCompareMdHeadingFmt": {
     "message": "Porovnání skenování: {0}"
   },

@@ -6239,6 +6239,9 @@
   "historyCompareCopy": {
     "message": "复制为 Markdown"
   },
+  "historyCompareCopySummary": {
+    "message": "复制摘要"
+  },
   "historyCompareMdHeadingFmt": {
     "message": "比较扫描：{0}"
   },
