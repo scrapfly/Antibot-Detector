@@ -6,6 +6,7 @@
  *   clean()       an entry as the log keeps it: known fields only, short values
  *   errorClassOf() 'network' | 'blocked' | 'config' for a failed request: the kind, never the error's own text (it could name the address)
  *   append()      the log with one more entry (newest last), cut to MAX_ENTRIES
+ *   forget()      the log with the page blanked on the lines that name a page the person has since left out
  *
  * An entry: { t, page, outcome: 'sent' | 'failed' | 'skipped', trigger: 'scan' | 'cache' | 'test' | 'retry',
  *             status?, error?: 'network' | 'blocked' | 'config', reason?: 'site' | 'category' | 'confidence', ms?,
@@ -61,7 +62,31 @@
     return kept.slice(-MAX_ENTRIES);
   }
 
-  const api = { MAX_ENTRIES, OUTCOMES, TRIGGERS, ERRORS, REASONS, clean, errorClassOf, append };
+  /**
+   * The log with `page` blanked on every line whose page `isKeptOut` says must not be named any more: a site added to Skipped sites
+   * or to History's ignored sites after the line was written, History paused, a site left out of "only these sites". Only the page
+   * goes: what happened, when and the status stay, and so does the id a Retry button still uses. A line that names no page is not
+   * asked about. Pure: the log it is given is not changed.
+   * @param {Array<object>} log
+   * @param {(page: string) => boolean} isKeptOut  `true` for a page to forget; any other answer (a promise from an async check
+   *        included) leaves the line as it is, so a page that was not judged is never blanked
+   * @returns {Array<object>} a new log in which the lines that are not blanked are the same objects as before; the log itself when
+   *          no line was blanked, so a caller can tell by identity that there is nothing to write
+   */
+  function forget(log, isKeptOut) {
+    if (!Array.isArray(log)) return [];
+    if (typeof isKeptOut !== 'function') return log;
+    let blanked = false;
+    const next = log.map((line) => {
+      if (!line || typeof line !== 'object' || !line.page) return line;
+      if (isKeptOut(String(line.page)) !== true) return line;
+      blanked = true;
+      return { ...line, page: '' };
+    });
+    return blanked ? next : log;
+  }
+
+  const api = { MAX_ENTRIES, OUTCOMES, TRIGGERS, ERRORS, REASONS, clean, errorClassOf, append, forget };
   root.WebhookLog = api;
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.WebhookLog = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
