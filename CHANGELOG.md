@@ -26,6 +26,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Fixed
 
+- Popup: a tab clicked while the popup was still opening no longer loses its sort, search, chips and menu the next time it is opened.
 - Advanced → Captures: Copy on a capture shows one message, and no longer says the data was copied when the browser refused the copy.
 - Bulk scan: Copy as lines says the copy failed when the browser refuses it, instead of saying Copied.
 - Scrape with Scrapfly: an option set to 0, such as Wait after load, shows 0 when the window reopens, not an empty box.

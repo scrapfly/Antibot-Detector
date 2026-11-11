@@ -189,13 +189,9 @@ class ScrapflyPopup {
       // Other sections will be lazy-loaded on first access
       await this.settings.initialize();
 
-      // Mark other sections as NOT initialized - they'll load on-demand
-      this.detection.initialized = false;
-      this.history.initialized = false;
-      this.rules.initialized = false;
-      if (this.advanced) {
-        this.advanced.initialized = false;
-      }
+      // The other sections start uninitialized and load on first use. They are not reset here: a tab clicked while the rules were
+      // still loading has already set itself up, and marking it uninitialized made its next opening load the markup again without
+      // its listeners (sort, search, chips and menus did nothing until the popup was reopened)
     } catch (error) {
       Logger.error('UI', 'Failed to initialize sections:', error);
     }
