@@ -1,5 +1,7 @@
 const { test } = require('node:test');
 const assert = require('node:assert');
+const fs = require('node:fs');
+const path = require('node:path');
 
 require('../modules/core/message-sender.js');
 require('../modules/core/history-store.js');
@@ -309,4 +311,26 @@ test('a backup that failed is tried again at the next start, an hour later at th
       assert.strictEqual(w.downloads.length, 1, 'a retry that failed is not retried at every start');
     });
   } finally { cleanup(); }
+});
+
+// ---- The Automatic backup text (Settings → History) says what can be imported back
+
+const read = (file) => fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
+const messagesOf = (locale) => JSON.parse(read(`_locales/${locale}/messages.json`));
+const LOCALES = fs.readdirSync(path.join(__dirname, '..', '_locales')).sort();
+
+test('the Automatic backup text says, in every language, that only JSON can be imported back into History', () => {
+  // The file is written in the export format chosen above, and History imports JSON only: a CSV, text or Markdown backup cannot be restored
+  assert.strictEqual(LOCALES.length, 22);
+  const english = messagesOf('en').settingsHistoryBackupDesc.message;
+  assert.match(english, /in the export format chosen above\./);
+  assert.match(english, /Only JSON files can be imported back into History\.$/);
+  for (const locale of LOCALES) {
+    const text = messagesOf(locale).settingsHistoryBackupDesc.message;
+    assert.match(text, /JSON/, `${locale}: ${text}`);
+  }
+  const html = read('sections/settings/settings.html');
+  assert.strictEqual(/data-i18n="settingsHistoryBackupDesc">([^<]*)</.exec(html)[1], english, 'the text shown before the translations load is the English one');
+  // The History tab's own file picker takes .json only: that is why
+  assert.match(read('sections/history/history.html'), /id="importHistoryFile" accept="\.json"/);
 });

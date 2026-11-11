@@ -5397,7 +5397,7 @@
     "message": "Setiap bulan"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Menyimpan salinan riwayat ke folder Unduhan Anda (di dalam folder Scrapfly), dalam format ekspor yang dipilih di atas."
+    "message": "Menyimpan salinan riwayat ke folder Unduhan Anda (di dalam folder Scrapfly), dalam format ekspor yang dipilih di atas. Hanya file JSON yang dapat diimpor kembali ke riwayat."
   },
   "settingsHistoryBackupNow": {
     "message": "Cadangkan sekarang"

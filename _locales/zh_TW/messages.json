@@ -5397,7 +5397,7 @@
     "message": "每月"
   },
   "settingsHistoryBackupDesc": {
-    "message": "將歷史記錄的副本，以上方選擇的匯出格式儲存到「下載」資料夾中的 Scrapfly 資料夾。"
+    "message": "將歷史記錄的副本，以上方選擇的匯出格式儲存到「下載」資料夾中的 Scrapfly 資料夾。只有 JSON 檔案可以重新匯入歷史記錄。"
   },
   "settingsHistoryBackupNow": {
     "message": "立即備份"

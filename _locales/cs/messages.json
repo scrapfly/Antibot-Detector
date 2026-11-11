@@ -5397,7 +5397,7 @@
     "message": "Každý měsíc"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Uloží kopii historie do složky Stažené soubory (do složky Scrapfly) ve výše zvoleném formátu exportu."
+    "message": "Uloží kopii historie do složky Stažené soubory (do složky Scrapfly) ve výše zvoleném formátu exportu. Zpět do historie lze importovat pouze soubory JSON."
   },
   "settingsHistoryBackupNow": {
     "message": "Zálohovat nyní"

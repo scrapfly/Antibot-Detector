@@ -5673,7 +5673,7 @@
     "description": "Option"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Saves a copy of History to your Downloads folder (in a Scrapfly folder), in the export format chosen above."
+    "message": "Saves a copy of History to your Downloads folder (in a Scrapfly folder), in the export format chosen above. Only JSON files can be imported back into History."
   },
   "settingsHistoryBackupNow": {
     "message": "Back up now",

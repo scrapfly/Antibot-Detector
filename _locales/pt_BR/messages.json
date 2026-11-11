@@ -5397,7 +5397,7 @@
     "message": "Todo mês"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Salva uma cópia do histórico na sua pasta Downloads (dentro de uma pasta Scrapfly), no formato de exportação escolhido acima."
+    "message": "Salva uma cópia do histórico na sua pasta Downloads (dentro de uma pasta Scrapfly), no formato de exportação escolhido acima. Somente arquivos JSON podem ser importados de volta para o histórico."
   },
   "settingsHistoryBackupNow": {
     "message": "Fazer backup agora"

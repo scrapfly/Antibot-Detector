@@ -5397,7 +5397,7 @@
     "message": "Varje månad"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Sparar en kopia av historiken i mappen Nedladdningar (i en Scrapfly-mapp), i exportformatet som valts ovan."
+    "message": "Sparar en kopia av historiken i mappen Nedladdningar (i en Scrapfly-mapp), i exportformatet som valts ovan. Bara JSON-filer kan importeras tillbaka till historiken."
   },
   "settingsHistoryBackupNow": {
     "message": "Säkerhetskopiera nu"

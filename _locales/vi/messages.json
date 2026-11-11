@@ -5397,7 +5397,7 @@
     "message": "Hằng tháng"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Lưu một bản sao Lịch sử vào thư mục Tải xuống của bạn (trong thư mục Scrapfly), theo định dạng xuất đã chọn ở trên."
+    "message": "Lưu một bản sao Lịch sử vào thư mục Tải xuống của bạn (trong thư mục Scrapfly), theo định dạng xuất đã chọn ở trên. Chỉ các tệp JSON mới có thể được nhập lại vào Lịch sử."
   },
   "settingsHistoryBackupNow": {
     "message": "Sao lưu ngay"

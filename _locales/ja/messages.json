@@ -5397,7 +5397,7 @@
     "message": "毎月"
   },
   "settingsHistoryBackupDesc": {
-    "message": "履歴のコピーを、上で選択したエクスポート形式で「ダウンロード」フォルダ内の Scrapfly フォルダに保存します。"
+    "message": "履歴のコピーを、上で選択したエクスポート形式で「ダウンロード」フォルダ内の Scrapfly フォルダに保存します。履歴に再度インポートできるのは JSON ファイルのみです。"
   },
   "settingsHistoryBackupNow": {
     "message": "今すぐバックアップ"

@@ -5397,7 +5397,7 @@
     "message": "Tous les mois"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Enregistre une copie de l’historique dans votre dossier Téléchargements (dans un dossier Scrapfly), au format d’export choisi ci-dessus."
+    "message": "Enregistre une copie de l’historique dans votre dossier Téléchargements (dans un dossier Scrapfly), au format d’export choisi ci-dessus. Seuls les fichiers JSON peuvent être réimportés dans l’historique."
   },
   "settingsHistoryBackupNow": {
     "message": "Sauvegarder maintenant"

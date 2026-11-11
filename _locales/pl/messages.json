@@ -5397,7 +5397,7 @@
     "message": "Co miesiąc"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Zapisuje kopię historii w folderze Pobrane (w folderze Scrapfly) w wybranym powyżej formacie eksportu."
+    "message": "Zapisuje kopię historii w folderze Pobrane (w folderze Scrapfly) w wybranym powyżej formacie eksportu. Do historii można ponownie zaimportować tylko pliki JSON."
   },
   "settingsHistoryBackupNow": {
     "message": "Utwórz kopię teraz"

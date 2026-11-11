@@ -5397,7 +5397,7 @@
     "message": "Monatlich"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Speichert eine Kopie des Verlaufs in deinem Downloads-Ordner (in einem Ordner „Scrapfly“) im oben gewählten Exportformat."
+    "message": "Speichert eine Kopie des Verlaufs in deinem Downloads-Ordner (in einem Ordner „Scrapfly“) im oben gewählten Exportformat. Nur JSON-Dateien lassen sich wieder in den Verlauf importieren."
   },
   "settingsHistoryBackupNow": {
     "message": "Jetzt sichern"

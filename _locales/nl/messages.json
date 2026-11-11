@@ -5397,7 +5397,7 @@
     "message": "Elke maand"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Slaat een kopie van de geschiedenis op in je map Downloads (in een map Scrapfly), in de hierboven gekozen exportindeling."
+    "message": "Slaat een kopie van de geschiedenis op in je map Downloads (in een map Scrapfly), in de hierboven gekozen exportindeling. Alleen JSON-bestanden kunnen weer in de geschiedenis worden geïmporteerd."
   },
   "settingsHistoryBackupNow": {
     "message": "Nu back-up maken"
