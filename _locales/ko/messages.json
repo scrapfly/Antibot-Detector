@@ -456,7 +456,7 @@
     "message": "알림"
   },
   "settingsCardNotificationsDesc": {
-    "message": "보안 시스템이 탐지될 때 알림 표시"
+    "message": "페이지의 보호 기능이 변경되거나, 기록 저장 공간이 거의 가득 차거나, 기록 백업에 실패하면 알림을 표시합니다."
   },
   "settingsCardDebug": {
     "message": "디버그 모드"

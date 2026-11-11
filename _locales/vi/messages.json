@@ -456,7 +456,7 @@
     "message": "Thông báo"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Hiển thị cảnh báo khi phát hiện hệ thống bảo mật"
+    "message": "Hiển thị thông báo khi biện pháp bảo vệ của một trang thay đổi, lịch sử gần đầy hoặc không thể sao lưu lịch sử."
   },
   "settingsCardDebug": {
     "message": "Chế độ gỡ lỗi"

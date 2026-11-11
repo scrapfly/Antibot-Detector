@@ -456,7 +456,7 @@
     "message": "通知"
   },
   "settingsCardNotificationsDesc": {
-    "message": "偵測到安全系統時顯示警示"
+    "message": "當頁面的防護變更、歷史記錄即將額滿或歷史記錄備份失敗時，顯示通知。"
   },
   "settingsCardDebug": {
     "message": "偵錯模式"

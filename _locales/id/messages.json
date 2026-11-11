@@ -456,7 +456,7 @@
     "message": "Notifikasi"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Tampilkan peringatan saat sistem keamanan terdeteksi"
+    "message": "Tampilkan notifikasi saat proteksi suatu halaman berubah, riwayat hampir penuh, atau pencadangannya gagal."
   },
   "settingsCardDebug": {
     "message": "Mode debug"

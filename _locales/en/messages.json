@@ -460,7 +460,7 @@
     "message": "Notifications"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Show alerts when security systems are detected"
+    "message": "Show a notification when a page's protections change, History is almost full or its backup fails."
   },
   "settingsCardDebug": {
     "message": "Debug Mode"

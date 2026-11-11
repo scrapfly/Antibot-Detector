@@ -456,7 +456,7 @@
     "message": "通知"
   },
   "settingsCardNotificationsDesc": {
-    "message": "检测到安全系统时显示警报"
+    "message": "当页面的防护措施变化、历史记录存储空间即将占满或历史记录备份失败时，显示通知。"
   },
   "settingsCardDebug": {
     "message": "调试模式"

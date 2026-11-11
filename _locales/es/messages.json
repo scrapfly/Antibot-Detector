@@ -456,7 +456,7 @@
     "message": "Notificaciones"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Mostrar alertas cuando se detectan sistemas de seguridad"
+    "message": "Mostrar una notificación cuando cambian las protecciones de una página, el historial está casi lleno o falla su copia de seguridad."
   },
   "settingsCardDebug": {
     "message": "Modo depuración"

@@ -456,7 +456,7 @@
     "message": "Aviseringar"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Visa varningar när skyddssystem upptäcks"
+    "message": "Visa en avisering när en sidas skydd ändras, historiken är nästan full eller dess säkerhetskopiering misslyckas."
   },
   "settingsCardDebug": {
     "message": "Felsökningsläge"

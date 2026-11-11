@@ -456,7 +456,7 @@
     "message": "Oznámení"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Zobrazovat upozornění při zjištění bezpečnostních systémů"
+    "message": "Zobrazit oznámení, když se změní ochrany stránky, historie je téměř plná nebo se nezdaří její zálohování."
   },
   "settingsCardDebug": {
     "message": "Režim ladění"

@@ -456,7 +456,7 @@
     "message": "Bildirimler"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Güvenlik sistemleri tespit edildiğinde uyarı göster"
+    "message": "Bir sayfanın korumaları değiştiğinde, geçmiş neredeyse dolduğunda veya geçmiş yedeklemesi başarısız olduğunda bildirim göster."
   },
   "settingsCardDebug": {
     "message": "Hata ayıklama modu"

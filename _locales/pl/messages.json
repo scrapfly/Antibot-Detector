@@ -456,7 +456,7 @@
     "message": "Powiadomienia"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Pokazuj alerty po wykryciu systemów zabezpieczeń"
+    "message": "Pokazuj powiadomienie, gdy zmienia się ochrona strony, historia jest prawie pełna lub nie udaje się utworzyć jej kopii zapasowej."
   },
   "settingsCardDebug": {
     "message": "Tryb debugowania"

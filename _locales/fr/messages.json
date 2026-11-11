@@ -456,7 +456,7 @@
     "message": "Notifications"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Afficher des alertes lorsque des systèmes de sécurité sont détectés"
+    "message": "Afficher une notification lorsque les protections d’une page changent, que l’historique est presque plein ou que sa sauvegarde échoue."
   },
   "settingsCardDebug": {
     "message": "Mode débogage"

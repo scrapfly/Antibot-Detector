@@ -456,7 +456,7 @@
     "message": "Benachrichtigungen"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Warnungen anzeigen, wenn Sicherheitssysteme erkannt werden"
+    "message": "Eine Benachrichtigung anzeigen, wenn sich die Schutzmaßnahmen einer Seite ändern, der Verlauf fast voll ist oder dessen Sicherung fehlschlägt."
   },
   "settingsCardDebug": {
     "message": "Debug-Modus"

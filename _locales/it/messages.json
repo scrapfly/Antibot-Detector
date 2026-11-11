@@ -456,7 +456,7 @@
     "message": "Notifiche"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Mostra avvisi quando vengono rilevati sistemi di sicurezza"
+    "message": "Mostra una notifica quando cambiano le protezioni di una pagina, la cronologia è quasi piena o il suo backup non riesce."
   },
   "settingsCardDebug": {
     "message": "Modalità debug"
