@@ -41,9 +41,10 @@ out/
 .env.local
 .env.*.local
 
-# Test files and examples
-test-*.html
-test-*.js
+# Test files and examples: scratch files at the repository root only (unanchored, these also swallowed a new test/test-x.js
+# or scripts/test-x.js without a word)
+/test-*.html
+/test-*.js
 old example of recaptcha capture/
 
 # Local configuration files
@@ -63,10 +64,8 @@ temp/
 *.crx
 *.pem
 
-# Documentation (the translated READMEs and the anti-bot pages are kept)
-docs/*
-!docs/README.*.md
-!docs/antibots/
+# Documents: PDFs stay out. docs/ is tracked as a whole (the translated READMEs and the anti-bot pages), so a new file there
+# is not ignored; "docs/*" with two exceptions used to make git add skip any other new file under docs/ without a word
 *.pdf
 
 # Internal planning docs (not shipped, not needed in the repo)
