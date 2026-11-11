@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "कैश साफ़ करें"
   },
-  "clearingMsg": {
-    "message": "साफ़ किया जा रहा है..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ साफ़ हो गया!"
-  },
   "cacheClearedToast": {
     "message": "कैश साफ़ कर दिया गया"
   },
@@ -3414,17 +3408,11 @@
   "clipboardTimestampFmt": {
     "message": "समय: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "सुरक्षा प्रणाली: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "श्रेणी: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "विश्वास: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "जांच विधियां: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "जांच विधियां:"

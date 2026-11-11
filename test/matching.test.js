@@ -1,5 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert');
+const withinLimit = require('./helpers/hard-limit.js');
 
 globalThis.Constants = globalThis.Constants || { PATTERN_CACHE_MAX_SIZE: 500, MATCH_CACHE_TTL: 300000 };
 globalThis.Logger = globalThis.Logger || { warn() {}, debug() {}, get debugMode() { return false; } };
@@ -73,11 +74,10 @@ test('wildcard cookie names: * is any run of characters, nothing else is special
 });
 
 test('a wildcard cookie name that almost matches is answered at once', () => {
-  const started = Date.now();
   const name = 'a'.repeat(5000);
-  assert.strictEqual(demMatchCookieName.call(freshThis(), name, '*a*a*a*a*a*a*a*a*b'), false);
-  assert.strictEqual(demMatchCookieName.call(freshThis(), name, 'a*a*a*a*a*a*a*a*b'), false);
-  assert.ok(Date.now() - started < 500, `took ${Date.now() - started} ms`);
+  for (const pattern of ['*a*a*a*a*a*a*a*a*b', 'a*a*a*a*a*a*a*a*b']) {
+    assert.strictEqual(withinLimit(() => demMatchCookieName.call(freshThis(), name, pattern), `the pattern ${pattern}`), false);
+  }
 });
 
 // "İ" (a dotted capital I, in Turkish text) is two characters in lower case: the place found in the lower-case copy is not the

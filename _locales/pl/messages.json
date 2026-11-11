@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "Wyczyść pamięć podręczną"
   },
-  "clearingMsg": {
-    "message": "Czyszczenie..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Wyczyszczono!"
-  },
   "cacheClearedToast": {
     "message": "Wyczyszczono pamięć podręczną"
   },
@@ -3414,17 +3408,11 @@
   "clipboardTimestampFmt": {
     "message": "Znacznik czasu: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "System zabezpieczeń: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategoria: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Pewność: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Metody wykrywania: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Metody wykrywania:"

@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "Очистити кеш"
   },
-  "clearingMsg": {
-    "message": "Очищення..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Очищено!"
-  },
   "cacheClearedToast": {
     "message": "Кеш очищено"
   },
@@ -3414,17 +3408,11 @@
   "clipboardTimestampFmt": {
     "message": "Позначка часу: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Система захисту: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Категорія: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Впевненість: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Методи виявлення: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Методи виявлення:"

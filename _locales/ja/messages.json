@@ -826,12 +826,6 @@
   "clearCacheConfirmBtn": {
     "message": "キャッシュをクリア"
   },
-  "clearingMsg": {
-    "message": "クリア中..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ クリアしました!"
-  },
   "cacheClearedToast": {
     "message": "キャッシュをクリアしました"
   },
@@ -3414,17 +3408,11 @@
   "clipboardTimestampFmt": {
     "message": "日時: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "セキュリティシステム: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "カテゴリー: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "信頼度: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "検出方法: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "検出方法:"

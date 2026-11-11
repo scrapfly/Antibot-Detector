@@ -136,7 +136,7 @@ As proteções encontradas na página atual, cada uma com sua confiança, sua di
 
 - **Enviar detecções** para obter um link compartilhável (dpaste.com por padrão; veja [Links de compartilhamento](#links-de-compartilhamento))
 - **Limpar cache**, para que a página seja analisada de novo no próximo carregamento
-- **Copiar**, um menu: o mesmo resumo que o envio compartilha, uma tabela Markdown para um ticket ou chat, ou JSON (nenhum inclui valores de cookies ou de cabeçalhos)
+- **Copiar**, um menu: o mesmo resumo que o envio compartilha, uma tabela Markdown para um ticket ou chat, uma linha com o site e suas proteções, ou JSON (nenhum destes inclui valores de cookies ou de cabeçalhos); ou código que pede a página de novo, como comando curl, Python (requests) ou Node.js (fetch), com o User-Agent, o Accept-Language e as client hints deste navegador e todos os cookies que a página envia, inclusive os HttpOnly. O código inclui, sim, os valores dos cookies e o endereço da página com a query string, então mantenha-o em sigilo
 - **Bloquear este domínio**, para que a extensão deixe de analisá-lo
 
 ### Histórico
