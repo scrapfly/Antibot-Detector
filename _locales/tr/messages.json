@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Yalnızca gösterilen girdiler ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Yalnızca sabitlenen sayfalar"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Markdown olarak kopyala"
+  },
+  "historyCompareCopySummary": {
+    "message": "Özeti kopyala"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Taramaları karşılaştır: {0}"

@@ -4,6 +4,7 @@
  *
  *   filter()    the entries an export dialog's choices select
  *   build()     one file's text for a list of entries, in JSON, CSV or plain text
+ *   oneLines()  a list of entries as one line each ("address: Cloudflare 95%, reCAPTCHA 70%"), for a chat or a ticket
  *   chunk()     the entries cut into parts that each stay under a size (a download of
  *               a data: URL cannot be larger than about 2 MB)
  *   fileName()  scrapfly-history-2026-10-19[-part-2].csv
@@ -165,6 +166,48 @@
     return { text, fileText: format === 'csv' ? `\uFEFF${text}` : text, type: TYPES[format], extension: format, format };
   }
 
+  // ---- One line per entry (the Select bar's "Copy as lines") -----------------------------------------------------------------
+
+  // A line is one line: whatever would break a text in two (a name from a custom rule, an address from an imported file) is a space
+  const oneLine = (value) => String(value == null ? '' : value).replace(/[\r\n\u0085\u2028\u2029]+/g, ' ').trim();
+  /** An entry's score as a whole number; null when it has none (no score is not a score of 0). */
+  const scoreOf = (d) => {
+    const raw = d && d.confidence;
+    if (raw === null || raw === undefined || raw === '') return null;
+    const n = Number(raw);
+    return Number.isFinite(n) ? Math.round(n) : null;
+  };
+  /**
+   * The address a line gives: origin and path, never the query, the fragment or a login (tokens live there). One that cannot be read
+   * (or has no origin of its own, like a file) is its text cut before the first ? or #; an entry with no address gives its host name.
+   */
+  function lineAddress(item) {
+    const text = String((item && item.url) || '').trim();
+    if (!text) return String((item && item.hostname) || '').trim();
+    try {
+      const parsed = new URL(text);
+      if (parsed.origin !== 'null') return `${parsed.origin}${parsed.pathname}`;
+    } catch (_) { /* not an address: its text, cut below */ }
+    return text.split('#')[0].split('?')[0];
+  }
+
+  /**
+   * One line per entry, newline-separated: "https://shop.example/cart: Cloudflare 95%, reCAPTCHA 70%", or "address: -" when nothing
+   * was found. Names and scores only: no cookie or header value, no query string. Written as Bulk scan's "Copy as lines" writes its
+   * pages and as the Detection tab's one-line copy writes its protections.
+   * @param {Array<object>} items - History entries, in the order the lines should come
+   * @returns {string} '' when there is no entry
+   */
+  function oneLines(items) {
+    return (Array.isArray(items) ? items : []).filter(item => item && typeof item === 'object').map((item) => {
+      const found = detectionsOf(item).map((d) => {
+        const score = scoreOf(d);
+        return `${oneLine(detectionName(d)) || '?'}${score === null ? '' : ` ${score}%`}`;
+      });
+      return `${oneLine(lineAddress(item)) || '?'}: ${found.length ? found.join(', ') : '-'}`;
+    }).join('\n');
+  }
+
   const byteLength = (text) => (typeof TextEncoder !== 'undefined' ? new TextEncoder().encode(text).length : text.length);
 
   /** The entries in parts whose files each stay under about `maxBytes` of UTF-8 (an entry bigger than that gets its own). */
@@ -189,7 +232,7 @@
     return `scrapfly-history-${localDay(now)}${part > 0 ? `-part-${part}` : ''}.${ext}`;
   }
 
-  const api = { FORMATS, filter, build, chunk, fileName };
+  const api = { FORMATS, filter, build, oneLines, chunk, fileName };
   root.HistoryExport = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

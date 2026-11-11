@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Alleen de getoonde items ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Alleen vastgezette pagina's"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Kopiëren als Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Samenvatting kopiëren"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Scans vergelijken: {0}"

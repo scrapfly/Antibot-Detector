@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Hanya entri yang ditampilkan ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Hanya halaman yang disematkan"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Salin sebagai Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Salin ringkasan"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Perbandingan pindaian: {0}"

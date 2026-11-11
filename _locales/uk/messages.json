@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Лише показані записи ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Лише закріплені сторінки"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Копіювати як Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Копіювати підсумок"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Порівняння сканувань: {0}"

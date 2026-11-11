@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "僅限顯示的項目（{0} 筆）"
+  },
   "historyExportPinnedOnly": {
     "message": "僅限已釘選的網頁"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "複製為 Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "複製摘要"
   },
   "historyCompareMdHeadingFmt": {
     "message": "比較掃描：{0}"

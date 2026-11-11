@@ -16,11 +16,12 @@ const CaptureRetention = require('../modules/core/capture-retention.js');
 // Languages whose nouns change with the number (the others, Chinese, Japanese, Korean, Thai, Vietnamese, Indonesian and
 // Turkish, keep the noun as it is after any number)
 const INFLECTING = ['ar', 'cs', 'de', 'en', 'es', 'fr', 'hi', 'it', 'nl', 'pl', 'pt_BR', 'ru', 'sv', 'uk'];
-const labelled = (message, index) => new RegExp(`[:：]\\s*\\{${index}\\}`).test(message);
+// A count after a label ("Entries: 2") or alone in brackets after a whole phrase ("Only the entries shown (2)"): no noun takes the number
+const labelled = (message, index) => new RegExp(`[:：]\\s*\\{${index}\\}|[(（]\\s*\\{${index}\\}\\s*[)）]`).test(message);
 
 // Used for any count, one included (no singular twin): the key and the number of its count placeholder
 const ANY_COUNT = { settingsHistoryStorageUsedFmt: 2, settingsHistoryStorageTrimmedFmt: 0, settingsHistoryBackupLastFmt: 1,
-  settingsHistoryBackupDoneFmt: 0, restorePartHistoryFmt: 0, capturesExportedFmt: 0, statsKpiProtectionsRulesFmt: 0 };
+  settingsHistoryBackupDoneFmt: 0, restorePartHistoryFmt: 0, capturesExportedFmt: 0, statsKpiProtectionsRulesFmt: 0, historyExportShownFmt: 0 };
 // The Arabic "N of the captures" says it for any number (one of the captures, two of them, fifteen of them)
 const READS_RIGHT = { capturesExportedFmt: ['ar'] };
 

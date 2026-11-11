@@ -5815,6 +5815,10 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Only the entries shown ({0})",
+    "description": "Checkbox in the History export dialog: export only the entries the History list shows now (what its search and filter chips leave, in the list's order) instead of every entry. {0} = how many entries are shown, a number"
+  },
   "historyExportPinnedOnly": {
     "message": "Pinned pages only",
     "description": "Checkbox"
@@ -6785,6 +6789,10 @@
   "historyCompareCopy": {
     "message": "Copy as Markdown",
     "description": "Compare dialog button: copies the comparison as a Markdown report (for a ticket or a chat). Keep Markdown as written"
+  },
+  "historyCompareCopySummary": {
+    "message": "Copy summary",
+    "description": "Compare dialog button: copies what changed between the two scans as one line (the site, the protections added, removed and changed, how many are unchanged), for a chat or a ticket"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Compare scans: {0}",

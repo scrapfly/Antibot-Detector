@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Только показанные записи ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Только закреплённые страницы"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Копировать как Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Копировать сводку"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Сравнение сканирований: {0}"

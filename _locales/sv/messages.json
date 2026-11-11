@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Endast visade poster ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Endast fästa sidor"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Kopiera som Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Kopiera sammanfattning"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Jämför skanningar: {0}"

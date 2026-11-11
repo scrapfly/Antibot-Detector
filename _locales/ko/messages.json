@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "표시된 항목만({0}개)"
+  },
   "historyExportPinnedOnly": {
     "message": "고정한 페이지만"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Markdown으로 복사"
+  },
+  "historyCompareCopySummary": {
+    "message": "요약 복사"
   },
   "historyCompareMdHeadingFmt": {
     "message": "스캔 비교: {0}"

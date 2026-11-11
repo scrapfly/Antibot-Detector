@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Chỉ các mục đang hiển thị ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Chỉ trang đã ghim"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Sao chép dạng Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Sao chép tóm tắt"
   },
   "historyCompareMdHeadingFmt": {
     "message": "So sánh các lần quét: {0}"

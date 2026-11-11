@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "الإدخالات المعروضة فقط ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "الصفحات المثبّتة فقط"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "نسخ بتنسيق Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "نسخ الملخص"
   },
   "historyCompareMdHeadingFmt": {
     "message": "مقارنة عمليات الفحص: {0}"

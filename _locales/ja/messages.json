@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "表示中の項目のみ（{0} 件）"
+  },
   "historyExportPinnedOnly": {
     "message": "ピン留めしたページのみ"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Markdown としてコピー"
+  },
+  "historyCompareCopySummary": {
+    "message": "サマリーをコピー"
   },
   "historyCompareMdHeadingFmt": {
     "message": "スキャンの比較: {0}"

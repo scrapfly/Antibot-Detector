@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "Tylko pokazane wpisy ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "Tylko przypięte strony"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Kopiuj jako Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Kopiuj podsumowanie"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Porównanie skanów: {0}"

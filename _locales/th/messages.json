@@ -5513,6 +5513,9 @@
   "historyExportDomainPlaceholder": {
     "message": "example.com"
   },
+  "historyExportShownFmt": {
+    "message": "เฉพาะรายการที่แสดง ({0})"
+  },
   "historyExportPinnedOnly": {
     "message": "เฉพาะหน้าที่ปักหมุด"
   },
@@ -6247,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "คัดลอกเป็น Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "คัดลอกสรุป"
   },
   "historyCompareMdHeadingFmt": {
     "message": "เปรียบเทียบการสแกน: {0}"

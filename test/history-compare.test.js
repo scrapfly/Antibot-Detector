@@ -236,6 +236,84 @@ test('changeText() and toMarkdown() read the same after the dialog\'s rows were 
   assert.equal(C.changeText({ ...row, delta: null, methodsAdded: [], methodsRemoved: [] }), '');
 });
 
+// ---- The one-line summary ("Copy summary"): what changed, in a line for a chat or a ticket ---------------------------------
+
+test('toOneLine(): the host, then what was added, removed and changed, then how many stayed the same, on one line', () => {
+  const before = [det('Kasada', 'Anti-Bot', 60, ['url']), det('Cloudflare', 'Anti-Bot', 70, ['cookie']), det('Turnstile', 'CAPTCHA', 90, ['url']), det('Canvas Fingerprint', 'Fingerprint', 30), det('Audio Fingerprint', 'Fingerprint', 20)];
+  const after = [det('reCAPTCHA', 'CAPTCHA', 85, ['url']), det('Cloudflare', 'Anti-Bot', 95, ['cookie']), det('Turnstile', 'CAPTCHA', 90, ['url']), det('Canvas Fingerprint', 'Fingerprint', 30), det('Audio Fingerprint', 'Fingerprint', 20)];
+  assert.equal(C.toOneLine(compared(before, after), { host: 'shop.example' }), `shop.example: +reCAPTCHA 85%, ${unicodeMinus}Kasada, Cloudflare 70% → 95% (+25), Unchanged (3)`);
+});
+
+test('toOneLine(): several of each kind keep the dialog\'s order; a score that went down has the real minus sign; no score is no number', () => {
+  const before = [det('Akamai', 'Anti-Bot', 85, ['cookie']), det('hCaptcha', 'CAPTCHA', 60, ['url']), det('Turnstile', 'CAPTCHA', 90, ['url']), det('Cloudflare', 'Anti-Bot', 70, ['cookie'])];
+  const after = [det('Turnstile', 'CAPTCHA', 60, ['url']), det('Kasada', 'Anti-Bot', 70, ['url']), det('DataDome', 'Anti-Bot', 80, ['cookie']), det('Unscored', 'Fingerprint', null), det('Cloudflare', 'Anti-Bot', 95, ['cookie'])];
+  assert.equal(C.toOneLine(compared(before, after), { host: 's.example' }),
+    `s.example: +DataDome 80%, +Kasada 70%, +Unscored, ${unicodeMinus}Akamai, ${unicodeMinus}hCaptcha, Cloudflare 70% → 95% (+25), Turnstile 90% → 60% (${unicodeMinus}30)`,
+    'anti-bot before CAPTCHA before fingerprinting, then by name, in each kind; nothing unchanged, so no count');
+});
+
+test('toOneLine(): a protection whose score is the same but whose evidence changed says so, and is never left out', () => {
+  const r = compared([det('Kasada', 'Anti-Bot', 80, ['cookie']), det('Akamai', 'Anti-Bot', 70, ['cookie'])], [det('Kasada', 'Anti-Bot', 80, ['header']), det('Akamai', 'Anti-Bot', 90, ['cookie', 'header'])]);
+  assert.equal(C.toOneLine(r, { host: 's.example', methodLabel: (type) => type.toUpperCase() }),
+    's.example: Akamai 70% → 90% (+20), Kasada (New evidence: HEADER · Evidence gone: COOKIE)',
+    'a score that moved is the headline; the evidence only when it is all there is');
+});
+
+test('toOneLine(): two scans that found the same say how many, or the dialog\'s own sentence when they found nothing', () => {
+  const same = compared([det('Kasada', 'Anti-Bot', 80, ['url']), det('Canvas Fingerprint', 'Fingerprint', 30)], [det('Kasada', 'Anti-Bot', 80, ['url']), det('Canvas Fingerprint', 'Fingerprint', 30)]);
+  assert.equal(C.toOneLine(same, { host: 'news.example' }), 'news.example: Unchanged (2)');
+  assert.equal(C.toOneLine(compared([], []), { host: 'news.example' }), 'news.example: These two scans found the same protections, with the same confidence and evidence.');
+});
+
+test('toOneLine(): the host only, never a path, a query or a fragment, whatever it is given or the scans hold', () => {
+  const r = C.compare(entry('a', 'https://shop.example/cart?token=SECRET123#top', T0, [det('Kasada', 'Anti-Bot', 80)]), entry('b', 'https://shop.example/cart?token=SECRET456#end', T0 + HOUR, []));
+  assert.equal(C.toOneLine(r, { host: 'shop.example' }), `shop.example: ${unicodeMinus}Kasada`);
+  assert.equal(C.toOneLine(r), `shop.example: ${unicodeMinus}Kasada`, 'no host given: the scans\' own, without the rest of the address');
+  assert.equal(C.toOneLine(r, { host: 'https://user:pw@shop.example:8080/cart?token=SECRET123#top' }), `shop.example: ${unicodeMinus}Kasada`, 'an address given as the host is cut to its host');
+  assert.equal(C.toOneLine(r, { address: 'https://other.example/x?token=SECRET789' }), `other.example: ${unicodeMinus}Kasada`, 'or an address in its place');
+  assert.equal(C.toOneLine(r, { host: 'not a url?token=SECRET123#top' }), `not a url: ${unicodeMinus}Kasada`);
+  assert.equal(C.toOneLine(C.compare({}, {})), '?: These two scans found the same protections, with the same confidence and evidence.', 'no host anywhere');
+  for (const options of [{ host: 'shop.example' }, {}, { host: 'https://user:pw@shop.example:8080/cart?token=SECRET123#top' }]) {
+    assert.ok(!/SECRET|token|cart|#|pw|8080/.test(C.toOneLine(r, options)), JSON.stringify(options));
+  }
+});
+
+test('toOneLine(): a line break in a name, a host or a translation cannot make a second line', () => {
+  const r = compared(
+    [det('Old\nname', 'Anti-Bot', 80), det('Keep', 'Fingerprint', 20), det('Move', 'Anti-Bot', 50)],
+    [det('Two\r\nlines\u2028here', 'Anti-Bot', 70), det('Pipe | name', 'CAPTCHA', 60), det('Keep', 'Fingerprint', 20), det('Move', 'Anti-Bot', 60)]);
+  // A translator whose every text ends with a line break reaches the changed and the unchanged words
+  const line = C.toOneLine(r, { host: 'my host\nname', t: (key, fallback, ...args) => `${t(key, fallback, ...args)}\n` });
+  assert.ok(!/[\r\n\u0085\u2028\u2029]/.test(line), JSON.stringify(line));
+  assert.equal(line, `my host name: +Two lines here 70%, +Pipe | name 60%, ${unicodeMinus}Old name, Move 50% → 60% (+10), Unchanged (1)`);
+});
+
+test('toOneLine(): every word and the move go through the translator it is given, and all of them are the dialog\'s own', () => {
+  const words = { historyCompareUnchanged: 'Unverändert', historyCompareChangeFmt: '{0} % → {1} % ({2})', historyCompareIdentical: 'Gleich.' };
+  const german = (key, fallback, ...args) => (words[key] || fallback).replace(/\{(\d)\}/g, (_, i) => args[i]);
+  const r = compared([det('Cloudflare', 'Anti-Bot', 70, ['cookie']), det('Canvas Fingerprint', 'Fingerprint', 30)], [det('Cloudflare', 'Anti-Bot', 95, ['cookie']), det('Canvas Fingerprint', 'Fingerprint', 30)]);
+  assert.equal(C.toOneLine(r, { host: 's.example', t: german }), 's.example: Cloudflare 70 % → 95 % (+25), Unverändert (1)');
+  assert.equal(C.toOneLine(compared([], []), { host: 's.example', t: german }), 's.example: Gleich.');
+  // Whatever the line asks to translate is a text the Compare dialog had before: no new words for the languages to write
+  const asked = new Set();
+  const spy = (key, fallback, ...args) => { asked.add(key); return t(key, fallback, ...args); };
+  const evidence = compared([det('Kasada', 'Anti-Bot', 80, ['cookie']), det('Akamai', 'Anti-Bot', 70, ['cookie']), det('Canvas Fingerprint', 'Fingerprint', 30)],
+    [det('Kasada', 'Anti-Bot', 80, ['header']), det('Akamai', 'Anti-Bot', 90, ['cookie']), det('Canvas Fingerprint', 'Fingerprint', 30)]);
+  for (const result of [r, evidence, compared([], [])]) C.toOneLine(result, { host: 's.example', t: spy });
+  const english = JSON.parse(fs.readFileSync(path.join(root, '_locales/en/messages.json'), 'utf8'));
+  assert.deepEqual([...asked].sort(), ['historyCompareChangeFmt', 'historyCompareEvidenceAddedFmt', 'historyCompareEvidenceRemovedFmt', 'historyCompareIdentical', 'historyCompareUnchanged']);
+  for (const key of asked) assert.ok(english[key], `${key} is a message the extension has`);
+});
+
+test('toOneLine() never changes the result it is given, and a result with missing parts does not throw', () => {
+  const r = compared([det('Kasada', 'Anti-Bot', 80, ['url'])], [det('Kasada', 'Anti-Bot', 95, ['url']), det('DataDome', 'Anti-Bot', 70)]);
+  const before = JSON.stringify(r);
+  C.toOneLine(r, { host: 'a.example' });
+  assert.equal(JSON.stringify(r), before);
+  for (const odd of [undefined, null, {}, { added: null, changed: 'x' }]) assert.doesNotThrow(() => C.toOneLine(odd, { host: 'a.example' }), JSON.stringify(odd));
+  assert.equal(C.toOneLine({}, { host: 'a.example' }), 'a.example: These two scans found the same protections, with the same confidence and evidence.');
+});
+
 // ---- The dialog itself: History.compareHistoryItem builds it in a vm with a small stand-in for the DOM -------------------
 
 class Dom {
@@ -481,4 +559,99 @@ test('the dialog: a page with no other scan says so and opens nothing', async ()
   assert.equal(d.options, null);
   assert.deepEqual(d.infos, ['No other saved scan of this page to compare with']);
   assert.equal(await d.done, false);
+});
+
+// ---- "Copy summary": a button of the dialog's own content (the dialog's footer has room for Close and Copy as Markdown only) ---
+
+const flush = () => new Promise((resolve) => setImmediate(resolve));
+/** The dialog's capture-phase keydown guards, and a way to press a key through the first of them. */
+const keyGuard = (d) => {
+  const guards = d.listeners.filter((l) => l.type === 'keydown' && l.capture === true);
+  const press = (key) => { const event = { key, stopped: false, prevented: false, stopImmediatePropagation() { this.stopped = true; }, preventDefault() { this.prevented = true; } }; guards[0].fn(event); return event; };
+  return { guards, press };
+};
+
+test('the dialog: "Copy summary" is a real button of the content, after the four counts and before the results, named by its text', async () => {
+  const later = entry('later', SEARCH, NOW, [...NINE, det('Crypto Fingerprint', 'Fingerprint', 15)]);
+  const earlier = entry('earlier', SEARCH, T0, [...NINE, det('Crypto Fingerprint', 'Fingerprint', 10)]);
+  const d = compareDialog([later, earlier], later);
+  const copy = d.form.first('history-compare-copy');
+  assert.ok(copy, 'a button in the dialog\'s content');
+  assert.equal(copy.tagName, 'BUTTON');
+  assert.equal(copy.getAttribute('type'), 'button', 'a button of the page, so it submits nothing');
+  assert.equal(copy.textContent, 'Copy summary', 'its own text is its name');
+  assert.equal(copy.first('history-compare-copy-icon').getAttribute('aria-hidden'), 'true', 'its icon is decoration');
+  const order = d.form.children.map((node) => [...node.classes].find((name) => /^history-compare-(pick|range|summary|copy|result)$/.test(name)));
+  assert.deepEqual(order, ['history-compare-pick', 'history-compare-range', 'history-compare-summary', 'history-compare-copy', 'history-compare-result'],
+    'the Tab order is the reading order: the list, the button for the counts above it, then the scrolling results');
+  assert.deepEqual([d.options.confirmText, d.options.cancelText, d.options.focus === d.select], ['Copy as Markdown', 'Close', true], 'the footer and the first focus are as before');
+  d.close(false);
+  await d.done;
+});
+
+test('the dialog: "Copy summary" copies one line for the scan picked, keeps the dialog open, and follows the list', async () => {
+  const later = entry('later', `${SEARCH}?tab=1#top`, NOW, [...NINE, det('Crypto Fingerprint', 'Fingerprint', 15), det('Kasada', 'Anti-Bot', 70, ['url'])]);
+  const earlier = entry('earlier', `${SEARCH}?resource_id=sc-domain%3Aexample.com`, T0, [...NINE, det('Crypto Fingerprint', 'Fingerprint', 10), det('Akamai', 'Anti-Bot', 85, ['cookie'])]);
+  const older = entry('older', SEARCH, T0 - HOUR, [...NINE, det('Crypto Fingerprint', 'Fingerprint', 15)]);
+  const d = compareDialog([later, earlier, older], later);
+  const copy = d.form.first('history-compare-copy');
+  let closed = false;
+  d.done.then(() => { closed = true; });
+  copy.click();
+  await flush();
+  assert.deepEqual(d.copied, [`search.example: +Kasada 70%, ${unicodeMinus}Akamai, Crypto Fingerprint 10% → 15% (+5), Unchanged (9)`], 'the host, then what changed since the scan picked');
+  assert.equal(closed, false, 'the dialog stays open: another scan can be picked, or the report copied');
+  d.choose('older');
+  copy.click();
+  await flush();
+  assert.equal(d.copied[1], 'search.example: +Kasada 70%, Unchanged (10)', 'the other scan, the other line');
+  assert.ok(d.copied.every((line) => !/[?#]|resource_id|tab=1|top/.test(line)), 'no query string or fragment, though the scans\' addresses had them');
+  assert.ok(d.copied.every((line) => !/\n/.test(line)), 'one line');
+  d.close(false);
+  await d.done;
+  assert.equal(d.copied.length, 2, 'Close copies nothing more');
+});
+
+test('the dialog: "Copy summary" and "Copy as Markdown" are two copies of the same comparison, the second one as before', async () => {
+  const later = entry('later', SEARCH, NOW, [...NINE, det('Crypto Fingerprint', 'Fingerprint', 15)]);
+  const earlier = entry('earlier', `${SEARCH}?x=1`, T0, [...NINE, det('Crypto Fingerprint', 'Fingerprint', 10)]);
+  const d = compareDialog([later, earlier], later);
+  d.form.first('history-compare-copy').click();
+  await flush();
+  d.close(true);
+  await d.done;
+  assert.equal(d.copied.length, 2);
+  assert.equal(d.copied[0], 'search.example: Crypto Fingerprint 10% → 15% (+5), Unchanged (9)');
+  assert.ok(d.copied[1].startsWith(`## Compare scans: search.example\n\n${SEARCH}\n\nFrom `), d.copied[1].slice(0, 120));
+  assert.ok(d.copied[1].includes('### Changed\n- Crypto Fingerprint (Fingerprint): 10% → 15% (+5)'));
+});
+
+test('the dialog: for two identical scans "Copy summary" says how many protections stayed the same', async () => {
+  const later = entry('later', SEARCH, NOW, [...NINE, det('Crypto Fingerprint', 'Fingerprint', 15)]);
+  const twin = entry('twin', SEARCH, T0, [...NINE, det('Crypto Fingerprint', 'Fingerprint', 15)]);
+  const d = compareDialog([later, twin], later);
+  d.form.first('history-compare-copy').click();
+  await flush();
+  assert.deepEqual(d.copied, ['search.example: Unchanged (10)']);
+  d.close(false);
+  await d.done;
+});
+
+test('the dialog: Enter on "Copy summary" presses the button, as it does on Unchanged; the dialog\'s own Enter (Copy as Markdown) stays for everything else', async () => {
+  const later = entry('later', SEARCH, NOW, [...NINE, det('Crypto Fingerprint', 'Fingerprint', 15)]);
+  const earlier = entry('earlier', SEARCH, T0, [...NINE, det('Crypto Fingerprint', 'Fingerprint', 10)]);
+  const d = compareDialog([later, earlier], later);
+  const { guards, press } = keyGuard(d);
+  assert.equal(guards.length, 1, 'one guard for both buttons, registered before the dialog\'s own handler (same target, same phase)');
+  d.document.activeElement = d.form.first('history-compare-copy');
+  const enter = press('Enter');
+  assert.deepEqual([enter.stopped, enter.prevented], [true, false], 'the dialog never sees it, so it does not copy the Markdown and close; the browser still presses the button');
+  assert.equal(press('Escape').stopped, false, 'Escape still closes the dialog');
+  d.document.activeElement = d.groups()[1].first('history-compare-toggle');
+  assert.equal(press('Enter').stopped, true, 'Unchanged keeps its Enter');
+  d.document.activeElement = d.select;
+  assert.equal(press('Enter').stopped, false, 'anywhere else Enter is the dialog\'s');
+  d.close(false);
+  await d.done;
+  assert.equal(d.listeners.filter((l) => l.type === 'keydown').length, 0, 'removed when the dialog closes');
 });
