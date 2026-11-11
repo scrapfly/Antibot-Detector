@@ -245,6 +245,12 @@
     "message": ": एंटी-बॉट डिटेक्टर",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "संस्करण {0} के रिलीज़ नोट्स"
+  },
+  "headerVersionNewFmt": {
+    "message": "संस्करण {0} में नया क्या है"
+  },
   "extensionDescription": {
     "message": "वेबसाइटों पर CAPTCHA, एंटी-बॉट सिस्टम और फ़िंगरप्रिंटिंग तकनीकों का पता लगाएं"
   },
@@ -456,7 +462,7 @@
     "message": "सूचनाएं"
   },
   "settingsCardNotificationsDesc": {
-    "message": "जब सुरक्षा प्रणालियों का पता चले तो अलर्ट दिखाएं"
+    "message": "जब किसी पेज के सुरक्षा उपाय बदलें, इतिहास लगभग भर जाए या उसका बैकअप विफल हो, तब सूचना दिखाएं।"
   },
   "settingsCardDebug": {
     "message": "डीबग मोड"
@@ -1398,6 +1404,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "डोमेन खोजें..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "सेटिंग्स खोजें..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "आपकी खोज से कोई सेटिंग मेल नहीं खाती।"
+  },
+  "settingsSearchCountFmt": {
+    "message": "मिली सेटिंग्स: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "खोज साफ़ करें"
   },
   "settingsBadgeColorLow": {
     "message": "कम"
@@ -5397,7 +5415,13 @@
     "message": "हर महीने"
   },
   "settingsHistoryBackupDesc": {
-    "message": "इतिहास की एक प्रति आपके डाउनलोड फ़ोल्डर में (Scrapfly फ़ोल्डर के अंदर), ऊपर चुने गए निर्यात फ़ॉर्मेट में सहेजता है।"
+    "message": "इतिहास की एक प्रति आपके डाउनलोड फ़ोल्डर में (Scrapfly फ़ोल्डर के अंदर), ऊपर चुने गए निर्यात फ़ॉर्मेट में सहेजता है। इतिहास में केवल JSON फ़ाइलें ही वापस आयात की जा सकती हैं।"
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "रखे जाने वाले बैकअप"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "हर बैकअप के बाद, इस संख्या से ज़्यादा पुराने बैकअप आपके डाउनलोड फ़ोल्डर से हटा दिए जाते हैं (कई हिस्सों में सहेजा गया एक बैकअप एक गिना जाता है)। केवल इस एक्सटेंशन द्वारा सहेजी गई बैकअप फ़ाइलें ही हटाई जाती हैं। सभी रखने पर कुछ भी नहीं हटाया जाता।"
   },
   "settingsHistoryBackupNow": {
     "message": "अभी बैकअप लें"
@@ -5488,6 +5512,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "सिर्फ़ दिख रही प्रविष्टियाँ ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "सिर्फ़ पिन किए गए पेज"
@@ -6223,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Markdown के रूप में कॉपी करें"
+  },
+  "historyCompareCopySummary": {
+    "message": "सारांश कॉपी करें"
   },
   "historyCompareMdHeadingFmt": {
     "message": "स्कैन की तुलना: {0}"

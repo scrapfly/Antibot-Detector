@@ -245,6 +245,12 @@
     "message": ": detector anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Notas de la versión {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Novedades de la versión {0}"
+  },
   "extensionDescription": {
     "message": "Detecta CAPTCHAs, sistemas anti-bot y técnicas de fingerprinting en sitios web"
   },
@@ -456,7 +462,7 @@
     "message": "Notificaciones"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Mostrar alertas cuando se detectan sistemas de seguridad"
+    "message": "Mostrar una notificación cuando cambian las protecciones de una página, el historial está casi lleno o falla su copia de seguridad."
   },
   "settingsCardDebug": {
     "message": "Modo depuración"
@@ -1398,6 +1404,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Buscar dominios..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Buscar ajustes..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Ningún ajuste coincide con tu búsqueda."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Ajustes encontrados: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Borrar búsqueda"
   },
   "settingsBadgeColorLow": {
     "message": "Bajo"
@@ -5397,7 +5415,13 @@
     "message": "Cada mes"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Guarda una copia del historial en tu carpeta de Descargas (dentro de una carpeta Scrapfly), con el formato de exportación elegido arriba."
+    "message": "Guarda una copia del historial en tu carpeta de Descargas (dentro de una carpeta Scrapfly), con el formato de exportación elegido arriba. Solo los archivos JSON se pueden volver a importar al historial."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Copias de seguridad que conservar"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Después de cada copia, las más antiguas por encima de este número se eliminan de tu carpeta de Descargas (una copia guardada en varias partes cuenta como una). Solo se eliminan los archivos de copia guardados por esta extensión. Si las conservas todas, no se elimina nada."
   },
   "settingsHistoryBackupNow": {
     "message": "Hacer copia ahora"
@@ -5488,6 +5512,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Solo las entradas mostradas ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Solo páginas fijadas"
@@ -6225,6 +6252,9 @@
   },
   "historyCompareCopy": {
     "message": "Copiar como Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Copiar resumen"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Comparación de análisis: {0}"

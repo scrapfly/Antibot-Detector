@@ -245,6 +245,12 @@
     "message": ": anti-bot-detektor",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Versionsanteckningar för version {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Nytt i version {0}"
+  },
   "extensionDescription": {
     "message": "Upptäck CAPTCHA, anti-bot-system och fingerprinting-tekniker på webbplatser"
   },
@@ -456,7 +462,7 @@
     "message": "Aviseringar"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Visa varningar när skyddssystem upptäcks"
+    "message": "Visa en avisering när en sidas skydd ändras, historiken är nästan full eller dess säkerhetskopiering misslyckas."
   },
   "settingsCardDebug": {
     "message": "Felsökningsläge"
@@ -1398,6 +1404,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Sök domäner..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Sök inställningar..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Inga inställningar matchar din sökning."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Hittade inställningar: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Rensa sökning"
   },
   "settingsBadgeColorLow": {
     "message": "Låg"
@@ -5397,7 +5415,13 @@
     "message": "Varje månad"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Sparar en kopia av historiken i mappen Nedladdningar (i en Scrapfly-mapp), i exportformatet som valts ovan."
+    "message": "Sparar en kopia av historiken i mappen Nedladdningar (i en Scrapfly-mapp), i exportformatet som valts ovan. Bara JSON-filer kan importeras tillbaka till historiken."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Säkerhetskopior att behålla"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Efter varje säkerhetskopia tas äldre säkerhetskopior utöver detta antal bort från mappen Nedladdningar (en säkerhetskopia som sparats i flera delar räknas som en). Bara säkerhetskopiefiler som det här tillägget har sparat tas bort. Behåller du alla tas ingenting bort."
   },
   "settingsHistoryBackupNow": {
     "message": "Säkerhetskopiera nu"
@@ -5488,6 +5512,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Endast visade poster ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Endast fästa sidor"
@@ -6223,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Kopiera som Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Kopiera sammanfattning"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Jämför skanningar: {0}"

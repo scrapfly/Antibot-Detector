@@ -245,6 +245,12 @@
     "message": "：反機器人偵測器",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "版本 {0} 的發行說明"
+  },
+  "headerVersionNewFmt": {
+    "message": "版本 {0} 的更新內容"
+  },
   "extensionDescription": {
     "message": "偵測網站上的 CAPTCHA、反機器人系統和指紋辨識技術"
   },
@@ -456,7 +462,7 @@
     "message": "通知"
   },
   "settingsCardNotificationsDesc": {
-    "message": "偵測到安全系統時顯示警示"
+    "message": "當頁面的防護變更、歷史記錄即將額滿或歷史記錄備份失敗時，顯示通知。"
   },
   "settingsCardDebug": {
     "message": "偵錯模式"
@@ -1398,6 +1404,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "搜尋網域..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "搜尋設定..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "沒有符合搜尋條件的設定。"
+  },
+  "settingsSearchCountFmt": {
+    "message": "找到的設定：{0}"
+  },
+  "settingsSearchClear": {
+    "message": "清除搜尋"
   },
   "settingsBadgeColorLow": {
     "message": "低"
@@ -5397,7 +5415,13 @@
     "message": "每月"
   },
   "settingsHistoryBackupDesc": {
-    "message": "將歷史記錄的副本，以上方選擇的匯出格式儲存到「下載」資料夾中的 Scrapfly 資料夾。"
+    "message": "將歷史記錄的副本，以上方選擇的匯出格式儲存到「下載」資料夾中的 Scrapfly 資料夾。只有 JSON 檔案可以重新匯入歷史記錄。"
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "保留的備份數量"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "每次備份後，超出此數量的舊備份會從「下載」資料夾中刪除（分成多個檔案儲存的一次備份只算一份）。只會刪除此擴充功能儲存的備份檔案。全部保留時不會刪除任何內容。"
   },
   "settingsHistoryBackupNow": {
     "message": "立即備份"
@@ -5488,6 +5512,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "僅限顯示的項目（{0} 筆）"
   },
   "historyExportPinnedOnly": {
     "message": "僅限已釘選的網頁"
@@ -6223,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "複製為 Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "複製摘要"
   },
   "historyCompareMdHeadingFmt": {
     "message": "比較掃描：{0}"

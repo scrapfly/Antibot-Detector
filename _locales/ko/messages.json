@@ -245,6 +245,12 @@
     "message": ": 안티봇 탐지기",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "버전 {0} 릴리스 노트"
+  },
+  "headerVersionNewFmt": {
+    "message": "버전 {0}의 새로운 기능"
+  },
   "extensionDescription": {
     "message": "웹사이트의 CAPTCHA, 안티봇 시스템 및 핑거프린팅 기술 감지"
   },
@@ -456,7 +462,7 @@
     "message": "알림"
   },
   "settingsCardNotificationsDesc": {
-    "message": "보안 시스템이 탐지될 때 알림 표시"
+    "message": "페이지의 보호 기능이 변경되거나, 기록 저장 공간이 거의 가득 차거나, 기록 백업에 실패하면 알림을 표시합니다."
   },
   "settingsCardDebug": {
     "message": "디버그 모드"
@@ -1398,6 +1404,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "도메인 검색..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "설정 검색..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "검색과 일치하는 설정이 없습니다."
+  },
+  "settingsSearchCountFmt": {
+    "message": "찾은 설정: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "검색 지우기"
   },
   "settingsBadgeColorLow": {
     "message": "낮음"
@@ -5397,7 +5415,13 @@
     "message": "매월"
   },
   "settingsHistoryBackupDesc": {
-    "message": "위에서 선택한 내보내기 형식으로 기록 사본을 다운로드 폴더의 Scrapfly 폴더에 저장합니다."
+    "message": "위에서 선택한 내보내기 형식으로 기록 사본을 다운로드 폴더의 Scrapfly 폴더에 저장합니다. JSON 파일만 기록으로 다시 가져올 수 있습니다."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "보관할 백업 수"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "백업할 때마다 이 수를 넘는 오래된 백업이 다운로드 폴더에서 삭제됩니다(여러 파일로 나뉘어 저장된 백업은 하나로 셉니다). 이 확장 프로그램이 저장한 백업 파일만 삭제됩니다. 모두 보관하면 아무것도 삭제되지 않습니다."
   },
   "settingsHistoryBackupNow": {
     "message": "지금 백업"
@@ -5488,6 +5512,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "표시된 항목만({0}개)"
   },
   "historyExportPinnedOnly": {
     "message": "고정한 페이지만"
@@ -6223,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Markdown으로 복사"
+  },
+  "historyCompareCopySummary": {
+    "message": "요약 복사"
   },
   "historyCompareMdHeadingFmt": {
     "message": "스캔 비교: {0}"

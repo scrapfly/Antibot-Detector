@@ -245,6 +245,12 @@
     "message": ": rilevatore anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Note di rilascio della versione {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Novità della versione {0}"
+  },
   "extensionDescription": {
     "message": "Rileva CAPTCHA, sistemi anti-bot e tecnologie di fingerprinting sui siti web"
   },
@@ -456,7 +462,7 @@
     "message": "Notifiche"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Mostra avvisi quando vengono rilevati sistemi di sicurezza"
+    "message": "Mostra una notifica quando cambiano le protezioni di una pagina, la cronologia è quasi piena o il suo backup non riesce."
   },
   "settingsCardDebug": {
     "message": "Modalità debug"
@@ -1398,6 +1404,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Cerca domini..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Cerca impostazioni..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Nessuna impostazione corrisponde alla ricerca."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Impostazioni trovate: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Cancella la ricerca"
   },
   "settingsBadgeColorLow": {
     "message": "Basso"
@@ -5397,7 +5415,13 @@
     "message": "Ogni mese"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Salva una copia della cronologia nella cartella Download (in una cartella Scrapfly), nel formato di esportazione scelto sopra."
+    "message": "Salva una copia della cronologia nella cartella Download (in una cartella Scrapfly), nel formato di esportazione scelto sopra. Solo i file JSON possono essere reimportati nella cronologia."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Backup da conservare"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Dopo ogni backup, quelli più vecchi oltre questo numero vengono eliminati dalla cartella Download (un backup salvato in più parti conta come uno). Vengono eliminati solo i file di backup salvati da questa estensione. Se li conservi tutti, non viene eliminato nulla."
   },
   "settingsHistoryBackupNow": {
     "message": "Esegui backup ora"
@@ -5488,6 +5512,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Solo le voci mostrate ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Solo pagine fissate"
@@ -6223,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Copia come Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Copia riepilogo"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Confronto delle analisi: {0}"

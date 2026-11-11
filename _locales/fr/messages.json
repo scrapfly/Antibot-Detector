@@ -245,6 +245,12 @@
     "message": " : détecteur anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Notes de version {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Nouveautés de la version {0}"
+  },
   "extensionDescription": {
     "message": "Détecte les CAPTCHAs, les systèmes anti-bot et les technologies de fingerprinting sur les sites web"
   },
@@ -456,7 +462,7 @@
     "message": "Notifications"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Afficher des alertes lorsque des systèmes de sécurité sont détectés"
+    "message": "Afficher une notification lorsque les protections d’une page changent, que l’historique est presque plein ou que sa sauvegarde échoue."
   },
   "settingsCardDebug": {
     "message": "Mode débogage"
@@ -1398,6 +1404,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Rechercher des domaines..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Rechercher dans les paramètres..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Aucun paramètre ne correspond à votre recherche."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Paramètres trouvés : {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Effacer la recherche"
   },
   "settingsBadgeColorLow": {
     "message": "Faible"
@@ -5397,7 +5415,13 @@
     "message": "Tous les mois"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Enregistre une copie de l’historique dans votre dossier Téléchargements (dans un dossier Scrapfly), au format d’export choisi ci-dessus."
+    "message": "Enregistre une copie de l’historique dans votre dossier Téléchargements (dans un dossier Scrapfly), au format d’export choisi ci-dessus. Seuls les fichiers JSON peuvent être réimportés dans l’historique."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Sauvegardes à conserver"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Après chaque sauvegarde, les plus anciennes au-delà de ce nombre sont supprimées de votre dossier Téléchargements (une sauvegarde enregistrée en plusieurs parties compte pour une). Seuls les fichiers de sauvegarde enregistrés par cette extension sont supprimés. Si vous les conservez toutes, rien n’est supprimé."
   },
   "settingsHistoryBackupNow": {
     "message": "Sauvegarder maintenant"
@@ -5488,6 +5512,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Uniquement les entrées affichées ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Pages épinglées uniquement"
@@ -6223,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Copier en Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Copier le résumé"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Comparaison des analyses : {0}"

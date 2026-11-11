@@ -9,6 +9,17 @@
       <button type="button" id="closeSettingsModal" class="btn-close" title="Close" aria-label="Close" data-i18n-title="btnClose" data-i18n-aria-label="btnClose"><svg class="btn-close-icon" viewBox="0 0 14 14" width="14" height="14" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg></button>
     </div>
 
+    <!-- Search: narrows the four tabs to the settings whose text holds what is typed (settings-ui-search.js). It sits outside the tabs and the scrolling body, so it stays where it is and the search can never hide it -->
+    <div class="settings-search">
+      <div class="settings-search-field">
+        <svg class="settings-search-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg>
+        <input type="search" id="settingsSearchInput" class="settings-search-input" placeholder="Search settings..." aria-label="Search settings..." autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" data-i18n-placeholder="settingsSearchPlaceholder" data-i18n-aria-label="settingsSearchPlaceholder">
+        <button type="button" id="settingsSearchClear" class="settings-search-clear" title="Clear search" aria-label="Clear search" data-i18n-title="settingsSearchClear" data-i18n-aria-label="settingsSearchClear" hidden><svg viewBox="0 0 14 14" width="12" height="12" fill="none" aria-hidden="true" focusable="false"><path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg></button>
+      </div>
+      <!-- Said to a screen reader, not shown: how many settings the search found. Always in the page, since a region that appears together with its text is not announced -->
+      <p id="settingsSearchStatus" class="settings-search-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    </div>
+
     <!-- Tab Navigation: four equal buttons, icon above label -->
     <div class="settings-tabs" role="tablist" aria-labelledby="settingsTitle">
       <button class="settings-tab-btn active" data-settings-tab="general" id="settingsTab-general" role="tab" aria-controls="settingsPanel-general" aria-selected="true" tabindex="0">
@@ -38,6 +49,9 @@
     </div>
 
     <div class="modal-body">
+      <!-- What the search says when the open tab has no setting for it (settings-ui-search.js); the count is said through the status line above -->
+      <p id="settingsSearchEmpty" class="settings-search-empty" data-i18n="settingsSearchNoMatch" hidden>No settings match your search.</p>
+
       <!-- General Settings Tab -->
       <div class="settings-tab-content active" data-tab-content="general" id="settingsPanel-general" role="tabpanel" aria-labelledby="settingsTab-general">
 
@@ -1330,7 +1344,18 @@
                   <option value="monthly" data-i18n="settingsBackupMonthly">Every month</option>
                 </select>
               </div>
-              <p class="setting-row-hint" data-i18n="settingsHistoryBackupDesc">Saves a copy of History to your Downloads folder (in a Scrapfly folder), in the export format chosen above.</p>
+              <p class="setting-row-hint" data-i18n="settingsHistoryBackupDesc">Saves a copy of History to your Downloads folder (in a Scrapfly folder), in the export format chosen above. Only JSON files can be imported back into History.</p>
+              <div class="setting-row setting-row--inline">
+                <label class="setting-row-label" for="historyBackupKeep" data-i18n="settingsHistoryBackupKeep">Backups to keep</label>
+                <select id="historyBackupKeep" class="select-field ui-select" aria-describedby="historyBackupKeepHint">
+                  <option value="0" data-i18n="statsRangeAll">All</option>
+                  <option value="3">3</option>
+                  <option value="7">7</option>
+                  <option value="14">14</option>
+                  <option value="30">30</option>
+                </select>
+              </div>
+              <p class="setting-row-hint" id="historyBackupKeepHint" data-i18n="settingsHistoryBackupKeepDesc">After each backup, older backups beyond this number are deleted from your Downloads folder (a backup saved in several parts counts as one). Only backup files saved by this extension are removed. Keep all and nothing is deleted.</p>
               <div class="setting-row setting-row--inline">
                 <span class="setting-row-hint history-backup-last" id="historyBackupLast"></span>
                 <button type="button" id="historyBackupNowBtn" class="action-btn action-btn-outline" data-i18n="settingsHistoryBackupNow">Back up now</button>

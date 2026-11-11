@@ -28,6 +28,7 @@ test('defaults: History records everything except private windows, keeps full ad
   assert.deepEqual(h.historyExcludedDomains, []);
   assert.equal(h.historyChangeAlerts, 'off');
   assert.equal(h.historyBackup, 'off');
+  assert.equal(h.historyBackupKeep, 0, 'and a backup, once chosen, deletes nothing');
   assert.equal(h.historyClearOnClose, false);
   assert.equal(defaults.duplicatePrevention.duplicateAction, 'skip');
 });
@@ -246,4 +247,68 @@ test('the History tab declares the size box and its hint, and only an offered si
   assert.ok(html.includes('data-i18n="settingsHistorySizeHint"'));
   const ui = read('sections/settings/settings-ui.js');
   assert.match(ui, /HistoryStore\.SIZES_MB\.includes\(settings\.history\.historyMaxMB\)/);
+});
+
+// ---- Backups to keep: how many backups stay in Downloads (All by default, which deletes nothing)
+
+const HistoryBackup = require('../background/history-backup.js');
+const messagesOf = (locale) => JSON.parse(read(`_locales/${locale}/messages.json`));
+
+test('Backups to keep is All by default, next to the backup frequency, read as saved, and carried by a settings export', async () => {
+  const keys = Object.keys(defaults.history);
+  assert.equal(defaults.history.historyBackupKeep, 0, 'All: nothing is deleted unless the person chose a number');
+  assert.equal(keys.indexOf('historyBackupKeep'), keys.indexOf('historyBackup') + 1);
+  assert.equal(HistoryBackup.keepOf(defaults.history.historyBackupKeep), 0, 'and the worker reads the default as All');
+  // The worker reads the saved number as it is: HistoryBackup.keepOf decides what it means, and anything it does not offer is All
+  for (const keep of [0, ...HistoryBackup.KEEP_CHOICES]) assert.equal((await loadUtils({ history: { historyBackupKeep: keep } }).getHistorySettings()).historyBackupKeep, keep);
+  const older = await loadUtils({ history: { historyBackup: 'weekly' } }).getHistorySettings();
+  assert.equal(older.historyBackupKeep, undefined, 'settings saved by an older version have none');
+  assert.equal(HistoryBackup.keepOf(older.historyBackupKeep), 0, 'which is All, as they always behaved');
+  // A settings export and a backup of everything carry it, like the frequency
+  const ctx = vm.createContext({ self: {} });
+  for (const file of ['modules/core/categories.js', 'modules/core/domain-list.js', 'modules/core/scan-scope.js', 'modules/settings/settings-transfer.js']) vm.runInContext(read(file), ctx);
+  const exported = plain(ctx.SettingsTransfer.portable({ history: { historyBackup: 'weekly', historyBackupKeep: 14, stray: 1 } })).history;
+  assert.deepEqual(exported, { historyBackup: 'weekly', historyBackupKeep: 14 });
+});
+
+test('the History tab declares Backups to keep: named, All and the numbers the worker accepts, described by its hint, and read, shown and checked by Settings', () => {
+  const html = read('sections/settings/settings.html');
+  const select = /<select id="historyBackupKeep"([^>]*)>([\s\S]*?)<\/select>/.exec(html);
+  assert.ok(select, 'the dropdown is in the page');
+  assert.match(select[1], /class="select-field ui-select"/);
+  assert.match(html, /<label class="setting-row-label" for="historyBackupKeep" data-i18n="settingsHistoryBackupKeep">Backups to keep<\/label>/, 'a screen reader says what it is');
+  const options = [...select[2].matchAll(/<option value="(\d+)"([^>]*)>([^<]*)<\/option>/g)].map(match => [match[1], match[3], (/data-i18n="([^"]+)"/.exec(match[2]) || [])[1]]);
+  assert.deepEqual(options.map(option => option[0]), ['0', ...HistoryBackup.KEEP_CHOICES.map(String)], 'All, then each number the worker accepts: the page and the worker share one list');
+  assert.deepEqual(options[0], ['0', 'All', 'statsRangeAll'], 'the first is All, written by a message that exists');
+  assert.deepEqual(options.slice(1).map(option => option[1]), HistoryBackup.KEEP_CHOICES.map(String), 'the others are the numbers themselves');
+  assert.ok(options.slice(1).every(option => option[2] === undefined), 'a number needs no translation');
+  const hint = /aria-describedby="([^"]+)"/.exec(select[1])[1];
+  assert.match(html, new RegExp(`<p class="setting-row-hint" id="${hint}" data-i18n="settingsHistoryBackupKeepDesc">`), 'described by its hint');
+  const numbers = HistoryBackup.KEEP_CHOICES.join(', ');
+  const ui = read('sections/settings/settings-ui.js');
+  assert.ok(ui.includes(`choose('historyBackupKeep', [${numbers}].includes(h.historyBackupKeep) ? h.historyBackupKeep : 0);`), 'shown: anything else is shown as All');
+  assert.match(ui, /historyBackupKeep: parseInt\(document\.querySelector\('#historyBackupKeep'\)\?\.value \?\? this\.settings\.history\?\.historyBackupKeep \?\? 0, 10\)/, 'read as a number');
+  assert.ok(ui.includes(`['history', 'historyBackupKeep', [0, ${numbers}], '#historyBackupKeep']`), 'a value the list does not offer is refused');
+  assert.ok(read('modules/settings/diagnostics-report.js').includes(`[${numbers}].includes(history.historyBackupKeep)`), 'the diagnostics name the same numbers');
+});
+
+test('Backups to keep has its label and hint in every language, and the page shows the English ones until the translations load', () => {
+  const html = read('sections/settings/settings.html');
+  const english = messagesOf('en');
+  for (const key of ['settingsHistoryBackupKeep', 'settingsHistoryBackupKeepDesc']) {
+    assert.equal(new RegExp(`data-i18n="${key}">([^<]*)<`).exec(html)[1], english[key].message, key);
+    for (const locale of fs.readdirSync(path.join(root, '_locales'))) assert.ok((messagesOf(locale)[key] || {}).message, `${locale} ${key}`);
+  }
+  // The hint has no count in it, so it reads right for every number in every language
+  assert.ok(!/\{\d\}/.test(english.settingsHistoryBackupKeep.message + english.settingsHistoryBackupKeepDesc.message));
+  // It says what is deleted and, as important, what is not
+  assert.match(english.settingsHistoryBackupKeepDesc.message, /Only backup files saved by this extension are removed\./);
+  assert.match(english.settingsHistoryBackupKeepDesc.message, /Keep all and nothing is deleted\./);
+  // The first option is the message "All" of the statistics range: it exists in every language
+  for (const locale of fs.readdirSync(path.join(root, '_locales'))) assert.ok(messagesOf(locale).statsRangeAll.message.trim(), `${locale}: All`);
+});
+
+test('the storage overview counts the record of backups with History', () => {
+  const StorageOverview = require('../modules/settings/storage-overview.js');
+  assert.ok(StorageOverview.GROUPS.find(group => group.id === 'history').keys.includes(HistoryBackup.RUNS_KEY));
 });

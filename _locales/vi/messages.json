@@ -245,6 +245,12 @@
     "message": ": trình phát hiện anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Ghi chú phát hành cho phiên bản {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Có gì mới trong phiên bản {0}"
+  },
   "extensionDescription": {
     "message": "Phát hiện CAPTCHA, hệ thống anti-bot và công nghệ thu thập dấu vân tay trên trang web"
   },
@@ -456,7 +462,7 @@
     "message": "Thông báo"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Hiển thị cảnh báo khi phát hiện hệ thống bảo mật"
+    "message": "Hiển thị thông báo khi biện pháp bảo vệ của một trang thay đổi, lịch sử gần đầy hoặc không thể sao lưu lịch sử."
   },
   "settingsCardDebug": {
     "message": "Chế độ gỡ lỗi"
@@ -1398,6 +1404,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Tìm tên miền..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Tìm cài đặt..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Không có cài đặt nào khớp với tìm kiếm của bạn."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Số cài đặt tìm thấy: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Xóa tìm kiếm"
   },
   "settingsBadgeColorLow": {
     "message": "Thấp"
@@ -5397,7 +5415,13 @@
     "message": "Hằng tháng"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Lưu một bản sao Lịch sử vào thư mục Tải xuống của bạn (trong thư mục Scrapfly), theo định dạng xuất đã chọn ở trên."
+    "message": "Lưu một bản sao Lịch sử vào thư mục Tải xuống của bạn (trong thư mục Scrapfly), theo định dạng xuất đã chọn ở trên. Chỉ các tệp JSON mới có thể được nhập lại vào Lịch sử."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Số bản sao lưu cần giữ"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Sau mỗi lần sao lưu, các bản sao lưu cũ vượt quá số này sẽ bị xóa khỏi thư mục Tải xuống của bạn (một bản sao lưu được lưu thành nhiều phần chỉ tính là một). Chỉ các tệp sao lưu do tiện ích này lưu mới bị xóa. Nếu giữ lại tất cả, sẽ không có gì bị xóa."
   },
   "settingsHistoryBackupNow": {
     "message": "Sao lưu ngay"
@@ -5488,6 +5512,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Chỉ các mục đang hiển thị ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Chỉ trang đã ghim"
@@ -6223,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Sao chép dạng Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Sao chép tóm tắt"
   },
   "historyCompareMdHeadingFmt": {
     "message": "So sánh các lần quét: {0}"

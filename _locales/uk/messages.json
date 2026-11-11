@@ -245,6 +245,12 @@
     "message": ": детектор антиботів",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Примітки до версії {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Що нового у версії {0}"
+  },
   "extensionDescription": {
     "message": "Виявляє CAPTCHA, антибот-системи та технології зняття відбитків на веб-сайтах"
   },
@@ -456,7 +462,7 @@
     "message": "Сповіщення"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Показувати сповіщення, коли виявлено системи захисту"
+    "message": "Показувати сповіщення, коли змінюється захист сторінки, історія майже заповнена або не вдалося створити резервну копію історії."
   },
   "settingsCardDebug": {
     "message": "Режим налагодження"
@@ -1398,6 +1404,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Пошук доменів..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Пошук налаштувань..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Жодне налаштування не відповідає пошуку."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Знайдено налаштувань: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Очистити пошук"
   },
   "settingsBadgeColorLow": {
     "message": "Низька"
@@ -5397,7 +5415,13 @@
     "message": "Щомісяця"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Зберігає копію історії в папці «Завантаження» (у папці Scrapfly) у вибраному вище форматі експорту."
+    "message": "Зберігає копію історії в папці «Завантаження» (у папці Scrapfly) у вибраному вище форматі експорту. Назад в історію можна імпортувати лише файли JSON."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Скільки копій зберігати"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Після кожної копії старіші копії понад це число видаляються з папки «Завантаження» (копія, збережена в кількох частинах, вважається за одну). Видаляються лише файли копій, збережені цим розширенням. Якщо зберігати всі копії, нічого не видаляється."
   },
   "settingsHistoryBackupNow": {
     "message": "Створити копію зараз"
@@ -5488,6 +5512,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Лише показані записи ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Лише закріплені сторінки"
@@ -6223,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Копіювати як Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Копіювати підсумок"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Порівняння сканувань: {0}"

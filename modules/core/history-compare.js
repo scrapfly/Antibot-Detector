@@ -9,6 +9,7 @@
  *                  between two entries, the earlier scan first whatever order they were given in
  *   changeText()   one changed protection as a line: "70% → 95% (+25) · New evidence: Cookies"
  *   toMarkdown()   the result as a Markdown report for a ticket or a chat
+ *   toOneLine()    the result as one line, for a chat or a ticket: "shop.example: +reCAPTCHA 85%, −Kasada, Cloudflare 70% → 95% (+25), Unchanged (3)"
  *   view()         what the dialog draws, as plain data: four counts, and the groups of rows with the text of each
  *   shortDateTime(), rangeDates(), optionDates(), whereText()   the dialog's dates (no seconds) and the other scan's page path
  *
@@ -131,8 +132,10 @@
 
   const plain = (key, fallback, ...args) => String(fallback).replace(/\{(\d)\}/g, (_, i) => args[Number(i)]);
 
+  // The real minus sign (U+2212): a lowered confidence shows it (−30) and a removed protection leads with it in the one-line summary
+  const MINUS = '−';
   /** A difference of confidence with its sign: +25, −30 (a real minus sign). */
-  const signed = (delta) => `${delta > 0 ? '+' : '−'}${Math.abs(delta)}`;
+  const signed = (delta) => `${delta > 0 ? '+' : MINUS}${Math.abs(delta)}`;
 
   /** What changed in the evidence of one changed protection, a line for each side. */
   function evidenceLines(row, t, label) {
@@ -182,6 +185,54 @@
     section('historyCompareChanged', 'Changed', result.changed, (row) => `- ${md(row.name)} (${md(categoryLabel(row.category))}): ${md(changeText(row, options))}`);
     section('historyCompareUnchanged', 'Unchanged', result.same, line);
     return lines.join('\n');
+  }
+
+  // ---- One line: what changed, for a chat or a ticket ----------------------------------------------------------------------
+
+  // A line is one line: whatever would break a text in two (a name from a custom rule, a translation) is a space
+  const oneLine = (value) => String(value == null ? '' : value).replace(/[\r\n\u0085\u2028\u2029]+/g, ' ').trim();
+
+  /** The host of an address or a host name, never its path, query, fragment or login ('' when there is none). */
+  function hostOf(value) {
+    const text = oneLine(value);
+    if (!text) return '';
+    try {
+      const host = new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(text) ? text : `http://${text}`).hostname;
+      if (host) return host;
+    } catch (_) { /* not an address: its text up to the first / ? or # */ }
+    return text.split(/[/?#]/)[0].trim();
+  }
+
+  /**
+   * The comparison as one line, for a chat or a ticket, written with the words and symbols the dialog has: the host, then the
+   * protections added (+, with their score), removed (−), changed (the move of the score, or when it is the same the change of
+   * evidence), then how many are unchanged: "shop.example: +reCAPTCHA 85%, −Kasada, Cloudflare 70% → 95% (+25), Unchanged (3)".
+   * Two scans that found nothing at all say so with the dialog's own sentence. Host only: never a path, a query or a fragment.
+   * @param {object} result - compare()
+   * @param {{host?: string, address?: string, t?: Function, methodLabel?: Function}} [options]
+   *   host: the site's host name (an address is cut to its host; none given: the later scan's); t and methodLabel as for changeText()
+   * @returns {string} One line
+   */
+  function toOneLine(result, options = {}) {
+    const t = options.t || plain;
+    const label = options.methodLabel || ((type) => type);
+    const say = (key, fallback, ...args) => oneLine(t(key, fallback, ...args));
+    const rows = (kind) => (result && Array.isArray(result[kind]) ? result[kind] : []);
+    const named = (row) => oneLine(row.name) || '?';
+    const parts = [
+      ...rows('added').map((row) => `+${named(row)}${row.confidence === null || row.confidence === undefined ? '' : ` ${row.confidence}%`}`),
+      ...rows('removed').map((row) => `${MINUS}${named(row)}`),
+      ...rows('changed').map((row) => {
+        if (row.delta !== null && row.delta !== 0) return `${named(row)} ${say('historyCompareChangeFmt', '{0}% → {1}% ({2})', row.from, row.to, signed(row.delta))}`;
+        // The score is the same: the evidence is what changed. It is all there is to say, so it is said (in brackets: its list has commas)
+        const notes = evidenceLines(row, t, label).map(oneLine).filter(Boolean);
+        return notes.length ? `${named(row)} (${notes.join(' · ')})` : named(row);
+      })
+    ];
+    if (rows('same').length) parts.push(`${say('historyCompareUnchanged', 'Unchanged')} (${rows('same').length})`);
+    if (!parts.length) parts.push(say('historyCompareIdentical', 'These two scans found the same protections, with the same confidence and evidence.'));
+    const host = hostOf(options.host) || hostOf(options.address) || hostOf(result && result.later && result.later.url) || '?';
+    return oneLine(`${host}: ${parts.join(', ')}`);
   }
 
   // ---- The dialog: what it shows, as plain data -----------------------------------------------------------------------
@@ -293,7 +344,7 @@
     return { identical: result.identical, chips, groups };
   }
 
-  const api = { CATEGORY_ORDER, COLLAPSE_AFTER, pageKey, others, pickDefault, compare, changeText, toMarkdown, methodsOf, timeOf, shortDateTime, rangeDates, optionDates, pagePath, whereText, view };
+  const api = { CATEGORY_ORDER, COLLAPSE_AFTER, pageKey, others, pickDefault, compare, changeText, toMarkdown, toOneLine, methodsOf, timeOf, shortDateTime, rangeDates, optionDates, pagePath, whereText, view };
   root.HistoryCompare = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

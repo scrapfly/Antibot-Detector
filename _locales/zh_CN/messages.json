@@ -245,6 +245,12 @@
     "message": ":反机器人检测器",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "版本 {0} 的发行说明"
+  },
+  "headerVersionNewFmt": {
+    "message": "版本 {0} 的更新内容"
+  },
   "extensionDescription": {
     "message": "检测网站上的验证码、反机器人系统和指纹识别技术"
   },
@@ -456,7 +462,7 @@
     "message": "通知"
   },
   "settingsCardNotificationsDesc": {
-    "message": "检测到安全系统时显示警报"
+    "message": "当页面的防护措施变化、历史记录存储空间即将占满或历史记录备份失败时，显示通知。"
   },
   "settingsCardDebug": {
     "message": "调试模式"
@@ -1398,6 +1404,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "搜索域名..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "搜索设置..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "没有与搜索条件匹配的设置。"
+  },
+  "settingsSearchCountFmt": {
+    "message": "找到的设置：{0}"
+  },
+  "settingsSearchClear": {
+    "message": "清除搜索"
   },
   "settingsBadgeColorLow": {
     "message": "低"
@@ -5397,7 +5415,13 @@
     "message": "每月"
   },
   "settingsHistoryBackupDesc": {
-    "message": "按上方选择的导出格式，将历史记录的副本保存到“下载”文件夹中的 Scrapfly 文件夹。"
+    "message": "按上方选择的导出格式，将历史记录的副本保存到“下载”文件夹中的 Scrapfly 文件夹。只有 JSON 文件可以重新导入历史记录。"
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "保留的备份数量"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "每次备份后，超出此数量的旧备份会从“下载”文件夹中删除（分成多个文件保存的一次备份只算一份）。只会删除此扩展保存的备份文件。全部保留时不会删除任何内容。"
   },
   "settingsHistoryBackupNow": {
     "message": "立即备份"
@@ -5488,6 +5512,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "仅显示的记录（{0} 条）"
   },
   "historyExportPinnedOnly": {
     "message": "仅已固定的页面"
@@ -6223,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "复制为 Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "复制摘要"
   },
   "historyCompareMdHeadingFmt": {
     "message": "比较扫描：{0}"

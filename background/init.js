@@ -139,6 +139,9 @@ CookieTimelineRecorder.init();
 BulkScanRunner.init();
 // Failed webhook deliveries are retried by an alarm (modules/settings/webhook-runtime.js)
 SettingsRuntime.initWebhookRetries();
+// A page the person leaves out after a line of the webhook's record named it stops being named there (same module). Guarded like
+// the other optional registrations: the worker tests that load this file stub SettingsRuntime with the calls they need
+if (typeof SettingsRuntime.initWebhookLogScope === 'function') SettingsRuntime.initWebhookLogScope();
 
 // When a history write hits the 10 MB storage quota, the detection cache
 // (rebuilt on the next visit) gives up space before any history entry does.

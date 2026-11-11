@@ -245,6 +245,12 @@
     "message": ": Anti-Bot-Detektor",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Versionshinweise zu Version {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Neu in Version {0}"
+  },
   "extensionDescription": {
     "message": "Erkennt CAPTCHAs, Anti-Bot-Systeme und Fingerprinting-Technologien auf Websites"
   },
@@ -456,7 +462,7 @@
     "message": "Benachrichtigungen"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Warnungen anzeigen, wenn Sicherheitssysteme erkannt werden"
+    "message": "Eine Benachrichtigung anzeigen, wenn sich die Schutzmaßnahmen einer Seite ändern, der Verlauf fast voll ist oder dessen Sicherung fehlschlägt."
   },
   "settingsCardDebug": {
     "message": "Debug-Modus"
@@ -1398,6 +1404,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Domains suchen..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Einstellungen suchen..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Keine Einstellungen entsprechen deiner Suche."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Gefundene Einstellungen: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Suche leeren"
   },
   "settingsBadgeColorLow": {
     "message": "Niedrig"
@@ -5397,7 +5415,13 @@
     "message": "Monatlich"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Speichert eine Kopie des Verlaufs in deinem Downloads-Ordner (in einem Ordner „Scrapfly“) im oben gewählten Exportformat."
+    "message": "Speichert eine Kopie des Verlaufs in deinem Downloads-Ordner (in einem Ordner „Scrapfly“) im oben gewählten Exportformat. Nur JSON-Dateien lassen sich wieder in den Verlauf importieren."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Sicherungen behalten"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Nach jeder Sicherung werden ältere Sicherungen über dieser Anzahl aus deinem Downloads-Ordner gelöscht (eine in mehreren Teilen gespeicherte Sicherung zählt als eine). Entfernt werden nur Sicherungsdateien, die diese Erweiterung gespeichert hat. Wenn du alle behältst, wird nichts gelöscht."
   },
   "settingsHistoryBackupNow": {
     "message": "Jetzt sichern"
@@ -5488,6 +5512,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Nur die angezeigten Einträge ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Nur angeheftete Seiten"
@@ -6223,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Als Markdown kopieren"
+  },
+  "historyCompareCopySummary": {
+    "message": "Zusammenfassung kopieren"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Scan-Vergleich: {0}"

@@ -245,6 +245,12 @@
     "message": ": detector anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Notas da versão {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Novidades da versão {0}"
+  },
   "extensionDescription": {
     "message": "Detecta CAPTCHAs, sistemas anti-bot e técnicas de fingerprinting em sites"
   },
@@ -456,7 +462,7 @@
     "message": "Notificações"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Mostrar alertas quando sistemas de segurança forem detectados"
+    "message": "Mostrar uma notificação quando as proteções de uma página mudarem, o histórico estiver quase cheio ou o backup dele falhar."
   },
   "settingsCardDebug": {
     "message": "Modo de depuração"
@@ -1398,6 +1404,18 @@
   },
   "settingsSearchDomainsPlaceholder": {
     "message": "Pesquisar domínios..."
+  },
+  "settingsSearchPlaceholder": {
+    "message": "Buscar configurações..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Nenhuma configuração corresponde à sua pesquisa."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Configurações encontradas: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Limpar pesquisa"
   },
   "settingsBadgeColorLow": {
     "message": "Baixo"
@@ -5397,7 +5415,13 @@
     "message": "Todo mês"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Salva uma cópia do histórico na sua pasta Downloads (dentro de uma pasta Scrapfly), no formato de exportação escolhido acima."
+    "message": "Salva uma cópia do histórico na sua pasta Downloads (dentro de uma pasta Scrapfly), no formato de exportação escolhido acima. Somente arquivos JSON podem ser importados de volta para o histórico."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Backups a manter"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Após cada backup, os mais antigos além deste número são excluídos da sua pasta Downloads (um backup salvo em várias partes conta como um). Somente arquivos de backup salvos por esta extensão são excluídos. Se você mantiver todos, nada é excluído."
   },
   "settingsHistoryBackupNow": {
     "message": "Fazer backup agora"
@@ -5488,6 +5512,9 @@
   },
   "historyExportDomainPlaceholder": {
     "message": "example.com"
+  },
+  "historyExportShownFmt": {
+    "message": "Somente as entradas mostradas ({0})"
   },
   "historyExportPinnedOnly": {
     "message": "Somente páginas fixadas"
@@ -6223,6 +6250,9 @@
   },
   "historyCompareCopy": {
     "message": "Copiar como Markdown"
+  },
+  "historyCompareCopySummary": {
+    "message": "Copiar resumo"
   },
   "historyCompareMdHeadingFmt": {
     "message": "Comparação de análises: {0}"
