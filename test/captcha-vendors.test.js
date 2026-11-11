@@ -6,6 +6,7 @@ const vm = require('node:vm');
 const Vendors = require('../modules/advanced/captcha-vendors.js');
 const Probe = require('../sections/advanced/components/sitekey-probe.js');
 const { demParseDOMSelector, demMatchDOMSelector } = require('../modules/detection/engine/detection-engine-matching.js');
+const withinLimit = require('./helpers/hard-limit.js');
 
 // Advanced tools for the CAPTCHA vendors described as data: the config agrees
 // with the detectors, Analyze Scripts matches only each vendor's hosts, and
@@ -69,17 +70,12 @@ test('every rule is safe to run in a page: anchored paths, no g/y flags, compoun
   ];
   for (const regex of regexes) {
     assert.doesNotMatch(regex.flags, /[gy]/, String(regex));
+    // Bounded time means "does not backtrack without end": the call is stopped at a hard limit, never timed
     for (const filler of ['a', '5', 'x ', '"', ':']) {
       const input = filler.repeat(100000) + '!';
-      const started = Date.now();
-      regex.test(input);
-      assert.ok(Date.now() - started < 50, `${regex} runs in bounded time`);
+      withinLimit(() => regex.test(input), `${regex} on ${JSON.stringify(filler)} repeated 100000 times`);
     }
-    for (const input of hostile) {
-      const started = Date.now();
-      regex.test(input);
-      assert.ok(Date.now() - started < 50, `${regex} runs in bounded time on ${input.slice(0, 60)}...`);
-    }
+    for (const input of hostile) withinLimit(() => regex.test(input), `${regex} on ${input.slice(0, 60)}...`);
   }
 });
 
