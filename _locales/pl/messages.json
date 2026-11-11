@@ -4967,7 +4967,7 @@
     "message": "Nowe w tym okresie: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "z {0} reguł"
+    "message": "Łączna liczba reguł: {0}"
   },
   "statsTipPages": {
     "message": "Strony zapisane w Historii w tym zakresie. Historia przechowuje zapisane wykrycia, a nie każdą wizytę w przeglądarce."

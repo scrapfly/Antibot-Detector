@@ -5228,7 +5228,7 @@
     "message": "{0} new this period"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "of {0} rules"
+    "message": "Total rules: {0}"
   },
   "statsTipPages": {
     "message": "Pages saved to History in this range. History keeps saved detections, not every browser visit."

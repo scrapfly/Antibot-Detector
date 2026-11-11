@@ -4967,7 +4967,7 @@
     "message": "{0} nouvelles sur cette période"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "sur {0} règles"
+    "message": "Total des règles : {0}"
   },
   "statsTipPages": {
     "message": "Pages enregistrées dans l’Historique sur cette période. L’Historique conserve les détections enregistrées, pas chaque visite du navigateur."

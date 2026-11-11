@@ -4967,7 +4967,7 @@
     "message": "Nya under perioden: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "av {0} regler"
+    "message": "Totalt antal regler: {0}"
   },
   "statsTipPages": {
     "message": "Sidor som sparats i Historik i det här intervallet. Historik sparar upptäckter, inte varje webbläsarbesök."

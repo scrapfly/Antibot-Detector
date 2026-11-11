@@ -4967,7 +4967,7 @@
     "message": "{0} neu in diesem Zeitraum"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "von {0} Regeln"
+    "message": "Regeln insgesamt: {0}"
   },
   "statsTipPages": {
     "message": "Im Verlauf gespeicherte Seiten in diesem Zeitraum. Der Verlauf enthält gespeicherte Erkennungen, nicht jeden Browser-Besuch."

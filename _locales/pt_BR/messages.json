@@ -4967,7 +4967,7 @@
     "message": "{0} novas neste período"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "de {0} regras"
+    "message": "Total de regras: {0}"
   },
   "statsTipPages": {
     "message": "Páginas salvas no Histórico neste período. O Histórico guarda as detecções salvas, não cada visita do navegador."

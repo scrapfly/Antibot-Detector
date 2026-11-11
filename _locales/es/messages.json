@@ -4967,7 +4967,7 @@
     "message": "{0} nuevas en este periodo"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "de {0} reglas"
+    "message": "Total de reglas: {0}"
   },
   "statsTipPages": {
     "message": "Páginas guardadas en el Historial en este periodo. El Historial conserva las detecciones guardadas, no todas las visitas del navegador."
