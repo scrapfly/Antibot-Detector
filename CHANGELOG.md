@@ -13,6 +13,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Bulk scan: Copy as lines says the copy failed when the browser refuses it, instead of saying Copied.
 - Scrape with Scrapfly: an option set to 0, such as Wait after load, shows 0 when the window reopens, not an empty box.
 - Settings → Log collector: Clear no longer says Logs cleared, and Export no longer stays silent, when the extension reports an error.
+- Arabic: the icon picker's search icon no longer covers your text, and the statistics description and Regex cheat sheet arrow sit on the correct side.
 
 ## [3.1.6] - 2026-11-10
 
