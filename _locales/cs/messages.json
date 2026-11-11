@@ -832,12 +832,6 @@
   "clearCacheConfirmBtn": {
     "message": "Vymazat mezipaměť"
   },
-  "clearingMsg": {
-    "message": "Mazání..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Vymazáno!"
-  },
   "cacheClearedToast": {
     "message": "Mezipaměť vymazána"
   },
@@ -3420,17 +3414,11 @@
   "clipboardTimestampFmt": {
     "message": "Časové razítko: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Bezpečnostní systém: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategorie: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Spolehlivost: {0} %"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Metody detekce: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Metody detekce:"

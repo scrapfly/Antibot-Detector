@@ -832,12 +832,6 @@
   "clearCacheConfirmBtn": {
     "message": "Vaciar caché"
   },
-  "clearingMsg": {
-    "message": "Vaciando..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ ¡Vaciado!"
-  },
   "cacheClearedToast": {
     "message": "Caché vaciada"
   },
@@ -3420,17 +3414,11 @@
   "clipboardTimestampFmt": {
     "message": "Fecha y hora: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Sistema de seguridad: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Categoría: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Confianza: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Métodos de detección: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Métodos de detección:"
@@ -4973,7 +4961,7 @@
     "message": "{0} nuevas en este periodo"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "de {0} reglas"
+    "message": "Total de reglas: {0}"
   },
   "statsTipPages": {
     "message": "Páginas guardadas en el Historial en este periodo. El Historial conserva las detecciones guardadas, no todas las visitas del navegador."

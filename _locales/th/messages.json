@@ -832,12 +832,6 @@
   "clearCacheConfirmBtn": {
     "message": "ล้างแคช"
   },
-  "clearingMsg": {
-    "message": "กำลังล้าง..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ ล้างแล้ว!"
-  },
   "cacheClearedToast": {
     "message": "ล้างแคชแล้ว"
   },
@@ -3420,17 +3414,11 @@
   "clipboardTimestampFmt": {
     "message": "เวลา: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "ระบบรักษาความปลอดภัย: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "หมวดหมู่: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "ความมั่นใจ: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "วิธีการตรวจจับ: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "วิธีการตรวจจับ:"

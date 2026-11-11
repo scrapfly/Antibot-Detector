@@ -183,6 +183,31 @@ test('needsExternalContent: only a content rule that is on asks for the page\'s 
   }
 });
 
+test('precomputed priorities: the fastest kind of rule that is on sets a detector\'s place; a rule that is off counts for nothing', () => {
+  const { Engine } = engineContext();
+  const priorities = (detectors) => {
+    const engine = new Engine();
+    engine.setDetectors(detectors);
+    return plain(engine.precomputedPriorities.map(entry => [entry.detectorName, entry.priority]));
+  };
+  const off = { enabled: false };
+  const one = (detection, extra) => priorities(detectorsWith(detection, extra))[0]?.[1];
+  assert.equal(one({ cookie: [{ name: 'a' }], content: [{ text: 'x' }] }), 3, 'cookie, url and header rules are the fast ones');
+  assert.equal(one({ cookie: [{ name: 'a', ...off }], content: [{ text: 'x' }] }), 2, 'a cookie rule that is off leaves the content rule as the fastest');
+  assert.equal(one({ url: [{ text: 'u', ...off }], header: [{ name: 'h', ...off }], content: [{ text: 'x', ...off }], dom: [{ selector: 'd' }] }), 1);
+  assert.equal(one({ cookie: [{ name: 'a', ...off }] }), 0, 'nothing on at all');
+  assert.equal(one({ content: [{ text: 'x' }], dom: [{ selector: 'd' }] }), 2);
+  assert.equal(one({ dom: [{ selector: 'd' }] }), 1);
+  assert.deepEqual(priorities(detectorsWith({ cookie: [{ name: 'a' }] }, off)), [], 'a detector that is off is not ordered at all');
+  // The loop runs the fast detectors first, so a detector whose cookie rule is off waits behind the ones that have a cookie rule on
+  const rules = (detection) => ({ id: 'x', enabled: true, detection });
+  assert.deepEqual(priorities({ antibot: {
+    slow: rules({ dom: [{ selector: 'd' }] }),
+    content: rules({ cookie: [{ name: 'a', ...off }], content: [{ text: 'x' }] }),
+    fast: rules({ header: [{ name: 'h' }] })
+  } }), [['fast', 3], ['content', 2], ['slow', 1]]);
+});
+
 // ---- The page's cookies
 
 test('page cookies: name, value (cut at 100 characters) and the page\'s host; rows without a name are left out', () => {

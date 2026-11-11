@@ -832,12 +832,6 @@
   "clearCacheConfirmBtn": {
     "message": "Rensa cache"
   },
-  "clearingMsg": {
-    "message": "Rensar..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Rensat!"
-  },
   "cacheClearedToast": {
     "message": "Cachen rensades"
   },
@@ -3420,17 +3414,11 @@
   "clipboardTimestampFmt": {
     "message": "Tidsstämpel: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Skyddssystem: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategori: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Säkerhet: {0} %"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Upptäcktsmetoder: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Upptäcktsmetoder:"
@@ -4973,7 +4961,7 @@
     "message": "Nya under perioden: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "av {0} regler"
+    "message": "Totalt antal regler: {0}"
   },
   "statsTipPages": {
     "message": "Sidor som sparats i Historik i det här intervallet. Historik sparar upptäckter, inte varje webbläsarbesök."

@@ -452,6 +452,25 @@ test('headers are never saved: they can carry cookies or tokens', () => {
   }
 });
 
+test('a number option saved as 0 is 0 in its box when the dialog opens again; one never set is an empty box', () => {
+  // optionsHtml reads FormatUtils from the page's globals
+  global.FormatUtils = require('../utils/format-utils');
+  try {
+    const tr = (key, fallback) => fallback;
+    const box = (html, key) => html.match(new RegExp(`<input type="number"[^>]*id="scrapflyExportOpt-${key}"[^>]*>`))[0];
+    // 0 is a value of its own (rendering_wait=0 is in the code), so it is kept as the number 0: the box must show it, because the next
+    // change to any option reads every box back and an empty one would drop it from the code
+    const saved = ScrapflyExport.normalizeOptions({ renderingWait: '0', timeout: 5000 });
+    assert.equal(saved.renderingWait, 0);
+    const html = ScrapflyExport.optionsHtml(saved, tr);
+    assert.match(box(html, 'renderingWait'), / value="0" /);
+    assert.match(box(html, 'timeout'), / value="5000" /);
+    assert.match(box(html, 'cacheTtl'), / value="" /, 'a number never set stays an empty box');
+  } finally {
+    delete global.FormatUtils;
+  }
+});
+
 test('a detector name with a Unicode line break cannot end a // comment and run as code', () => {
   const names = ['Foo\u2028console.log("INJECTED")', 'Bar\u2029x', 'Baz\u0085y'];
   const comment = ScrapflyExport.detectedComment(names, '//');

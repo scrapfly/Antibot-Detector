@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const withinLimit = require('./helpers/hard-limit.js');
 
 // The protection cookie timeline: which cookies count (the detectors' own rules), what the worker records (name,
 // event, time, expiry, length and a salted marker, never a value), the caps and eviction, private windows, the
@@ -313,8 +314,6 @@ test('Check Cookies reads the timeline by name, never saves it with the result, 
 
 test('a cookie-name regex that backtracks catastrophically names nothing, instead of hanging the worker on a crafted name', () => {
   const m = CookieTimeline.matcher([{ pattern: '^(a+)+$', regex: true }, { pattern: 'datadome' }]);
-  const started = Date.now();
-  assert.equal(m(`${'a'.repeat(40)}!`), false);
-  assert.ok(Date.now() - started < 200, 'answered at once');
+  assert.equal(withinLimit(() => m(`${'a'.repeat(40)}!`), 'the crafted cookie name'), false);
   assert.equal(m('datadome'), true, 'the other rules still work');
 });

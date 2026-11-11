@@ -832,12 +832,6 @@
   "clearCacheConfirmBtn": {
     "message": "कैश साफ़ करें"
   },
-  "clearingMsg": {
-    "message": "साफ़ किया जा रहा है..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ साफ़ हो गया!"
-  },
   "cacheClearedToast": {
     "message": "कैश साफ़ कर दिया गया"
   },
@@ -3420,17 +3414,11 @@
   "clipboardTimestampFmt": {
     "message": "समय: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "सुरक्षा प्रणाली: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "श्रेणी: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "विश्वास: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "जांच विधियां: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "जांच विधियां:"
@@ -4973,7 +4961,7 @@
     "message": "इस अवधि में {0} नए"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "कुल {0} नियमों में से"
+    "message": "कुल नियम: {0}"
   },
   "statsTipPages": {
     "message": "इस अवधि में इतिहास में सहेजे गए पेज। इतिहास में सहेजे गए डिटेक्शन रहते हैं, ब्राउज़र की हर विज़िट नहीं।"

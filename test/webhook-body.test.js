@@ -97,7 +97,7 @@ test('template validation reports the line of a JSON error after substitution', 
   assert.strictEqual(bad.line, 4);
 });
 
-test('a JSON error Chrome words without a position still gets its line: a stray token, or a text that ends too soon', () => {
+test('a JSON error Chrome words without a position still gets its line: a stray token, or a text that ends too soon', (t) => {
   // "Unexpected token '}', … is not valid JSON" carries no position
   const stray = WB.validateTemplate('{\n  "a": 1,\n  "b": \n}\n');
   assert.deepStrictEqual([stray.ok, stray.line, stray.column], [false, 4, 1]);
@@ -107,11 +107,15 @@ test('a JSON error Chrome words without a position still gets its line: a stray 
   // A comma left before the closing brace, wherever the message puts it
   const comma = WB.validateTemplate('{\n  "a": 1,\n  "b": 2,\n}');
   assert.deepStrictEqual([comma.ok, comma.line], [false, 4]);
-  // A long template does not slow the check
+  // A long template does not slow the check: the first bad character is found by halving, so JSON.parse runs a few dozen
+  // times at most (17 here), not once per character. Counted, not timed: how long it takes depends on how busy the machine is
   const long = '{' + Array.from({ length: 800 }, (_, i) => `\n  "k${i}": "${'x'.repeat(40)}",`).join('') + '\n  "end": oops\n}';
-  const started = Date.now();
+  const parse = t.mock.method(JSON, 'parse');
   const far = WB.validateTemplate(long);
-  assert.ok(far.line > 800 && Date.now() - started < 1000, `line ${far.line} in ${Date.now() - started} ms`);
+  const parses = parse.mock.callCount();
+  parse.mock.restore();
+  assert.ok(far.line > 800, `line ${far.line}`);
+  assert.ok(parses < 100, `${parses} calls to JSON.parse for ${long.length} characters`);
 });
 
 // The Settings "Test" button sends sampleContext(); a naturally triggered

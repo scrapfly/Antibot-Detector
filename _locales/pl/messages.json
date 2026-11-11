@@ -832,12 +832,6 @@
   "clearCacheConfirmBtn": {
     "message": "Wyczyść pamięć podręczną"
   },
-  "clearingMsg": {
-    "message": "Czyszczenie..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Wyczyszczono!"
-  },
   "cacheClearedToast": {
     "message": "Wyczyszczono pamięć podręczną"
   },
@@ -3420,17 +3414,11 @@
   "clipboardTimestampFmt": {
     "message": "Znacznik czasu: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "System zabezpieczeń: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "Kategoria: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "Pewność: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Metody wykrywania: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Metody wykrywania:"
@@ -4973,7 +4961,7 @@
     "message": "Nowe w tym okresie: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "z {0} reguł"
+    "message": "Łączna liczba reguł: {0}"
   },
   "statsTipPages": {
     "message": "Strony zapisane w Historii w tym zakresie. Historia przechowuje zapisane wykrycia, a nie każdą wizytę w przeglądarce."

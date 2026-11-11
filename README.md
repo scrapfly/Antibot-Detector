@@ -138,7 +138,7 @@ The protections found on the current page, each with its confidence, its difficu
 
 - **Upload detections** to get a shareable link (dpaste.com by default; see [Share links](#share-links))
 - **Clear Cache**, so the page is scanned again on its next load
-- **Copy**, a menu: the same summary that the upload shares, a Markdown table for a ticket or a chat, or JSON (none of them holds cookie or header values)
+- **Copy**, a menu: the same summary that the upload shares, a Markdown table for a ticket or a chat, one line with the site and its protections, or JSON (none of these holds cookie or header values); or code that asks for the page again, as a curl command, Python (requests) or Node.js (fetch), with this browser's User-Agent, Accept-Language and client hints and every cookie the page sends, HttpOnly ones too. The code does hold the cookie values and the page address with its query string, so keep it private
 - **Block this domain**, so the extension stops scanning it
 
 ### History

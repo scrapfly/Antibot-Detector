@@ -194,9 +194,8 @@ test('the runner: all green is exit 0, the live suite only when asked, and --bai
 }));
 
 test('the runner: a suite that never answers is stopped at its limit and its process is gone', { skip: process.platform === 'win32' }, () => withRepo({}, (repo) => {
-  const started = Date.now();
+  // No stopwatch here: a runner that waited for the suite would be cut off by runAll's own limit (spawnSync, 60 s) and have no status
   const run = runAll(repo, ['--only', 'slow', '--timeout', '0.03']);
-  assert.ok(Date.now() - started < 30000);
   assert.equal(run.status, 1);
   assert.match(run.stdout, /TIME {2}slow .*no answer after \d+s, stopped/);
   assert.equal(run.summary.results[0].timedOut, true);

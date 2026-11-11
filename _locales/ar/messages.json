@@ -832,12 +832,6 @@
   "clearCacheConfirmBtn": {
     "message": "مسح التخزين المؤقت"
   },
-  "clearingMsg": {
-    "message": "جارٍ المسح..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ تم المسح!"
-  },
   "cacheClearedToast": {
     "message": "تم مسح التخزين المؤقت"
   },
@@ -3420,17 +3414,11 @@
   "clipboardTimestampFmt": {
     "message": "التاريخ والوقت: {0}"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "نظام الحماية: {0}"
-  },
   "clipboardCategoryFmt": {
     "message": "الفئة: {0}"
   },
   "clipboardConfidenceFmt": {
     "message": "الثقة: {0}%"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "طرق الكشف: {0}"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "طرق الكشف:"
@@ -4973,7 +4961,7 @@
     "message": "{0} جديدة في هذه الفترة"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "من أصل {0} قاعدة"
+    "message": "إجمالي القواعد: {0}"
   },
   "statsTipPages": {
     "message": "الصفحات المحفوظة في السجل ضمن هذا النطاق. يحتفظ السجل بالاكتشافات المحفوظة، وليس بكل زيارة في المتصفح."

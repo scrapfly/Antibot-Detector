@@ -5,8 +5,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-// Detection tab: copies, uploads and the replay kit hold what the list shows (the search and the chips applied), a click on
-// Clear filters does not strand the keyboard on a button that has just been hidden, and a held Enter opens a card once.
+// Detection tab: copies, uploads and the replay kit hold what the list shows (the search and the chips applied), a summary copied
+// while the list is empty copies nothing and says so, a click on Clear filters does not strand the keyboard on a button that has
+// just been hidden, and a held Enter opens a card once.
 
 const root = path.join(__dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
@@ -28,10 +29,11 @@ function fixture() {
   const doc = { activeElement: null, readyState: 'complete', addEventListener() {}, createElement: () => element({ ownerDocument: doc }), createTextNode: t => ({ textContent: t }),
     querySelector: selector => els[selector] || null, querySelectorAll: () => doc.cards || [] };
   for (const id of ['#detectionSearch', '#detectionClearFilters', '#detectionNoResults', '#resultsList', '#detectionStatus']) els[id] = element({ ownerDocument: doc });
-  const copied = [];
+  const copied = [], warnings = [];
   const context = { window: {}, console, URL, Logger: { error() {}, debug() {}, warn() {} },
     setTimeout: () => 0, clearTimeout() {}, requestAnimationFrame: () => 0,
-    ReplayKit: { pageUrl: () => '', browserHeaders: () => [] },
+    NotificationHelper: { warning: (text) => { warnings.push(text); } },
+    ReplayKit: { pageUrl: () => '', browserHeaders: () => [], curl: () => 'curl-code', python: () => 'python-code', node: () => 'node-code' },
     chrome: { tabs: { query: async () => [] }, runtime: { getURL: p => p } }, document: doc };
   context.self = context;
   vm.createContext(context);
@@ -50,7 +52,7 @@ function fixture() {
     ]
   });
   detection.setupPagination();
-  return { detection, els, doc, copied, context, DA: context.DetectionActions, UI: context.DetectionUI };
+  return { detection, els, doc, copied, warnings, context, DA: context.DetectionActions, UI: context.DetectionUI };
 }
 
 const names = (payload) => payload.detections.map(d => d.name);
@@ -76,6 +78,40 @@ test('the search box narrows the copy too', () => {
   const { detection, DA } = fixture();
   detection.handleSearch('cloud');
   assert.deepEqual(names(DA.buildDetectionsPasteContent.call(detection, '').payload), ['Cloudflare']);
+});
+
+test('a summary copied while the search and the chips match nothing copies nothing and warns, as Upload does; the code kinds still copy', async () => {
+  const { detection, DA, copied, warnings } = fixture();
+  const summaries = ['overview', 'markdown', 'oneline', 'json'];
+  // The line the empty list itself shows (#detectionNoResults), not a "Copied" for an empty summary
+  const noResults = JSON.parse(read('_locales/en/messages.json')).historyNoResults.message;
+
+  detection.handleSearch('nothing matches this');
+  assert.equal(DA.shownResults.call(detection).length, 0, 'the search leaves nothing');
+  for (const kind of summaries) assert.equal(await DA.copyDetectionsAs.call(detection, kind, ''), '', `${kind}: no text comes back`);
+  assert.deepEqual(copied, [], 'no empty summary reaches the clipboard');
+  assert.deepEqual(warnings, summaries.map(() => noResults), 'one warning per attempt');
+
+  // A chip and a search that each match something, but not together, leave nothing too
+  detection.clearFilters();
+  detection.toggleFilterChip('captcha');
+  detection.handleSearch('cloud');
+  assert.equal(DA.shownResults.call(detection).length, 0);
+  assert.equal(await DA.copyDetectionsAs.call(detection, 'markdown', ''), '');
+  assert.deepEqual(copied, []);
+  assert.equal(warnings.length, summaries.length + 1);
+
+  // curl, Python and Node.js replay this browser's headers and the page's cookies, not the list: they stay allowed and say nothing
+  for (const kind of ['curl', 'python', 'node']) assert.equal(await DA.copyDetectionsAs.call(detection, kind, ''), `${kind}-code`);
+  assert.deepEqual(copied, ['curl-code', 'python-code', 'node-code']);
+  assert.equal(warnings.length, summaries.length + 1, 'no warning for the code kinds');
+
+  // The list back: the summary copies as before, with no new warning
+  detection.clearFilters();
+  await DA.copyDetectionsAs.call(detection, 'markdown', '');
+  assert.equal(copied.length, 4);
+  assert.ok(copied[3].includes('Cloudflare') && copied[3].includes('reCAPTCHA') && copied[3].includes('Canvas'));
+  assert.equal(warnings.length, summaries.length + 1);
 });
 
 test('Clear filters hides its own button: the keyboard goes to the search box, not to the page', () => {

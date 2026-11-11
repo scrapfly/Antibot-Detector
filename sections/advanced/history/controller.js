@@ -416,8 +416,10 @@ Advanced.prototype.copyCaptureData = async function(moduleId, captureId) {
         return;
       }
 
-      await AdvancedUtils.copyToClipboard(JSON.stringify(captureData, null, 2));
-      NotificationHelper.success(_trCC('captureDataCopied', 'Capture data copied to clipboard'));
+      // The copy shows its own toast: these words when it worked, an error when the browser refused it. A second toast of ours said "copied" after a refusal too
+      await AdvancedUtils.copyToClipboard(JSON.stringify(captureData, null, 2), null, {
+        notificationMessage: _trCC('captureDataCopied', 'Capture data copied to clipboard')
+      });
     } catch (error) {
       Logger.error('UI', '[Advanced] Error copying capture:', error);
       NotificationHelper.error(_trCC('failedCopyCaptureData', 'Failed to copy capture data'));

@@ -838,12 +838,6 @@
   "clearCacheConfirmBtn": {
     "message": "Clear Cache"
   },
-  "clearingMsg": {
-    "message": "Clearing..."
-  },
-  "clearedSuccessMsg": {
-    "message": "✓ Cleared!"
-  },
   "cacheClearedToast": {
     "message": "Cache cleared"
   },
@@ -3642,10 +3636,6 @@
     "message": "Timestamp: {0}",
     "description": "Line of a copied text report. {0} = date and time"
   },
-  "clipboardSecuritySystemFmt": {
-    "message": "Security System: {0}",
-    "description": "Line of a copied text report. {0} = detector name (e.g. Akamai)"
-  },
   "clipboardCategoryFmt": {
     "message": "Category: {0}",
     "description": "Line of a copied text report. {0} = category (antibot, captcha, fingerprint)"
@@ -3653,10 +3643,6 @@
   "clipboardConfidenceFmt": {
     "message": "Confidence: {0}%",
     "description": "Line of a copied text report. {0} = percentage number (the % sign follows)"
-  },
-  "clipboardDetectionMethodsFmt": {
-    "message": "Detection Methods: {0}",
-    "description": "Line of a copied text report. {0} = comma-separated list of methods"
   },
   "clipboardDetectionMethodsHeading": {
     "message": "Detection Methods:",
@@ -5236,7 +5222,7 @@
     "message": "{0} new this period"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "of {0} rules"
+    "message": "Total rules: {0}"
   },
   "statsTipPages": {
     "message": "Pages saved to History in this range. History keeps saved detections, not every browser visit."
