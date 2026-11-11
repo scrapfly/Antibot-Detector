@@ -2036,7 +2036,8 @@ input[type="file"] {
 
 /* The description sits in the icon column's indent, as in 2.8 */
 #settingsModal .settings-stats-desc {
-  margin: 1px 0 0 38px;
+  margin-block: 1px 0;
+  margin-inline: 38px 0;
   font-size: 10px;
   line-height: 13px;
   color: var(--settings-text-dim);
