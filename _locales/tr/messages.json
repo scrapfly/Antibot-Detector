@@ -1405,6 +1405,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "Alan adı ara..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "Ayarlarda ara..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Aramanızla eşleşen ayar yok."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Bulunan ayarlar: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Aramayı temizle"
+  },
   "settingsBadgeColorLow": {
     "message": "Düşük"
   },

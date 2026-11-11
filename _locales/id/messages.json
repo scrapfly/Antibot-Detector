@@ -1405,6 +1405,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "Cari domain..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "Cari pengaturan..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Tidak ada pengaturan yang cocok dengan pencarian Anda."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Pengaturan ditemukan: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Hapus pencarian"
+  },
   "settingsBadgeColorLow": {
     "message": "Rendah"
   },

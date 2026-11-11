@@ -1405,6 +1405,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "डोमेन खोजें..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "सेटिंग्स खोजें..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "आपकी खोज से कोई सेटिंग मेल नहीं खाती।"
+  },
+  "settingsSearchCountFmt": {
+    "message": "मिली सेटिंग्स: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "खोज साफ़ करें"
+  },
   "settingsBadgeColorLow": {
     "message": "कम"
   },

@@ -1405,6 +1405,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "Поиск доменов..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "Поиск настроек..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Нет настроек, соответствующих вашему запросу."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Найдено настроек: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Очистить поиск"
+  },
   "settingsBadgeColorLow": {
     "message": "Низкая"
   },

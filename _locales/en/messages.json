@@ -1418,6 +1418,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "Search domains..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "Search settings..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "No settings match your search."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Settings found: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Clear search"
+  },
   "settingsBadgeColorLow": {
     "message": "Low"
   },

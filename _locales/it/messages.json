@@ -1405,6 +1405,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "Cerca domini..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "Cerca impostazioni..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Nessuna impostazione corrisponde alla ricerca."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Impostazioni trovate: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Cancella la ricerca"
+  },
   "settingsBadgeColorLow": {
     "message": "Basso"
   },

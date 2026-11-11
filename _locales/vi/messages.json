@@ -1405,6 +1405,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "Tìm tên miền..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "Tìm cài đặt..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "Không có cài đặt nào khớp với tìm kiếm của bạn."
+  },
+  "settingsSearchCountFmt": {
+    "message": "Số cài đặt tìm thấy: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "Xóa tìm kiếm"
+  },
   "settingsBadgeColorLow": {
     "message": "Thấp"
   },

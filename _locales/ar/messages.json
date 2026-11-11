@@ -1405,6 +1405,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "البحث في النطاقات..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "البحث في الإعدادات..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "لا توجد إعدادات تطابق بحثك."
+  },
+  "settingsSearchCountFmt": {
+    "message": "الإعدادات المطابقة: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "مسح البحث"
+  },
   "settingsBadgeColorLow": {
     "message": "منخفض"
   },

@@ -57,6 +57,8 @@ SettingsUI.collapseCards = function(root) {
 SettingsUI.showSettings = function() {
     const settingsModal = document.querySelector('#settingsModal');
     if (settingsModal) {
+      // The search box starts empty and nothing is hidden by it; the cards fold again just below
+      if (typeof SettingsUI.resetSettingsSearch === 'function') SettingsUI.resetSettingsSearch.call(this);
       SettingsUI.collapseCards(settingsModal);
       settingsModal.classList.add('is-open');
       this.isModalVisible = true;
@@ -173,6 +175,8 @@ SettingsUI.switchTab = function(tabName) {
     if (tabName === 'history') SettingsUI.refreshHistoryStorage.call(this);
     if (tabName === 'history') SettingsUI.refreshHistoryWatch.call(this);
     if (tabName === 'data') SettingsUI.refreshStorageOverview();
+    // A tab opened by hand during a search may have nothing for it: the search says so
+    if (typeof SettingsUI.syncSettingsSearchView === 'function') SettingsUI.syncSettingsSearchView.call(this);
 };
 
 SettingsUI.loadSettings = async function() {
@@ -921,6 +925,8 @@ SettingsUI.revealInvalidFields = function(fields) {
       element.addEventListener('input', edited, { once: true });
       element.addEventListener('change', edited, { once: true });
     }
+    // A field the search hides cannot be shown or focused: the search steps aside first
+    if (typeof SettingsUI.clearSettingsSearch === 'function') SettingsUI.clearSettingsSearch.call(this);
     const first = elements[0];
     const tab = first.closest('.settings-tab-content');
     if (tab && typeof this.switchTab === 'function') this.switchTab(tab.getAttribute('data-tab-content'));
@@ -1238,6 +1244,9 @@ SettingsUI.setupEventListeners = function() {
     }
     if (typeof SettingsUI._setupShortcutListeners === 'function') {
       SettingsUI._setupShortcutListeners.call(this);
+    }
+    if (typeof SettingsUI._setupSearchListeners === 'function') {
+      SettingsUI._setupSearchListeners.call(this);
     }
 
     this.setupColorPagination();

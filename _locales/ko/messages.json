@@ -1405,6 +1405,18 @@
   "settingsSearchDomainsPlaceholder": {
     "message": "도메인 검색..."
   },
+  "settingsSearchPlaceholder": {
+    "message": "설정 검색..."
+  },
+  "settingsSearchNoMatch": {
+    "message": "검색과 일치하는 설정이 없습니다."
+  },
+  "settingsSearchCountFmt": {
+    "message": "찾은 설정: {0}"
+  },
+  "settingsSearchClear": {
+    "message": "검색 지우기"
+  },
   "settingsBadgeColorLow": {
     "message": "낮음"
   },
