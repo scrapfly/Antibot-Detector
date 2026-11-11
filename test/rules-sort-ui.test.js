@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-// Rules tab: a sort dropdown at the end of the chip row, drawn like the one History got in 3.1.5. The list is drawn in the order
+// Rules tab: a sort dropdown at the end of the search row (History's has its chip row; here the chips already fill two rows). The list is drawn in the order
 // chosen (Default is the order the tab always had), the choice comes back the next time the popup opens (the browser's own storage,
 // as History keeps its sort), and a search still puts the best name first. This file drives the real Rules scripts in a sandbox.
 
@@ -192,13 +192,14 @@ test('getSortTimestamp, which the Default order reads, is the same reading the s
 
 const html = read('sections/rules/rules.html');
 const row = html.slice(html.indexOf('id="rulesFilters"'), html.indexOf('id="rulesList"'));
-const select = row.match(/<select\b[^>]*id="rulesSort"[^>]*>[\s\S]*?<\/select>/);
+const searchRow = html.slice(html.indexOf('class="rules-search-row"'), html.indexOf('id="rulesFilters"'));
+const select = searchRow.match(/<select\b[^>]*id="rulesSort"[^>]*>[\s\S]*?<\/select>/);
 
-test('the dropdown sits at the end of the chip row, as History\'s does, and offers exactly the keys the module knows, in order', () => {
-  assert.ok(select, 'a select with the id rulesSort is in the chip row');
-  const chipRowEnd = row.indexOf('</div>'); // the row holds no other div: its first closing tag is its own
-  assert.ok(row.indexOf('id="rulesSort"') > row.lastIndexOf('</button>', chipRowEnd), 'after the last chip');
-  assert.ok(row.indexOf('id="rulesSort"') < chipRowEnd, 'inside the row');
+test('the dropdown sits at the end of the search row, so the chips below keep their height, and offers exactly the keys the module knows, in order', () => {
+  assert.ok(html.indexOf('class="rules-search-row"') >= 0, 'the search box and the dropdown share a row');
+  assert.ok(select, 'a select with the id rulesSort is in the search row');
+  assert.ok(searchRow.indexOf('id="rulesSort"') > searchRow.indexOf('id="rulesSearch"'), 'after the search box');
+  assert.ok(!row.includes('<select'), 'not in the chip row: it would add a third row there in English');
   const values = [...select[0].matchAll(/<option\b[^>]*value="([^"]+)"/g)].map(match => match[1]);
   assert.deepEqual(values, require('../modules/core/rules-sort.js').KEYS);
   assert.deepEqual(values, ['default', 'name', 'updated']);
@@ -219,31 +220,29 @@ test('the dropdown has an accessible name, the shared arrow and select look, and
   assert.deepEqual(['rulesSortDefault', 'rulesSortName', 'rulesRecentlyUpdated'].map(key => en[key].message), ['Default', 'Name A to Z', 'Recently updated']);
 });
 
-test('the dropdown is drawn like History\'s: the same pill as a chip, only the width is its own, and it mirrors for Arabic', () => {
+test('the dropdown is drawn as the search box beside it, keeps its own width, and mirrors for Arabic as History\'s does', () => {
   const declarations = (css, selector) => {
     const at = css.indexOf(`${selector} {`);
     assert.ok(at >= 0, `${selector} is defined`);
     return Object.fromEntries(css.slice(css.indexOf('{', at) + 1, css.indexOf('}', at)).replace(/\/\*[\s\S]*?\*\//g, '').split(';')
       .map(line => line.trim()).filter(Boolean).map(line => [line.slice(0, line.indexOf(':')).trim(), line.slice(line.indexOf(':') + 1).trim()]));
   };
-  const history = declarations(read('sections/history/history.css'), '#historyTab .history-filters select.history-sort');
-  const rules = declarations(read('sections/rules/styles/list.css'), '.rules-filters select.rules-sort');
-  for (const [property, value] of Object.entries(history)) {
-    if (property === 'width') continue;
-    assert.equal(rules[property], value, `${property}: as History's`);
-  }
-  assert.deepEqual(Object.keys(rules).filter(property => !(property in history)), [], 'nothing History\'s dropdown does not have');
-  assert.match(rules.width, /^\d+px$/, 'a width of its own, beside the last chips and not stretched');
-  assert.ok(parseInt(rules.width, 10) < 200);
-  assert.equal(rules['margin-inline-start'], 'auto', 'at the end of the row in either direction');
   const css = read('sections/rules/styles/list.css');
-  const rtl = declarations(css, '[dir="rtl"] .rules-filters select.rules-sort');
+  const search = declarations(css, '.rules-header .search-input');
+  const rules = declarations(css, '.rules-search-row select.rules-sort');
+  for (const property of ['height', 'border', 'border-radius']) assert.equal(rules[property], search[property], `${property}: as the search box`);
+  assert.equal(rules['background-color'], search.background, 'the same fill as the search box');
+  assert.equal(rules.flex, '0 0 auto', 'not stretched: the search box takes the rest of the row');
+  assert.match(rules.width, /^\d+px$/);
+  assert.ok(parseInt(rules.width, 10) <= 140, 'narrow enough to leave the search box most of the row');
+  assert.equal(declarations(css, '.rules-header .rules-search-row .search-container').flex, '1 1 auto');
+  const rtl = declarations(css, '[dir="rtl"] .rules-search-row select.rules-sort');
   assert.equal(rtl.padding, '0 10px 0 26px', 'the arrow\'s room is on the left in Arabic');
   assert.equal(rtl['background-position'], 'left 9px center', 'and so is the arrow');
   const historyRtl = declarations(read('sections/history/history.css'), '[dir="rtl"] #historyTab .history-filters select.history-sort');
   assert.deepEqual(rtl, historyRtl, 'mirrored exactly as History\'s');
-  for (const state of [':hover', ':focus', ':focus-visible']) assert.match(css, new RegExp(`\\.rules-filters select\\.rules-sort${state.replace(':', '\\:')} \\{`), `${state} is styled`);
-  assert.match(css, /\.rules-filters select\.rules-sort:focus-visible \{\s*outline: 2px solid var\(--accent\);/, 'a keyboard user sees where the focus is');
+  for (const state of [':hover', ':focus', ':focus-visible']) assert.match(css, new RegExp(`\\.rules-search-row select\\.rules-sort${state.replace(':', '\\:')} \\{`), `${state} is styled`);
+  assert.match(css, /\.rules-search-row select\.rules-sort:focus-visible \{\s*outline: 2px solid var\(--accent\);/, 'a keyboard user sees where the focus is');
 });
 
 test('the tab wires the dropdown and keeps its choice the way History does, and the popup loads the module before the Rules scripts', () => {
@@ -281,5 +280,5 @@ test('every language has the five new words, and none of them was left in Englis
 
 test('the categories the row still names are the extension\'s own (the row did not lose a chip)', () => {
   const chips = [...row.matchAll(/<button\b[^>]*data-filter="([a-z]+)"/g)].map(match => match[1]);
-  assert.deepEqual(chips, [...Categories.KEYS, 'custom', 'edited', 'disabled', 'updated']);
+  assert.deepEqual(chips, [...Categories.KEYS, 'updated', 'custom', 'edited', 'disabled']);
 });

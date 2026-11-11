@@ -103,7 +103,7 @@ test('chips are normalised: unknown names and non-booleans are ignored, duplicat
   const f = F();
   assert.deepEqual(f.normalizeChips(undefined), { custom: false, edited: false, disabled: false, updated: false, categories: [] });
   assert.deepEqual(f.normalizeChips({ custom: 'yes', edited: 1, disabled: true, updated: 'recently', categories: ['captcha', 'captcha', 'other', 7, 'x'] }), { custom: false, edited: false, disabled: true, updated: false, categories: ['captcha'] });
-  assert.deepEqual(f.FLAGS, ['custom', 'edited', 'disabled', 'updated'], 'the on/off chips, in the order of the row');
+  assert.deepEqual(f.FLAGS, ['custom', 'edited', 'disabled', 'updated'], 'the on/off chips');
   assert.deepEqual(f.CATEGORIES, [...Categories.KEYS]);
   assert.equal(f.isActive({}), false);
   assert.equal(f.isActive({ categories: ['other'] }), false);
@@ -423,7 +423,7 @@ test('a rule edited now is recently updated: the editor stamps its date and the 
 const html = read('sections/rules/rules.html');
 const row = html.slice(html.indexOf('id="rulesFilters"'), html.indexOf('id="rulesList"'));
 
-test('the row sits in the header under the search, is a labelled group, and has the categories, then Custom, Edited, Disabled and Recently updated', () => {
+test('the row sits in the header under the search, is a labelled group, and has the categories, then Recently updated, Custom, Edited and Disabled', () => {
   assert.ok(html.indexOf('id="rulesFilters"') > html.indexOf('id="rulesSearch"'), 'under the search');
   const header = html.slice(html.indexOf('class="rules-header"'), html.indexOf('id="rulesList"'));
   assert.ok(header.includes('id="rulesFilters"'), 'in the header, above the list');
@@ -433,13 +433,13 @@ test('the row sits in the header under the search, is a labelled group, and has 
   assert.match(open, /data-i18n-aria-label="rulesFiltersLabel"/);
   const chips = [...row.matchAll(/<button\b([^>]*)>([\s\S]*?)<\/button>/g)].map(match => ({
     attrs: match[1], filter: (match[1].match(/data-filter="([a-z]+)"/) || [])[1], category: (match[1].match(/data-category="([a-z]+)"/) || [])[1],
-    label: (match[2].match(/data-i18n="([A-Za-z]+)"/) || [])[1], body: match[2]
+    label: (match[2].match(/data-i18n="([A-Za-z]+)"/) || match[1].match(/data-i18n-aria-label="([A-Za-z]+)"/) || [])[1], body: match[2]
   })).filter(chip => chip.filter);
-  assert.deepEqual(chips.map(chip => chip.filter), [...Categories.KEYS, 'custom', 'edited', 'disabled', 'updated']);
+  assert.deepEqual(chips.map(chip => chip.filter), [...Categories.KEYS, 'updated', 'custom', 'edited', 'disabled']);
   for (const chip of chips) {
     assert.match(chip.attrs, /type="button"/);
     assert.match(chip.attrs, /aria-pressed="false"/, 'off to start with');
-    assert.match(chip.attrs, /class="history-filter-chip"/, 'the chip look History already has');
+    assert.match(chip.attrs, /class="history-filter-chip(?: rules-filter-chip--icon)?"/, 'the chip look History already has');
     assert.match(chip.body, /class="history-filter-icon/, `${chip.filter} has an icon`);
   }
   for (const key of Categories.KEYS) {
@@ -454,9 +454,14 @@ test('the row sits in the header under the search, is a labelled group, and has 
   assert.equal(chips.find(chip => chip.filter === 'disabled').label, 'statsRulesDisabled');
   const en = JSON.parse(read('_locales/en/messages.json'));
   assert.deepEqual(['statsRulesCustom', 'ruleEditedTag', 'statsRulesDisabled'].map(key => en[key].message), ['Custom', 'Edited', 'Disabled']);
-  // Recently updated is new: its own word, with the 30 days said where the pointer rests (and to a screen reader, as its description)
+  // Recently updated is new: a clock alone, so the chips keep their two rows in every language. Its word is its accessible name, and
+  // the 30 days are said where the pointer rests
   const updated = chips.find(chip => chip.filter === 'updated');
   assert.equal(updated.label, 'rulesRecentlyUpdated');
+  assert.match(updated.attrs, /class="history-filter-chip rules-filter-chip--icon"/);
+  assert.match(updated.attrs, /aria-label="Recently updated"/);
+  assert.match(updated.attrs, /data-i18n-aria-label="rulesRecentlyUpdated"/);
+  assert.doesNotMatch(updated.body, /data-i18n=/, 'no visible word: the clock and the hover text say it');
   assert.match(updated.attrs, /title="Updated in the last 30 days"/);
   assert.match(updated.attrs, /data-i18n-title="rulesRecentlyUpdatedTip"/);
   assert.equal(en.rulesRecentlyUpdated.message, 'Recently updated');

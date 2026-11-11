@@ -2,7 +2,7 @@
  * Rules tab: which rules the search box and the filter chips leave on the list.
  * Pure (no browser APIs), so the popup and the tests share it.
  *
- *   FLAGS             the on/off chips, in the order of the row: 'custom', 'edited', 'disabled', 'updated'
+ *   FLAGS             the on/off chips: 'custom', 'edited', 'disabled', 'updated' (the row shows Recently updated after the categories)
  *   RECENT_DAYS       how far back "Recently updated" looks: 30 days
  *   CATEGORIES        the category chips, one per category, in the category order
  *   normalizeChips()  the chips as the popup keeps them, whatever was passed (nothing gives every chip off)
