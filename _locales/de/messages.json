@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "Regeln filtern"
   },
+  "rulesSortLabel": {
+    "message": "Regeln sortieren"
+  },
+  "rulesSortDefault": {
+    "message": "Standard"
+  },
+  "rulesSortName": {
+    "message": "Name A bis Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Zuletzt aktualisiert"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "In den letzten 30 Tagen aktualisiert"
+  },
   "paginationPrev": {
     "message": "Vorherige Seite"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "Gespeichert. Diese Regel enthält dasselbe Muster mehrfach; die überzähligen Kopien lassen sich löschen."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Gespeichert. Ein Muster dieser Regel steckt auch in {0}. Das ist in Ordnung, wenn es Absicht ist."
   },
   "rulesUiMethodFallback": {
     "message": "Methode"

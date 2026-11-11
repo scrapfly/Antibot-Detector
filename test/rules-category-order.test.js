@@ -16,6 +16,7 @@ function rulesWith(settings) {
     Utils: { getSettings: async () => settings }, document: { querySelector: selector => (selector === '#rulesList' ? {} : selector === '#rulesSearch' ? { value: '' } : { style: {}, querySelectorAll: () => [] }) } };
   vm.createContext(context);
   vm.runInContext(read('modules/core/categories.js'), context);
+  vm.runInContext(read('modules/core/rules-sort.js'), context);
   vm.runInContext(read('modules/core/rules-filter.js'), context);
   vm.runInContext(read('utils/detection-utils.js') + '\nthis.DetectionUtils = DetectionUtils;', context);
   vm.runInContext(read('sections/rules/rules-display.js'), context);

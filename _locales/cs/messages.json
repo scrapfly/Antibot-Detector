@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "Filtrovat pravidla"
   },
+  "rulesSortLabel": {
+    "message": "Řazení pravidel"
+  },
+  "rulesSortDefault": {
+    "message": "Výchozí"
+  },
+  "rulesSortName": {
+    "message": "Název A až Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Nedávno aktualizovaná"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Aktualizováno za posledních 30 dní"
+  },
   "paginationPrev": {
     "message": "Předchozí stránka"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "Uloženo. Toto pravidlo obsahuje stejný vzor vícekrát; přebytečné kopie lze smazat."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Uloženo. Stejný vzor mají i další pravidla: {0}. V pořádku, pokud je to záměr."
   },
   "rulesUiMethodFallback": {
     "message": "Metoda"

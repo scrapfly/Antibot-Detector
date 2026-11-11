@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "Фильтр правил"
   },
+  "rulesSortLabel": {
+    "message": "Сортировка правил"
+  },
+  "rulesSortDefault": {
+    "message": "По умолчанию"
+  },
+  "rulesSortName": {
+    "message": "Название от А до Я"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Недавно обновлённые"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Обновлены за последние 30 дней"
+  },
   "paginationPrev": {
     "message": "Предыдущая страница"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "Сохранено. В этом правиле один и тот же шаблон встречается несколько раз; лишние копии можно удалить."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Сохранено. Шаблон этого правила есть и в других правилах: {0}. Это нормально, если так задумано."
   },
   "rulesUiMethodFallback": {
     "message": "Метод"

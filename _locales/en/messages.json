@@ -329,6 +329,26 @@
     "message": "Filter rules",
     "description": "Accessible name of the row of filter chips under the Rules search"
   },
+  "rulesSortLabel": {
+    "message": "Sort rules",
+    "description": "Accessible name of the sort dropdown at the end of the Rules chip row"
+  },
+  "rulesSortDefault": {
+    "message": "Default",
+    "description": "Sort option in Rules: the order the list always had (switched-off rules last, the category order from Settings, newest update, name)"
+  },
+  "rulesSortName": {
+    "message": "Name A to Z",
+    "description": "Sort option in Rules: by rule name, A to Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Recently updated",
+    "description": "Rules: the chip that keeps the rules updated in the last 30 days, and the sort option that puts the most recently updated rule first"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Updated in the last 30 days",
+    "description": "Rules: hover text of the Recently updated chip"
+  },
   "paginationPrev": {
     "message": "Previous page"
   },
@@ -3620,6 +3640,10 @@
   "rulesUiDuplicatePatterns": {
     "message": "Saved. This rule has the same pattern more than once; the extra copies can be deleted.",
     "description": "Rules editor: shown after a rule is saved when it holds the same pattern more than once"
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Saved. A pattern of this rule is also in {0}. That is fine if it is on purpose.",
+    "description": "Rules editor: shown after a rule is saved when one of its patterns is also in other rules; {0} is their names (up to two, then \"N more\")"
   },
   "rulesUiMethodFallback": {
     "message": "Method",

@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "Filtra le regole"
   },
+  "rulesSortLabel": {
+    "message": "Ordina regole"
+  },
+  "rulesSortDefault": {
+    "message": "Predefinito"
+  },
+  "rulesSortName": {
+    "message": "Nome da A a Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Aggiornate di recente"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Aggiornate negli ultimi 30 giorni"
+  },
   "paginationPrev": {
     "message": "Pagina precedente"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "Salvata. Questa regola ha lo stesso schema più volte; le copie in più si possono eliminare."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Salvata. Uno schema di questa regola è presente anche in {0}. Va bene se è voluto."
   },
   "rulesUiMethodFallback": {
     "message": "Metodo"

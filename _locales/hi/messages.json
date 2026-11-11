@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "नियम फ़िल्टर करें"
   },
+  "rulesSortLabel": {
+    "message": "नियमों को क्रमबद्ध करें"
+  },
+  "rulesSortDefault": {
+    "message": "डिफ़ॉल्ट"
+  },
+  "rulesSortName": {
+    "message": "नाम A से Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "हाल ही में अपडेट किए गए"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "पिछले 30 दिनों में अपडेट किए गए"
+  },
   "paginationPrev": {
     "message": "पिछला पृष्ठ"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "सहेजा गया। इस नियम में एक ही पैटर्न एक से अधिक बार है; अतिरिक्त प्रतियाँ हटाई जा सकती हैं।"
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "सहेजा गया। इस नियम का एक पैटर्न {0} में भी है। अगर यह जानबूझकर है तो कोई समस्या नहीं।"
   },
   "rulesUiMethodFallback": {
     "message": "विधि"

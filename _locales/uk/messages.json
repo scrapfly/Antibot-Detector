@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "Фільтр правил"
   },
+  "rulesSortLabel": {
+    "message": "Сортування правил"
+  },
+  "rulesSortDefault": {
+    "message": "Типово"
+  },
+  "rulesSortName": {
+    "message": "Назва від А до Я"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Нещодавно оновлені"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Оновлено за останні 30 днів"
+  },
   "paginationPrev": {
     "message": "Попередня сторінка"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "Збережено. У цьому правилі один і той самий шаблон трапляється кілька разів; зайві копії можна видалити."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Збережено. Шаблон цього правила є також в інших правилах: {0}. Це нормально, якщо так задумано."
   },
   "rulesUiMethodFallback": {
     "message": "Метод"

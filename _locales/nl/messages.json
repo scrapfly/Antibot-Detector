@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "Regels filteren"
   },
+  "rulesSortLabel": {
+    "message": "Regels sorteren"
+  },
+  "rulesSortDefault": {
+    "message": "Standaard"
+  },
+  "rulesSortName": {
+    "message": "Naam A tot Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Onlangs bijgewerkt"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Bijgewerkt in de afgelopen 30 dagen"
+  },
   "paginationPrev": {
     "message": "Vorige pagina"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "Opgeslagen. Deze regel bevat hetzelfde patroon meerdere keren; de extra kopieën kunnen worden verwijderd."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Opgeslagen. Een patroon van deze regel staat ook in {0}. Dat is prima als het bewust is."
   },
   "rulesUiMethodFallback": {
     "message": "Methode"

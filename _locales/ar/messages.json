@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "تصفية القواعد"
   },
+  "rulesSortLabel": {
+    "message": "ترتيب القواعد"
+  },
+  "rulesSortDefault": {
+    "message": "الافتراضي"
+  },
+  "rulesSortName": {
+    "message": "الاسم من أ إلى ي"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "حُدّثت مؤخراً"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "حُدّثت خلال آخر 30 يوماً"
+  },
   "paginationPrev": {
     "message": "الصفحة السابقة"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "تم الحفظ. تحتوي هذه القاعدة على النمط نفسه أكثر من مرة؛ يمكن حذف النسخ الزائدة."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "تم الحفظ. أحد أنماط هذه القاعدة موجود أيضاً في {0}. لا مشكلة إن كان ذلك مقصوداً."
   },
   "rulesUiMethodFallback": {
     "message": "الطريقة"

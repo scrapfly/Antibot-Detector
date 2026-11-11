@@ -29,7 +29,7 @@ function fixture(count = 5) {
   function Rules() {}
   const context = vm.createContext({ console, Rules, Logger: { debug() {}, error() {} }, document: { querySelector: (selector) => elements[selector] || null },
     Utils: { getSettings: async () => ({ detection: {} }) }, FormatUtils: require('../utils/format-utils.js') });
-  for (const file of ['modules/core/categories.js', 'modules/core/rules-filter.js']) vm.runInContext(read(file), context, { filename: file });
+  for (const file of ['modules/core/categories.js', 'modules/core/rules-sort.js', 'modules/core/rules-filter.js']) vm.runInContext(read(file), context, { filename: file });
   vm.runInContext(read('utils/detection-utils.js') + '\nthis.DetectionUtils = DetectionUtils;', context);
   for (const file of ['sections/rules/rules-handlers.js', 'sections/rules/rules-display.js']) vm.runInContext(read(file), context, { filename: file });
   const view = Object.create(Rules.prototype);

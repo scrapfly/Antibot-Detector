@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "Filtrera regler"
   },
+  "rulesSortLabel": {
+    "message": "Sortera regler"
+  },
+  "rulesSortDefault": {
+    "message": "Standard"
+  },
+  "rulesSortName": {
+    "message": "Namn A till Ö"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Nyligen uppdaterade"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Uppdaterade de senaste 30 dagarna"
+  },
   "paginationPrev": {
     "message": "Föregående sida"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "Sparad. Den här regeln har samma mönster flera gånger; de extra kopiorna kan tas bort."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Sparad. Ett mönster i den här regeln finns även i {0}. Det är okej om det är avsiktligt."
   },
   "rulesUiMethodFallback": {
     "message": "Metod"

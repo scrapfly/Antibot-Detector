@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "筛选规则"
   },
+  "rulesSortLabel": {
+    "message": "对规则排序"
+  },
+  "rulesSortDefault": {
+    "message": "默认"
+  },
+  "rulesSortName": {
+    "message": "名称 A 到 Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "最近更新"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "最近 30 天内更新"
+  },
   "paginationPrev": {
     "message": "上一页"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "已保存。此规则中同一模式出现了多次；可以删除多余的副本。"
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "已保存。此规则的一个模式也出现在 {0} 中。如果是有意为之，则无需处理。"
   },
   "rulesUiMethodFallback": {
     "message": "方法"

@@ -66,7 +66,7 @@ test('every script that reads a shared global module loads after it, in the popu
     WebhookFilter: 'modules/core/webhook-filter.js', WebhookLog: 'modules/core/webhook-log.js', MessageSender: 'modules/core/message-sender.js', CookieTimeline: 'modules/core/cookie-timeline.js',
     WorkerMessages: 'modules/core/worker-messages.js', WorkerVersion: 'modules/core/worker-version.js', HistoryFilter: 'modules/core/history-filter.js', HistoryCompare: 'modules/core/history-compare.js',
     DetectionSummary: 'modules/core/detection-summary.js', HistorySort: 'modules/core/history-sort.js',
-    DetectionFilter: 'modules/core/detection-filter.js', RulesFilter: 'modules/core/rules-filter.js', RulesBulk: 'modules/core/rules-bulk.js',
+    DetectionFilter: 'modules/core/detection-filter.js', RulesFilter: 'modules/core/rules-filter.js', RulesBulk: 'modules/core/rules-bulk.js', RulesSort: 'modules/core/rules-sort.js', RuleDuplicates: 'modules/core/rule-duplicates.js',
     StorageOverview: 'modules/settings/storage-overview.js', BackupBundle: 'modules/settings/backup-bundle.js', DiagnosticsReport: 'modules/settings/diagnostics-report.js',
     SettingsPresets: 'modules/settings/settings-presets.js', SettingsTransfer: 'modules/settings/settings-transfer.js',
     RuleSuggest: 'modules/core/rule-suggest.js',
@@ -93,6 +93,7 @@ test('every script that reads a shared global module loads after it, in the popu
   assert.ok(readers.BulkScan >= 2, 'the guard finds the bulk scan page and its worker');
   assert.ok(readers.HistoryFilter >= 1 && readers.StorageOverview >= 1 && readers.BackupBundle >= 1 && readers.DiagnosticsReport >= 1 && readers.SettingsPresets >= 1 && readers.SettingsTransfer >= 2, 'the guard finds the popup modules\' users');
   assert.ok(readers.DetectionFilter >= 2 && readers.RulesFilter >= 3, 'the guard finds the Detection and Rules tabs\' scripts that read their filter modules');
+  assert.ok(readers.RulesSort >= 3, 'the guard finds the Rules tab\'s scripts and the filter that read the sort module');
 });
 
 test('rules and integration graphs load dependencies before their users', () => {

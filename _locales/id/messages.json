@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "Filter aturan"
   },
+  "rulesSortLabel": {
+    "message": "Urutkan aturan"
+  },
+  "rulesSortDefault": {
+    "message": "Bawaan"
+  },
+  "rulesSortName": {
+    "message": "Nama A ke Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Baru diperbarui"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Diperbarui dalam 30 hari terakhir"
+  },
   "paginationPrev": {
     "message": "Halaman sebelumnya"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "Tersimpan. Aturan ini memiliki pola yang sama lebih dari sekali; salinan tambahannya bisa dihapus."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Tersimpan. Satu pola aturan ini juga ada di {0}. Tidak masalah jika memang disengaja."
   },
   "rulesUiMethodFallback": {
     "message": "Metode"

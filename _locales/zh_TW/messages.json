@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "篩選規則"
   },
+  "rulesSortLabel": {
+    "message": "對規則排序"
+  },
+  "rulesSortDefault": {
+    "message": "預設"
+  },
+  "rulesSortName": {
+    "message": "名稱 A 到 Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "最近更新"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "最近 30 天內更新"
+  },
   "paginationPrev": {
     "message": "上一頁"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "已儲存。此規則中同一模式出現了多次；可以刪除多餘的副本。"
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "已儲存。此規則的一個模式也出現在 {0} 中。若是刻意為之，則無需處理。"
   },
   "rulesUiMethodFallback": {
     "message": "方法"

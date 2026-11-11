@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "Filtrar regras"
   },
+  "rulesSortLabel": {
+    "message": "Ordenar regras"
+  },
+  "rulesSortDefault": {
+    "message": "Padrão"
+  },
+  "rulesSortName": {
+    "message": "Nome de A a Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Atualizadas recentemente"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Atualizadas nos últimos 30 dias"
+  },
   "paginationPrev": {
     "message": "Página anterior"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "Salva. Esta regra tem o mesmo padrão mais de uma vez; as cópias extras podem ser excluídas."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Salva. Um padrão desta regra também está em {0}. Sem problema se for de propósito."
   },
   "rulesUiMethodFallback": {
     "message": "Método"

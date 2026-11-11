@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "Filtruj reguły"
   },
+  "rulesSortLabel": {
+    "message": "Sortuj reguły"
+  },
+  "rulesSortDefault": {
+    "message": "Domyślnie"
+  },
+  "rulesSortName": {
+    "message": "Nazwa od A do Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Ostatnio zaktualizowane"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Zaktualizowane w ciągu ostatnich 30 dni"
+  },
   "paginationPrev": {
     "message": "Poprzednia strona"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "Zapisano. Ta reguła zawiera ten sam wzorzec więcej niż raz; nadmiarowe kopie można usunąć."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Zapisano. Wzorzec z tej reguły występuje także w: {0}. To w porządku, jeśli jest zamierzone."
   },
   "rulesUiMethodFallback": {
     "message": "Metoda"

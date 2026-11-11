@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "Kuralları filtrele"
   },
+  "rulesSortLabel": {
+    "message": "Kuralları sırala"
+  },
+  "rulesSortDefault": {
+    "message": "Varsayılan"
+  },
+  "rulesSortName": {
+    "message": "Ad A’dan Z’ye"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Yakın zamanda güncellenenler"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Son 30 günde güncellendi"
+  },
   "paginationPrev": {
     "message": "Önceki sayfa"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "Kaydedildi. Bu kuralda aynı desen birden fazla kez var; fazla kopyalar silinebilir."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Kaydedildi. Bu kuraldaki bir desen {0} içinde de var. Bilerek yapıldıysa sorun değil."
   },
   "rulesUiMethodFallback": {
     "message": "Yöntem"

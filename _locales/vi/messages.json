@@ -323,6 +323,21 @@
   "rulesFiltersLabel": {
     "message": "Lọc quy tắc"
   },
+  "rulesSortLabel": {
+    "message": "Sắp xếp quy tắc"
+  },
+  "rulesSortDefault": {
+    "message": "Mặc định"
+  },
+  "rulesSortName": {
+    "message": "Tên A đến Z"
+  },
+  "rulesRecentlyUpdated": {
+    "message": "Mới cập nhật"
+  },
+  "rulesRecentlyUpdatedTip": {
+    "message": "Đã cập nhật trong 30 ngày qua"
+  },
   "paginationPrev": {
     "message": "Trang trước"
   },
@@ -3404,6 +3419,9 @@
   },
   "rulesUiDuplicatePatterns": {
     "message": "Đã lưu. Quy tắc này có cùng một mẫu nhiều lần; có thể xóa các bản sao thừa."
+  },
+  "rulesUiPatternInOtherRules": {
+    "message": "Đã lưu. Một mẫu của quy tắc này cũng có trong {0}. Không sao nếu bạn cố ý."
   },
   "rulesUiMethodFallback": {
     "message": "Phương thức"
