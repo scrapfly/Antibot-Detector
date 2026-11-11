@@ -4967,7 +4967,7 @@
     "message": "{0} nieuw in deze periode"
   },
   "statsKpiProtectionsRulesFmt": {
-    "message": "van {0} regels"
+    "message": "Totaal aantal regels: {0}"
   },
   "statsTipPages": {
     "message": "Pagina's die in dit bereik in Geschiedenis zijn opgeslagen. Geschiedenis bewaart opgeslagen detecties, niet elk browserbezoek."
