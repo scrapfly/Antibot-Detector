@@ -5397,7 +5397,13 @@
     "message": "每月"
   },
   "settingsHistoryBackupDesc": {
-    "message": "按上方选择的导出格式，将历史记录的副本保存到“下载”文件夹中的 Scrapfly 文件夹。"
+    "message": "按上方选择的导出格式，将历史记录的副本保存到“下载”文件夹中的 Scrapfly 文件夹。只有 JSON 文件可以重新导入历史记录。"
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "保留的备份数量"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "每次备份后，超出此数量的旧备份会从“下载”文件夹中删除（分成多个文件保存的一次备份只算一份）。只会删除此扩展保存的备份文件。全部保留时不会删除任何内容。"
   },
   "settingsHistoryBackupNow": {
     "message": "立即备份"

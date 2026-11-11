@@ -191,6 +191,7 @@ test('validateSettings names the field each message is about, once, in the order
   assert.deepEqual(fields({ updates: { checkIntervalHours: 72 } }), ['#checkIntervalHours']);
   assert.deepEqual(fields({ history: { exportFormat: 'pdf' } }), ['#exportFormat']);
   assert.deepEqual(fields({ history: { historyBackup: 'hourly' } }), ['#historyBackup']);
+  assert.deepEqual(fields({ history: { historyBackupKeep: 5 } }), ['#historyBackupKeep']);
   assert.deepEqual(fields({ duplicatePrevention: { duplicateScope: 'site' } }), ['#duplicateScope']);
   assert.deepEqual(fields({ detection: { cacheScope: 'host' } }), ['#cacheScope']);
   // two problems: both fields, in the order of the messages; the same field twice is named once

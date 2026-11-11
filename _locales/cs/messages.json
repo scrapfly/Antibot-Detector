@@ -5397,7 +5397,13 @@
     "message": "Každý měsíc"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Uloží kopii historie do složky Stažené soubory (do složky Scrapfly) ve výše zvoleném formátu exportu."
+    "message": "Uloží kopii historie do složky Stažené soubory (do složky Scrapfly) ve výše zvoleném formátu exportu. Zpět do historie lze importovat pouze soubory JSON."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Kolik záloh ponechat"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Po každé záloze se starší zálohy nad tento počet odstraní ze složky Stažené soubory (záloha uložená ve více částech se počítá jako jedna). Odstraňují se jen soubory záloh uložené tímto rozšířením. Pokud ponecháte všechny, nic se nesmaže."
   },
   "settingsHistoryBackupNow": {
     "message": "Zálohovat nyní"

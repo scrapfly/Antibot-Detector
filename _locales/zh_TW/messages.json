@@ -5397,7 +5397,13 @@
     "message": "每月"
   },
   "settingsHistoryBackupDesc": {
-    "message": "將歷史記錄的副本，以上方選擇的匯出格式儲存到「下載」資料夾中的 Scrapfly 資料夾。"
+    "message": "將歷史記錄的副本，以上方選擇的匯出格式儲存到「下載」資料夾中的 Scrapfly 資料夾。只有 JSON 檔案可以重新匯入歷史記錄。"
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "保留的備份數量"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "每次備份後，超出此數量的舊備份會從「下載」資料夾中刪除（分成多個檔案儲存的一次備份只算一份）。只會刪除此擴充功能儲存的備份檔案。全部保留時不會刪除任何內容。"
   },
   "settingsHistoryBackupNow": {
     "message": "立即備份"

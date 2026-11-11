@@ -5397,7 +5397,13 @@
     "message": "Hằng tháng"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Lưu một bản sao Lịch sử vào thư mục Tải xuống của bạn (trong thư mục Scrapfly), theo định dạng xuất đã chọn ở trên."
+    "message": "Lưu một bản sao Lịch sử vào thư mục Tải xuống của bạn (trong thư mục Scrapfly), theo định dạng xuất đã chọn ở trên. Chỉ các tệp JSON mới có thể được nhập lại vào Lịch sử."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Số bản sao lưu cần giữ"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Sau mỗi lần sao lưu, các bản sao lưu cũ vượt quá số này sẽ bị xóa khỏi thư mục Tải xuống của bạn (một bản sao lưu được lưu thành nhiều phần chỉ tính là một). Chỉ các tệp sao lưu do tiện ích này lưu mới bị xóa. Nếu giữ lại tất cả, sẽ không có gì bị xóa."
   },
   "settingsHistoryBackupNow": {
     "message": "Sao lưu ngay"

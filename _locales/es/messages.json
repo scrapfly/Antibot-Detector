@@ -5397,7 +5397,13 @@
     "message": "Cada mes"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Guarda una copia del historial en tu carpeta de Descargas (dentro de una carpeta Scrapfly), con el formato de exportación elegido arriba."
+    "message": "Guarda una copia del historial en tu carpeta de Descargas (dentro de una carpeta Scrapfly), con el formato de exportación elegido arriba. Solo los archivos JSON se pueden volver a importar al historial."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Copias de seguridad que conservar"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Después de cada copia, las más antiguas por encima de este número se eliminan de tu carpeta de Descargas (una copia guardada en varias partes cuenta como una). Solo se eliminan los archivos de copia guardados por esta extensión. Si las conservas todas, no se elimina nada."
   },
   "settingsHistoryBackupNow": {
     "message": "Hacer copia ahora"

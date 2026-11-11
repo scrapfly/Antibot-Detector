@@ -55,6 +55,21 @@ test('a value a setting\'s list does not offer is refused when it is new, and to
   assert.equal(check({ updates: { checkIntervalHours: 72 } }, { updates: { checkIntervalHours: 72 } }).isValid, true);
 });
 
+test('Backups to keep: All and the four numbers are saved, any other number is refused when it is new and tolerated when it is what is saved', () => {
+  const SettingsUI = load();
+  const check = (value, saved) => SettingsUI.validateSettings.call({ settingsBaseline: { history: { historyBackupKeep: saved } } }, { history: { historyBackupKeep: value } });
+  for (const offered of [0, 3, 7, 14, 30]) assert.equal(check(offered).isValid, true, `${offered}`);
+  // 1 or 5 would delete files the person never chose to lose: they are not on the list, so a hand-edited file or an import cannot bring them in
+  for (const other of [1, 2, 5, 15, 31, -3, 7.5, NaN, '7']) {
+    const result = check(other);
+    assert.equal(result.isValid, false, String(other));
+    assert.deepEqual([...result.fields], ['#historyBackupKeep'], String(other));
+    assert.match(result.errors.join(' '), /history\.historyBackupKeep/);
+  }
+  assert.equal(check(5, 5).isValid, true, 'already what is saved: an unrelated Save goes through (the worker treats it as All)');
+  assert.equal(check(0, undefined).isValid, true, 'the first Save after an update, from settings that have none');
+});
+
 
 test('a blank number whose option is off keeps the saved value; with the option on it stays blank, so Save refuses it', () => {
   const SettingsUI = load();

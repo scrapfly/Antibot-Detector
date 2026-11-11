@@ -5397,7 +5397,13 @@
     "message": "Elke maand"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Slaat een kopie van de geschiedenis op in je map Downloads (in een map Scrapfly), in de hierboven gekozen exportindeling."
+    "message": "Slaat een kopie van de geschiedenis op in je map Downloads (in een map Scrapfly), in de hierboven gekozen exportindeling. Alleen JSON-bestanden kunnen weer in de geschiedenis worden geïmporteerd."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Back-ups om te bewaren"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Na elke back-up worden oudere back-ups boven dit aantal uit je map Downloads verwijderd (een back-up die in meerdere delen is opgeslagen, telt als één). Alleen back-upbestanden die door deze extensie zijn opgeslagen, worden verwijderd. Bewaar je ze allemaal, dan wordt er niets verwijderd."
   },
   "settingsHistoryBackupNow": {
     "message": "Nu back-up maken"

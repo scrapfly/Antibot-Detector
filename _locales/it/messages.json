@@ -5397,7 +5397,13 @@
     "message": "Ogni mese"
   },
   "settingsHistoryBackupDesc": {
-    "message": "Salva una copia della cronologia nella cartella Download (in una cartella Scrapfly), nel formato di esportazione scelto sopra."
+    "message": "Salva una copia della cronologia nella cartella Download (in una cartella Scrapfly), nel formato di esportazione scelto sopra. Solo i file JSON possono essere reimportati nella cronologia."
+  },
+  "settingsHistoryBackupKeep": {
+    "message": "Backup da conservare"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Dopo ogni backup, quelli più vecchi oltre questo numero vengono eliminati dalla cartella Download (un backup salvato in più parti conta come uno). Vengono eliminati solo i file di backup salvati da questa estensione. Se li conservi tutti, non viene eliminato nulla."
   },
   "settingsHistoryBackupNow": {
     "message": "Esegui backup ora"
