@@ -5,6 +5,15 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.7] - 2026-11-11
+
+### Fixed
+
+- Advanced → Captures: Copy on a capture shows one message, and no longer says the data was copied when the browser refused the copy.
+- Bulk scan: Copy as lines says the copy failed when the browser refuses it, instead of saying Copied.
+- Scrape with Scrapfly: an option set to 0, such as Wait after load, shows 0 when the window reopens, not an empty box.
+- Settings → Log collector: Clear no longer says Logs cleared, and Export no longer stays silent, when the extension reports an error.
+
 ## [3.1.6] - 2026-11-10
 
 ### Added
