@@ -5399,6 +5399,12 @@
   "settingsHistoryBackupDesc": {
     "message": "Zapisuje kopię historii w folderze Pobrane (w folderze Scrapfly) w wybranym powyżej formacie eksportu. Do historii można ponownie zaimportować tylko pliki JSON."
   },
+  "settingsHistoryBackupKeep": {
+    "message": "Kopie zapasowe do zachowania"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Po każdej kopii starsze kopie ponad tę liczbę są usuwane z folderu Pobrane (kopia zapisana w kilku częściach liczy się jako jedna). Usuwane są tylko pliki kopii zapisane przez to rozszerzenie. Jeśli zachowasz wszystkie, nic nie zostanie usunięte."
+  },
   "settingsHistoryBackupNow": {
     "message": "Utwórz kopię teraz"
   },

@@ -5399,6 +5399,12 @@
   "settingsHistoryBackupDesc": {
     "message": "履歴のコピーを、上で選択したエクスポート形式で「ダウンロード」フォルダ内の Scrapfly フォルダに保存します。履歴に再度インポートできるのは JSON ファイルのみです。"
   },
+  "settingsHistoryBackupKeep": {
+    "message": "保持するバックアップ数"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "バックアップのたびに、この数を超える古いバックアップが「ダウンロード」フォルダから削除されます（複数のファイルに分けて保存したバックアップは1件と数えます）。削除されるのは、この拡張機能が保存したバックアップファイルだけです。すべて保持すれば、何も削除されません。"
+  },
   "settingsHistoryBackupNow": {
     "message": "今すぐバックアップ"
   },

@@ -5399,6 +5399,12 @@
   "settingsHistoryBackupDesc": {
     "message": "Speichert eine Kopie des Verlaufs in deinem Downloads-Ordner (in einem Ordner „Scrapfly“) im oben gewählten Exportformat. Nur JSON-Dateien lassen sich wieder in den Verlauf importieren."
   },
+  "settingsHistoryBackupKeep": {
+    "message": "Sicherungen behalten"
+  },
+  "settingsHistoryBackupKeepDesc": {
+    "message": "Nach jeder Sicherung werden ältere Sicherungen über dieser Anzahl aus deinem Downloads-Ordner gelöscht (eine in mehreren Teilen gespeicherte Sicherung zählt als eine). Entfernt werden nur Sicherungsdateien, die diese Erweiterung gespeichert hat. Wenn du alle behältst, wird nichts gelöscht."
+  },
   "settingsHistoryBackupNow": {
     "message": "Jetzt sichern"
   },

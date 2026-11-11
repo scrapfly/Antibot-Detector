@@ -1332,6 +1332,17 @@
               </div>
               <p class="setting-row-hint" data-i18n="settingsHistoryBackupDesc">Saves a copy of History to your Downloads folder (in a Scrapfly folder), in the export format chosen above. Only JSON files can be imported back into History.</p>
               <div class="setting-row setting-row--inline">
+                <label class="setting-row-label" for="historyBackupKeep" data-i18n="settingsHistoryBackupKeep">Backups to keep</label>
+                <select id="historyBackupKeep" class="select-field ui-select" aria-describedby="historyBackupKeepHint">
+                  <option value="0" data-i18n="statsRangeAll">All</option>
+                  <option value="3">3</option>
+                  <option value="7">7</option>
+                  <option value="14">14</option>
+                  <option value="30">30</option>
+                </select>
+              </div>
+              <p class="setting-row-hint" id="historyBackupKeepHint" data-i18n="settingsHistoryBackupKeepDesc">After each backup, older backups beyond this number are deleted from your Downloads folder (a backup saved in several parts counts as one). Only backup files saved by this extension are removed. Keep all and nothing is deleted.</p>
+              <div class="setting-row setting-row--inline">
                 <span class="setting-row-hint history-backup-last" id="historyBackupLast"></span>
                 <button type="button" id="historyBackupNowBtn" class="action-btn action-btn-outline" data-i18n="settingsHistoryBackupNow">Back up now</button>
               </div>
