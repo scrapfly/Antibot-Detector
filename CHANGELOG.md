@@ -17,6 +17,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection: Copy no longer puts an empty summary on the clipboard when the search or filters match nothing; it says so instead.
 - Statistics: "60 minutes ago" and "24 hours ago" now read "1 hour ago" and "yesterday"; the rules count no longer reads "of 1 rules".
 - Changing the cache scope no longer shows a page whose saved scan found nothing as unscanned; the toolbar keeps its clean state.
+- Turning the extension back on shows "No protections found" on the toolbar icon of pages whose saved scan found nothing.
 - Analyze Scripts no longer ends early, or saves an empty list, when the page was still finishing loading as you started it.
 - Fingerprint: a page that reads the CPU count and device memory now shows one card (Hardware) instead of two (Hardware and Navigator).
 
