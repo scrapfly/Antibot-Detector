@@ -82,3 +82,66 @@ test('the log collector answers extension pages only: a content script cannot sw
   }
   assert.equal(h.state.writes, 0, 'nothing was saved');
 });
+
+// ---- Settings → Log collector: Clear and Export say what the worker answered
+
+const en = JSON.parse(read('_locales/en/messages.json'));
+// Not a success: the worker's own error, "unknown" from a worker that predates the message (an unpacked extension edited without a reload), no answer, a closed port
+const NOT_DONE = {
+  'an error answer': () => ({ status: 'error', message: 'LogCollector not available' }),
+  'an unknown answer': () => ({ status: 'unknown' }),
+  'no answer': () => undefined,
+  'a closed message port': () => { throw new Error('The message port closed before a response was received.'); }
+};
+
+/** sections/settings/settings-ui-logs.js wired to fake buttons; the worker answers each message with what `answer` returns. */
+function logButtons(answer) {
+  const nodes = {}, toasts = [], sent = [];
+  const node = (selector) => (nodes[selector] = nodes[selector] || { textContent: '', listeners: {}, addEventListener(type, fn) { this.listeners[type] = fn; } });
+  const known = ['#exportLogsJsonBtn', '#exportLogsTextBtn', '#clearLogsBtn', '#logCountValue'];
+  const ctx = vm.createContext({
+    WorkerMessages: require('../modules/core/worker-messages.js'),
+    chrome: { runtime: { sendMessage: async (message) => { sent.push(message.type); return answer(message); } } },
+    NotificationHelper: { confirm: async () => true, success: message => toasts.push(['success', message]), error: message => toasts.push(['error', message]) },
+    I18n: { get: key => en[key] && en[key].message },
+    document: { querySelector: selector => (known.includes(selector) ? node(selector) : null) }
+  });
+  vm.runInContext('const SettingsUI = {};', ctx); // settings-ui.js defines it; the log methods only add to it
+  vm.runInContext(read('sections/settings/settings-ui-logs.js'), ctx);
+  vm.runInContext('SettingsUI._setupLogListeners()', ctx);
+  node('#logCountValue').textContent = '42';
+  return {
+    sent, toasts, count: () => node('#logCountValue').textContent,
+    async press(selector) { await node(selector).listeners.click(); await new Promise(resolve => setImmediate(resolve)); }
+  };
+}
+
+test('Clear logs empties the counter and says so only when the worker answered success', async () => {
+  const done = logButtons(() => ({ status: 'success' }));
+  await done.press('#clearLogsBtn');
+  assert.deepEqual(done.sent, [WorkerMessages.LOG_COLLECTOR_CLEAR]);
+  assert.equal(done.count(), '0');
+  assert.deepEqual(done.toasts, [['success', en.logsCleared.message]]);
+
+  for (const [name, answer] of Object.entries(NOT_DONE)) {
+    const notDone = logButtons(answer);
+    await notDone.press('#clearLogsBtn');
+    assert.equal(notDone.count(), '42', `${name}: the counter stays what it was`);
+    assert.deepEqual(notDone.toasts, [['error', en.failedClearLogs.message]], name);
+  }
+});
+
+test('Export logs says it failed unless the worker answered success, which needs no toast: the download is the answer', async () => {
+  for (const [button, type] of [['#exportLogsJsonBtn', WorkerMessages.LOG_COLLECTOR_EXPORT_JSON], ['#exportLogsTextBtn', WorkerMessages.LOG_COLLECTOR_EXPORT_TEXT]]) {
+    const done = logButtons(() => ({ status: 'success', filename: 'logs' }));
+    await done.press(button);
+    assert.deepEqual(done.sent, [type]);
+    assert.deepEqual(done.toasts, [], button);
+
+    for (const [name, answer] of Object.entries(NOT_DONE)) {
+      const notDone = logButtons(answer);
+      await notDone.press(button);
+      assert.deepEqual(notDone.toasts, [['error', en.failedExportLogs.message]], `${button}: ${name}`);
+    }
+  }
+});
