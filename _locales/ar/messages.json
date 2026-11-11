@@ -245,6 +245,12 @@
     "message": ": كاشف مكافحة الروبوتات",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "ملاحظات الإصدار {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "الجديد في الإصدار {0}"
+  },
   "extensionDescription": {
     "message": "اكتشاف CAPTCHA وأنظمة مكافحة الروبوتات وتقنيات البصمة على المواقع"
   },
@@ -456,7 +462,7 @@
     "message": "الإشعارات"
   },
   "settingsCardNotificationsDesc": {
-    "message": "إظهار التنبيهات عند اكتشاف أنظمة الأمان"
+    "message": "إظهار إشعار عند تغيّر وسائل الحماية في صفحة، أو عندما يكاد السجل يمتلئ، أو عند فشل نسخه الاحتياطي."
   },
   "settingsCardDebug": {
     "message": "وضع التصحيح"

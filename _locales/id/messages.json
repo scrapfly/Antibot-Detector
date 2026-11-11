@@ -245,6 +245,12 @@
     "message": ": detektor anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Catatan rilis versi {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Yang baru di versi {0}"
+  },
   "extensionDescription": {
     "message": "Mendeteksi CAPTCHA, sistem anti-bot, dan teknologi fingerprinting di situs web"
   },
@@ -456,7 +462,7 @@
     "message": "Notifikasi"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Tampilkan peringatan saat sistem keamanan terdeteksi"
+    "message": "Tampilkan notifikasi saat proteksi suatu halaman berubah, riwayat hampir penuh, atau pencadangannya gagal."
   },
   "settingsCardDebug": {
     "message": "Mode debug"

@@ -245,6 +245,12 @@
     "message": ": trình phát hiện anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Ghi chú phát hành cho phiên bản {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Có gì mới trong phiên bản {0}"
+  },
   "extensionDescription": {
     "message": "Phát hiện CAPTCHA, hệ thống anti-bot và công nghệ thu thập dấu vân tay trên trang web"
   },
@@ -456,7 +462,7 @@
     "message": "Thông báo"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Hiển thị cảnh báo khi phát hiện hệ thống bảo mật"
+    "message": "Hiển thị thông báo khi biện pháp bảo vệ của một trang thay đổi, lịch sử gần đầy hoặc không thể sao lưu lịch sử."
   },
   "settingsCardDebug": {
     "message": "Chế độ gỡ lỗi"

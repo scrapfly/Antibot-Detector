@@ -245,6 +245,12 @@
     "message": ": ตัวตรวจจับ anti-bot",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "บันทึกประจำรุ่นสำหรับเวอร์ชัน {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "มีอะไรใหม่ในเวอร์ชัน {0}"
+  },
   "extensionDescription": {
     "message": "ตรวจจับ CAPTCHA ระบบ anti-bot และเทคโนโลยี fingerprinting บนเว็บไซต์"
   },
@@ -456,7 +462,7 @@
     "message": "การแจ้งเตือน"
   },
   "settingsCardNotificationsDesc": {
-    "message": "แสดงการแจ้งเตือนเมื่อตรวจพบระบบรักษาความปลอดภัย"
+    "message": "แสดงการแจ้งเตือนเมื่อระบบป้องกันของหน้าเปลี่ยนแปลง ประวัติใกล้เต็ม หรือสำรองข้อมูลประวัติไม่สำเร็จ"
   },
   "settingsCardDebug": {
     "message": "โหมดดีบัก"

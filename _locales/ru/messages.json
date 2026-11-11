@@ -245,6 +245,12 @@
     "message": ": детектор анти-бот",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Примечания к версии {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Что нового в версии {0}"
+  },
   "extensionDescription": {
     "message": "Обнаружение CAPTCHA, систем анти-бот и технологий снятия отпечатков на сайтах"
   },
@@ -456,7 +462,7 @@
     "message": "Уведомления"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Показывать оповещения при обнаружении систем безопасности"
+    "message": "Показывать уведомление, когда меняется защита страницы, история почти заполнена или не удалось создать резервную копию истории."
   },
   "settingsCardDebug": {
     "message": "Режим отладки"

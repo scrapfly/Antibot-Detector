@@ -245,6 +245,12 @@
     "message": ": Anti-Bot-Detektor",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "Versionshinweise zu Version {0}"
+  },
+  "headerVersionNewFmt": {
+    "message": "Neu in Version {0}"
+  },
   "extensionDescription": {
     "message": "Erkennt CAPTCHAs, Anti-Bot-Systeme und Fingerprinting-Technologien auf Websites"
   },
@@ -456,7 +462,7 @@
     "message": "Benachrichtigungen"
   },
   "settingsCardNotificationsDesc": {
-    "message": "Warnungen anzeigen, wenn Sicherheitssysteme erkannt werden"
+    "message": "Eine Benachrichtigung anzeigen, wenn sich die Schutzmaßnahmen einer Seite ändern, der Verlauf fast voll ist oder dessen Sicherung fehlschlägt."
   },
   "settingsCardDebug": {
     "message": "Debug-Modus"

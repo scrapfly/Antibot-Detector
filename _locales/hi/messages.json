@@ -245,6 +245,12 @@
     "message": ": एंटी-बॉट डिटेक्टर",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "संस्करण {0} के रिलीज़ नोट्स"
+  },
+  "headerVersionNewFmt": {
+    "message": "संस्करण {0} में नया क्या है"
+  },
   "extensionDescription": {
     "message": "वेबसाइटों पर CAPTCHA, एंटी-बॉट सिस्टम और फ़िंगरप्रिंटिंग तकनीकों का पता लगाएं"
   },
@@ -456,7 +462,7 @@
     "message": "सूचनाएं"
   },
   "settingsCardNotificationsDesc": {
-    "message": "जब सुरक्षा प्रणालियों का पता चले तो अलर्ट दिखाएं"
+    "message": "जब किसी पेज के सुरक्षा उपाय बदलें, इतिहास लगभग भर जाए या उसका बैकअप विफल हो, तब सूचना दिखाएं।"
   },
   "settingsCardDebug": {
     "message": "डीबग मोड"

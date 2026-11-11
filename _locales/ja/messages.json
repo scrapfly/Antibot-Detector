@@ -245,6 +245,12 @@
     "message": ":アンチボット検出器",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "バージョン {0} のリリースノート"
+  },
+  "headerVersionNewFmt": {
+    "message": "バージョン {0} の新機能"
+  },
   "extensionDescription": {
     "message": "ウェブサイト上のCAPTCHA、アンチボットシステム、フィンガープリント技術を検出"
   },
@@ -456,7 +462,7 @@
     "message": "通知"
   },
   "settingsCardNotificationsDesc": {
-    "message": "セキュリティシステムが検出されたときに通知を表示"
+    "message": "ページの保護機能が変化したとき、履歴がほぼいっぱいになったとき、履歴のバックアップに失敗したときに通知します。"
   },
   "settingsCardDebug": {
     "message": "デバッグモード"

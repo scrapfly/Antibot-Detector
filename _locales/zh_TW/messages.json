@@ -245,6 +245,12 @@
     "message": "：反機器人偵測器",
     "description": "Popup header text drawn after the ScrapFly wordmark: headerBrandName without the leading brand word (keep the separator, e.g. \": \")"
   },
+  "headerVersionLinkFmt": {
+    "message": "版本 {0} 的發行說明"
+  },
+  "headerVersionNewFmt": {
+    "message": "版本 {0} 的更新內容"
+  },
   "extensionDescription": {
     "message": "偵測網站上的 CAPTCHA、反機器人系統和指紋辨識技術"
   },
@@ -456,7 +462,7 @@
     "message": "通知"
   },
   "settingsCardNotificationsDesc": {
-    "message": "偵測到安全系統時顯示警示"
+    "message": "當頁面的防護變更、歷史記錄即將額滿或歷史記錄備份失敗時，顯示通知。"
   },
   "settingsCardDebug": {
     "message": "偵錯模式"
