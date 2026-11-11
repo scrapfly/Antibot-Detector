@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Gespeichert. Diese Regel enthält dasselbe Muster mehrfach; die überzähligen Kopien lassen sich löschen."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Gespeichert. Ein Muster dieser Regel steckt auch in {0}. Das ist in Ordnung, wenn es Absicht ist."
+  },
   "rulesUiMethodFallback": {
     "message": "Methode"
   },

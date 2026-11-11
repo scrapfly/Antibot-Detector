@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Salvata. Questa regola ha lo stesso schema più volte; le copie in più si possono eliminare."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Salvata. Uno schema di questa regola è presente anche in {0}. Va bene se è voluto."
+  },
   "rulesUiMethodFallback": {
     "message": "Metodo"
   },

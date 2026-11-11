@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Sparad. Den här regeln har samma mönster flera gånger; de extra kopiorna kan tas bort."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Sparad. Ett mönster i den här regeln finns även i {0}. Det är okej om det är avsiktligt."
+  },
   "rulesUiMethodFallback": {
     "message": "Metod"
   },

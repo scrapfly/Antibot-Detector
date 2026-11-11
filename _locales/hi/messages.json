@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "सहेजा गया। इस नियम में एक ही पैटर्न एक से अधिक बार है; अतिरिक्त प्रतियाँ हटाई जा सकती हैं।"
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "सहेजा गया। इस नियम का एक पैटर्न {0} में भी है। अगर यह जानबूझकर है तो कोई समस्या नहीं।"
+  },
   "rulesUiMethodFallback": {
     "message": "विधि"
   },

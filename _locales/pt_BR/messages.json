@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Salva. Esta regra tem o mesmo padrão mais de uma vez; as cópias extras podem ser excluídas."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Salva. Um padrão desta regra também está em {0}. Sem problema se for de propósito."
+  },
   "rulesUiMethodFallback": {
     "message": "Método"
   },

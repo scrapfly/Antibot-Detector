@@ -3627,6 +3627,10 @@
     "message": "Saved. This rule has the same pattern more than once; the extra copies can be deleted.",
     "description": "Rules editor: shown after a rule is saved when it holds the same pattern more than once"
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Saved. A pattern of this rule is also in {0}. That is fine if it is on purpose.",
+    "description": "Rules editor: shown after a rule is saved when one of its patterns is also in other rules; {0} is their names (up to two, then \"N more\")"
+  },
   "rulesUiMethodFallback": {
     "message": "Method",
     "description": "Generic name of a detection method when its type is unknown"

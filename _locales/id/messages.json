@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Tersimpan. Aturan ini memiliki pola yang sama lebih dari sekali; salinan tambahannya bisa dihapus."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Tersimpan. Satu pola aturan ini juga ada di {0}. Tidak masalah jika memang disengaja."
+  },
   "rulesUiMethodFallback": {
     "message": "Metode"
   },

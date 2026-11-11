@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Opgeslagen. Deze regel bevat hetzelfde patroon meerdere keren; de extra kopieën kunnen worden verwijderd."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Opgeslagen. Een patroon van deze regel staat ook in {0}. Dat is prima als het bewust is."
+  },
   "rulesUiMethodFallback": {
     "message": "Methode"
   },

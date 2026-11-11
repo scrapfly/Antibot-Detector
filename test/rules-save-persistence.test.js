@@ -15,6 +15,7 @@ const fixture = () => ({ id: 'detect-custom', name: 'Custom', category: 'antibot
 
 function editor({ isNew = false } = {}) {
   const errors = [];
+  const warnings = [];
   const messages = [];
   const saveButton = { disabled: false };
   const modal = { style: { display: 'flex' } };
@@ -26,8 +27,11 @@ function editor({ isNew = false } = {}) {
   const ctx = { WorkerMessages: require('../modules/core/worker-messages.js'), Rules: function() {}, DetectorManager, DetectionUtils, Logger, JSON, Date, console,
     document: { querySelector: key => fields[key] || null, body: { style: { overflow: 'hidden' } } },
     chrome: { runtime: { sendMessage: (message, cb) => { messages.push(message); cb?.(); }, getURL: value => value } },
-    NotificationHelper: { error: value => errors.push(value) } };
+    FormatUtils: require('../utils/format-utils.js'),
+    NotificationHelper: { error: value => errors.push(value), warning: value => warnings.push(value) } };
   vm.createContext(ctx);
+  // the editor reads what is shared between rules with this module (the popup loads it before the Rules scripts)
+  vm.runInContext(fs.readFileSync(path.join(root, 'modules/core/rule-duplicates.js'), 'utf8'), ctx);
   vm.runInContext(fs.readFileSync(path.join(root, 'sections/rules/rules-editor.js'), 'utf8'), ctx);
   vm.runInContext(fs.readFileSync(path.join(root, 'sections/rules/rules-editor-modal.js'), 'utf8'), ctx);
   const rules = new ctx.Rules();
@@ -45,7 +49,7 @@ function editor({ isNew = false } = {}) {
   rules.resolveDetectorNameForSave = value => value;
   let renders = 0;
   rules.displayRules = () => { renders++; };
-  return { rules, dm, errors, messages, saveButton, fields, modal, get renders() { return renders; } };
+  return { rules, dm, ctx, errors, warnings, messages, saveButton, fields, modal, get renders() { return renders; } };
 }
 
 test('rule edits remain staged until persistence succeeds; duplicate clicks and closing cannot interrupt saving', async () => {
@@ -252,4 +256,107 @@ test('an icon-only edit to an official rule counts as an edit, though the picker
   assert.equal(saved.icon, 'new.png');
   assert.equal(saved.userModified, true, 'the icon alone is a change');
   assert.equal(saved.officialSnapshot.icon, 'old.png');
+});
+
+// ---- 3.1.7: a pattern another rule already holds ----
+
+/** A rule as the tab lists it (rules.allDetectors) */
+const listed = (id, name, detection, category = 'antibot') => ({ category, detectorName: id, detector: { id, name, displayName: name, detection } });
+const SHARED = { id: 'session', name: 'shared-cookie', confidence: 50 };
+const others = () => [
+  listed('detect-custom', 'Custom', fixture().detection),                                                    // the rule being edited, as it was before
+  listed('other-rule', 'Other rule', { cookie: [{ id: 'q', name: 'shared-cookie', confidence: 10 }] }, 'captcha'), // holds the pattern, with its own id and confidence
+  listed('third', 'Third', { cookie: [{ name: 'unrelated' }] })
+];
+const share = () => { global.StorageManager = { saveToStorage: async () => true }; const state = editor(); state.rules._collectDetectionFromForm = () => ({ cookie: [{ ...SHARED }] }); state.rules.allDetectors = others(); return state; };
+
+test('saving a rule with a pattern another rule holds still saves it, then names that rule in a warning', async () => {
+  const state = share();
+  assert.equal(await state.rules.saveRule(), true, 'the save is not in the warning\'s way');
+  assert.equal(state.dm.detectors.antibot['detect-custom'].detection.cookie[0].name, 'shared-cookie', 'saved as written');
+  assert.equal(state.modal.style.display, 'none');
+  assert.equal(state.renders, 1);
+  assert.equal(state.errors.length, 0, 'a warning, not an error');
+  assert.equal(state.warnings.length, 1);
+  assert.equal(state.warnings[0], 'Saved. A pattern of this rule is also in Other rule. That is fine if it is on purpose.');
+});
+
+test('a rule is not "another rule" to itself: its own earlier version in the list says nothing', async () => {
+  global.StorageManager = { saveToStorage: async () => true };
+  const state = editor();
+  state.rules._collectDetectionFromForm = () => ({ cookie: [{ ...SHARED }] });
+  state.rules.allDetectors = [listed('detect-custom', 'Custom', { cookie: [{ id: 'old', name: 'shared-cookie', confidence: 1 }] }), listed('third', 'Third', { cookie: [{ name: 'unrelated' }] })];
+  assert.equal(await state.rules.saveRule(), true);
+  assert.deepEqual(state.warnings, []);
+});
+
+test('a rule that shares nothing says nothing, and so does a tab that has not listed the rules yet', async () => {
+  global.StorageManager = { saveToStorage: async () => true };
+  const state = editor();
+  state.rules.allDetectors = others().filter(entry => entry.detectorName !== 'other-rule');
+  assert.equal(await state.rules.saveRule(), true);
+  assert.deepEqual(state.warnings, []);
+  const bare = editor();
+  bare.rules._collectDetectionFromForm = () => ({ cookie: [{ ...SHARED }] });
+  assert.equal(bare.rules.allDetectors, undefined);
+  assert.equal(await bare.rules.saveRule(), true);
+  assert.deepEqual(bare.warnings, []);
+});
+
+test('a save that fails warns of nothing: the rule was not saved', async () => {
+  const state = share();
+  global.StorageManager = { saveToStorage: async () => false };
+  assert.equal(await state.rules.saveRule(), false);
+  assert.deepEqual(state.warnings, []);
+  assert.equal(state.errors.length, 1);
+  global.StorageManager = { saveToStorage: async () => true };
+  assert.equal(await state.rules.saveRule(), true, 'the retry saves, and then says it');
+  assert.equal(state.warnings.length, 1);
+});
+
+test('the list is read as it was when the save began: the redraw after it does not change what the warning says', async () => {
+  const state = share();
+  // the real displayRules rebuilds the list from storage straight away, with the saved rule and without the stale copy
+  state.rules.displayRules = () => { state.rules.allDetectors = [listed('detect-custom', 'Custom', { cookie: [{ ...SHARED }] })]; };
+  assert.equal(await state.rules.saveRule(), true);
+  assert.equal(state.warnings.length, 1);
+  assert.match(state.warnings[0], /also in Other rule\./);
+});
+
+test('more than two other rules: two are named and the rest counted', async () => {
+  const state = share();
+  state.rules.allDetectors = [...others(), ...['A', 'B', 'C'].map(letter => listed(`more-${letter}`, `More ${letter}`, { cookie: [{ name: 'shared-cookie' }] }))];
+  assert.equal(await state.rules.saveRule(), true);
+  assert.equal(state.warnings.length, 1);
+  assert.match(state.warnings[0], /also in Other rule, More A, 2 more\./, 'the rule that shares the most first, then the list order');
+  assert.ok(!/More B|More C/.test(state.warnings[0]));
+});
+
+test('a pattern repeated inside the rule and held by another rule gives both warnings, each once', async () => {
+  const state = share();
+  state.rules._collectDetectionFromForm = () => ({ cookie: [{ ...SHARED }, { ...SHARED, id: 'again', confidence: 20 }] });
+  assert.equal(await state.rules.saveRule(), true);
+  assert.equal(state.warnings.length, 2);
+  assert.match(state.warnings[0], /same pattern more than once/, 'the repeat inside the rule, as in 3.1.6');
+  assert.match(state.warnings[1], /also in Other rule\./);
+});
+
+test('a new rule made by copying another one is told so too', async () => {
+  global.StorageManager = { saveToStorage: async () => true };
+  const state = editor({ isNew: true });
+  state.fields['#detectorNameInput'].value = 'Copy of other';
+  state.rules.currentEditDetector.detectorName = 'copy-of-other';
+  state.rules._collectDetectionFromForm = () => ({ cookie: [{ ...SHARED }] });
+  state.rules.allDetectors = others();
+  assert.equal(await state.rules.saveRule(), true);
+  assert.equal(state.warnings.length, 1);
+  assert.match(state.warnings[0], /also in Other rule\./);
+});
+
+test('a page that cannot show a warning still saves the rule', async () => {
+  const state = share();
+  delete state.ctx.NotificationHelper.warning;
+  assert.equal(await state.rules.saveRule(), true);
+  assert.equal(state.dm.detectors.antibot['detect-custom'].detection.cookie[0].name, 'shared-cookie');
+  assert.equal(state.errors.length, 0);
 });

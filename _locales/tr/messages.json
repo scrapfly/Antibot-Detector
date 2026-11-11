@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Kaydedildi. Bu kuralda aynı desen birden fazla kez var; fazla kopyalar silinebilir."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Kaydedildi. Bu kuraldaki bir desen {0} içinde de var. Bilerek yapıldıysa sorun değil."
+  },
   "rulesUiMethodFallback": {
     "message": "Yöntem"
   },

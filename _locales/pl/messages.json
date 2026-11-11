@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Zapisano. Ta reguła zawiera ten sam wzorzec więcej niż raz; nadmiarowe kopie można usunąć."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Zapisano. Wzorzec z tej reguły występuje także w: {0}. To w porządku, jeśli jest zamierzone."
+  },
   "rulesUiMethodFallback": {
     "message": "Metoda"
   },

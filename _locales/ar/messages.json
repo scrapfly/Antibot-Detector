@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "تم الحفظ. تحتوي هذه القاعدة على النمط نفسه أكثر من مرة؛ يمكن حذف النسخ الزائدة."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "تم الحفظ. أحد أنماط هذه القاعدة موجود أيضاً في {0}. لا مشكلة إن كان ذلك مقصوداً."
+  },
   "rulesUiMethodFallback": {
     "message": "الطريقة"
   },

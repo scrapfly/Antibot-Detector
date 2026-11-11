@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "บันทึกแล้ว กฎนี้มีรูปแบบเดียวกันมากกว่าหนึ่งครั้ง สามารถลบสำเนาส่วนเกินได้"
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "บันทึกแล้ว รูปแบบหนึ่งของกฎนี้มีอยู่ใน {0} ด้วย ไม่เป็นไรหากตั้งใจ"
+  },
   "rulesUiMethodFallback": {
     "message": "วิธีการ"
   },

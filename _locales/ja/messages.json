@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "保存しました。このルールには同じパターンが複数あります。余分なコピーは削除できます。"
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "保存しました。このルールのパターンが {0} にもあります。意図したものなら問題ありません。"
+  },
   "rulesUiMethodFallback": {
     "message": "方法"
   },

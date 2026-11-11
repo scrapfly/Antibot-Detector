@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Guardada. Esta regla tiene el mismo patrón más de una vez; las copias sobrantes se pueden eliminar."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Guardada. Un patrón de esta regla también está en {0}. No pasa nada si es a propósito."
+  },
   "rulesUiMethodFallback": {
     "message": "Método"
   },

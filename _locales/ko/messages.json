@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "저장했습니다. 이 규칙에 같은 패턴이 여러 번 있습니다. 중복된 항목은 삭제할 수 있습니다."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "저장했습니다. 이 규칙의 패턴이 {0}에도 있습니다. 의도한 것이라면 괜찮습니다."
+  },
   "rulesUiMethodFallback": {
     "message": "방법"
   },

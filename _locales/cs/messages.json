@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Uloženo. Toto pravidlo obsahuje stejný vzor vícekrát; přebytečné kopie lze smazat."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Uloženo. Stejný vzor mají i další pravidla: {0}. V pořádku, pokud je to záměr."
+  },
   "rulesUiMethodFallback": {
     "message": "Metoda"
   },

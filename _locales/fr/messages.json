@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "Enregistrée. Cette règle contient plusieurs fois le même motif ; les copies en trop peuvent être supprimées."
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "Enregistrée. Un motif de cette règle figure aussi dans {0}. Aucun souci si c’est voulu."
+  },
   "rulesUiMethodFallback": {
     "message": "Méthode"
   },

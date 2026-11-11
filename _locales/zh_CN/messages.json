@@ -3408,6 +3408,9 @@
   "rulesUiDuplicatePatterns": {
     "message": "已保存。此规则中同一模式出现了多次；可以删除多余的副本。"
   },
+  "rulesUiPatternInOtherRules": {
+    "message": "已保存。此规则的一个模式也出现在 {0} 中。如果是有意为之，则无需处理。"
+  },
   "rulesUiMethodFallback": {
     "message": "方法"
   },

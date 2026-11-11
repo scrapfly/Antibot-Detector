@@ -1084,19 +1084,21 @@ Rules.prototype.updateDetectorBadgeColor = function(detectorName, color) {
 
 /** How many patterns of a rule's detection repeat another of the same kind (same text, options and scope; the id and confidence do not count). */
 Rules.countDuplicatePatterns = function(detection) {
-  let duplicates = 0;
-  for (const rules of Object.values(detection || {})) {
-    if (!Array.isArray(rules)) continue;
-    const seen = new Set();
-    for (const rule of rules) {
-      if (!rule || typeof rule !== 'object') continue;
-      const { id, confidence, standalone, ...rest } = rule;
-      const key = JSON.stringify(Object.keys(rest).sort().map(name => [name, rest[name]]));
-      if (seen.has(key)) duplicates++;
-      else seen.add(key);
-    }
-  }
-  return duplicates;
+  return RuleDuplicates.countWithin(detection);
+};
+
+/**
+ * After a save: say which other rules hold a pattern of the saved rule (up to two named, the rest counted). Only a warning: a host two
+ * rules share on purpose is not a mistake, so it never stands in the save's way.
+ * @param {Array<{name: string}>} found - from RuleDuplicates.findInOthers
+ */
+Rules.prototype.warnSharedPatterns = function(found) {
+  if (!Array.isArray(found) || found.length === 0) return;
+  if (typeof NotificationHelper === 'undefined' || typeof NotificationHelper.warning !== 'function') return;
+  const { names, more } = RuleDuplicates.summarize(found);
+  const list = more > 0 ? [...names, FormatUtils.t('restoreOfficialMoreFmt', `${more} more`, more)] : names;
+  NotificationHelper.warning(FormatUtils.t('rulesUiPatternInOtherRules',
+    'Saved. A pattern of this rule is also in {0}. That is fine if it is on purpose.', FormatUtils.formatList(list)));
 };
 
 Rules.prototype.saveRule = async function() {
@@ -1272,6 +1274,10 @@ Rules.prototype.saveRule = async function() {
       Logger.debug('UI', 'No changes detected, version and timestamp unchanged');
     }
 
+    // Rules that hold a pattern of this one, read now (the list drawn after the save already has the new version) and said after the save
+    const sharedWith = RuleDuplicates.findInOthers(draft.detector.detection, this.allDetectors,
+      { category: edit.originalCategory || edit.category, detectorName: edit.detectorName });
+
     const saveButton = document.querySelector('#saveRuleEdit');
     this.savingRule = true;
     if (saveButton) saveButton.disabled = true;
@@ -1326,5 +1332,6 @@ Rules.prototype.saveRule = async function() {
       NotificationHelper.warning((typeof I18n !== 'undefined' && I18n.get('rulesUiDuplicatePatterns'))
         || 'Saved. This rule has the same pattern more than once; the extra copies can be deleted.');
     }
+    this.warnSharedPatterns(sharedWith);
     return true;
   };
