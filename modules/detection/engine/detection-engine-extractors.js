@@ -93,7 +93,9 @@ function demExtractDOM() {
     let canvasCount = 0;
 
     // Use NodeFilter to skip irrelevant elements (20-30% faster)
-    const relevantTags = new Set(['iframe', 'form', 'div', 'meta', 'script', 'noscript', 'canvas']);
+    // A div is not among them: a page can have tens of thousands, and the prefilter below keeps one only when a configured
+    // rule could match it (or it carries a widget attribute)
+    const relevantTags = new Set(['iframe', 'form', 'meta', 'script', 'noscript', 'canvas']);
     // A rule that is off (its own `enabled: false`) records nothing: matching skips it, so its nodes would only be carried along
     const configuredSelectors = Object.values(this.detectors || {}).flatMap(category =>
         Object.values(category).filter(detector => detector.enabled !== false).flatMap(detector =>
@@ -104,7 +106,9 @@ function demExtractDOM() {
         group.tokens.map(token => token.attribute)));
     // Capture selector metadata, never input values or generated response tokens.
     extraAttributes.delete('value');
-    const attributesFor = element => this.getElementAttributes(element, extraAttributes);
+    // The names to copy, worked out once for the walk rather than once per element
+    const attributeNames = demAttributeNames(extraAttributes);
+    const attributesFor = element => this.getElementAttributes(element, extraAttributes, attributeNames);
 
     // From the document element, not the body: the <head> holds scripts that DOM rules name (the Queue-it connector tag, CHEQ's
     // ClickTrue and JSONP tags, the Anubis challenge module, the Ruishu marker), and a walk that starts at the body never sees them
@@ -194,22 +198,6 @@ function demExtractDOM() {
                 break;
             }
 
-            case 'div': {
-                const id = element.getAttribute('id') || '';
-                const className = element.getAttribute('class') || '';
-                // Keep its attributes too: [data-sitekey] / [data-callback] usually sit on a div
-                const attributes = attributesFor(element);
-                if (id || className || Object.keys(attributes).length > 0) {
-                    domData.push({
-                        selector: 'div',
-                        id: id,
-                        class: className,
-                        attributes
-                    });
-                }
-                break;
-            }
-
             case 'meta': {
                 const name = element.getAttribute('name') || element.getAttribute('property') || '';
                 const content = element.getAttribute('content') || '';
@@ -274,15 +262,18 @@ function demExtractDOM() {
 }
 
 
-function demGetElementAttributes(element, extraAttributes = []) {
+function demAttributeNames(extraAttributes = []) {
+    const names = new Set(['id', 'class', 'src', 'href', 'action', 'type', 'name',
+        'data-sitekey', 'data-callback', ...extraAttributes]);
+    names.delete('value');
+    return names;
+}
+
+function demGetElementAttributes(element, extraAttributes = [], names = demAttributeNames(extraAttributes)) {
     if (!element) return {};
 
     const attributes = {};
-    const relevantAttrs = new Set(['id', 'class', 'src', 'href', 'action', 'type', 'name',
-        'data-sitekey', 'data-callback', ...extraAttributes]);
-    relevantAttrs.delete('value');
-
-    relevantAttrs.forEach(attr => {
+    names.forEach(attr => {
         if (element.hasAttribute(attr)) {
             let value = element.getAttribute(attr);
             // Limit attribute value length
