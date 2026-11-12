@@ -7,6 +7,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.1.8] - 2026-11-12
 
+### Added
+
+- Rules → Update: new detectors for Tencent Cloud EdgeOne, Bunny Shield, Signifyd, Azure WAF, Google Cloud Armor and Myra's EU CAPTCHA.
+
 ### Fixed
 
 - Backups to keep deletes older backups only after the new one is fully saved; a backup that fails to save is reported and deletes nothing.
