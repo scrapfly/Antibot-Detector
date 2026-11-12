@@ -13,8 +13,22 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Bulk scan shows each page's HTTP status ("Done · 403") and adds it to the CSV, JSON and Markdown exports; webhooks get an `<HTTP_STATUS>` variable.
 - Rules → Update: new detectors for Tencent Cloud EdgeOne, Bunny Shield, Signifyd, Azure WAF, Google Cloud Armor and Myra's EU CAPTCHA.
 
+### Changed
+
+- Faster scans on very large pages, with much less data sent from the page while scanning.
+
+### Removed
+
+- Rules editor: the Badge Color field, which never saved anything; badge and category colours are set in Settings.
+
 ### Fixed
 
+- Articles on Next.js, Remix, Nuxt and similar sites no longer show anti-bot and CAPTCHA cards for vendor names mentioned in their text.
+- Fingerprint cards no longer change between reloads on apps that change their own address as they start.
+- Binance CAPTCHA is no longer reported on pages whose scripts merely use a common field name.
+- Rules: saving keeps the list on the rule's page with focus on its Edit button and confirms the save; both exports confirm how many rules they wrote.
+- Rules: the warning that a pattern is also in another rule now fires when only the description differs.
+- Rules editor: dropdown arrows are visible in the light theme, and the helpers' search icon sits on the correct side in Arabic.
 - Backups to keep deletes older backups only after the new one is fully saved; a backup that fails to save is reported and deletes nothing.
 - Backups to keep no longer deletes newer backups after the browser's downloads list was cleared and the browser restarted; its note says pre-3.1.7 backups stay.
 - Resuming a paused site reloads the page, so its scan includes headers and cookies instead of saving an incomplete result.
