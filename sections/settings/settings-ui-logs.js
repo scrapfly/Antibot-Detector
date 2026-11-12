@@ -73,8 +73,36 @@ SettingsUI._setupLogListeners = function() {
         return false;
       }
     };
+    // The worker builds the file; it is saved here from a Blob (a full log is over the size Chrome takes in a data: address, and a
+    // worker cannot make a Blob address). True once the download has started: a refused one is a failure, said as one.
+    const saveFile = async ({ filename, type, text }) => {
+      if (!chrome.downloads || typeof chrome.downloads.download !== 'function' ||
+          typeof URL === 'undefined' || typeof URL.createObjectURL !== 'function' || typeof Blob !== 'function') return false;
+      const url = URL.createObjectURL(new Blob([text], { type: type || 'text/plain;charset=utf-8' }));
+      try {
+        return await new Promise((resolve) => {
+          chrome.downloads.download({ url, filename, saveAs: false }, (id) => {
+            resolve(!chrome.runtime.lastError && typeof id === 'number');
+          });
+        });
+      } catch (_) {
+        return false;
+      } finally {
+        // Chrome reads a Blob address after it hands out the download id: let it go a minute later
+        setTimeout(() => URL.revokeObjectURL(url), 60000);
+      }
+    };
     const exportLogs = async (type) => {
-      if (!await workerDid(type)) NotificationHelper.error(_trLog('failedExportLogs', 'Failed to export logs'));
+      let response = null;
+      try {
+        response = await chrome.runtime.sendMessage({ type });
+      } catch (_) {
+        response = null;
+      }
+      let done = Boolean(response) && response.status === 'success';
+      // A worker from before 3.1.8 started the download itself and sends no file
+      if (done && typeof response.text === 'string') done = await saveFile(response);
+      if (!done) NotificationHelper.error(_trLog('failedExportLogs', 'Failed to export logs'));
     };
 
     const exportLogsJsonBtn = document.querySelector('#exportLogsJsonBtn');
