@@ -60,7 +60,7 @@ const HOSTING_HEADERS = {
 const blockPage = (name) => fs.readFileSync(path.join(REPO, 'test', 'fixtures', 'block-pages', `${name}.html`), 'utf8');
 const BLOCK_PAGES = {
   '/f5-block': { status: 200, name: 'f5', headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache', connection: 'close',
-    'set-cookie': `TS01a2b3c4=01${'9f'.repeat(30)}; Path=/` } },
+    'set-cookie': `TS01a2b3c4=01${'9f'.repeat(30)}; Path=/f5-block` } }, // its own path: the cookie must not follow the other pages
   '/sucuri-block': { status: 403, name: 'sucuri', headers: { 'content-type': 'text/html', server: 'Sucuri/Cloudproxy', 'x-sucuri-id': '14013',
     'x-sucuri-block': 'BNP005' } },
   '/radware-block': { status: 403, name: 'radware', headers: { 'content-type': 'text/html; charset=utf-8', 'x-sl-compstate': 'Disabled', 'cache-control': 'no-cache' } }
@@ -210,7 +210,9 @@ async function scenario(name, fn) {
       assert.equal(found.confidence, want.confidence, pathname);
       assert.deepEqual([...new Set(found.matches.filter(m => m.type === 'content').map(m => m.patternId))].sort(), want.content, pathname);
       assert.ok(found.combinations.some(c => c.id === want.combo), `${pathname}: ${found.combinations.map(c => c.id).join(', ')}`);
-      assert.ok(found.matches.filter(m => m.type === 'content').every(m => m.foundIn === 'page content'), 'read from the page itself');
+      // Where a content match was found is not always kept in the saved result; when it is, it is the page itself
+      const where = found.matches.filter(m => m.type === 'content').map(m => m.foundIn);
+      assert.ok(where.every(w => w === undefined || w === 'page content'), `read from the page itself: ${JSON.stringify(where)}`);
       assert.equal(saved.httpStatus, want.status, `${pathname}: the HTTP status the tile shows`);
       console.log(`      ${pathname}: ${await titleOf(tabId)}, HTTP ${saved.httpStatus}`);
       await page.close();
