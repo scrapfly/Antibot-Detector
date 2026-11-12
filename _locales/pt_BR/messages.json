@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "\"{0}\" excluído"
   },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" salvo"
+  },
   "failedClearDetectors": {
     "message": "Falha ao remover detectores"
   },

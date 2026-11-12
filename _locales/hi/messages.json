@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "\"{0}\" हटा दिया गया"
   },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" सहेजा गया"
+  },
   "failedClearDetectors": {
     "message": "डिटेक्टर साफ़ करने में विफल"
   },

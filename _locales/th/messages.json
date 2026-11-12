@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "ลบ \"{0}\" แล้ว"
   },
+  "ruleSavedFmt": {
+    "message": "บันทึก \"{0}\" แล้ว"
+  },
   "failedClearDetectors": {
     "message": "ล้างตัวตรวจจับไม่สำเร็จ"
   },

@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "\"{0}\" eliminato"
   },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" salvato"
+  },
   "failedClearDetectors": {
     "message": "Impossibile eliminare i detector"
   },

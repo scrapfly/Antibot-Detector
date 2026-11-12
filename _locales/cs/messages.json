@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "Smazáno: „{0}“"
   },
+  "ruleSavedFmt": {
+    "message": "Uloženo: „{0}“"
+  },
   "failedClearDetectors": {
     "message": "Detektory se nepodařilo vymazat"
   },

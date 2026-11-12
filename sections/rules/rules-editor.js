@@ -1268,11 +1268,11 @@ Rules.prototype.saveRule = async function() {
     this.savingRule = true;
     if (saveButton) saveButton.disabled = true;
     let saved = false;
+    let detectorId = edit.detectorName;
     try {
       if (!this.detectorManager) throw new Error('Detector manager unavailable');
       const candidate = JSON.parse(JSON.stringify(this.detectorManager.detectors));
       const originalCategory = edit.originalCategory || edit.category;
-      let detectorId = edit.detectorName;
       if (draft.isNew) {
         const slug = (draft.detector.name || 'custom').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
         const baseId = DetectorManager.canonicalizeDetectorId(slug || `custom-${Date.now()}`);
@@ -1308,12 +1308,45 @@ Rules.prototype.saveRule = async function() {
     if (!saved) return false;
 
     chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, () => { void chrome.runtime.lastError; });
+    // Where the rule's card was, for the focus when the search or the chips no longer list it (a new rule has no card yet)
+    const place = !draft.isNew && typeof this.listPlaceOf === 'function' ? this.listPlaceOf(edit.originalCategory || edit.category, edit.detectorName) : null;
     this.closeEditModal();
-    this.displayRules();
-    if (Rules.countDuplicatePatterns(draft.detector.detection) > 0 && typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.warning === 'function') {
+    await this.showSavedRule(draft.category, detectorId, place);
+    const duplicated = Rules.countDuplicatePatterns(draft.detector.detection) > 0;
+    if (duplicated && typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.warning === 'function') {
       NotificationHelper.warning((typeof I18n !== 'undefined' && I18n.get('rulesUiDuplicatePatterns'))
         || 'Saved. This rule has the same pattern more than once; the extra copies can be deleted.');
     }
     this.warnSharedPatterns(sharedWith);
+    // Every save is confirmed; the two warnings above already start with "Saved."
+    if (!duplicated && !(Array.isArray(sharedWith) && sharedWith.length > 0)
+      && typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.success === 'function') {
+      const name = draft.detector.name || detectorId;
+      NotificationHelper.success(FormatUtils.t('ruleSavedFmt', `Saved "${name}"`, name));
+    }
     return true;
   };
+
+/**
+ * After Save, the list is drawn again on the page that now holds the saved rule (a new rule, or one whose new date sorts it
+ * elsewhere, can land on another page) and the focus goes to its Edit button: the button that opened the editor went with the
+ * old cards. A rule the search or the chips do not list keeps the page shown, and the focus goes back into the list.
+ * @param {string} category
+ * @param {string} detectorName - the saved rule's id
+ * @param {object|null} place - where its card was (listPlaceOf), for restoreListFocus
+ */
+Rules.prototype.showSavedRule = async function(category, detectorName, place) {
+  await this.displayRules({ keepPage: true });
+  const index = (this.filteredDetectors || []).findIndex(entry => entry && entry.category === category && entry.detectorName === detectorName);
+  if (index < 0) {
+    if (typeof this.restoreListFocus === 'function') this.restoreListFocus(place);
+    return false;
+  }
+  if (this.paginationManager && typeof this.paginationManager.showItem === 'function') this.paginationManager.showItem(index);
+  if (typeof document === 'undefined' || typeof document.querySelectorAll !== 'function') return true;
+  const card = Array.from(document.querySelectorAll('#rulesList .detector-card'))
+    .find(element => element.dataset && element.dataset.category === category && element.dataset.detectorId === detectorName);
+  const editButton = card && card.querySelector('.edit-btn');
+  if (editButton && typeof editButton.focus === 'function') editButton.focus();
+  return true;
+};

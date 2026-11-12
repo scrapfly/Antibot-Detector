@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "\"{0}\"을(를) 삭제했습니다"
   },
+  "ruleSavedFmt": {
+    "message": "\"{0}\"을(를) 저장했습니다"
+  },
   "failedClearDetectors": {
     "message": "감지기를 지우지 못했습니다"
   },

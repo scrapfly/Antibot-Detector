@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "已删除 \"{0}\""
   },
+  "ruleSavedFmt": {
+    "message": "已保存 \"{0}\""
+  },
   "failedClearDetectors": {
     "message": "清除检测器失败"
   },

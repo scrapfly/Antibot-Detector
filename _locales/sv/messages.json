@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "\"{0}\" togs bort"
   },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" sparades"
+  },
   "failedClearDetectors": {
     "message": "Det gick inte att rensa detektorerna"
   },

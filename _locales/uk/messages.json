@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "Видалено «{0}»"
   },
+  "ruleSavedFmt": {
+    "message": "Збережено «{0}»"
+  },
   "failedClearDetectors": {
     "message": "Не вдалося видалити детектори"
   },

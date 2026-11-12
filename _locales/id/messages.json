@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "\"{0}\" dihapus"
   },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" disimpan"
+  },
   "failedClearDetectors": {
     "message": "Gagal menghapus detektor"
   },

@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "Đã xóa \"{0}\""
   },
+  "ruleSavedFmt": {
+    "message": "Đã lưu \"{0}\""
+  },
   "failedClearDetectors": {
     "message": "Không thể xóa trình phát hiện"
   },

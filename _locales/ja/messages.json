@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "「{0}」を削除しました"
   },
+  "ruleSavedFmt": {
+    "message": "「{0}」を保存しました"
+  },
   "failedClearDetectors": {
     "message": "ディテクターのクリアに失敗しました"
   },

@@ -1059,6 +1059,10 @@
   "detectorDeletedFmt": {
     "message": "Deleted \"{0}\""
   },
+  "ruleSavedFmt": {
+    "message": "Saved \"{0}\"",
+    "description": "Message after a rule is saved in the rule editor. {0} is the rule's name"
+  },
   "failedClearDetectors": {
     "message": "Failed to clear detectors"
   },

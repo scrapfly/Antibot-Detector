@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "تم حذف \"{0}\""
   },
+  "ruleSavedFmt": {
+    "message": "تم حفظ \"{0}\""
+  },
   "failedClearDetectors": {
     "message": "تعذَّر مسح الكواشف"
   },

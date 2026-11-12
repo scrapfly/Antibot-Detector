@@ -1042,6 +1042,9 @@
   "detectorDeletedFmt": {
     "message": "Usunięto „{0}”"
   },
+  "ruleSavedFmt": {
+    "message": "Zapisano „{0}”"
+  },
   "failedClearDetectors": {
     "message": "Nie udało się wyczyścić detektorów"
   },
