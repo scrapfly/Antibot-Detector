@@ -9,6 +9,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
+- Detection: results taken from another page of the site name that page and when it was scanned; a clean result shows when it was last checked; both offer Scan again now.
+- Detection: a line under the stats says what changed since the page's previous saved scan, with Compare scans and Watch for changes.
 - Detection shows the page's HTTP status beside Cache, amber or red for an error, which often means a block page.
 - Bulk scan shows each page's HTTP status ("Done · 403") and adds it to the CSV, JSON and Markdown exports; webhooks get an `<HTTP_STATUS>` variable.
 - Settings → General → Toolbar number: count every detection, or only anti-bot and CAPTCHA, so fingerprinting no longer inflates the number.
