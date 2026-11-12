@@ -9,6 +9,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Fixed
 
+- Backups to keep deletes older backups only after the new one is fully saved; a backup that fails to save is reported and deletes nothing.
+- Backups to keep no longer deletes newer backups after the browser's downloads list was cleared and the browser restarted; its note says pre-3.1.7 backups stay.
 - Resuming a paused site reloads the page, so its scan includes headers and cookies instead of saving an incomplete result.
 - A page left open while its site is turned back on is not scanned until it is reloaded; the popup offers Scan again.
 
