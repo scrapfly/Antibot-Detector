@@ -2,7 +2,7 @@
 
 # HUMAN (PerimeterX) 反爬防护：如何检测网站是否使用它（以及它对网页抓取意味着什么）
 
-HUMAN (PerimeterX) 是一些网站放在页面前面的反爬虫（反机器人）或反滥用防护层。无论你是在寻找 HUMAN (PerimeterX) 绕过方法、想检测某个网站是否使用了 HUMAN (PerimeterX)，还是在排查网页抓取被 HUMAN (PerimeterX) 拦截的问题，第一步都是一样的：确认响应你请求的确实是 HUMAN (PerimeterX)。本页列出 Scrapfly Antibot Detector 扩展用来识别 HUMAN (PerimeterX) 机器人检测的 12 个公开特征，说明每个特征指向它的可信程度，以及这通常对自动化客户端意味着什么。
+HUMAN (PerimeterX) 是一些网站放在页面前面的反爬虫（反机器人）或反滥用防护层。无论你是在寻找 HUMAN (PerimeterX) 绕过方法、想检测某个网站是否使用了 HUMAN (PerimeterX)，还是在排查网页抓取被 HUMAN (PerimeterX) 拦截的问题，第一步都是一样的：确认响应你请求的确实是 HUMAN (PerimeterX)。本页列出 Scrapfly Antibot Detector 扩展用来识别 HUMAN (PerimeterX) 机器人检测的 22 个公开特征，说明每个特征指向它的可信程度，以及这通常对自动化客户端意味着什么。
 
 ## 它是什么
 
@@ -12,7 +12,7 @@ PerimeterX 现已并入 HUMAN Security。它的 bot defender 会在页面上放�
 
 ## 如何判断网站使用了 HUMAN (PerimeterX)
 
-这些特征由扩展自身针对 `detect-perimeterx` 的检测规则生成（规则版本 2.3.1，最后更新于 2026-10-30）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
+这些特征由扩展自身针对 `detect-perimeterx` 的检测规则生成（规则版本 2.4.0，最后更新于 2026-11-12）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
 
 ### Cookie
 
@@ -24,6 +24,8 @@ PerimeterX 现已并入 HUMAN Security。它的 bot defender 会在页面上放�
 | `^_pxhd$ = ^[A-Za-z0-9+/=_-]{60,120}(?::\|$)` | 100% | PerimeterX first-party server cookie |
 | `^_pxvid$ = ^[0-9a-f]{8}-[0-9a-f]{4}-1[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$` | 100% | PerimeterX visitor ID cookie |
 | `^(?:pxcts\|_pxde\|_pxff_[A-Za-z0-9_]+)$` | 50% (仅作佐证) | Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*) |
+| `^(?:_pxmvid\|_pxttld\|_pxwvm\|_pxmd\|_pxda\|_pxac)$` | 60% | Other cookies HUMAN documents for its sensor (_pxmvid, _pxttld, _pxwvm, _pxmd, _pxda, _pxac) |
+| `^__pxvid$` | 60% | HUMAN Code Defender visitor cookie (__pxvid) |
 
 ### 脚本和请求 URL
 
@@ -36,6 +38,9 @@ PerimeterX 现已并入 HUMAN Security。它的 bot defender 会在页面上放�
 | `^https://collector-(?:PX[A-Za-z0-9]{6,10}\|[a-z])\.(?:px-cloud\.net\|perimeterx\.net\|hsprotect\.net)/` | 100% | PerimeterX collector endpoint |
 | `^https://captcha\.px-cdn\.net/PX[A-Za-z0-9]{6,10}/` | 100% | PerimeterX challenge (Press & Hold) script host |
 | `^https?://[^/?#]+/[A-Za-z0-9]{8}/captcha/captcha\.js(?:[?#]\|$)` | 30% (仅作佐证) | First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js) |
+| `^https://(?:[a-z0-9-]+\.)+(?:px-cloud\.net\|px-cdn\.net\|px-client\.net\|pxchk\.net\|perimeterx\.net\|hsprotect\.net)(?:[/?#:]\|$)` | 100% | Request to a HUMAN (PerimeterX) sensor, collector or challenge host |
+| `^https?://[^/?#]+/(?:PX)?[A-Za-z0-9]{8}/xhr/api/v[0-9]/collector(?:[/?#]\|$)` | 85% | First-party HUMAN collector under the app ID (/<appid>/xhr/api/v1/collector) |
+| `^https?://[^/?#]+/[A-Za-z0-9]{8}/init\.js(?:[?#]\|$)` | 30% (仅作佐证) | First-party init.js under an app-ID path without the PX prefix; corroboration only |
 
 ### 页面和脚本内容
 
@@ -53,6 +58,18 @@ PerimeterX 现已并入 HUMAN Security。它的 bot defender 会在页面上放�
 | --- | --- | --- |
 | `_pxAppId (typeof string)` | 70% | PerimeterX application ID |
 | `pxInit (typeof function)` | 30% (仅作佐证) | Optional PerimeterX init callback defined by the site |
+| `_pxUuid (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+| `_pxVid (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+| `_pxBlockedUrl (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+| `_pxJsClientSrc (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+
+### DOM 元素
+
+通过 CSS 选择器匹配的元素。
+
+| 特征 | 置信度 | 含义 |
+| --- | --- | --- |
+| `div#px-captcha` | 60% | HUMAN challenge container (div#px-captcha) |
 
 ### 组合特征
 
@@ -64,6 +81,8 @@ PerimeterX 现已并入 HUMAN Security。它的 bot defender 会在页面上放�
 | Several PerimeterX cookies together | 100% | 以下至少 2 项：PerimeterX risk token cookie (_px2 or _px3); PerimeterX first-party server cookie; PerimeterX visitor ID cookie; Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*) |
 | PerimeterX challenge with the app ID | 100% | PerimeterX challenge (Press & Hold) script host和(PerimeterX application ID或Script assigning the PerimeterX app ID (window._pxAppId)或Optional PerimeterX init callback defined by the site) |
 | First-party PerimeterX challenge with the app ID | 95% | First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js)和(PerimeterX application ID或Script assigning the PerimeterX app ID (window._pxAppId)或Optional PerimeterX init callback defined by the site) |
+| First-party HUMAN sensor with its app ID or cookies | 95% | (First-party init.js under an app-ID path without the PX prefix; corroboration only或First-party HUMAN collector under the app ID (/<appid>/xhr/api/v1/collector))和(PerimeterX application ID或Script assigning the PerimeterX app ID (window._pxAppId)或Optional PerimeterX init callback defined by the site或Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*)或Other cookies HUMAN documents for its sensor (_pxmvid, _pxttld, _pxwvm, _pxmd, _pxda, _pxac)) |
+| HUMAN block page with its challenge | 95% | (HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc)或HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc)或HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc)或HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc)或HUMAN challenge container (div#px-captcha))和(PerimeterX challenge (Press & Hold) script host或First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js)或Request to a HUMAN (PerimeterX) sensor, collector or challenge host) |
 
 ## 难度
 

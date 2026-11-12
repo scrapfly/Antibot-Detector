@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-26",
-  "version": "2.2.0",
+  "lastUpdated": "2026-11-12",
+  "version": "2.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.akamai.com/products/bot-manager",
   "icon": "akamai_official.png",
@@ -49,11 +49,20 @@
       },
       {
         "id": "bm-family-cookie",
-        "name": "^bm_(?:mi|sv|s|so|lso)$",
+        "name": "^bm_(?:mi|s|so|lso)$",
         "nameRegex": true,
         "confidence": 30,
         "standalone": false,
-        "description": "Other Bot Manager cookies (bm_mi, bm_sv, bm_s, bm_so); short names, corroboration only",
+        "description": "Other Bot Manager cookies (bm_mi, bm_s, bm_so); short names, corroboration only",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "bm-sv-cookie",
+        "name": "^bm_sv$",
+        "nameRegex": true,
+        "confidence": 60,
+        "description": "Bot Manager cookie bm_sv, named in Akamai's cookie documentation",
         "nameScope": "all",
         "valueScope": "all"
       },
@@ -240,6 +249,9 @@
               },
               {
                 "pattern": "bm-family-cookie"
+              },
+              {
+                "pattern": "bm-sv-cookie"
               }
             ]
           }
@@ -357,6 +369,9 @@
               },
               {
                 "pattern": "ak-bmsc-cookie"
+              },
+              {
+                "pattern": "bm-sv-cookie"
               }
             ]
           }
@@ -373,7 +388,14 @@
             "pattern": "ak-bmsc-cookie"
           },
           {
-            "pattern": "bm-family-cookie"
+            "any": [
+              {
+                "pattern": "bm-family-cookie"
+              },
+              {
+                "pattern": "bm-sv-cookie"
+              }
+            ]
           }
         ]
       }

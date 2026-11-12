@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-11-09",
-  "version": "2.2.0",
+  "lastUpdated": "2026-11-12",
+  "version": "2.3.0",
   "minExtensionVersion": "2.8",
   "website": "https://aws.amazon.com/waf/",
   "icon": "aws_official.png",
@@ -24,6 +24,16 @@
         "value": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[A-Za-z0-9+/=_:-]{20,}",
         "valueRegex": true,
         "valueCaseSensitive": true
+      },
+      {
+        "id": "aws-waf-token-name",
+        "name": "^aws-waf-token$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 85,
+        "description": "AWS WAF token cookie by name; its value format is not documented",
+        "nameScope": "all",
+        "valueScope": "all"
       }
     ],
     "header": [
@@ -54,7 +64,7 @@
         "id": "token-host-script",
         "confidence": 100,
         "description": "Integration SDK from the regional token.awswaf.com host",
-        "text": "^https://[0-9a-f]{8,16}\\.[0-9a-f]{6,12}\\.[a-z]{2}-[a-z]+-[0-9]\\.token\\.awswaf\\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge|captcha|jsapi)\\.js(?:[?#]|$)",
+        "text": "^https://(?:[a-z0-9-]+\\.)+(?:token|sdk)\\.awswaf\\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge|captcha|jsapi)\\.js(?:[?#]|$)",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -63,7 +73,7 @@
         "id": "token-host-endpoint",
         "confidence": 100,
         "description": "Any request to the regional token.awswaf.com host (inputs, verify, telemetry)",
-        "text": "^https://[0-9a-f]{8,16}\\.[0-9a-f]{6,12}\\.[a-z]{2}-[a-z]+-[0-9]\\.token\\.awswaf\\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs|verify|telemetry|voucher|mp_verify)(?:[?#/]|$)",
+        "text": "^https://(?:[a-z0-9-]+\\.)+(?:token|sdk)\\.awswaf\\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs|verify|telemetry|voucher|mp_verify)(?:[?#/]|$)",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -73,6 +83,15 @@
         "confidence": 100,
         "description": "AWS WAF CAPTCHA host",
         "text": "^https://[0-9a-f]{8,16}\\.[0-9a-f]{6,12}\\.[a-z]{2}-[a-z]+-[0-9]\\.captcha\\.awswaf\\.com/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "awswaf-host",
+        "confidence": 100,
+        "description": "Any request to an AWS WAF host (*.awswaf.com)",
+        "text": "^https://(?:[a-z0-9-]+\\.)+awswaf\\.com(?:[/?#:]|$)",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -205,7 +224,14 @@
       "when": {
         "all": [
           {
-            "pattern": "aws-waf-token-cookie"
+            "any": [
+              {
+                "pattern": "aws-waf-token-cookie"
+              },
+              {
+                "pattern": "aws-waf-token-name"
+              }
+            ]
           },
           {
             "any": [

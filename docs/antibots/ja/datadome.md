@@ -2,7 +2,7 @@
 
 # DataDome のボット対策: 検出方法とスクレイピングへの影響
 
-DataDome は、一部のウェブサイトがページの手前に置くボット対策（アンチボット）または不正利用対策のレイヤーです。DataDome の回避方法を調べている場合も、サイトで DataDome を検出したい場合も、DataDome によるスクレイピングのブロックを調査している場合も、最初にやることは同じです。リクエストに応答しているのが本当に DataDome かどうかを確認することです。このページでは、Scrapfly Antibot Detector 拡張機能が DataDome のボット検出を見分けるために使う 11 件の公開シグナルと、それぞれがどの程度 DataDome を示唆するか、そして自動化クライアントにとってそれが通常何を意味するかをまとめています。
+DataDome は、一部のウェブサイトがページの手前に置くボット対策（アンチボット）または不正利用対策のレイヤーです。DataDome の回避方法を調べている場合も、サイトで DataDome を検出したい場合も、DataDome によるスクレイピングのブロックを調査している場合も、最初にやることは同じです。リクエストに応答しているのが本当に DataDome かどうかを確認することです。このページでは、Scrapfly Antibot Detector 拡張機能が DataDome のボット検出を見分けるために使う 13 件の公開シグナルと、それぞれがどの程度 DataDome を示唆するか、そして自動化クライアントにとってそれが通常何を意味するかをまとめています。
 
 ## 概要
 
@@ -12,7 +12,7 @@ DataDome はフランスのボットおよびオンライン不正対策ベン�
 
 ## サイトが DataDome を使っているかを見分ける方法
 
-これらのシグナルは、`detect-datadome` に対する拡張機能自身の検出ルール（ルールのバージョン 2.1.0、最終更新日 2026-10-16）から生成されています。シグナルはあくまで目安です。信頼度とは、そのシグナル単体が確認されたときに拡張機能がどの程度確信を持つかを表します。「補強のみ」とマークされたシグナルは、他の製品でも発生しうるため、それだけでは判定に加算されません。
+これらのシグナルは、`detect-datadome` に対する拡張機能自身の検出ルール（ルールのバージョン 2.2.0、最終更新日 2026-11-12）から生成されています。シグナルはあくまで目安です。信頼度とは、そのシグナル単体が確認されたときに拡張機能がどの程度確信を持つかを表します。「補強のみ」とマークされたシグナルは、他の製品でも発生しうるため、それだけでは判定に加算されません。
 
 ### Cookie
 
@@ -39,8 +39,8 @@ DataDome はフランスのボットおよびオンライン不正対策ベン�
 
 | シグナル | 信頼度 | 示唆する内容 |
 | --- | --- | --- |
-| `^https://(?:js\|api-js)\.datadome\.co/(?:tags\.js\|js/)` | 100% | Official DataDome JavaScript tag or its collection endpoint |
-| `^https://(?:geo\|ct\|c\|t)\.captcha-delivery\.com/` | 100% | DataDome challenge or CAPTCHA delivery host |
+| `^https://(?:js\|api-js)\.datadome\.co/` | 100% | Official DataDome JavaScript tag or its collection endpoint |
+| `^https://(?:[a-z0-9-]+\.)+captcha-delivery\.com(?:[/?#:]\|$)` | 100% | DataDome challenge or CAPTCHA delivery host |
 | `^https?://[^/?#]+/(?:tags\.js\|js/)(?:[?#]\|$)` | 30% (補強のみ) | First-party tags.js or js/ collection path; the name is generic, corroboration only |
 
 ### ページとスクリプトの内容
@@ -59,6 +59,8 @@ DataDome はフランスのボットおよびオンライン不正対策ベン�
 | シグナル | 信頼度 | 示唆する内容 |
 | --- | --- | --- |
 | `ddjskey (typeof string)` | 60% | DataDome JS key set by the integration snippet |
+| `ddoptions (typeof object)` | 60% | DataDome tag options object (window.ddoptions) |
+| `displayDataDomeResponsePage (typeof function)` | 85% | DataDome response page function (window.displayDataDomeResponsePage) |
 
 ### 組み合わせ
 
@@ -68,8 +70,8 @@ DataDome はフランスのボットおよびオンライン不正対策ベン�
 | --- | --- | --- |
 | DataDome tag with its session cookie | 100% | (Official DataDome JavaScript tag or its collection endpoint または DataDome JS key set by the integration snippet または Integration snippet setting window.ddjskey) および DataDome session cookie |
 | DataDome response headers with its cookie | 100% | (DataDome client ID response header または DataDome protection response header または Response served by DataDome itself (block or challenge page)) および DataDome session cookie |
-| First-party DataDome tag with its JS key | 85% | First-party tags.js or js/ collection path; the name is generic, corroboration only および (DataDome JS key set by the integration snippet または Integration snippet setting window.ddjskey) |
-| DataDome block page | 95% | DataDome block page bootstrap (var dd={'rt':...}) および (DataDome client ID response header または DataDome block-type header on challenge responses または DataDome challenge or CAPTCHA delivery host または DataDome session cookie) |
+| First-party DataDome tag with its JS key | 85% | First-party tags.js or js/ collection path; the name is generic, corroboration only および (DataDome JS key set by the integration snippet または Integration snippet setting window.ddjskey または DataDome tag options object (window.ddoptions)) |
+| DataDome block page | 95% | (DataDome block page bootstrap (var dd={'rt':...}) または DataDome response page function (window.displayDataDomeResponsePage)) および (DataDome client ID response header または DataDome block-type header on challenge responses または DataDome challenge or CAPTCHA delivery host または DataDome session cookie) |
 
 ## 難易度
 

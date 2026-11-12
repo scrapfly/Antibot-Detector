@@ -2,7 +2,7 @@
 
 # Анти-бот защита HUMAN (PerimeterX): как определить, что сайт её использует (и что это значит для парсинга)
 
-HUMAN (PerimeterX) - это система защиты от ботов или от злоупотреблений, которую некоторые сайты ставят перед своими страницами. Если вы ищете способ обхода HUMAN (PerimeterX), хотите определить, использует ли сайт HUMAN (PerimeterX), или разбираетесь с блокировкой парсинга со стороны HUMAN (PerimeterX), первый шаг один и тот же: убедиться, что на ваши запросы действительно отвечает HUMAN (PerimeterX). На этой странице перечислены 12 публичных признаков, по которым расширение Scrapfly Antibot Detector распознаёт анти-бот защиту HUMAN (PerimeterX), насколько уверенно каждый из них на неё указывает и что это обычно означает для автоматизированного клиента.
+HUMAN (PerimeterX) - это система защиты от ботов или от злоупотреблений, которую некоторые сайты ставят перед своими страницами. Если вы ищете способ обхода HUMAN (PerimeterX), хотите определить, использует ли сайт HUMAN (PerimeterX), или разбираетесь с блокировкой парсинга со стороны HUMAN (PerimeterX), первый шаг один и тот же: убедиться, что на ваши запросы действительно отвечает HUMAN (PerimeterX). На этой странице перечислены 22 публичных признаков, по которым расширение Scrapfly Antibot Detector распознаёт анти-бот защиту HUMAN (PerimeterX), насколько уверенно каждый из них на неё указывает и что это обычно означает для автоматизированного клиента.
 
 ## Что это такое
 
@@ -12,7 +12,7 @@ PerimeterX теперь входит в HUMAN Security. Его bot defender ра
 
 ## Как определить, что сайт использует HUMAN (PerimeterX)
 
-Эти признаки сформированы из собственных правил обнаружения расширения для `detect-perimeterx` (версия правила 2.3.1, последнее обновление 2026-10-30). Признак - лишь индикатор: уверенность показывает, насколько расширение убеждено в результате при срабатывании именно этого признака. Признаки с пометкой "только для подтверждения" никогда не учитываются сами по себе, потому что их могут создавать и другие продукты.
+Эти признаки сформированы из собственных правил обнаружения расширения для `detect-perimeterx` (версия правила 2.4.0, последнее обновление 2026-11-12). Признак - лишь индикатор: уверенность показывает, насколько расширение убеждено в результате при срабатывании именно этого признака. Признаки с пометкой "только для подтверждения" никогда не учитываются сами по себе, потому что их могут создавать и другие продукты.
 
 ### Cookie
 
@@ -24,6 +24,8 @@ PerimeterX теперь входит в HUMAN Security. Его bot defender ра
 | `^_pxhd$ = ^[A-Za-z0-9+/=_-]{60,120}(?::\|$)` | 100% | PerimeterX first-party server cookie |
 | `^_pxvid$ = ^[0-9a-f]{8}-[0-9a-f]{4}-1[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$` | 100% | PerimeterX visitor ID cookie |
 | `^(?:pxcts\|_pxde\|_pxff_[A-Za-z0-9_]+)$` | 50% (только для подтверждения) | Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*) |
+| `^(?:_pxmvid\|_pxttld\|_pxwvm\|_pxmd\|_pxda\|_pxac)$` | 60% | Other cookies HUMAN documents for its sensor (_pxmvid, _pxttld, _pxwvm, _pxmd, _pxda, _pxac) |
+| `^__pxvid$` | 60% | HUMAN Code Defender visitor cookie (__pxvid) |
 
 ### URL скриптов и запросов
 
@@ -36,6 +38,9 @@ PerimeterX теперь входит в HUMAN Security. Его bot defender ра
 | `^https://collector-(?:PX[A-Za-z0-9]{6,10}\|[a-z])\.(?:px-cloud\.net\|perimeterx\.net\|hsprotect\.net)/` | 100% | PerimeterX collector endpoint |
 | `^https://captcha\.px-cdn\.net/PX[A-Za-z0-9]{6,10}/` | 100% | PerimeterX challenge (Press & Hold) script host |
 | `^https?://[^/?#]+/[A-Za-z0-9]{8}/captcha/captcha\.js(?:[?#]\|$)` | 30% (только для подтверждения) | First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js) |
+| `^https://(?:[a-z0-9-]+\.)+(?:px-cloud\.net\|px-cdn\.net\|px-client\.net\|pxchk\.net\|perimeterx\.net\|hsprotect\.net)(?:[/?#:]\|$)` | 100% | Request to a HUMAN (PerimeterX) sensor, collector or challenge host |
+| `^https?://[^/?#]+/(?:PX)?[A-Za-z0-9]{8}/xhr/api/v[0-9]/collector(?:[/?#]\|$)` | 85% | First-party HUMAN collector under the app ID (/<appid>/xhr/api/v1/collector) |
+| `^https?://[^/?#]+/[A-Za-z0-9]{8}/init\.js(?:[?#]\|$)` | 30% (только для подтверждения) | First-party init.js under an app-ID path without the PX prefix; corroboration only |
 
 ### Содержимое страницы и скриптов
 
@@ -53,6 +58,18 @@ PerimeterX теперь входит в HUMAN Security. Его bot defender ра
 | --- | --- | --- |
 | `_pxAppId (typeof string)` | 70% | PerimeterX application ID |
 | `pxInit (typeof function)` | 30% (только для подтверждения) | Optional PerimeterX init callback defined by the site |
+| `_pxUuid (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+| `_pxVid (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+| `_pxBlockedUrl (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+| `_pxJsClientSrc (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+
+### Элементы DOM
+
+Элементы, найденные по CSS-селектору.
+
+| Признак | Уверенность | На что указывает |
+| --- | --- | --- |
+| `div#px-captcha` | 60% | HUMAN challenge container (div#px-captcha) |
 
 ### Комбинации
 
@@ -64,6 +81,8 @@ PerimeterX теперь входит в HUMAN Security. Его bot defender ра
 | Several PerimeterX cookies together | 100% | не менее 2 из: PerimeterX risk token cookie (_px2 or _px3); PerimeterX first-party server cookie; PerimeterX visitor ID cookie; Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*) |
 | PerimeterX challenge with the app ID | 100% | PerimeterX challenge (Press & Hold) script host и (PerimeterX application ID или Script assigning the PerimeterX app ID (window._pxAppId) или Optional PerimeterX init callback defined by the site) |
 | First-party PerimeterX challenge with the app ID | 95% | First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js) и (PerimeterX application ID или Script assigning the PerimeterX app ID (window._pxAppId) или Optional PerimeterX init callback defined by the site) |
+| First-party HUMAN sensor with its app ID or cookies | 95% | (First-party init.js under an app-ID path without the PX prefix; corroboration only или First-party HUMAN collector under the app ID (/<appid>/xhr/api/v1/collector)) и (PerimeterX application ID или Script assigning the PerimeterX app ID (window._pxAppId) или Optional PerimeterX init callback defined by the site или Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*) или Other cookies HUMAN documents for its sensor (_pxmvid, _pxttld, _pxwvm, _pxmd, _pxda, _pxac)) |
+| HUMAN block page with its challenge | 95% | (HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) или HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) или HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) или HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) или HUMAN challenge container (div#px-captcha)) и (PerimeterX challenge (Press & Hold) script host или First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js) или Request to a HUMAN (PerimeterX) sensor, collector or challenge host) |
 
 ## Сложность
 

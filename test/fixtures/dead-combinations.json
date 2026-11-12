@@ -2,7 +2,6 @@
   "about": "Combinations that can never raise a detector's score: whenever one is satisfied, a standalone rule of the same detector already scores at least its tier (a proof-grade rule scores 100 alone), so the tier is a label, not score. test/dead-combinations.test.js computes this list with the engine's own score(). A new entry is a decision; an entry that stops being true has to be removed.",
   "dead": [
     "detect-akamai/akamai-bmsc-session",
-    "detect-akamai/akamai-edge-bot-cookie",
     "detect-akamai/akamai-obfuscated-sensor",
     "detect-akamai/akamai-sensor-cookies",
     "detect-akamai/akamai-sensor-script",
@@ -18,7 +17,6 @@
     "detect-amazon/metadata1-with-fwcim-script",
     "detect-anubis/anubis-passed-challenge",
     "detect-anubis/anubis-verified-session",
-    "detect-aws-waf/aws-waf-token",
     "detect-basilisk/basilisk-resource-check",
     "detect-basilisk/basilisk-script-check",
     "detect-binance-captcha/binance-sdk-api",
