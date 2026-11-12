@@ -463,7 +463,8 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       const english = JSON.parse(fs.readFileSync(path.join(REPO, '_locales', 'en', 'messages.json'), 'utf8'));
       for (const [button, extension] of [['#exportLogsTextBtn', 'txt'], ['#exportLogsJsonBtn', 'json']]) {
         const [download] = await Promise.all([page.waitForEvent('download', { timeout: 15000 }), page.$eval(button, el => el.click())]);
-        assert.match(download.suggestedFilename(), new RegExp(`^scrapfly-logs-\\d+\\.${extension}$`));
+        // (Playwright names a chrome.downloads file after its Blob address; the name Settings gives it is pinned by the unit tests)
+        assert.ok(download.suggestedFilename().endsWith(`.${extension}`), `${button}: ${download.suggestedFilename()}`);
         assert.equal(await download.failure(), null, `${button}: the download did not fail`);
         const text = fs.readFileSync(await download.path(), 'utf8');
         assert.ok(text.length > 2 * 1024 * 1024, `${button}: the whole log, over 2 MB (${text.length})`);
