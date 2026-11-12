@@ -10,10 +10,16 @@
  *   Back            switching back to the skipped sites keeps both lists
  *   Tab switch      returning to the tab of a skipped (or not chosen) site scans nothing, also after the worker was
  *                   restarted: nothing was cached for it, so the tab switch used to ask for a scan that stored and recorded it
+ *   Resume          a page that loaded while its site was paused kept none of its headers, cookies, bodies or requests: Resume
+ *                   ("Scan this site") reloads it, and the scan that follows has its response header
+ *   Turned back on  the site turned back on in Settings while such a page stays open: returning to its tab (after a worker
+ *                   restart), the popup and a route change of the page scan nothing of it; the popup says to reload it, and
+ *                   Scan again does, with the page's response header in the result
  *
  * One local server answers on 127.0.0.1, localhost and a.localhost, so a site is told apart by its host. A probe rule
  * (a marker in the page) makes a real scan leave a result in the detection cache: a scanned page has an entry there, a
- * paused one never does.
+ * paused one never does. The rule also reads a response header the page is served with, which only a scan with the page's
+ * own capture sees, and the server counts the requests of each address, so a reload shows.
  *
  * Not part of `npm run verify`: it needs Playwright and its Chromium.
  *   npm i --no-save playwright && npx playwright install chromium
@@ -35,10 +41,14 @@ const path = require('node:path');
 const REPO = path.resolve(process.argv.slice(2).find(a => !a.startsWith('--')) || path.join(__dirname, '..'));
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
+// Requests per host and address (path and query), as the server saw them
+const hits = new Map();
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
+  const key = `${String(req.headers.host || '').split(':')[0]}${url.pathname}${url.search}`;
+  hits.set(key, (hits.get(key) || 0) + 1);
   if (url.pathname === '/p') {
-    res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store' });
+    res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store', 'x-scope-probe': 'on' });
     return res.end('<!doctype html><html><head><title>Scope probe</title></head><body><p>scope-probe-marker</p></body></html>');
   }
   res.writeHead(404); res.end();
@@ -47,7 +57,13 @@ const server = http.createServer((req, res) => {
 const PROBE = {
   id: 'detect-scopeprobe', name: 'Scope Probe', author: 'Probe', enabled: true, category: 'Anti-Bot', difficulty: 'Medium', version: '1.0.0',
   lastUpdated: '2026-10-20', icon: 'custom.png', description: 'Scope probe',
-  detection: { content: [{ id: 'scope-marker', text: 'scope-probe-marker', confidence: 90, standalone: true, description: 'scope-marker' }] }
+  detection: {
+    content: [{ id: 'scope-marker', text: 'scope-probe-marker', confidence: 90, standalone: true, description: 'scope-marker' }],
+    // Seen only by a scan that has the page's own response headers (the capture of a page that loaded while its site was paused
+    // kept none)
+    header: [{ id: 'scope-header', name: '^x-scope-probe$', nameRegex: true, value: '^on$', valueRegex: true, nameScope: 'response', valueScope: 'response',
+      confidence: 90, standalone: true, description: 'scope-header' }]
+  }
 };
 
 (async () => {
@@ -84,6 +100,21 @@ const PROBE = {
     const entries = (host) => worker.evaluate(async (h) => Object.values((await chrome.storage.local.get('scrapfly_detection_storage')).scrapfly_detection_storage || {})
       .filter(entry => new URL(entry.url).hostname === h).length, host);
     const wipeCache = () => worker.evaluate(() => chrome.storage.local.remove('scrapfly_detection_storage'));
+    // The saved result of one address (results are saved per full address here), and whether its scan read the page's header
+    const entryOf = (url) => worker.evaluate(async (u) => Object.values((await chrome.storage.local.get('scrapfly_detection_storage')).scrapfly_detection_storage || {})
+      .find(entry => entry.url === u) || null, url);
+    const headerSeen = (entry) => !!entry && (entry.detectionResults || []).some(d => (d.matches || []).some(m => m.type === 'header'));
+    const historyOf = (host) => worker.evaluate(async (h) => (await HistoryStore.read(chrome.storage.local)).filter(entry => entry && entry.hostname === h).length, host);
+    const until = async (check, what, ms = 20000) => {
+      const end = Date.now() + ms;
+      for (;;) {
+        const value = await check();
+        if (value) return value;
+        if (Date.now() > end) throw new Error(`timed out waiting for ${what}`);
+        await sleep(250);
+      }
+    };
+    const hitsOf = (host, query) => hits.get(`${host}/p${query}`) || 0;
     const visit = async (url) => {
       const page = await context.newPage();
       page.on('pageerror', () => {});
@@ -207,15 +238,20 @@ const PROBE = {
     await popup.waitForSelector('#historyItemMenu [data-scan-mode-show]', { state: 'attached' });
     assert.equal(await popup.$eval('#historyItemMenu [data-scan-mode-show="allowlist"]', el => el.hidden), false, 'the History menu offers the action of this mode');
     assert.equal(await popup.$eval('#historyItemMenu [data-scan-mode-show="blocklist"]', el => el.hidden), true);
+    assert.equal(hitsOf('127.0.0.1', '?c=2'), 1);
     await popup.$eval('#allowSiteBtn', el => el.click());
     await popup.waitForFunction(() => window.popupInstance.settings.settings, null, { polling: 250, timeout: 5000 });
     await sleep(2500);
     now = await stored(popup);
     assert.deepEqual(now.detection.allowedDomains.sort(), ['127.0.0.1', 'localhost'], 'the site joined the list');
+    // The page on screen loaded while its site was paused, so it loads again and its scan has its own response header
+    await until(() => hitsOf('127.0.0.1', '?c=2') === 2, 'the page on screen to load again');
+    const resumed = await until(() => entryOf(at('127.0.0.1', '?c=2')), 'the result of the page on screen');
+    assert.ok(headerSeen(resumed), 'the scan after the reload read the page\'s response header');
     await popup.close(); await blocked.page.close();
     page = (await visit(at('127.0.0.1', '?c=3'))).page; await page.close();
     assert.ok(await entries('127.0.0.1') >= 1, 'now that it is chosen, it is scanned');
-    console.log('PASS Paused card: its own words, "Block this domain" hidden, "Scan this site" adds the site and the site is scanned');
+    console.log('PASS Paused card: its own words, "Block this domain" hidden, "Scan this site" adds the site, reloads the page and it is scanned with its headers');
 
     // 5. Back to the skipped sites: both lists are as they were
     await admin.reload();
@@ -237,6 +273,59 @@ const PROBE = {
     page = (await visit(at('localhost', '?b=1'))).page; await page.close();
     assert.equal(await entries('localhost'), 0, 'localhost is skipped again');
     console.log('PASS Back: switching the mode back keeps both lists and the skipped site is skipped again');
+
+    // 6. Resume on the paused card ("every site except the ones I skip"): the page loads again and is scanned with its headers
+    const skippedPage = await visit(at('localhost', '?r=1'));
+    const resumePopup = await popupPage(skippedPage.tab);
+    await resumePopup.waitForFunction(() => document.querySelector('#blacklistWarning') && getComputedStyle(document.querySelector('#blacklistWarning')).display !== 'none', null, { polling: 250, timeout: 15000 });
+    assert.equal(hitsOf('localhost', '?r=1'), 1);
+    await resumePopup.$eval('#removeFromBlacklistBtn', el => el.click());
+    await until(() => hitsOf('localhost', '?r=1') === 2, 'Resume to reload the page');
+    const afterResume = await until(() => entryOf(at('localhost', '?r=1')), 'the result of the resumed page');
+    assert.ok(headerSeen(afterResume), 'the scan after Resume read the page\'s response header');
+    await resumePopup.waitForFunction(() => {
+      const detection = window.popupInstance.detection;
+      return detection.isShowingResults && detection.currentResults.some(d => (d.detector && d.detector.id) === 'detect-scopeprobe');
+    }, null, { polling: 250, timeout: 20000 });
+    assert.deepEqual((await stored(resumePopup)).detection.blacklistedDomains, [], 'the site is no longer skipped');
+    await resumePopup.close(); await skippedPage.page.close();
+    console.log('PASS Resume: the page on screen loads again and its result, headers included, is shown');
+
+    // 7. The site turned back on in Settings while one of its pages stays open (it loaded while the site was skipped)
+    await patch(admin, { detection: { blacklistedDomains: ['localhost'] } });
+    await sleep(500);
+    const historyBefore = await historyOf('localhost');
+    const stayed = await visit(at('localhost', '?u=1'));
+    const otherTab = await visit(at('127.0.0.1', '?u=1'));
+    await patch(admin, { detection: { blacklistedDomains: [] } });   // what Settings → Sites to scan → Save does
+    // As after Chrome stops the idle worker and starts it again: what it held in memory is gone, session storage remains
+    await worker.evaluate(() => {
+      detectionStates.clear(); activeDetections.clear(); tabCaptureScopes.clear();
+      UncapturedPages._documents.clear(); UncapturedPages._pending.clear(); UncapturedPages._restored = null;
+    });
+    await stayed.page.bringToFront();
+    await sleep(6000);
+    assert.equal(await entryOf(at('localhost', '?u=1')), null, 'returning to its tab scans nothing of it');
+    assert.equal(await historyOf('localhost'), historyBefore, 'and records nothing');
+    // The popup on that page: no scan, and the card that says to reload it
+    const stayedPopup = await popupPage(stayed.tab);
+    await stayedPopup.waitForFunction(() => window.popupInstance.detection.scanOutcome === 'unscanned', null, { polling: 250, timeout: 15000 });
+    assert.equal(await stayedPopup.locator('#emptyState .state-card-title').innerText(), 'No completed scan');
+    assert.equal(await stayedPopup.locator('#emptyRescanBtn').isVisible(), true, 'Scan again is offered');
+    // A route change of the single-page app scans nothing of it either
+    await stayed.page.evaluate(() => { history.pushState({}, '', '/p?u=2'); document.body.appendChild(document.createElement('div')); });
+    await sleep(5000);
+    assert.equal(await entryOf(at('localhost', '?u=2')), null, 'a route change of the page scans nothing of it');
+    assert.equal(await entryOf(at('localhost', '?u=1')), null);
+    assert.equal(await historyOf('localhost'), historyBefore);
+    assert.equal(hitsOf('localhost', '?u=1'), 1, 'the page was never reloaded by the extension');
+    // Scan again reloads it, and that scan has everything
+    await stayedPopup.$eval('#emptyRescanBtn', el => el.click());
+    await until(() => hitsOf('localhost', '?u=2') === 1, 'Scan again to reload the page');
+    const rescanned = await until(() => entryOf(at('localhost', '?u=2')), 'the result of the page scanned again');
+    assert.ok(headerSeen(rescanned), 'the scan after the reload read the page\'s response header');
+    await stayedPopup.close(); await stayed.page.close(); await otherTab.page.close();
+    console.log('PASS Turned back on: the tab switch, the popup and a route change scan nothing of a page that loaded skipped; Scan again reloads it');
 
     assert.deepEqual(errors, [], 'no popup runtime exceptions');
     console.log('RESULT ALL PASS, no page errors');

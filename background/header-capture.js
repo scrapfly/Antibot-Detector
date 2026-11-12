@@ -58,6 +58,95 @@ function tabOfWorkerRequest(details) {
     return found;
 }
 
+// ─── Which pages capture anything ───────────────────────────────────────────────────────────────────────────
+
+/**
+ * What the capture below may keep of each tab's page. A page the scan is refused for (a skipped site, or a site left out of "only
+ * these sites") leaves nothing in the stores either: its response headers and Set-Cookie, its request headers (Cookie and
+ * Authorization among them), its POST bodies and the addresses of its requests were read for every page and held for five
+ * minutes, scan or no scan. The question is the one that refuses the scan (Utils.isUrlBlacklisted, which reads ScanScope), asked
+ * with failClosed: settings that cannot be read are not "no site is skipped", so such a page captures nothing.
+ *
+ * The answer is settled when the page starts loading, from its main-frame request (each hop of a redirect: the last one is the
+ * page), and shared by everything the page makes, because the address of a request is not the page's. Per tab: { url, open }, where
+ * `open` is the promise of the answer. A change made while the page is open applies from the next page load.
+ */
+const tabCaptureScopes = new Map();
+
+/** May the page at this address capture? false when the scan is refused for it, or the settings cannot be read. Never rejects. */
+function captureOpenFor(url) {
+    try {
+        return Promise.resolve(Utils.isUrlBlacklisted(url, { failClosed: true })).then((refused) => refused !== true, () => false);
+    } catch (_) {
+        return Promise.resolve(false);
+    }
+}
+
+/**
+ * Sets what the tab's page is judged by, unless the extension is off: nothing is captured then, and nothing is read to find out
+ * which page would. Switched on again while the page stays, its requests are judged by the tab's own address (captureScopeOfTab).
+ */
+function setCaptureScope(tabId, url) {
+    if (typeof cachedEnabledState !== 'undefined' && cachedEnabledState.value === false) {
+        tabCaptureScopes.delete(tabId);
+        return;
+    }
+    tabCaptureScopes.set(tabId, { url, open: captureOpenFor(url) });
+}
+
+/** A top-level page starts loading in the tab (each hop of a redirect): from now on its requests are judged by this address. */
+function noteCaptureScope(details) {
+    if (!details || typeof details.tabId !== 'number' || details.tabId < 0 || typeof details.url !== 'string') return;
+    setCaptureScope(details.tabId, details.url);
+}
+
+/** The page committed. One that sent no main-frame request (restored from the back/forward cache) is judged by the address that committed. */
+function noteCommittedScope(details) {
+    if (!details || typeof details.tabId !== 'number' || typeof details.url !== 'string' || !details.url) return;
+    const scope = tabCaptureScopes.get(details.tabId);
+    // The address that commits may carry a fragment its request did not
+    if (scope && scope.url.split('#')[0] === details.url.split('#')[0]) return;
+    setCaptureScope(details.tabId, details.url);
+}
+
+/**
+ * The page a tab shows when this worker saw no page start in it (the worker restarted while the page stayed, or the tab was open
+ * before the extension): judged once, by the tab's own address. A tab that cannot be read is not remembered as skipped: the next
+ * request asks again.
+ */
+function captureScopeOfTab(tabId) {
+    const known = tabCaptureScopes.get(tabId);
+    if (known) return known;
+    const scope = { url: '', open: null };
+    scope.open = Promise.resolve()
+        .then(() => chrome.tabs.get(tabId))
+        .then((tab) => (tab && typeof tab.url === 'string' ? tab.url : ''), () => '')
+        .then((url) => {
+            if (!url) {
+                if (tabCaptureScopes.get(tabId) === scope) tabCaptureScopes.delete(tabId);
+                return false;
+            }
+            scope.url = url;
+            return captureOpenFor(url);
+        });
+    tabCaptureScopes.set(tabId, scope);
+    return scope;
+}
+
+/**
+ * May this request be recorded? The page's own request (main frame) is judged by its own address: the tab's page may already be
+ * the next hop of a redirect. Everything else the tab makes is judged by the page. A request that belongs to no tab has no page.
+ * @returns {boolean|Promise<boolean>}
+ */
+function captureOpen(details, tabId = details.tabId) {
+    if (typeof tabId !== 'number' || tabId < 0) return true;
+    if (details.type === 'main_frame') {
+        const scope = tabCaptureScopes.get(tabId);
+        return scope && scope.url === details.url ? scope.open : captureOpenFor(details.url);
+    }
+    return captureScopeOfTab(tabId).open;
+}
+
 // The top-level request each tab is loading: its redirects reuse the request id and keep what was recorded
 const tabPageRequests = new Map();
 
@@ -129,6 +218,8 @@ function navigationFailed(tabId) {
     const left = (pendingNavigations.get(tabId) || 0) - 1;
     if (left > 0) { pendingNavigations.set(tabId, left); return; }
     pendingNavigations.delete(tabId);
+    // The page being left is the shown page again, whatever the failed request was: the tab's own address says what it is
+    tabCaptureScopes.delete(tabId);
     const gone = leavingDocuments.get(tabId);
     leavingDocuments.delete(tabId);
     if (gone && !tabDocuments.has(tabId)) tabDocuments.set(tabId, gone);
@@ -146,6 +237,11 @@ function navigationCommitted(details) {
     pendingNavigations.delete(details.tabId);
     leavingDocuments.delete(details.tabId);
     if (details.documentId) tabDocuments.set(details.tabId, details.documentId);
+    noteCommittedScope(details);
+    // A page shown with its capture refused is remembered by its document: a scan of it without a reload would be incomplete
+    // (background/uncaptured-pages.js). With the extension off there is no verdict, and no content script to scan the page either
+    const scope = tabCaptureScopes.get(details.tabId);
+    if (scope && typeof UncapturedPages !== 'undefined') UncapturedPages.noteCommit(details.tabId, details.documentId, scope.open);
 }
 
 /**
@@ -157,7 +253,13 @@ function navigationCommitted(details) {
 function forgetTabRequests(tabId, requestId) {
     if (typeof tabId !== 'number' || tabId < 0) return;
     if (requestId !== undefined && tabPageRequests.get(tabId) === requestId) return; // a redirect of the same load
-    if (requestId === undefined) tabPageRequests.delete(tabId); else tabPageRequests.set(tabId, requestId);
+    if (requestId === undefined) {
+        tabPageRequests.delete(tabId);
+        // A page that no request of this tab loaded (a prerendered page just activated): the tab's own address says what it is
+        tabCaptureScopes.delete(tabId);
+    } else {
+        tabPageRequests.set(tabId, requestId);
+    }
     // "This tab shows a cached result" belonged to the page before: the new page's own response headers and
     // Set-Cookie arrive before it commits (and before its content script asks the cache), so a flag left over
     // until the address changed dropped them. A cache hit on the new page sets it again.
@@ -210,6 +312,8 @@ function setupHeaderCapture() {
             if (isPrerenderRequest(details)) return;
             if (tabPageRequests.get(details.tabId) !== details.requestId) navigationStarted(details.tabId); // not a redirect
             forgetTabRequests(details.tabId, details.requestId);
+            // Whether this page captures anything starts here, before any request of it; the listeners below wait for the answer
+            noteCaptureScope(details);
         },
         { urls: ['<all_urls>'], types: ['main_frame'] }
     );
@@ -218,6 +322,7 @@ function setupHeaderCapture() {
         if (chrome.webNavigation.onCommitted) chrome.webNavigation.onCommitted.addListener((details) => { if (details && details.frameId === 0) navigationCommitted(details); });
         if (chrome.webNavigation.onErrorOccurred) chrome.webNavigation.onErrorOccurred.addListener((details) => { if (details && details.frameId === 0) navigationFailed(details.tabId); });
     }
+    if (chrome.tabs && chrome.tabs.onRemoved) chrome.tabs.onRemoved.addListener((tabId) => { tabCaptureScopes.delete(tabId); });
 
     // Listen for response headers
     chrome.webRequest.onHeadersReceived.addListener(
@@ -235,6 +340,8 @@ function setupHeaderCapture() {
 
             // Only capture headers for main frame requests
             if (details.type === 'main_frame' && details.responseHeaders) {
+                // A page the scan is refused for (or whose settings cannot be read) keeps nothing
+                if (!await captureOpen(details)) return;
                 const headers = {};
                 const responseCookies = [];
 
@@ -292,6 +399,7 @@ function setupHeaderCapture() {
 
             // Only capture headers for main frame requests
             if (details.type === 'main_frame' && details.requestHeaders) {
+                if (!await captureOpen(details)) return;
                 const headers = {};
 
                 details.requestHeaders.forEach(header => {
@@ -329,6 +437,8 @@ function setupHeaderCapture() {
 
                 // Only store payloads for methods that typically have bodies
                 if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+                    // Asked before the body is read: a page the scan is refused for has none of it decoded
+                    if (!await captureOpen(details)) return;
                     const { payloadData, payloadType } = readRequestBody(details.requestBody, Constants.MAX_RESPONSE_BODY_CHARS);
 
                     // Store all payloads in an array per tab
@@ -373,6 +483,7 @@ function setupHeaderCapture() {
             // amount of URL data scanned on asset-heavy pages. Keep script/xhr/fetch/
             // websocket/image/ping/main_frame/sub_frame (beacons can be images/pings).
             if (details.type === 'font' || details.type === 'media' || details.type === 'stylesheet') return;
+            if (!await captureOpen(details, tabId)) return;
 
             const networkUrls = networkUrlsStore.get(tabId) || [];
             const entry = {

@@ -83,6 +83,7 @@ importScripts(
     // Background runtime modules
     './background/runtime-state.js',
     './background/detection-session-store.js',
+    './background/uncaptured-pages.js',
     './background/header-capture.js',
     './background/utilities.js',
     './background/scan-report.js',

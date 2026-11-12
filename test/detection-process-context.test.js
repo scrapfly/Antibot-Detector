@@ -23,5 +23,6 @@ test('every processDetectionData caller passes the tab\'s own engine and detecto
     }
     assert.doesNotMatch(src, /detectionEngine:\s*window\.detectionEngine|detectorManager:\s*window\.detectorManager/, file);
   }
-  assert.ok(calls >= 4, `found ${calls} callers`);
+  // A floor that proves the pattern still finds the callers (3.1.8: Resume reloads the page instead of rendering a cached result)
+  assert.ok(calls >= 3, `found ${calls} callers`);
 });
