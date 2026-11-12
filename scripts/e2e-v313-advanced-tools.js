@@ -713,7 +713,7 @@ async function main() {
     await t.click(`${spec.id}CheckCookies`);
     const modal = await t.modal();
     assert.equal(modal.title, title);
-    assert.match(modal.text, new RegExp(`Found ${found} cookies`));
+    assert.match(modal.text, new RegExp(`Cookies found: ${found}`));
     for (const name of names) assert.ok(modal.cookies.includes(name), `${name} among ${modal.cookies.join(', ')}`);
     for (const fact of facts) assert.ok(modal.text.includes(fact), `${fact} in the window`);
     await t.closeModal();
