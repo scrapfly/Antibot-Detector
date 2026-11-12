@@ -209,6 +209,39 @@ test('line 3: a change since the earlier scan names what came and went, with Com
   assert.equal(detection.changeEntry.id, 'b', 'the newest saved scan is what Compare and Watch act on');
 });
 
+test('line 3: the line is one line, so its hover text holds what an ellipsis may cut, and the date', async () => {
+  const { UI, detection, els } = fixture({ history: changed });
+  detection.currentResults = [det('DataDome')];
+  await UI.syncChangeNote.call(detection);
+  const line = els['#detectionChangeNote'];
+  const [whole, date] = line.text.title.split('\n');
+  assert.equal(whole, line.text.textContent, 'the whole line on hover');
+  assert.ok(date && /\d/.test(date), `the date of the earlier scan on hover: ${line.text.title}`);
+});
+
+test('the summary card\'s lines take one line each, and the results list gives their room back (the first page fits)', () => {
+  // 3.1.8 merge: the change line wrapped to two or three lines and the two cards of a first page went under the pagination bar
+  // (e2e-v313-filters "Detection first pages fit above the pagination without scrolling")
+  const css = read('sections/detection/detection.css');
+  const rule = (selector) => {
+    const at = css.indexOf(`${selector} {`);
+    assert.ok(at >= 0, selector);
+    return css.slice(at, css.indexOf('}', at));
+  };
+  const summary = rule('.detection-summary-note');
+  assert.match(summary, /white-space:\s*nowrap/, 'one line');
+  assert.match(summary, /overflow:\s*hidden/);
+  assert.doesNotMatch(summary, /overflow-wrap:\s*anywhere/);
+  const text = rule('.detection-summary-note .detection-note-text');
+  assert.match(text, /text-overflow:\s*ellipsis/, 'the text gives way');
+  assert.match(text, /min-width:\s*0/);
+  assert.match(rule('.detection-summary-note .detection-note-action'), /flex:\s*0 0 auto/, 'the buttons stay whole');
+  for (const target of ['.results-list {', '.detection-group-head {', '.card-header {']) {
+    assert.ok(css.split('.detection-results:has(.detection-summary-note:not([hidden]))').slice(1).some(part => part.split('\n')[0].includes(target)),
+      `the list gives the room back: ${target}`);
+  }
+});
+
 test('line 3: no change, and a watched page says Watching', async () => {
   const history = [
     { id: 'a', url: 'https://shop.example/login', timestamp: T0, detections: [det('Akamai')] },
