@@ -187,7 +187,7 @@
     "message": "تستخدم التواريخ والساعات منطقتك الزمنية المحلية."
   },
   "statsTimelineLimitFmt": {
-    "message": "يتم عرض آخر {0} من الأيام. تشمل الإجماليات والصادرات الفترة المحددة بالكامل."
+    "message": "يتم عرض الأيام الأخيرة فقط (عددها: {0}). تشمل الإجماليات والصادرات الفترة المحددة بالكامل."
   },
   "statsProtectionDetails": {
     "message": "جميع وسائل الحماية"
@@ -226,7 +226,7 @@
     "message": "النطاق"
   },
   "statsTableCountFmt": {
-    "message": "{0} من أصل {1} صفًا"
+    "message": "الصفوف: {0} من {1}"
   },
   "statsTableMore": {
     "message": "عرض المزيد"
@@ -926,13 +926,13 @@
     "message": "تعذَّر حذف عنصر السجل"
   },
   "notificationHistoryExportedFmt": {
-    "message": "تم تصدير {0} من عناصر السجل"
+    "message": "عناصر السجل المُصدَّرة: {0}"
   },
   "notificationHistoryMergedFmt": {
-    "message": "تم دمج {0} من عناصر السجل الجديدة"
+    "message": "عناصر السجل الجديدة المدمجة: {0}"
   },
   "notificationHistoryReplacedFmt": {
-    "message": "تم استبدال السجل بـ {0} عنصرًا"
+    "message": "تم استبدال السجل، عدد العناصر: {0}"
   },
   "notificationHistoryExportedOne": {
     "message": "تم تصدير عنصر سجل واحد"
@@ -1043,7 +1043,7 @@
     "message": "خطأ في قراءة الملف: {0}"
   },
   "detectorsUpdatedFmt": {
-    "message": "تم تحديث {0} من الكواشف"
+    "message": "الكواشف المُحدَّثة: {0}"
   },
   "detectorDeletedFmt": {
     "message": "تم حذف \"{0}\""
@@ -1100,7 +1100,7 @@
     "message": "استبدال"
   },
   "importHistoryModeMessageFmt": {
-    "message": "هل تريد استيراد {0} من عناصر السجل؟ يحتوي سجلك الحالي على {1}.<br>«دمج» يضيف العناصر الجديدة إليه، و«استبدال» يحذفه أولًا."
+    "message": "العناصر المراد استيرادها: {0}. العناصر في سجلك الحالي: {1}.<br>«دمج» يضيف العناصر الجديدة إليه، و«استبدال» يحذفه أولًا."
   },
   "clearLogsTitle": {
     "message": "مسح السجلات"
@@ -1975,13 +1975,13 @@
     "message": "لا توجد بيانات في هذه الفترة"
   },
   "statsTipPagesFmt": {
-    "message": "{0} صفحة"
+    "message": "الصفحات: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} من {1} اكتشافات · {2}%"
+    "message": "الاكتشافات: {0} من {1} · {2}%"
   },
   "statsTimelineMetaFmt": {
-    "message": "{0} اكتشاف · {1} يوم"
+    "message": "الاكتشافات: {0} · الأيام: {1}"
   },
   "deleteOfficialDetectorNote": {
     "message": "هذا كاشف رسمي من Scrapfly. لن تعيده التحديثات؛ استخدم \"استعادة الكواشف الرسمية\" في القائمة … لاستعادته."
@@ -1990,7 +1990,7 @@
     "message": "استعادة الكواشف الرسمية"
   },
   "officialDetectorsRestoredFmt": {
-    "message": "تمت استعادة {0} من الكواشف الرسمية"
+    "message": "الكواشف الرسمية المستعادة: {0}"
   },
   "failedRestoreOfficialDetectors": {
     "message": "تعذرت استعادة الكواشف الرسمية"
@@ -2011,7 +2011,7 @@
     "message": "جارٍ مسح الكواشف المخصصة..."
   },
   "customDetectorsClearedFmt": {
-    "message": "تمت إزالة {0} من الكواشف المخصصة"
+    "message": "الكواشف المخصصة المُزالة: {0}"
   },
   "noCustomDetectorsToClear": {
     "message": "لا توجد كواشف مخصصة لمسحها"
@@ -3256,7 +3256,7 @@
     "message": "تم النسخ إلى الحافظة"
   },
   "advPanelCookiesFoundFmt": {
-    "message": "تم العثور على {0}/{1} من ملفات تعريف الارتباط"
+    "message": "ملفات تعريف الارتباط التي عُثر عليها: {0}/{1}"
   },
   "advPanelScriptsFoundFmt": {
     "message": "السكربتات التي تم العثور عليها: {0}"
@@ -3631,19 +3631,19 @@
     "message": "تحتاج قائمة «واحد مما يلي» في كل خيار إلى نمط يجب أن يوجد."
   },
   "combinationInvalidAtLeastFmt": {
-    "message": "يحتاج «{0} على الأقل» إلى {0} أنماط يجب أن توجد."
+    "message": "يحتاج «{0} على الأقل» إلى أنماط يجب أن توجد (العدد: {0})."
   },
   "combinationSentenceOne": {
     "message": "تعمل عند تحقق هذا الشرط."
   },
   "combinationSentenceAllFmt": {
-    "message": "تعمل عند تحقق الشروط الـ{0} كلها."
+    "message": "تعمل عند تحقق جميع الشروط (عددها: {0})."
   },
   "combinationSentenceAnyFmt": {
-    "message": "تعمل عند تحقق أي شرط من هذه الشروط الـ{0}."
+    "message": "تعمل عند تحقق أي شرط من هذه الشروط (عددها: {0})."
   },
   "combinationSentenceAtLeastFmt": {
-    "message": "تعمل عند تحقق {0} على الأقل من هذه الشروط الـ{1}."
+    "message": "تعمل عند تحقق حد أدنى من هذه الشروط: {0} من {1}."
   },
   "combinationSentenceConfidenceFmt": {
     "message": "الثقة: {0}%."
@@ -3808,7 +3808,7 @@
     "message": "حُفظ"
   },
   "tipConfidenceAverageFmt": {
-    "message": "متوسط {0} اكتشافات، من {1}% إلى {2}%"
+    "message": "متوسط الاكتشافات (عددها: {0})، من {1}% إلى {2}%"
   },
   "tipConfidenceFromCombinations": {
     "message": "من التركيبات المطابقة"
@@ -3832,7 +3832,7 @@
     "message": "حددها {0}"
   },
   "tipDifficultyManyFmt": {
-    "message": "رفعتها {0} أنظمة حماية معًا"
+    "message": "رفعتها عدة أنظمة حماية معًا (عددها: {0})"
   },
   "tipDifficultyNoneCounted": {
     "message": "لم يُعثر على مكافحة روبوتات أو CAPTCHA بنسبة 50% أو أكثر"
@@ -4090,7 +4090,7 @@
     "message": "سيُرفع ملخص اكتشافات هذه الصفحة إلى {0} ({1}). يمكن لأي شخص لديه الرابط عرضه. لا تُضمَّن معاملات عنوان URL ولا قيم ملفات تعريف الارتباط أو الترويسات."
   },
   "shareExpiryDaysFmt": {
-    "message": "يُحذف بعد {0} يومًا"
+    "message": "يُحذف بعد عدد من الأيام: {0}"
   },
   "shareExpiryAfterFmt": {
     "message": "يُحذف بعد {0}"
@@ -4153,7 +4153,7 @@
     "message": "القيمة"
   },
   "advCommonCharsFmt": {
-    "message": "{0} حرفًا"
+    "message": "عدد الأحرف: {0}"
   },
   "advCookiePath": {
     "message": "المسار"
@@ -4535,13 +4535,13 @@
     "message": "تحقق"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "تتطابق هذه القاعدة مع {1} من {0} صفحة محفوظة"
+    "message": "الصفحات المحفوظة التي تطابقها هذه القاعدة: {1} من {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{0} من {1} صفحة"
+    "message": "الصفحات: {0} من {1}"
   },
   "ruleHistoryCheckOtherFmt": {
-    "message": "+{0} صفحات أخرى"
+    "message": "صفحات أخرى: +{0}"
   },
   "ruleHistoryCheckNoHistory": {
     "message": "السجل فارغ: تصفح بعض الصفحات أولًا."
@@ -4550,7 +4550,7 @@
     "message": "تقدير: يحفظ السجل القيم المطابقة، لا الصفحات كاملة."
   },
   "ruleHistoryCheckCombinationFmt": {
-    "message": "تتحقق في {0} صفحة"
+    "message": "تعمل في الصفحات: {0}"
   },
   "ruleHistoryCheckEmpty": {
     "message": "أضف أنماطًا للتحقق منها."
@@ -5006,7 +5006,7 @@
     "message": "وسائل الحماية المرصودة"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "{0} جديدة في هذه الفترة"
+    "message": "جديدة في هذه الفترة: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "إجمالي القواعد: {0}"
@@ -5180,7 +5180,7 @@
     "message": "أدلة قوية"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{0} من أصل {1} اكتشافًا حصلت على 80% أو أكثر."
+    "message": "الاكتشافات التي حصلت على 80% أو أكثر: {0} من {1}."
   },
   "statsUnconfirmed": {
     "message": "مذكورة وغير مؤكدة"
@@ -5249,7 +5249,7 @@
     "message": "التغطية"
   },
   "statsRulesCoverageFmt": {
-    "message": "تطابقت {0} من أصل {1} قاعدة مفعّلة في هذا النطاق"
+    "message": "القواعد المفعّلة التي تطابقت في هذا النطاق: {0} من {1}"
   },
   "statsRulesAttention": {
     "message": "تحتاج إلى انتباه"
@@ -6483,7 +6483,7 @@
     "message": "لا تتحقق"
   },
   "ruleLiveTestPageFmt": {
-    "message": "تمت القراءة: النصوص البرمجية {0}، العناصر {1}، ملفات تعريف الارتباط {2}، الطلبات {3}."
+    "message": "تمت القراءة من الصفحة. النصوص البرمجية: {0} · العناصر: {1} · ملفات تعريف الارتباط: {2} · الطلبات: {3}."
   },
   "ruleLiveTestNoRequests": {
     "message": "الطلبات التي أجرتها الصفحة غير متاحة الآن، لذا فُحصت أنماط URL مقابل عنوانها ونصوصها البرمجية فقط."
@@ -6626,7 +6626,7 @@
     "message": "لا توجد صفحة تطابق هذا المرشح."
   },
   "bulkShowingFmt": {
-    "message": "يتم عرض {0} من {1} صفحة. تشمل عمليات التصدير هذه الصفحات فقط.",
+    "message": "الصفحات المعروضة: {0} من {1}. تشمل عمليات التصدير هذه الصفحات فقط.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
@@ -6790,6 +6790,9 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "سطر واحد"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
   },
   "settingsCacheScopeDesc": {
     "message": "الصفحات التي تتشارك نتيجة محفوظة واحدة. النطاق: كل صفحات الموقع. المسار: العنوان نفسه أيًّا كان الاستعلام. URL كامل: العنوان المطابق تمامًا فقط."

@@ -320,7 +320,7 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       await backupCard();
       await restoreFrom({ version: '1.0', timestamp: new Date().toISOString(), itemsCount: 1, items: [entry('legacy-1')] });
       await page.waitForSelector('.notification-confirm');
-      assert.match(await dialogText(), /Import History|Import 1 history items/i, 'the History importer asks its own question');
+      assert.match(await dialogText(), /Import History|Entries to import: 1/i, 'the History importer asks its own question');
       await page.$eval('.notification-confirm .notification-btn-confirm', el => el.click());
       await dialogsGone();
       await page.waitForFunction(async () => (JSON.parse((await chrome.storage.local.get('scrapfly_history')).scrapfly_history || '{"items":[]}').items || []).some(i => i.id === 'legacy-1'), null, { polling: 250 });

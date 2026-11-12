@@ -81,15 +81,15 @@ const AdvancedUtils = {
     /**
      * Format bytes to human-readable size
      * @param {number} bytes - Size in bytes
-     * @returns {string} Formatted size (e.g., "1.5 KB")
+     * @returns {string} Formatted size ("1.5 KB", "1,5 KB" in German: the decimal mark of the interface language)
      */
     formatBytes(bytes) {
         if (bytes === 0) return '0 B';
         if (!bytes || isNaN(bytes)) return '-';
         const k = 1024;
         const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        const i = Math.min(sizes.length - 1, Math.floor(Math.log(bytes) / Math.log(k)));
+        return FormatUtils.formatNumber(bytes / Math.pow(k, i), { maximumFractionDigits: 2 }) + ' ' + sizes[i];
     },
 
     /**
@@ -167,7 +167,7 @@ const AdvancedUtils = {
          * Check cookies operation notifications
          */
         checkCookies: {
-            success: (count, total) => _advUtilsFmt('advPanelCookiesFoundFmt', `Found ${count}/${total} cookies`, count, total),
+            success: (count, total) => _advUtilsFmt('advPanelCookiesFoundFmt', `Cookies found: ${count}/${total}`, count, total),
             none: (moduleName) => _advUtilsFmt('advCommonNoCookiesFmt', `No ${moduleName} cookies found`, moduleName)
         },
 

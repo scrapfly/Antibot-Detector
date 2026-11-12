@@ -47,7 +47,7 @@ function fixture(copy = async () => true) {
   document.querySelectorAll = selector => document.body.querySelectorAll(selector);
   const opener = document.body.appendChild(document.createElement('button')); opener.focus();
   const context = { window: {}, document, AdvancedUtils: { copyToClipboard: copy },
-    I18n: { tr: (_, fallback) => fallback }, CloseButton: { create: () => document.createElement('button') } };
+    I18n: { tr: (_, fallback) => fallback }, FormatUtils: require('../utils/format-utils.js'), CloseButton: { create: () => document.createElement('button') } };
   vm.createContext(context); vm.runInContext(fs.readFileSync(sourcePath, 'utf8'), context);
   const owner = { createToolModal: () => { const modal = document.createElement('div'); modal.className = 'tool-modal'; return modal; }, showToolModal: modal => document.body.appendChild(modal) };
   return { context, document, opener, owner, api: context.window.AdvancedCodeDialog };

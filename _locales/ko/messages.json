@@ -6791,6 +6791,9 @@
   "detectionCopyMenuOneLine": {
     "message": "한 줄"
   },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
+  },
   "settingsCacheScopeDesc": {
     "message": "하나의 저장된 결과를 함께 쓰는 페이지 범위입니다. 도메인: 사이트의 모든 페이지. 경로: 쿼리와 관계없이 같은 주소. 전체 URL: 정확히 같은 주소만."
   },

@@ -1978,7 +1978,7 @@
     "message": "Sidor: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} av {1} upptäckter · {2} %"
+    "message": "Upptäckter: {0} av {1} · {2} %"
   },
   "statsTimelineMetaFmt": {
     "message": "Upptäckter: {0} · Dagar: {1}"
@@ -3256,7 +3256,7 @@
     "message": "Kopierat till urklipp"
   },
   "advPanelCookiesFoundFmt": {
-    "message": "Hittade {0}/{1} cookies"
+    "message": "Hittade cookies: {0}/{1}"
   },
   "advPanelScriptsFoundFmt": {
     "message": "Hittade skript: {0}"
@@ -4153,7 +4153,7 @@
     "message": "Värde"
   },
   "advCommonCharsFmt": {
-    "message": "{0} tecken"
+    "message": "tecken: {0}"
   },
   "advCookiePath": {
     "message": "Sökväg"
@@ -4535,10 +4535,10 @@
     "message": "Kontrollera"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Den här regeln matchar {1} av {0} sparade sidor"
+    "message": "Sparade sidor som regeln matchar: {1} av {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{0} av {1} sidor"
+    "message": "Sidor: {0} av {1}"
   },
   "ruleHistoryCheckOtherFmt": {
     "message": "Andra sidor: +{0}"
@@ -5180,7 +5180,7 @@
     "message": "Starka belägg"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{0} av {1} upptäckter har 80 % eller mer i poäng."
+    "message": "Upptäckter med 80 % eller mer: {0} av {1}."
   },
   "statsUnconfirmed": {
     "message": "Nämnda, inte bekräftade"
@@ -5249,7 +5249,7 @@
     "message": "Täckning"
   },
   "statsRulesCoverageFmt": {
-    "message": "{0} av {1} aktiverade regler matchade i det här intervallet"
+    "message": "Aktiverade regler som matchade i det här intervallet: {0} av {1}"
   },
   "statsRulesAttention": {
     "message": "Kräver uppmärksamhet"
@@ -6114,7 +6114,7 @@
     "message": "Senaste kontroll: {0} · {1} kontrollerade, {2} ändrade"
   },
   "settingsHistoryWatchDoneFmt": {
-    "message": "Kontrollerade {0} sidor, {1} ändrade"
+    "message": "Kontrollerade sidor: {0}, ändrade: {1}"
   },
   "settingsHistoryWatchUncheckedFmt": {
     "message": "Kunde inte kontrolleras: {0}"
@@ -6626,7 +6626,7 @@
     "message": "Ingen sida matchar det här filtret."
   },
   "bulkShowingFmt": {
-    "message": "Visar {0} av {1} sidor. Exporter innehåller bara dessa.",
+    "message": "Visade sidor: {0} av {1}. Exporter innehåller bara dessa.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
@@ -6790,6 +6790,9 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "En rad"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
   },
   "settingsCacheScopeDesc": {
     "message": "Vilka sidor som delar ett sparat resultat. Domän: alla sidor på webbplatsen. Sökväg: samma adress, oavsett fråga. Fullständig URL: bara exakt samma adress."

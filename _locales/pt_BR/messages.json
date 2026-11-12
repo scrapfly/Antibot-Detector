@@ -1043,7 +1043,7 @@
     "message": "Erro ao ler arquivo: {0}"
   },
   "detectorsUpdatedFmt": {
-    "message": "{0} detectores atualizados"
+    "message": "Detectores atualizados: {0}"
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" excluído"
@@ -1100,7 +1100,7 @@
     "message": "Substituir"
   },
   "importHistoryModeMessageFmt": {
-    "message": "Importar {0} itens do histórico? Seu histórico atual tem {1}.<br>Mesclar adiciona os novos itens. Substituir apaga o histórico atual antes."
+    "message": "Itens a importar: {0}. Itens no seu histórico atual: {1}.<br>Mesclar adiciona os novos itens. Substituir apaga o histórico atual antes."
   },
   "clearLogsTitle": {
     "message": "Limpar logs"
@@ -1978,7 +1978,7 @@
     "message": "Páginas: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} de {1} detecções · {2}%"
+    "message": "Detecções: {0} de {1} · {2}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Detecções: {0} · Dias: {1}"
@@ -2011,7 +2011,7 @@
     "message": "Limpando detectores personalizados..."
   },
   "customDetectorsClearedFmt": {
-    "message": "{0} detectores personalizados removidos"
+    "message": "Detectores personalizados removidos: {0}"
   },
   "noCustomDetectorsToClear": {
     "message": "Não há detectores personalizados para limpar"
@@ -4153,7 +4153,7 @@
     "message": "Valor"
   },
   "advCommonCharsFmt": {
-    "message": "{0} caracteres"
+    "message": "caracteres: {0}"
   },
   "advCookiePath": {
     "message": "Caminho"
@@ -4535,13 +4535,13 @@
     "message": "Verificar"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Esta regra corresponde a {1} de {0} páginas salvas"
+    "message": "Páginas salvas em que esta regra corresponde: {1} de {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{0} de {1} páginas"
+    "message": "Páginas: {0} de {1}"
   },
   "ruleHistoryCheckOtherFmt": {
-    "message": "+{0} outras páginas"
+    "message": "Outras páginas: +{0}"
   },
   "ruleHistoryCheckNoHistory": {
     "message": "O Histórico está vazio: navegue por algumas páginas primeiro."
@@ -4550,7 +4550,7 @@
     "message": "Uma estimativa: o Histórico guarda os valores encontrados, não as páginas inteiras."
   },
   "ruleHistoryCheckCombinationFmt": {
-    "message": "dispara em {0} páginas"
+    "message": "dispara em páginas: {0}"
   },
   "ruleHistoryCheckEmpty": {
     "message": "Adicione padrões para verificá-los."
@@ -5006,7 +5006,7 @@
     "message": "Proteções vistas"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "{0} novas neste período"
+    "message": "Novas neste período: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "Total de regras: {0}"
@@ -5180,7 +5180,7 @@
     "message": "Evidência forte"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{0} de {1} detecções pontuam 80% ou mais."
+    "message": "Detecções com 80% ou mais: {0} de {1}."
   },
   "statsUnconfirmed": {
     "message": "Citadas, não confirmadas"
@@ -5249,7 +5249,7 @@
     "message": "Cobertura"
   },
   "statsRulesCoverageFmt": {
-    "message": "{0} de {1} regras ativadas encontraram correspondência neste período"
+    "message": "Regras ativadas com correspondência neste período: {0} de {1}"
   },
   "statsRulesAttention": {
     "message": "Precisam de atenção"
@@ -6114,7 +6114,7 @@
     "message": "Última verificação: {0} · {1} verificadas, {2} alteradas"
   },
   "settingsHistoryWatchDoneFmt": {
-    "message": "{0} páginas verificadas, {1} alteradas"
+    "message": "Páginas verificadas: {0}, alteradas: {1}"
   },
   "settingsHistoryWatchUncheckedFmt": {
     "message": "Não foi possível verificar: {0}"
@@ -6483,7 +6483,7 @@
     "message": "não ativada"
   },
   "ruleLiveTestPageFmt": {
-    "message": "Lidos: {0} scripts, {1} elementos, {2} cookies e {3} requisições."
+    "message": "Lido da página. Scripts: {0} · elementos: {1} · cookies: {2} · requisições: {3}."
   },
   "ruleLiveTestNoRequests": {
     "message": "As requisições feitas pela página não estão disponíveis agora, então os padrões de URL foram verificados só no endereço e nos scripts dela."
@@ -6626,7 +6626,7 @@
     "message": "Nenhuma página corresponde a este filtro."
   },
   "bulkShowingFmt": {
-    "message": "Mostrando {0} de {1} páginas. As exportações incluem apenas estas.",
+    "message": "Páginas exibidas: {0} de {1}. As exportações incluem apenas estas.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
@@ -6790,6 +6790,9 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Uma linha"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
   },
   "settingsCacheScopeDesc": {
     "message": "Quais páginas compartilham um mesmo resultado salvo. Domínio: todas as páginas do site. Caminho: o mesmo endereço, qualquer que seja a consulta. URL completa: só o endereço exato."

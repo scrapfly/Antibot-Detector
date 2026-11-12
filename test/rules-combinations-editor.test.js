@@ -271,6 +271,8 @@ test('the card says when it fires, in plain sentences', () => {
   assert.equal(sentences({ all: [{ pattern: 'a' }, { pattern: 'b' }] }), 'Fires when all 2 conditions are met. Confidence: 65%.');
   assert.equal(sentences({ atLeast: 2, of: [{ pattern: 'a' }, { pattern: 'b' }, { pattern: 'c' }] }), 'Fires when at least 2 of these 3 conditions are met. Confidence: 65%.');
   assert.equal(sentences({ any: [{ pattern: 'a' }, { pattern: 'b' }] }, null), 'Fires when any one of these 2 conditions is met. Confidence: Auto, up to 40%.');
+  // "at least 1 of these 3 conditions are met" reads wrongly: it is "any one of these"
+  assert.equal(sentences({ atLeast: 1, of: [{ pattern: 'a' }, { pattern: 'b' }, { pattern: 'c' }] }), 'Fires when any one of these 3 conditions is met. Confidence: 65%.');
   assert.equal(sentences({ all: [{ pattern: 'a' }, { any: [{ pattern: 'b' }, { pattern: 'c' }] }, { not: { pattern: 'c' } }] }),
     'Fires when all 3 conditions are met. Confidence: 65%. A group counts as one condition. It does not fire if a “Must not be found” pattern is present.');
   const loose = [{ id: 'a', method: 'url', label: '/a', strict: false, confidence: 30 }, { id: 'b', method: 'url', label: '/b', strict: true, confidence: 40 }];

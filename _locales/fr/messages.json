@@ -1043,7 +1043,7 @@
     "message": "Erreur de lecture du fichier : {0}"
   },
   "detectorsUpdatedFmt": {
-    "message": "{0} détecteurs mis à jour"
+    "message": "Détecteurs mis à jour : {0}"
   },
   "detectorDeletedFmt": {
     "message": "« {0} » supprimé"
@@ -1100,7 +1100,7 @@
     "message": "Remplacer"
   },
   "importHistoryModeMessageFmt": {
-    "message": "Importer {0} éléments d'historique ? Votre historique actuel en contient {1}.<br>« Fusionner » y ajoute les nouveaux éléments. « Remplacer » le supprime d'abord."
+    "message": "Éléments à importer : {0}. Éléments dans votre historique actuel : {1}.<br>« Fusionner » y ajoute les nouveaux éléments. « Remplacer » le supprime d'abord."
   },
   "clearLogsTitle": {
     "message": "Vider les journaux"
@@ -1978,7 +1978,7 @@
     "message": "Pages : {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} sur {1} détections · {2}%"
+    "message": "Détections : {0} sur {1} · {2}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Détections : {0} · Jours : {1}"
@@ -2011,7 +2011,7 @@
     "message": "Suppression des détecteurs personnalisés..."
   },
   "customDetectorsClearedFmt": {
-    "message": "{0} détecteurs personnalisés supprimés"
+    "message": "Détecteurs personnalisés supprimés : {0}"
   },
   "noCustomDetectorsToClear": {
     "message": "Aucun détecteur personnalisé à effacer"
@@ -3256,7 +3256,7 @@
     "message": "Copié dans le presse-papiers"
   },
   "advPanelCookiesFoundFmt": {
-    "message": "{0}/{1} cookies trouvés"
+    "message": "Cookies trouvés : {0}/{1}"
   },
   "advPanelScriptsFoundFmt": {
     "message": "Scripts trouvés : {0}"
@@ -4153,7 +4153,7 @@
     "message": "Valeur"
   },
   "advCommonCharsFmt": {
-    "message": "{0} caractères"
+    "message": "caractères : {0}"
   },
   "advCookiePath": {
     "message": "Chemin"
@@ -4535,13 +4535,13 @@
     "message": "Vérifier"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Cette règle correspond à {1} pages enregistrées sur {0}"
+    "message": "Pages enregistrées correspondant à cette règle : {1} sur {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{0} sur {1} pages"
+    "message": "Pages : {0} sur {1}"
   },
   "ruleHistoryCheckOtherFmt": {
-    "message": "+{0} autres pages"
+    "message": "Autres pages : +{0}"
   },
   "ruleHistoryCheckNoHistory": {
     "message": "L'Historique est vide : parcourez d'abord quelques pages."
@@ -4550,7 +4550,7 @@
     "message": "Une estimation : l'Historique garde les valeurs trouvées, pas les pages entières."
   },
   "ruleHistoryCheckCombinationFmt": {
-    "message": "se déclenche sur {0} pages"
+    "message": "se déclenche sur des pages : {0}"
   },
   "ruleHistoryCheckEmpty": {
     "message": "Ajoutez des motifs pour les vérifier."
@@ -5006,7 +5006,7 @@
     "message": "Protections vues"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "{0} nouvelles sur cette période"
+    "message": "Nouvelles sur cette période : {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "Total des règles : {0}"
@@ -5180,7 +5180,7 @@
     "message": "Preuves solides"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{0} détections sur {1} obtiennent 80 % ou plus."
+    "message": "Détections à 80 % ou plus : {0} sur {1}."
   },
   "statsUnconfirmed": {
     "message": "Mentionnées, non confirmées"
@@ -5249,7 +5249,7 @@
     "message": "Couverture"
   },
   "statsRulesCoverageFmt": {
-    "message": "{0} règles activées sur {1} ont trouvé une correspondance sur cette période"
+    "message": "Règles activées ayant trouvé une correspondance sur cette période : {0} sur {1}"
   },
   "statsRulesAttention": {
     "message": "À examiner"
@@ -6483,7 +6483,7 @@
     "message": "ne se déclenche pas"
   },
   "ruleLiveTestPageFmt": {
-    "message": "Lu : {0} scripts, {1} éléments, {2} cookies et {3} requêtes."
+    "message": "Lu sur la page. Scripts : {0} · éléments : {1} · cookies : {2} · requêtes : {3}."
   },
   "ruleLiveTestNoRequests": {
     "message": "Les requêtes de la page ne sont plus disponibles : les motifs d’URL n’ont été vérifiés que sur son adresse et ses scripts."
@@ -6626,7 +6626,7 @@
     "message": "Aucune page ne correspond à ce filtre."
   },
   "bulkShowingFmt": {
-    "message": "{0} pages sur {1} affichées. Les exports ne contiennent que celles-ci.",
+    "message": "Pages affichées : {0} sur {1}. Les exports ne contiennent que celles-ci.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
@@ -6790,6 +6790,9 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Une ligne"
+  },
+  "labelValueFmt": {
+    "message": "{0} : {1}"
   },
   "settingsCacheScopeDesc": {
     "message": "Les pages qui partagent un même résultat enregistré. Domaine : toutes les pages du site. Chemin : la même adresse, quelle que soit la requête. URL complète : uniquement l’adresse exacte."

@@ -3631,7 +3631,7 @@
     "message": "Lista „Jeden z tych” wymaga wzorca, który musi zostać znaleziony w każdej opcji."
   },
   "combinationInvalidAtLeastFmt": {
-    "message": "„Co najmniej {0}” wymaga {0} wzorców, które muszą zostać znalezione."
+    "message": "„Co najmniej {0}” wymaga wzorców, które muszą zostać znalezione (liczba: {0})."
   },
   "combinationSentenceOne": {
     "message": "Uruchamia się, gdy ten warunek jest spełniony."
@@ -3643,7 +3643,7 @@
     "message": "Uruchamia się, gdy spełniony jest którykolwiek z warunków (liczba: {0})."
   },
   "combinationSentenceAtLeastFmt": {
-    "message": "Uruchamia się, gdy spełnione są co najmniej {0} z {1} warunków."
+    "message": "Uruchamia się, gdy spełniona jest minimalna liczba warunków: {0} z {1}."
   },
   "combinationSentenceConfidenceFmt": {
     "message": "Pewność: {0}%."
@@ -4535,7 +4535,7 @@
     "message": "Sprawdź"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Ta reguła pasuje do {1} z {0} zapisanych stron"
+    "message": "Zapisane strony, do których pasuje ta reguła: {1} z {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "Strony: {0} z {1}"
@@ -5559,7 +5559,7 @@
     "message": "Tylko zmienione strony"
   },
   "historyExportCountFmt": {
-    "message": "Do wyeksportowania: {0} z {1} wpisów"
+    "message": "Do wyeksportowania: {0} z {1}"
   },
   "historyExportNone": {
     "message": "Brak wpisów pasujących do tych filtrów"
@@ -6483,7 +6483,7 @@
     "message": "niespełniona"
   },
   "ruleLiveTestPageFmt": {
-    "message": "Odczytano skrypty: {0}, elementy: {1}, pliki cookie: {2} i żądania: {3}."
+    "message": "Odczytano ze strony. Skrypty: {0} · elementy: {1} · pliki cookie: {2} · żądania: {3}."
   },
   "ruleLiveTestNoRequests": {
     "message": "Żądania wykonane przez stronę nie są już dostępne, więc wzorce URL sprawdzono tylko względem jej adresu i skryptów."
@@ -6626,7 +6626,7 @@
     "message": "Żadna strona nie pasuje do tego filtra."
   },
   "bulkShowingFmt": {
-    "message": "Pokazano {0} z {1} stron. Eksporty zawierają tylko te strony.",
+    "message": "Pokazane strony: {0} z {1}. Eksporty zawierają tylko te strony.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
@@ -6790,6 +6790,9 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Jedna linia"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
   },
   "settingsCacheScopeDesc": {
     "message": "Które strony dzielą jeden zapisany wynik. Domena: każda strona witryny. Ścieżka: ten sam adres bez względu na zapytanie. Pełny URL: tylko dokładnie ten sam adres."

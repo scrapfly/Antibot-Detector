@@ -199,7 +199,7 @@ Advanced.prototype.renderCaptureCards = function(captures, container) {
       const summary = `${toolTag} · ${moduleName} · ${host}`;
       return `
         <div class="capture-card cap-row" role="group" aria-label="${attr(summary)}" data-module-id="${attr(capture.moduleId)}" data-capture-id="${attr(capture.id)}">
-          <button type="button" class="cap-row-open" aria-label="${attr(`${viewLabel}: ${summary}`)}">
+          <button type="button" class="cap-row-open" aria-label="${attr(FormatUtils.labelValue(viewLabel, summary))}">
             <span class="cap-row-mark" aria-hidden="true">${mark}</span>
             <span class="cap-row-main">
               <span class="cap-row-title"><span class="cap-row-tool">${esc(toolTag)}</span><span class="cap-row-vendor">${esc(moduleName)}</span></span>

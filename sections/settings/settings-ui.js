@@ -1727,7 +1727,7 @@ SettingsUI.checkWatchNow = async function(button) {
       const failed = Number(result.failed) || 0;
       const done = result.checked + result.skipped + failed === 0
         ? text('settingsHistoryWatchNothing', 'No page is watched yet: pin a page in History and choose Watch for changes.')
-        : text('settingsHistoryWatchDoneFmt', 'Checked {0} pages, {1} changed', result.checked, result.changed)
+        : text('settingsHistoryWatchDoneFmt', 'Pages checked: {0}, changed: {1}', result.checked, result.changed)
           + (failed ? ` · ${text('settingsHistoryWatchUncheckedFmt', '{0} could not be checked', failed)}` : '');
       // Every page failed: nothing was checked, which is not a success
       if (failed && !result.checked) NotificationHelper.error(done);
@@ -1758,12 +1758,12 @@ SettingsUI.backUpHistoryNow = async function(button) {
       NotificationHelper.error(text('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."));
     } else {
       // The worker's own reason (for example the browser refusing the download) follows the message
-      const reason = result && result.error ? `: ${String(result.error).slice(0, 160)}` : '';
-      NotificationHelper.error(`${text('settingsHistoryBackupFailed', 'History backup failed')}${reason}`);
+      const failed = text('settingsHistoryBackupFailed', 'History backup failed');
+      NotificationHelper.error(result && result.error ? FormatUtils.labelValue(failed, String(result.error).slice(0, 160)) : failed);
     }
   } catch (error) {
-    const reason = error && error.message ? `: ${String(error.message).slice(0, 160)}` : '';
-    NotificationHelper.error(`${text('settingsHistoryBackupFailed', 'History backup failed')}${reason}`);
+    const failed = text('settingsHistoryBackupFailed', 'History backup failed');
+    NotificationHelper.error(error && error.message ? FormatUtils.labelValue(failed, String(error.message).slice(0, 160)) : failed);
   } finally {
     if (button) button.disabled = false;
     SettingsUI.refreshHistoryStorage.call(this);

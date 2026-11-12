@@ -979,7 +979,7 @@ DetectionUI.updateCacheInfo = function() {
       const rows = [];
       if (meta && meta.timestamp) rows.push({ label: tr('tipCachedAt', 'Saved'), value: FormatUtils.formatDateTime(meta.timestamp) });
       if (meta && meta.expiry) rows.push({ label: tr('tipCacheExpires', 'Expires'), value: FormatUtils.formatDateTime(meta.expiry) });
-      FormatUtils.setTip(tile, `${tr('statCacheScope', 'Cache Scope')}: ${scopeNames[key]}`, scopeHints[key], rows);
+      FormatUtils.setTip(tile, FormatUtils.labelValue(tr('statCacheScope', 'Cache Scope'), scopeNames[key]), scopeHints[key], rows);
     };
     if (meta && meta.cacheScope) {
       showScope(meta.cacheScope);

@@ -6791,6 +6791,9 @@
   "detectionCopyMenuOneLine": {
     "message": "单行"
   },
+  "labelValueFmt": {
+    "message": "{0}：{1}"
+  },
   "settingsCacheScopeDesc": {
     "message": "哪些页面共用同一份已保存的结果。域名：站点的所有页面。路径：同一地址，不论查询参数。完整 URL：仅完全相同的地址。"
   },

@@ -226,7 +226,7 @@
     "message": "डोमेन"
   },
   "statsTableCountFmt": {
-    "message": "{1} में से {0} पंक्तियाँ"
+    "message": "पंक्तियाँ: {1} में से {0}"
   },
   "statsTableMore": {
     "message": "और दिखाएँ"
@@ -1043,7 +1043,7 @@
     "message": "फ़ाइल पढ़ने में त्रुटि: {0}"
   },
   "detectorsUpdatedFmt": {
-    "message": "{0} डिटेक्टर अपडेट किए गए"
+    "message": "अपडेट किए गए डिटेक्टर: {0}"
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" हटा दिया गया"
@@ -1100,7 +1100,7 @@
     "message": "बदलें"
   },
   "importHistoryModeMessageFmt": {
-    "message": "{0} इतिहास आइटम इम्पोर्ट करें? आपके मौजूदा इतिहास में {1} आइटम हैं।<br>“मर्ज करें” नए आइटम जोड़ता है। “बदलें” पहले मौजूदा इतिहास हटा देता है।"
+    "message": "इम्पोर्ट होने वाले आइटम: {0}। आपके मौजूदा इतिहास में आइटम: {1}।<br>“मर्ज करें” नए आइटम जोड़ता है। “बदलें” पहले मौजूदा इतिहास हटा देता है।"
   },
   "clearLogsTitle": {
     "message": "लॉग साफ़ करें"
@@ -1975,13 +1975,13 @@
     "message": "इस अवधि में कोई डेटा नहीं"
   },
   "statsTipPagesFmt": {
-    "message": "{0} पेज"
+    "message": "पेज: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{1} में से {0} डिटेक्शन · {2}%"
+    "message": "डिटेक्शन: {1} में से {0} · {2}%"
   },
   "statsTimelineMetaFmt": {
-    "message": "{0} डिटेक्शन · {1} दिन"
+    "message": "डिटेक्शन: {0} · दिन: {1}"
   },
   "deleteOfficialDetectorNote": {
     "message": "यह Scrapfly का आधिकारिक डिटेक्टर है। अपडेट इसे वापस नहीं लाएंगे; इसे वापस पाने के लिए … मेनू में \"आधिकारिक डिटेक्टर पुनर्स्थापित करें\" का उपयोग करें।"
@@ -2011,7 +2011,7 @@
     "message": "कस्टम डिटेक्टर साफ़ किए जा रहे हैं..."
   },
   "customDetectorsClearedFmt": {
-    "message": "{0} कस्टम डिटेक्टर हटाए गए"
+    "message": "हटाए गए कस्टम डिटेक्टर: {0}"
   },
   "noCustomDetectorsToClear": {
     "message": "साफ़ करने के लिए कोई कस्टम डिटेक्टर नहीं है"
@@ -3256,7 +3256,7 @@
     "message": "क्लिपबोर्ड पर कॉपी किया गया"
   },
   "advPanelCookiesFoundFmt": {
-    "message": "{0}/{1} कुकीज़ मिलीं"
+    "message": "मिली कुकीज़: {0}/{1}"
   },
   "advPanelScriptsFoundFmt": {
     "message": "मिली स्क्रिप्ट्स: {0}"
@@ -4153,7 +4153,7 @@
     "message": "मान"
   },
   "advCommonCharsFmt": {
-    "message": "{0} अक्षर"
+    "message": "अक्षर: {0}"
   },
   "advCookiePath": {
     "message": "पाथ"
@@ -4535,13 +4535,13 @@
     "message": "जाँचें"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "यह नियम {0} सहेजे गए पेजों में से {1} पर मेल खाता है"
+    "message": "इस नियम से मेल खाने वाले सहेजे गए पेज: {0} में से {1}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{1} में से {0} पेज"
+    "message": "पेज: {1} में से {0}"
   },
   "ruleHistoryCheckOtherFmt": {
-    "message": "+{0} अन्य पेज"
+    "message": "अन्य पेज: +{0}"
   },
   "ruleHistoryCheckNoHistory": {
     "message": "इतिहास खाली है: पहले कुछ पेज देखें।"
@@ -4550,7 +4550,7 @@
     "message": "अनुमान: इतिहास मिले हुए मान रखता है, पूरे पेज नहीं।"
   },
   "ruleHistoryCheckCombinationFmt": {
-    "message": "{0} पेजों पर सक्रिय"
+    "message": "सक्रिय पेज: {0}"
   },
   "ruleHistoryCheckEmpty": {
     "message": "जाँचने के लिए पैटर्न जोड़ें।"
@@ -5006,7 +5006,7 @@
     "message": "दिखे सुरक्षा उपाय"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "इस अवधि में {0} नए"
+    "message": "इस अवधि में नए: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "कुल नियम: {0}"
@@ -5180,7 +5180,7 @@
     "message": "मज़बूत साक्ष्य"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{1} में से {0} डिटेक्शन का स्कोर 80% या उससे ज़्यादा है।"
+    "message": "80% या उससे ज़्यादा स्कोर वाले डिटेक्शन: {1} में से {0}।"
   },
   "statsUnconfirmed": {
     "message": "ज़िक्र है, पुष्टि नहीं"
@@ -5249,7 +5249,7 @@
     "message": "कवरेज"
   },
   "statsRulesCoverageFmt": {
-    "message": "सक्षम {1} नियमों में से {0} इस अवधि में मेल खाए"
+    "message": "इस अवधि में मेल खाए सक्षम नियम: {1} में से {0}"
   },
   "statsRulesAttention": {
     "message": "ध्यान देने योग्य"
@@ -5559,7 +5559,7 @@
     "message": "सिर्फ़ बदले हुए पेज"
   },
   "historyExportCountFmt": {
-    "message": "{1} में से {0} प्रविष्टियाँ निर्यात होंगी"
+    "message": "निर्यात होने वाली प्रविष्टियाँ: {1} में से {0}"
   },
   "historyExportNone": {
     "message": "इन फ़िल्टर से कोई प्रविष्टि मेल नहीं खाती"
@@ -6114,7 +6114,7 @@
     "message": "पिछली जाँच: {0} · {1} जाँचे गए, {2} बदले"
   },
   "settingsHistoryWatchDoneFmt": {
-    "message": "{0} पेज जाँचे गए, {1} बदले"
+    "message": "जाँचे गए पेज: {0}, बदले: {1}"
   },
   "settingsHistoryWatchUncheckedFmt": {
     "message": "जाँचे नहीं जा सके: {0}"
@@ -6483,7 +6483,7 @@
     "message": "सक्रिय नहीं"
   },
   "ruleLiveTestPageFmt": {
-    "message": "पढ़े गए: {0} स्क्रिप्ट, {1} एलिमेंट, {2} कुकीज़ और {3} अनुरोध।"
+    "message": "पेज से पढ़ा गया। स्क्रिप्ट: {0} · एलिमेंट: {1} · कुकीज़: {2} · अनुरोध: {3}।"
   },
   "ruleLiveTestNoRequests": {
     "message": "पेज के किए गए अनुरोध अभी उपलब्ध नहीं हैं, इसलिए URL पैटर्न केवल उसके पते और स्क्रिप्ट से मिलाए गए।"
@@ -6626,7 +6626,7 @@
     "message": "कोई पेज इस फ़िल्टर से मेल नहीं खाता।"
   },
   "bulkShowingFmt": {
-    "message": "{1} में से {0} पेज दिख रहे हैं। एक्सपोर्ट में केवल यही शामिल होंगे।",
+    "message": "दिख रहे पेज: {1} में से {0}। एक्सपोर्ट में केवल यही शामिल होंगे।",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
@@ -6790,6 +6790,9 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "एक पंक्ति"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
   },
   "settingsCacheScopeDesc": {
     "message": "कौन-से पेज एक ही सहेजा गया परिणाम साझा करते हैं। डोमेन: साइट का हर पेज। पथ: वही पता, क्वेरी चाहे जो हो। पूर्ण URL: सिर्फ़ बिल्कुल वही पता।"

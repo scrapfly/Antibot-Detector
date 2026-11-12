@@ -279,7 +279,7 @@ DetectionModals.renderDetectionModalContent = function(detection) {
       const rows = [];
       if (definition.version) rows.push({ label: _dmText('ruleFieldVersion', 'Version'), value: String(definition.version) });
       if (definition.lastUpdated) rows.push({ label: _dmText('tipLastUpdated', 'Updated'), value: String(definition.lastUpdated).slice(0, 10) });
-      FormatUtils.setTip(authorElement.closest('.history-stat-inline'), `${_dmText('detectionModalAuthor', 'Author')}: ${author}`,
+      FormatUtils.setTip(authorElement.closest('.history-stat-inline'), FormatUtils.labelValue(_dmText('detectionModalAuthor', 'Author'), author),
         official ? _dmText('tipOfficialDetector', 'Official Scrapfly detector') : _dmText('tipCustomDetector', 'Custom detector'), rows);
     }
 

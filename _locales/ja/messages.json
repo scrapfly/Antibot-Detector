@@ -6791,6 +6791,9 @@
   "detectionCopyMenuOneLine": {
     "message": "1行"
   },
+  "labelValueFmt": {
+    "message": "{0}：{1}"
+  },
   "settingsCacheScopeDesc": {
     "message": "1 つの保存済み結果を共有するページの範囲です。ドメイン: サイトのすべてのページ。パス: クエリに関係なく同じアドレス。完全URL: まったく同じアドレスのみ。"
   },
