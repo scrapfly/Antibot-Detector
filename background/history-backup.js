@@ -10,11 +10,17 @@
  * each stay under MAX_PART_BYTES (scrapfly-history-2026-10-19-part-2.json ...;
  * every JSON part can be imported on its own).
  *
- * Settings → History → Backups to keep (KEEP_CHOICES) deletes the files of the older backups after a new one is made; All, the
+ * download() answers once a download has started, and its file can still fail after that (a full disk, a folder that cannot be
+ * written, a download blocked or cancelled, the browser closed): a backup waits, WRITE_WAIT_MS at most and with the worker kept
+ * awake, until the browser says every file of it is written. One that is interrupted or not written in time fails the backup
+ * (Settings says so, and the failure notification), and that backup deletes nothing.
+ *
+ * Settings → History → Backups to keep (KEEP_CHOICES) deletes the files of the older backups after a new one is written; All, the
  * default, deletes nothing. A backup is all the files one run wrote. They are found by the ids the browser gave their downloads,
  * kept in RUNS_KEY and written before anything is deleted, and never by a name in Downloads. An id is not for ever (clearing the
  * browser's downloads list can hand an old one to some other file), so each download is checked before it is deleted: started by
- * this extension and a file in the Scrapfly folder named like a backup.
+ * this extension and a file in the Scrapfly folder named like a backup. Only a run whose files were all written counts among the
+ * backups kept; the files of one that failed are on record too, so they go with the older backups.
  *
  * The schedule is a chrome.alarms alarm. Alarms may be cleared when the browser
  * restarts, so on every start the alarm is recreated and a backup that came due
@@ -27,12 +33,17 @@ const HistoryBackup = {
     FOLDER: 'Scrapfly',
     RETRY_AFTER_FAILURE_MS: 3600000,
     STATE_KEY: 'scrapfly_history_backup',
-    // What the backups saved, as { at, ids } with the ids the browser gave the downloads, oldest first (STATE_KEY holds only the last outcome)
+    // What the backups saved, as { at, ids } with the ids the browser gave the downloads, oldest first (STATE_KEY holds only the last
+    // outcome); partial: true marks a run that is no backup to keep (it failed, its files are not written yet, or some could not be deleted yet)
     RUNS_KEY: 'scrapfly_history_backup_runs',
     // The numbers Backups to keep offers (anything else is "all")
     KEEP_CHOICES: Object.freeze([3, 7, 14, 30]),
     // Backups remembered at most: far above the largest choice, so it only bounds the record of a person who keeps them all
     MAX_TRACKED_RUNS: 200,
+    // How long a backup waits for the browser to write its files; one not written by then fails the backup
+    WRITE_WAIT_MS: 60000,
+    // The worker keepalive's name for a backup that waits for its files
+    KEEPALIVE_ID: 'history-backup',
     Messages: Object.freeze({ BACKUP_NOW: 'HISTORY_BACKUP_NOW' }),
 
     _initialized: false,
@@ -74,15 +85,32 @@ const HistoryBackup = {
     run(reason = 'manual') {
         // One at a time: an alarm that fires while a manual backup runs joins it
         if (!this._running) {
-            this._running = this._run(reason).finally(() => { this._running = null; });
+            // A backup waits for its files to be written: Chrome stops an idle worker after about 30 s, which would end the wait with
+            // nothing said of how it went, so the worker is kept awake as for a scan or a watch check
+            this._keepAwake(true);
+            this._running = this._run(reason).finally(() => {
+                this._running = null;
+                this._keepAwake(false);
+            });
         }
         return this._running;
+    },
+
+    /** Start (or renew: the keepalive drops an operation after two minutes) or end keeping the worker awake for this backup. */
+    _keepAwake(on) {
+        const keepalive = typeof workerKeepaliveManager !== 'undefined' && workerKeepaliveManager ? workerKeepaliveManager : null;
+        if (!keepalive) return;
+        if (on) keepalive.startOperation(this.KEEPALIVE_ID, { reason: 'history_backup' });
+        else keepalive.endOperation(this.KEEPALIVE_ID);
     },
 
     async _run(reason) {
         const now = Date.now();
         const ids = [];
-        let remembered = false;
+        // How the run is on record: '' not yet, 'started' as files these backups made, 'written' as a backup to keep
+        let recorded = '';
+        // Listening starts before the first download does: what becomes of one is heard even before download() answers with its id
+        const heard = this.follow();
         try {
             const settings = await Utils.getHistorySettings();
             const items = await HistoryStore.read(chrome.storage.local);
@@ -100,26 +128,120 @@ const HistoryBackup = {
                 files++;
                 if (Number.isInteger(id)) ids.push(id);
             }
-            // A run that wrote no file is no backup: it is not on record, so a string of them cannot push real ones out. This one
-            // is on record before anything older is deleted, so a worker that stops in between loses track of no file
+            // A run that wrote no file is no backup: it is not on record, so a string of them cannot push real ones out
             let removed = 0;
             if (ids.length) {
-                remembered = true;
-                const record = await this.remember({ at: now, ids });
+                // On record at once, but not yet as a backup to keep: a worker stopped while it waits loses track of no file, and files
+                // that may never be written cannot push written ones out
+                await this.remember({ at: now, ids, partial: true });
+                recorded = 'started';
+                this._keepAwake(true);
+                const failure = await this.written(ids, heard);
+                if (failure) throw new Error(failure);
+                // Every file is written: now it is a backup to keep, on record before anything older is deleted, so a worker that stops
+                // in between loses track of no file
+                const record = await this.remember({ at: now, ids }, true);
+                recorded = 'written';
                 if (record) removed = await this.prune(record, this.keepOf(settings.historyBackupKeep));
             }
             const state = { at: now, ok: true, entries: items.length, files, format: HistoryExport.FORMATS.includes(options.format) ? options.format : 'json', trigger: reason, ...(removed ? { removed } : {}) };
             await chrome.storage.local.set({ [this.STATE_KEY]: state });
             return { ok: true, entries: items.length, files };
         } catch (error) {
-            // Parts written before the failure are files these backups made: on record, though not as a backup to keep
-            if (ids.length && !remembered) await this.remember({ at: now, ids, partial: true });
+            // Files started before the failure are files these backups made: on record, though not as a backup to keep
+            if (ids.length && recorded !== 'written') await this.remember({ at: now, ids, partial: true }, recorded === 'started');
             const message = String((error && error.message) || error);
             await chrome.storage.local.set({ [this.STATE_KEY]: { at: now, ok: false, error: message, trigger: reason } }).catch(() => {});
             await this.notifyFailure().catch(() => {});
             this._warn('Backup failed:', error);
             return { ok: false, entries: 0, files: 0, error: message };
+        } finally {
+            heard.stop();
         }
+    },
+
+    /**
+     * Listen to what becomes of the browser's downloads from now on, so a download written (or interrupted) before download() has
+     * answered with its id is not missed. Never throws; stop() ends it.
+     * @returns {{states: Map<number, {state: string, error: string}>, wake: Function|null, stop: Function}}
+     */
+    follow() {
+        const heard = { states: new Map(), wake: null, stop() {} };
+        const changed = typeof chrome !== 'undefined' && chrome.downloads && chrome.downloads.onChanged;
+        if (!changed || typeof changed.addListener !== 'function') return heard;
+        const listener = (delta) => {
+            if (!delta || !Number.isSafeInteger(delta.id) || !(delta.state || delta.error)) return;
+            const known = heard.states.get(delta.id) || { state: 'in_progress', error: '' };
+            heard.states.set(delta.id, {
+                state: delta.state && typeof delta.state.current === 'string' ? delta.state.current : known.state,
+                error: delta.error && typeof delta.error.current === 'string' ? delta.error.current : known.error
+            });
+            if (heard.wake) heard.wake();
+        };
+        try {
+            changed.addListener(listener);
+        } catch (error) {
+            return heard;
+        }
+        heard.stop = () => {
+            try { changed.removeListener(listener); } catch (error) { /* the worker is going */ }
+        };
+        return heard;
+    },
+
+    /** Ask the browser how far each download not yet heard to have ended has got. Never throws: what it cannot answer, the events still tell. */
+    async askBrowser(ids, heard) {
+        for (const id of ids) {
+            const before = heard.states.get(id);
+            if (before && before.state !== 'in_progress') continue;
+            try {
+                const [item] = await chrome.downloads.search({ id });
+                // What was heard while the browser answered is newer than its answer
+                const now = heard.states.get(id);
+                if (item && typeof item.state === 'string' && (!now || now.state === 'in_progress')) heard.states.set(id, { state: item.state, error: typeof item.error === 'string' ? item.error : '' });
+            } catch (error) { /* the events still tell */ }
+        }
+    },
+
+    /**
+     * Wait until the browser has written every file of a run: each download 'complete'. Never rejects.
+     * @param {number[]} ids
+     * @param {object} heard  from follow(), started before the first download
+     * @returns {Promise<string>} '' when every file is written; otherwise why the backup is not whole: a download interrupted (with
+     *   the browser's reason), or one still not written after WRITE_WAIT_MS
+     */
+    written(ids, heard) {
+        return new Promise((resolve) => {
+            let over = false;
+            let timer = null;
+            const end = (outcome) => {
+                if (over) return;
+                over = true;
+                clearTimeout(timer);
+                heard.wake = null;
+                resolve(outcome);
+            };
+            const check = () => {
+                let waiting = false;
+                for (const id of ids) {
+                    const known = heard.states.get(id);
+                    if (known && known.state === 'interrupted') {
+                        end(`Download interrupted${known.error ? ` (${known.error})` : ''}`);
+                        return;
+                    }
+                    if (!known || known.state !== 'complete') waiting = true;
+                }
+                if (!waiting) end('');
+            };
+            heard.wake = check;
+            // At the time limit the browser is asked once more, so a file written without a word heard of it still counts
+            timer = setTimeout(() => this.askBrowser(ids, heard).then(() => {
+                check();
+                end(`Download did not finish within ${Math.ceil(this.WRITE_WAIT_MS / 1000)} s`);
+            }), this.WRITE_WAIT_MS);
+            // A download that ended before it could be heard of (or whose news never comes) is found by asking the browser
+            this.askBrowser(ids, heard).then(check);
+        });
     },
 
     /** The record of what backups saved ({ at, ids }, oldest first). Whatever in it is not a run of whole-number ids is left out. */
@@ -137,13 +259,16 @@ const HistoryBackup = {
 
     /**
      * Put a run on the record. Never throws.
-     * @param {{at: number, ids: number[], partial?: boolean}} run  partial: files of a backup that failed, or that could not be deleted yet
+     * @param {{at: number, ids: number[], partial?: boolean}} run  partial: files of a backup that failed, that are not written yet, or
+     *   that could not be deleted yet
+     * @param {boolean} [replace]  in place of the same run (same time, same ids) already on record
      * @returns {Promise<Array|null>} the record, or null when it could not be read or written (then nothing is deleted)
      */
-    async remember(run) {
+    async remember(run, replace = false) {
         try {
-            const runs = await this.record();
-            runs.push(run);
+            const same = (other) => other.at === run.at && other.ids.length === run.ids.length && other.ids.every((id, i) => id === run.ids[i]);
+            const runs = (await this.record()).filter(other => !(replace && same(other)));
+            runs.push(run.partial ? { at: run.at, ids: run.ids, partial: true } : { at: run.at, ids: run.ids });
             const kept = runs.slice(-this.MAX_TRACKED_RUNS);
             await chrome.storage.local.set({ [this.RUNS_KEY]: kept });
             return kept;
