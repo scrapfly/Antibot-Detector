@@ -28,6 +28,7 @@ function setupTabListeners() {
         if (typeof tabDocuments !== 'undefined') tabDocuments.delete(tabId);
         if (typeof leavingDocuments !== 'undefined') leavingDocuments.delete(tabId);
         if (typeof pendingNavigations !== 'undefined') pendingNavigations.delete(tabId);
+        if (typeof UncapturedPages !== 'undefined') UncapturedPages.forgetTab(tabId);
 
         if (tabsUsingCache.has(tabId)) {
             tabsUsingCache.delete(tabId);

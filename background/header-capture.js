@@ -238,6 +238,10 @@ function navigationCommitted(details) {
     leavingDocuments.delete(details.tabId);
     if (details.documentId) tabDocuments.set(details.tabId, details.documentId);
     noteCommittedScope(details);
+    // A page shown with its capture refused is remembered by its document: a scan of it without a reload would be incomplete
+    // (background/uncaptured-pages.js). With the extension off there is no verdict, and no content script to scan the page either
+    const scope = tabCaptureScopes.get(details.tabId);
+    if (scope && typeof UncapturedPages !== 'undefined') UncapturedPages.noteCommit(details.tabId, details.documentId, scope.open);
 }
 
 /**

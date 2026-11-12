@@ -448,6 +448,19 @@ async function finalizeDetection(tabId, state) {
         if (DetectionSessionStore.isCurrent(tabId, state)) DetectionSessionStore.finish(tabId, state);
         return;
     }
+    // A page that loaded while its site was not scanned (background/uncaptured-pages.js) has none of its headers, cookies, request
+    // bodies or requests, nor what its JS hooks would have seen: what a scan of it found without a reload is not its result.
+    // Nothing is kept, recorded, sent or shown, and the badge counts nothing; the page is scanned when it loads again
+    if (typeof UncapturedPages !== 'undefined' && await UncapturedPages.has(tabId, state.documentId)) {
+        if (!DetectionSessionStore.isCurrent(tabId, state)) return;
+        Logger.detection(`${Logger.hostOf(state.url)}: loaded while its site was not scanned, scan results not kept (reload it to scan it)`);
+        if (scanTab) BackgroundTabScan.scanFinished(tabId, state.url, [], { excluded: true });
+        stopBadgeSpinner(tabId);
+        await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId }).catch(() => {});
+        if (typeof ToolbarTitle !== 'undefined') await ToolbarTitle.reset(chrome, tabId);
+        if (DetectionSessionStore.isCurrent(tabId, state)) DetectionSessionStore.finish(tabId, state);
+        return;
+    }
     const normalizedFavicon = UrlUtils.normalizeFaviconForStorage(state.favicon, state.url);
 
     // Store to cache (a private-window page only until the last private window closes)

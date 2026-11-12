@@ -2375,6 +2375,17 @@ class DetectionEngineManager {
             return { status: 'not_cached' };
         }
 
+        // A page that loaded while its site was not scanned (background/uncaptured-pages.js): a route change of a single-page
+        // app, or a load notice that comes after the site was turned back on, would scan it without its headers, cookies,
+        // request bodies, requests and JS hooks, and keep that as its result. It is scanned when it loads again; the hover text
+        // stops saying the site is not scanned
+        if (typeof UncapturedPages !== 'undefined' && await UncapturedPages.has(tabId, sender.documentId)) {
+            if (!await isCurrentDocument()) return ignored;
+            Logger.debug('SCAN', `Tab ${tabId}: the page loaded while its site was not scanned; it is scanned when it loads again`);
+            if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.reset(chrome, tabId);
+            return { status: 'needs_reload', reason: 'not_captured' };
+        }
+
         // Coalesce this document's notifications, never a new page or reload
         // that happens to reuse the tab within the throttle interval.
         // A route change of a single-page app is a new page of the same document: it is coalesced by its address
@@ -2599,6 +2610,16 @@ class DetectionEngineManager {
                 } catch (_) { return false; }
             };
             const isCurrentRequest = async () => ownsSlot() && await isSameDocument() && ownsSlot();
+
+            // A page that loaded while its site was not scanned (skipped then, or the settings unreadable: background/
+            // uncaptured-pages.js) kept none of its headers, cookies, request bodies or requests, and its JS hooks never ran.
+            // Scanned as it is, it would be saved, recorded and sent as if complete: it is scanned when it loads again (the
+            // popup offers Scan again). Nothing is asked of the page, and the throttle below is not spent on it
+            if (typeof UncapturedPages !== 'undefined' && await UncapturedPages.has(tabId, frame.documentId)) {
+                if (!ownsSlot()) { skipSuperseded(); return true; }
+                sendResponse({ status: 'needs_reload', reason: 'not_captured', message: 'Reload the page to run detection.' });
+                return true;
+            }
 
             const requestKey = `${tabId}:${frame.documentId || tab.url}`;
             if (Utils.shouldSkipDetection(requestKey, Constants.DETECTION_SKIP_THRESHOLD, recentDetectionRequests)) {
