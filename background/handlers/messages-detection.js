@@ -6,10 +6,18 @@ function normalizeDetectionMessageUrl(url) {
     } catch (_) { return String(url || ''); }
 }
 
-/** Validate the sending document before any state-creating helper can replace a scan. */
+/**
+ * Validate the sending document before any state-creating helper can replace a scan.
+ *
+ * Only the tab's top document may report. A page Chrome is prerendering is not (documentLifecycle 'prerender': it has a frame
+ * of its own, not the tab's frame 0). Once shown it is, and Chrome names it frame 0 from then on; a message it sent just
+ * before, still under its own frame, is accepted when Chrome confirms that very document is now the tab's top frame.
+ */
 async function resolveDetectionMessageDocument(sender, url) {
     const tabId = sender.tab?.id;
-    if (!tabId || (sender.frameId !== undefined && sender.frameId !== 0) || !url) return null;
+    if (!tabId || !url || sender.documentLifecycle === 'prerender') return null;
+    const notTopFrame = sender.frameId !== undefined && sender.frameId !== 0;
+    if (notTopFrame && !sender.documentId) return null;
     const normalized = normalizeDetectionMessageUrl(url);
     if (sender.url && normalizeDetectionMessageUrl(sender.url) !== normalized) return null;
     const previousState = detectionStates.get(tabId);
@@ -22,6 +30,7 @@ async function resolveDetectionMessageDocument(sender, url) {
             verified = frame.documentId === sender.documentId;
         } catch (_) { return null; } // closed/unavailable frames cannot own a scan
     }
+    if (notTopFrame && !verified) return null; // a prerendered page that is not (or no longer) the tab's page
     if (!verified && sender.tab.url && normalizeDetectionMessageUrl(sender.tab.url) !== normalized) return null;
     const state = detectionStates.get(tabId);
     if (state !== previousState && (!state || normalizeDetectionMessageUrl(state.url) !== normalized ||
@@ -125,6 +134,27 @@ function registerDetectionHandlers(registry, context) {
         return true; // Keep SW alive until badge/cache work completes
     };
     registry[WorkerMessages.PAGE_LOAD_NOTIFICATION] = handle_page_load_notification;
+
+    // A page Chrome prerendered is now the tab's page (content script, modules/core/prerender-outbox.js): sent before its held
+    // hook and window reports, so the tab drops what it captured for the page before and takes the page's own load first
+    // (header-capture.js, activatePrerenderedPage)
+    const handle_prerender_shown = function({ request, sender, sendResponse, context }) {
+        void context;
+        (async () => {
+            try {
+                const url = sender.url || request?.url;
+                const document = await resolveDetectionMessageDocument(sender, url);
+                if (!document || typeof activatePrerenderedPage !== 'function') { sendResponse({ status: 'url_changed' }); return; }
+                const adopted = activatePrerenderedPage(document.tabId, url, document.documentId);
+                sendResponse({ status: 'ok', adopted });
+            } catch (error) {
+                Logger.error('BACKGROUND', '[PRERENDER_SHOWN] Failed:', error);
+                sendResponse({ status: 'error', error: error.message });
+            }
+        })();
+        return true;
+    };
+    registry[WorkerMessages.PRERENDER_SHOWN] = handle_prerender_shown;
 
     const handle_detection_data = function({ request, sender, sendResponse, context }) {
         void context;
