@@ -6791,6 +6791,12 @@
   "detectionCopyMenuOneLine": {
     "message": "Одна строка"
   },
+  "rulesOnlyBlockPages": {
+    "message": "Только страницы блокировки и проверки"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Искать во всём HTML, включая заголовок, только на небольших страницах, например на странице блокировки файрвола. Большие страницы не проверяются"
+  },
   "labelValueFmt": {
     "message": "{0}: {1}"
   },

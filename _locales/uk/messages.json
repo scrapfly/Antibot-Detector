@@ -6791,6 +6791,12 @@
   "detectionCopyMenuOneLine": {
     "message": "Один рядок"
   },
+  "rulesOnlyBlockPages": {
+    "message": "Лише сторінки блокування та перевірки"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Шукати в усьому HTML, разом із заголовком, лише на невеликих сторінках, як-от сторінка блокування файрвола. Більші сторінки не переглядаються"
+  },
   "labelValueFmt": {
     "message": "{0}: {1}"
   },

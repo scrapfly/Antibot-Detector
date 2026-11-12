@@ -6791,6 +6791,12 @@
   "detectionCopyMenuOneLine": {
     "message": "หนึ่งบรรทัด"
   },
+  "rulesOnlyBlockPages": {
+    "message": "เฉพาะหน้าบล็อกและหน้าทดสอบ"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "ค้นหาใน HTML ทั้งหมดรวมถึงชื่อหน้า เฉพาะหน้าขนาดเล็ก เช่น หน้าบล็อกของไฟร์วอลล์ ไม่ค้นหาในหน้าที่ใหญ่กว่านั้น"
+  },
   "labelValueFmt": {
     "message": "{0}: {1}"
   },

@@ -6791,6 +6791,12 @@
   "detectionCopyMenuOneLine": {
     "message": "한 줄"
   },
+  "rulesOnlyBlockPages": {
+    "message": "차단 및 챌린지 페이지만"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "방화벽 차단 페이지처럼 작은 페이지에서만 제목을 포함한 HTML 전체를 검색합니다. 더 큰 페이지는 검색하지 않습니다"
+  },
   "labelValueFmt": {
     "message": "{0}: {1}"
   },

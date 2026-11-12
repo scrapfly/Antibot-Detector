@@ -6791,6 +6791,12 @@
   "detectionCopyMenuOneLine": {
     "message": "單行"
   },
+  "rulesOnlyBlockPages": {
+    "message": "僅限封鎖頁和驗證頁"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "只在小頁面（如防火牆的封鎖頁）中搜尋完整 HTML，包括標題。較大的頁面不會被搜尋"
+  },
   "labelValueFmt": {
     "message": "{0}：{1}"
   },

@@ -12,7 +12,7 @@ Sucuri는 웹사이트 보안 기업으로, 클라우드 WAF와 CDN이 사이트
 
 ## 사이트가 Sucuri WAF을(를) 사용하는지 확인하는 방법
 
-이 신호들은 `detect-sucuri`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.1.0, 최종 업데이트 2026-10-16)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
+이 신호들은 `detect-sucuri`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.2.0, 최종 업데이트 2026-11-12)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
 
 ### 쿠키
 
@@ -39,7 +39,7 @@ Sucuri는 웹사이트 보안 기업으로, 클라우드 WAF와 CDN이 사이트
 
 | 신호 | 신뢰도 | 의미 |
 | --- | --- | --- |
-| `Sucuri WebSite Firewall - Access Denied` | 30% (보조 근거로만 사용) | Sucuri block page title |
+| `Sucuri Web ?Site Firewall - (?:CloudProxy - )?Access Denied\|Access Denied - Sucuri Web ?Site Firewall` | 30% (보조 근거로만 사용) | Sucuri block page title |
 | `Block ID:` | 20% (보조 근거로만 사용) | Block ID label on the Sucuri block page |
 | `sucuri_cloudproxy_js` | 10% | Sucuri CloudProxy JS challenge variable |
 

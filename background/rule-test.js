@@ -74,7 +74,8 @@ const RuleTestRuntime = {
         const requests = typeof networkUrlsStore !== 'undefined' && networkUrlsStore.has(tab.id) ? networkUrlsStore.get(tab.id) : [];
         return {
             url: data.url || tab.url, content: list(data.content), dom: list(data.dom), cookies: list(data.cookies), allCookies,
-            pageHTML: typeof data.pageHTML === 'string' ? data.pageHTML : '', externalContent: list(data.externalContent),
+            pageHTML: typeof data.pageHTML === 'string' ? data.pageHTML : '', pageSource: typeof data.pageSource === 'string' ? data.pageSource : '',
+            externalContent: list(data.externalContent),
             networkUrls: list(requests).slice(), headers: {}, requestHeaders: {}, responseCookies: [], payloads: [], responses: []
         };
     },

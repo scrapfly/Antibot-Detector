@@ -6791,6 +6791,12 @@
   "detectionCopyMenuOneLine": {
     "message": "En rad"
   },
+  "rulesOnlyBlockPages": {
+    "message": "Endast blockerings- och utmaningssidor"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Söker i hela HTML-koden, inklusive titeln, men bara på små sidor, som en brandväggs blockeringssida. Större sidor genomsöks inte"
+  },
   "labelValueFmt": {
     "message": "{0}: {1}"
   },

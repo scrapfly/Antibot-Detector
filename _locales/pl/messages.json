@@ -6791,6 +6791,12 @@
   "detectionCopyMenuOneLine": {
     "message": "Jedna linia"
   },
+  "rulesOnlyBlockPages": {
+    "message": "Tylko strony blokady i weryfikacji"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Przeszukuje cały kod HTML, łącznie z tytułem, tylko na małych stronach, takich jak strona blokady zapory. Większe strony nie są przeszukiwane"
+  },
   "labelValueFmt": {
     "message": "{0}: {1}"
   },

@@ -17,6 +17,16 @@ function demContentRuleIsScripts(rule) {
     return rule.scope === 'scripts' || rule.checkScripts === true;
 }
 
+/**
+ * A content rule scoped to "page" (3.1.9) reads the HTML of a small page only: documentElement.outerHTML, head and title
+ * included, of a document under DetectionEngineManager.PAGE_SOURCE_MAX_ELEMENTS elements, cut at PAGE_SOURCE_MAX_CHARS. Block
+ * and challenge pages are that small, so their own text can be matched while an ordinary page collects nothing for it. Limited
+ * to scripts wins when a rule says both.
+ */
+function demContentRuleIsPage(rule) {
+    return rule.scope === 'page' && !demContentRuleIsScripts(rule);
+}
+
 function demAnalyzeUsedMethods() {
     const now = Date.now();
     if (this.analyzedMethodsCache && (now - this.analyzedMethodsCacheTime) < this.ANALYSIS_CACHE_TTL) {
@@ -83,7 +93,22 @@ function demNeedsExternalContent() {
     for (const categoryDetectors of Object.values(this.detectors)) {
         for (const detector of Object.values(categoryDetectors)) {
             if (detector.enabled === false) continue;
-            if (demEnabledRules(detector.detection, 'content').length > 0) return true;
+            // A "page" rule reads the small page's own HTML, never a fetched script or stylesheet
+            if (demEnabledRules(detector.detection, 'content').some(rule => !demContentRuleIsPage(rule))) return true;
+        }
+    }
+
+    return false;
+}
+
+/** Whether a small page's HTML is collected: any content rule that is on is scoped to "page" (demContentRuleIsPage). */
+function demNeedsPageSource() {
+    if (!this.detectors) return true;
+
+    for (const categoryDetectors of Object.values(this.detectors)) {
+        for (const detector of Object.values(categoryDetectors)) {
+            if (detector.enabled === false) continue;
+            if (demEnabledRules(detector.detection, 'content').some(demContentRuleIsPage)) return true;
         }
     }
 
@@ -92,7 +117,8 @@ function demNeedsExternalContent() {
 
 /**
  * Whether any content rule that is on reads the page text and the stylesheets' text: one that is not limited to scripts (a
- * "Page content" rule, the editor's default). All 144 bundled content rules are limited to scripts and read neither, so a scan
+ * "Page content" rule, the editor's default) nor scoped to a small page's HTML (demContentRuleIsPage). Every bundled content
+ * rule is limited to scripts or scoped to "page" and reads neither, so a scan
  * does not fetch the stylesheets' text or serialise the page's HTML for them. With no detectors loaded everything is collected,
  * as demAnalyzeUsedMethods does.
  */
@@ -102,7 +128,7 @@ function demNeedsPageBodies() {
     for (const categoryDetectors of Object.values(this.detectors)) {
         for (const detector of Object.values(categoryDetectors)) {
             if (detector.enabled === false) continue;
-            if (demEnabledRules(detector.detection, 'content').some(rule => !demContentRuleIsScripts(rule))) return true;
+            if (demEnabledRules(detector.detection, 'content').some(rule => !demContentRuleIsScripts(rule) && !demContentRuleIsPage(rule))) return true;
         }
     }
 

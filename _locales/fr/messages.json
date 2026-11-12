@@ -6791,6 +6791,12 @@
   "detectionCopyMenuOneLine": {
     "message": "Une ligne"
   },
+  "rulesOnlyBlockPages": {
+    "message": "Pages de blocage et de défi uniquement"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Recherche dans tout le HTML, titre compris, des petites pages uniquement, comme la page de blocage d’un pare-feu. Les pages plus grandes ne sont pas examinées"
+  },
   "labelValueFmt": {
     "message": "{0} : {1}"
   },

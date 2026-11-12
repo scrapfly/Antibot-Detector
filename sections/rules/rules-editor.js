@@ -181,6 +181,8 @@ Rules.prototype.populateDetectionMethods = function(detector) {
               nameCaseSensitive = method.selectorCaseSensitive === true;
             }
             const checkScripts = method.checkScripts === true || method.scope === 'scripts';
+            // Scope "page" (3.1.9): the HTML of small pages only, such as a block page; limited to scripts wins
+            const pageScope = methodType === 'content' && !checkScripts && method.scope === 'page';
 
             let nameScope = '';
             let valueScope = '';
@@ -221,7 +223,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
             const { name: inputPlaceholder, value: valuePlaceholder } = this.getMethodInputPlaceholders(methodType);
 
             const hasNameCustomSettings = (methodType !== 'dom' && (nameRegex || nameWholeWord || nameCaseSensitive)) ||
-                                          (methodType === 'content' && checkScripts === true);
+                                          (methodType === 'content' && (checkScripts === true || pageScope));
             const hasValueCustomSettings = valueRegex || valueWholeWord || valueCaseSensitive;
 
             const windowConditionDropdown = methodType === 'window'
@@ -244,6 +246,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
                 data-value-wholeword="${valueWholeWord}"
                 data-value-case="${valueCaseSensitive}"
                 data-check-scripts="${checkScripts}"
+                data-page-scope="${pageScope}"
                 data-name-scope="${FormatUtils.escapeAttr(nameScope)}"
                 data-value-scope="${FormatUtils.escapeAttr(valueScope)}"
                 data-text-scope="${FormatUtils.escapeAttr(textScope)}"
@@ -924,6 +927,8 @@ function mergeRuleWithForm(original, fromForm, methodType, formHasDescription) {
   // "Only check scripts" is stored as scope: "scripts" in shipped rules and as
   // checkScripts by the editor: keep the scope while the option stays on
   if (methodType === 'content' && merged.scope === 'scripts' && fromForm.checkScripts !== true) delete merged.scope;
+  // "Only block and challenge pages" is stored as scope: "page": dropped when the option is turned off
+  if (methodType === 'content' && merged.scope === 'page' && fromForm.scope !== 'page') delete merged.scope;
   return { ...merged, ...fromForm };
 }
 
@@ -1012,6 +1017,8 @@ Rules.prototype._collectDetectionFromForm = function() {
 
           if (item.dataset.checkScripts === 'true') {
             methodData.checkScripts = true;
+          } else if (methodType === 'content' && item.dataset.pageScope === 'true') {
+            methodData.scope = 'page';
           }
 
           if (methodType === 'header') {

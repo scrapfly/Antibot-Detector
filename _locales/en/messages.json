@@ -7504,6 +7504,14 @@
     "message": "One line",
     "description": "Detection tab Copy menu item: the scan as a single line of text, like \"shop.example: Cloudflare 95%\""
   },
+  "rulesOnlyBlockPages": {
+    "message": "Only block and challenge pages",
+    "description": "Rules editor, settings of a content rule: toggle that limits the rule to the HTML of small pages (block and challenge pages)"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Search the whole HTML, title included, of small pages only, such as a firewall's block page. Larger pages are not searched",
+    "description": "Rules editor: hint under 'Only block and challenge pages'"
+  },
   "labelValueFmt": {
     "message": "{0}: {1}",
     "description": "A label and its value, as in \"Cache scope: Domain\" or \"Pages: 12\". {0} = the label, {1} = the value. Write the colon the way your language does (French: narrow no-break space before it; Chinese and Japanese: full-width colon)."

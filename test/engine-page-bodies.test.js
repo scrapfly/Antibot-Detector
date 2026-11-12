@@ -53,7 +53,10 @@ test('needsPageBodies: only a content rule that is on and not limited to scripts
   assert.equal(needs({ url: [{ text: 'a' }], cookie: [{ name: 'b' }], dom: [{ selector: 'c' }] }), false, 'rules of other methods');
   assert.equal(needs({ content: PAGE_TEXT }), true, 'no scope: the whole page');
   assert.equal(needs({ content: [{ text: 'a', checkScripts: false }] }), true);
-  assert.equal(needs({ content: [{ text: 'a', scope: 'page' }] }), true, 'any scope other than scripts');
+  assert.equal(needs({ content: [{ text: 'a', scope: 'whatever' }] }), true, 'an unknown scope reads the whole page');
+  // 3.1.9: "page" reads a small page's own HTML (test/engine-page-source.test.js), never the body text or the stylesheets
+  assert.equal(needs({ content: [{ text: 'a', scope: 'page' }] }), false, 'a small page\'s HTML only');
+  assert.equal(needs({ content: [{ text: 'a', scope: 'page' }, ...PAGE_TEXT] }), true);
   assert.equal(needs({ content: [...SCRIPTS_ONLY, ...PAGE_TEXT] }), true, 'one such rule among script ones is enough');
   assert.equal(needs({ content: PAGE_TEXT }, { enabled: false }), false, 'a detector that is off');
   assert.equal(needs({ content: [{ ...PAGE_TEXT[0], enabled: false }, ...SCRIPTS_ONLY] }), false, 'a rule that is off');

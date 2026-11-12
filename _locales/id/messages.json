@@ -6791,6 +6791,12 @@
   "detectionCopyMenuOneLine": {
     "message": "Satu baris"
   },
+  "rulesOnlyBlockPages": {
+    "message": "Hanya halaman blokir dan tantangan"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Cari di seluruh HTML, termasuk judul, hanya pada halaman kecil, seperti halaman blokir firewall. Halaman yang lebih besar tidak dicari"
+  },
   "labelValueFmt": {
     "message": "{0}: {1}"
   },

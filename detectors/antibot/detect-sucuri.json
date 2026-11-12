@@ -5,9 +5,9 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-16",
-  "version": "2.1.0",
-  "minExtensionVersion": "2.8",
+  "lastUpdated": "2026-11-12",
+  "version": "2.2.0",
+  "minExtensionVersion": "3.1.9",
   "website": "https://sucuri.net/",
   "icon": "sucuri_official.png",
   "description": "Sucuri Website Security Platform with WAF and bot protection",
@@ -70,10 +70,10 @@
         "confidence": 30,
         "standalone": false,
         "description": "Sucuri block page title",
-        "text": "Sucuri WebSite Firewall - Access Denied",
-        "textCaseSensitive": true,
-        "scope": "scripts",
-        "checkScripts": true
+        "text": "Sucuri Web ?Site Firewall - (?:CloudProxy - )?Access Denied|Access Denied - Sucuri Web ?Site Firewall",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "scope": "page"
       },
       {
         "id": "sucuri-block-id",
@@ -82,8 +82,7 @@
         "description": "Block ID label on the Sucuri block page",
         "text": "Block ID:",
         "textCaseSensitive": true,
-        "scope": "scripts",
-        "checkScripts": true
+        "scope": "page"
       },
       {
         "id": "sucuri-challenge-script",

@@ -6791,6 +6791,12 @@
   "detectionCopyMenuOneLine": {
     "message": "एक पंक्ति"
   },
+  "rulesOnlyBlockPages": {
+    "message": "केवल ब्लॉक और चैलेंज पेज"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "सिर्फ़ छोटे पेजों का पूरा HTML, शीर्षक सहित, खोजें, जैसे किसी फ़ायरवॉल का ब्लॉक पेज। बड़े पेज नहीं खोजे जाते"
+  },
   "labelValueFmt": {
     "message": "{0}: {1}"
   },

@@ -67,6 +67,14 @@ Rules.prototype.setupMethodSettingsModal = function() {
       saveBtn.addEventListener('click', () => this.saveMethodSettings());
     }
 
+    // A content rule reads scripts only or small pages only, never both: turning one on turns the other off
+    const onlyScripts = document.querySelector('#checkScripts');
+    const onlyPages = document.querySelector('#checkPageSource');
+    if (onlyScripts && onlyPages) {
+      onlyScripts.addEventListener('change', () => { if (onlyScripts.checked) onlyPages.checked = false; });
+      onlyPages.addEventListener('change', () => { if (onlyPages.checked) onlyScripts.checked = false; });
+    }
+
     // Update confidence value display when slider changes
     if (slider && valueDisplay) {
       slider.addEventListener('input', (e) => {
@@ -397,6 +405,7 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
     const valueWholeword = methodItem.dataset.valueWholeword === 'true';
     const valueCase = methodItem.dataset.valueCase === 'true';
     const checkScripts = methodItem.dataset.checkScripts === 'true'; // Default: false (entire page)
+    const pageScope = !checkScripts && methodItem.dataset.pageScope === 'true'; // scope "page": small pages only
 
     // Load scope settings from data attributes
     let nameScope = methodItem.dataset.nameScope || (methodKey === 'header' || methodKey === 'cookie' ? (methodKey === 'header' ? 'response' : 'request') : '');
@@ -431,6 +440,7 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
     setCheckbox('valueWholeWord', valueWholeword);
     setCheckbox('valueCaseSensitive', valueCase);
     setCheckbox('checkScripts', checkScripts);
+    setCheckbox('checkPageSource', pageScope);
 
     // Set scope dropdowns
     const nameScopeSelect = document.querySelector('#nameScope');
@@ -723,6 +733,7 @@ Rules.prototype.saveMethodSettings = function() {
     const valueWholeWord = document.querySelector('#valueWholeWord')?.checked || false;
     const valueCaseSensitive = document.querySelector('#valueCaseSensitive')?.checked || false;
     const checkScripts = document.querySelector('#checkScripts')?.checked || false; // Default: false (entire page)
+    const pageScope = !checkScripts && (document.querySelector('#checkPageSource')?.checked || false);
 
     // Get scope values from modal
     let nameScope = document.querySelector('#nameScope')?.value || '';
@@ -770,6 +781,7 @@ Rules.prototype.saveMethodSettings = function() {
     this.currentMethodItem.dataset.valueWholeword = valueWholeWord;
     this.currentMethodItem.dataset.valueCase = valueCaseSensitive;
     this.currentMethodItem.dataset.checkScripts = checkScripts;
+    this.currentMethodItem.dataset.pageScope = pageScope;
     this.currentMethodItem.dataset.nameScope = nameScope;
     this.currentMethodItem.dataset.valueScope = valueScope;
     this.currentMethodItem.dataset.textScope = textScope;
@@ -787,7 +799,7 @@ Rules.prototype.saveMethodSettings = function() {
 
     // Check if name or value have custom settings
     const hasNameCustomSettings = (methodType !== 'dom' && (nameRegex || nameWholeWord || nameCaseSensitive)) ||
-      (methodType === 'content' && checkScripts === true);
+      (methodType === 'content' && (checkScripts === true || pageScope === true));
     const hasValueCustomSettings = valueRegex || valueWholeWord || valueCaseSensitive;
 
     if (nameSettingsBtn) {

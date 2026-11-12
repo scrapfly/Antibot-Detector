@@ -6791,6 +6791,12 @@
   "detectionCopyMenuOneLine": {
     "message": "1行"
   },
+  "rulesOnlyBlockPages": {
+    "message": "ブロックページとチャレンジページのみ"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "小さなページ（ファイアウォールのブロックページなど）に限り、タイトルを含む HTML 全体を検索します。大きなページは検索しません"
+  },
   "labelValueFmt": {
     "message": "{0}：{1}"
   },

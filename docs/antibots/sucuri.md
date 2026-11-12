@@ -12,7 +12,7 @@ Official site: [https://sucuri.net/](https://sucuri.net/)
 
 ## How to tell a site uses Sucuri WAF
 
-These signals are generated from the extension's own detection rules for `detect-sucuri` (rule version 2.1.0, last updated 2026-10-16). A signal is only an indication: confidence is how sure the extension is when that one signal is seen. Signals marked "corroboration only" never count on their own, because other products can produce them too.
+These signals are generated from the extension's own detection rules for `detect-sucuri` (rule version 2.2.0, last updated 2026-11-12). A signal is only an indication: confidence is how sure the extension is when that one signal is seen. Signals marked "corroboration only" never count on their own, because other products can produce them too.
 
 ### Cookies
 
@@ -39,7 +39,7 @@ Text found inside the page or its scripts.
 
 | Signal | Confidence | What it indicates |
 | --- | --- | --- |
-| `Sucuri WebSite Firewall - Access Denied` | 30% (corroboration only) | Sucuri block page title |
+| `Sucuri Web ?Site Firewall - (?:CloudProxy - )?Access Denied\|Access Denied - Sucuri Web ?Site Firewall` | 30% (corroboration only) | Sucuri block page title |
 | `Block ID:` | 20% (corroboration only) | Block ID label on the Sucuri block page |
 | `sucuri_cloudproxy_js` | 10% | Sucuri CloudProxy JS challenge variable |
 
