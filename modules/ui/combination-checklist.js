@@ -34,6 +34,10 @@
   const esc = (value) => String(value ?? '')
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  // "Label: value" as the UI language joins them (French "Label : value", Chinese "标签：值"); the markup form escapes only the pattern
+  const labelValue = (label, value) => fmt('labelValueFmt', '{0}: {1}', label, value);
+  const labelValueHtml = (labelHtml, valueHtml) => String(tr('labelValueFmt', '{0}: {1}')).split(/(\{[01]\})/)
+    .map(part => (part === '{0}' ? labelHtml : part === '{1}' ? valueHtml : esc(part))).join('');
   const oneLine = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
 
   /** Text of a pattern as written in the rule, with " = value" for cookies and headers. */
@@ -238,13 +242,16 @@
     const text = isMethod ? fmt('combinationAnyOfMethodFmt', 'Any {0} pattern', label) : (item.description || item.text);
     const plain = !isMethod && !item.description;
     // Tip: method and the pattern as written, then the value seen on the page
-    const tipTitle = [label, !isMethod && item.description ? item.text : ''].filter(Boolean).join(': ');
+    const tipTitle = !isMethod && item.description && item.text ? labelValue(label, item.text) : label;
     const tipDetail = item.value && item.value !== item.text ? item.value : '';
     const tip = tipTitle ? ` data-tip="${esc(tipTitle)}"${tipDetail ? ` data-tip-detail="${esc(tipDetail)}"` : ''}` : '';
     const markLabel = negative ? tr('combinationNotPresent', 'Not present') : tr('combinationFound', 'Found');
     return `<li class="match-combo-row${negative ? ' is-absent' : ''}"${tip}>
         <span class="match-combo-mark" role="img" aria-label="${esc(markLabel)}">${FOUND_ICON}</span>
-        <span class="match-combo-text${plain ? ' is-raw' : ''}" dir="${plain ? 'ltr' : 'auto'}">${negative ? `<span class="match-combo-not">${esc(tr('combinationNotPresent', 'Not present'))}:</span> ` : ''}${plain ? `<span class="match-combo-method">${esc(label)}</span> ` : ''}${esc(text)}</span>
+        <span class="match-combo-text${plain ? ' is-raw' : ''}" dir="${plain ? 'ltr' : 'auto'}">${(() => {
+          const body = `${plain ? `<span class="match-combo-method">${esc(label)}</span> ` : ''}${esc(text)}`;
+          return negative ? labelValueHtml(`<span class="match-combo-not">${esc(tr('combinationNotPresent', 'Not present'))}</span>`, body) : body;
+        })()}</span>
       </li>`;
   }
 

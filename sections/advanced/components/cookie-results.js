@@ -143,7 +143,7 @@ class AdvancedCookieResults {
         const cards = cookies.map(cookie => `
             <article class="adv-cookie">
                 <div class="adv-cookie-head">
-                    <button type="button" class="adv-cookie-name" data-copy="${attr(cookie.name)}" title="${copyTitle}" aria-label="${attr(`${tr('ruleFieldName', 'Name')}: ${cookie.name}`)}">
+                    <button type="button" class="adv-cookie-name" data-copy="${attr(cookie.name)}" title="${copyTitle}" aria-label="${attr(FormatUtils.labelValue(tr('ruleFieldName', 'Name'), cookie.name))}">
                         <span class="adv-cookie-name-text">${esc(cookie.name)}</span>${copyIcon}
                     </button>
                     <span class="adv-cookie-flags">${(cookie.secure ? K.kitChip('Secure', 'green') : '')

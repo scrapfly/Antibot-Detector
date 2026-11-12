@@ -6790,5 +6790,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Eén regel"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
   }
 }

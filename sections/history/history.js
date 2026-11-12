@@ -439,7 +439,7 @@ class History {
       const confidenceTip = hasCardDetections ? FormatUtils.confidenceTip(cardDetections, confidenceTitle) : null;
       const difficultyTip = hasCardDetections ? FormatUtils.difficultyTip(cardDetections, summary.difficulty, difficultyTitle) : null;
       // What a screen reader says for each number: the tips are only on hover (their targets cannot take the focus)
-      const detectionsName = FormatUtils.escapeAttr(`${summary.labels.detections}: ${summary.totalDetections}`);
+      const detectionsName = FormatUtils.escapeAttr(FormatUtils.labelValue(summary.labels.detections, summary.totalDetections));
       // The title, "…" and Scrapfly are named for their card: twenty buttons that all say "More actions" tell one from another by it
       const cardNumber = ++cardCount;
 
@@ -597,7 +597,7 @@ class History {
         return { label: FormatUtils.detectorName(d) || FormatUtils.t('timeUnknown', 'Unknown'), value: `${value}%`, tone: FormatUtils.confidenceTone(value) };
       });
       if (inCategory.length > 8) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', inCategory.length - 8) });
-      const chipTitle = `${FormatUtils.categoryLabel(key)}: ${inCategory.length}`;
+      const chipTitle = FormatUtils.labelValue(FormatUtils.categoryLabel(key), inCategory.length);
       return `<span class="history-cat-count${inCategory.length ? '' : ' is-zero'}" ${FormatUtils.tipAttrs(chipTitle, '', rows)} role="img" aria-label="${FormatUtils.escapeAttr(chipTitle)}">`
         + `<span class="category-icon" style="color:${colour}" aria-hidden="true">${FormatUtils.categoryIconSvg(key)}</span>`
         + `<span class="history-cat-value">${inCategory.length}</span></span>`;
@@ -635,7 +635,7 @@ class History {
     const rows = ranked.slice(0, 8).map(row => ({ label: row.label, value: `${row.value}%`, tone: FormatUtils.confidenceTone(row.value) }));
     if (ranked.length > 8) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', ranked.length - 8) });
     const label = FormatUtils.t('detectionModalCombinations', 'Matched combinations');
-    const chipTitle = `${label}: ${fired.length}`;
+    const chipTitle = FormatUtils.labelValue(label, fired.length);
     return `<span class="history-cat-count history-combo-count${fired.length ? '' : ' is-zero'}" ${FormatUtils.tipAttrs(chipTitle, '', rows)} role="img" aria-label="${FormatUtils.escapeAttr(chipTitle)}">`
       + `<span class="category-icon" aria-hidden="true">${FormatUtils.uiIconSvg('combination')}</span>`
       + `<span class="history-cat-value">${fired.length}</span></span>`;
@@ -747,7 +747,7 @@ class History {
             const count = s.categoryCounts[seg.key];
             const pct = Math.round((count / s.totalDetections) * 100);
             const detail = FormatUtils.t('historyCategoryShareFmt', 'Detections: {0} of {1} · {2}%', count, s.totalDetections, pct);
-            return `<span class="hm-bar-seg cat-${seg.key}" style="flex: ${count}" role="img" aria-label="${FormatUtils.escapeAttr(`${seg.label}: ${detail}`)}" data-tip="${FormatUtils.escapeAttr(seg.label)}" data-tip-detail="${FormatUtils.escapeAttr(detail)}" data-tip-dot="cat-${seg.key}"></span>`;
+            return `<span class="hm-bar-seg cat-${seg.key}" style="flex: ${count}" role="img" aria-label="${FormatUtils.escapeAttr(`${seg.label} · ${detail}`)}" data-tip="${FormatUtils.escapeAttr(seg.label)}" data-tip-detail="${FormatUtils.escapeAttr(detail)}" data-tip-dot="cat-${seg.key}"></span>`;
           }).join('')}
         </div>
         <div class="hm-legend">
@@ -757,7 +757,7 @@ class History {
             const detail = FormatUtils.t('historyCategoryShareFmt', 'Detections: {0} of {1} · {2}%', count, s.totalDetections, pct);
             return `<span class="hm-legend-item" ${FormatUtils.tipAttrs(seg.label, detail, [], `cat-${seg.key}`)}><i class="hm-dot cat-${seg.key}"></i>${esc(seg.label)}<b>${count}</b></span>`;
           }).join('')}
-          <span class="hm-legend-scope" ${FormatUtils.tipAttrs(`${s.labels.scope}: ${s.scopeDisplay}`, this.getScopeHint(item.cacheScope))}>
+          <span class="hm-legend-scope" ${FormatUtils.tipAttrs(FormatUtils.labelValue(s.labels.scope, s.scopeDisplay), this.getScopeHint(item.cacheScope))}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a13 13 0 0 0 0 18a13 13 0 0 0 0-18M3 12h18"/></svg>${esc(s.scopeDisplay)}
           </span>
         </div>
@@ -1497,7 +1497,7 @@ class History {
         detection.matches.forEach(match => {
           const methodType = (match.type || 'unknown').replace(/_/g, ' ').toUpperCase();
           const value = History.copyLabel(match) || unknownValue;
-          text += `     - ${methodType}: ${value} (${match.confidence || 0}%)\n`;
+          text += `     - ${FormatUtils.labelValue(methodType, value)} (${match.confidence || 0}%)\n`;
         });
       }
       text += '\n';

@@ -157,7 +157,7 @@
       const name = element('span', 'stats-site-name', row.hostname);
       name.setAttribute('dir', 'ltr');
       name.setAttribute('title', row.hostname);
-      li.append(name, U.pill(row.difficulty), U.stack(row), element('span', 'stats-site-count', tr('statsPagesColumn', 'Pages') + ': ' + num(row.visits)));
+      li.append(name, U.pill(row.difficulty), U.stack(row), element('span', 'stats-site-count', FormatUtils.labelValue(tr('statsPagesColumn', 'Pages'), num(row.visits))));
       const open = () => app.openDomain(row.hostname);
       li.addEventListener('click', open);
       li.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(); } });

@@ -27,13 +27,13 @@
     U.setText('rulesAttention', num(t.attention));
     const unseen = r.neverMatched.filter(row => row.attention).length;
     const parts = [];
-    if (unseen) parts.push(tr('statsRuleStatusUnseen', 'Not in History') + ': ' + num(unseen));
-    if (t.waiting) parts.push(tr('statsRulesWaiting', 'Waiting for a newer extension') + ': ' + num(t.waiting));
+    if (unseen) parts.push(FormatUtils.labelValue(tr('statsRuleStatusUnseen', 'Not in History'), num(unseen)));
+    if (t.waiting) parts.push(FormatUtils.labelValue(tr('statsRulesWaiting', 'Waiting for a newer extension'), num(t.waiting)));
     U.setText('rulesAttentionSub', parts.length ? parts.join(' · ') : tr('statsRulesAttentionNone', 'Nothing needs attention.'));
     byId('rulesWaitingTile').hidden = !t.waiting;
     U.setText('rulesWaitingCount', num(t.waiting));
     U.setText('rulesTotal', num(t.total));
-    const label = (id, text, count) => tr(id, text) + ': ' + num(count);
+    const label = (id, text, count) => FormatUtils.labelValue(tr(id, text), num(count));
     U.setText('rulesLibrarySub', [label('statsRulesOfficial', 'Official', t.official - t.modified), label('statsRulesCustom', 'Custom', t.custom),
       label('statsRulesSourceEdited', 'Edited', t.modified), label('statsRulesDisabled', 'Disabled', t.disabled)].join(' · '));
     const quiet = [tr('statsRulesOfficialQuietNote', 'Official rules for vendors you have not met stay quiet. That is normal.')];

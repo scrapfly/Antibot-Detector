@@ -116,7 +116,7 @@
             });
             const item = languages.find(entry => entry.id === language);
             codeLabel.textContent = item ? item.label : '';
-            textarea.setAttribute('aria-label', `${options.title}: ${codeLabel.textContent}`);
+            textarea.setAttribute('aria-label', FormatUtils.labelValue(options.title, codeLabel.textContent));
             description.textContent = typeof options.description === 'function' ? options.description(type, language) : (options.description || '');
         }
         function selectType(next) {

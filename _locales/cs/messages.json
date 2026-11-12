@@ -6790,5 +6790,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Jeden řádek"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
   }
 }

@@ -118,6 +118,55 @@ class FormatUtils {
   }
 
   /**
+   * A label and its value as the UI language joins them: "Pages: 12", "Pages : 12" (French, narrow no-break space),
+   * "页面：12" (full-width colon). English without a language loaded.
+   * @param {string} label
+   * @param {*} value
+   * @returns {string}
+   */
+  static labelValue(label, value) {
+    return FormatUtils.t('labelValueFmt', '{0}: {1}', label, value);
+  }
+
+  /**
+   * labelValue() for markup: the label and the value are HTML already (escaped by the caller), only the
+   * language's own pattern around them is escaped here.
+   * @param {string} labelHtml
+   * @param {string} valueHtml
+   * @returns {string}
+   */
+  static labelValueHtml(labelHtml, valueHtml) {
+    const pattern = (typeof I18n !== 'undefined' && I18n && typeof I18n.get === 'function' && I18n.get('labelValueFmt')) || '{0}: {1}';
+    return String(pattern).split(/(\{[01]\})/).map(part => (part === '{0}' ? labelHtml : part === '{1}' ? valueHtml : FormatUtils.escapeHtml(part))).join('');
+  }
+
+  /**
+   * A number with the decimal mark of the UI language ("1,5" in German), Latin digits and no thousands separator
+   * (which would read as a decimal mark in another language). The plain number when no language is loaded.
+   * @param {number} value
+   * @param {{minimumFractionDigits?: number, maximumFractionDigits?: number}} [options]
+   * @returns {string}
+   */
+  static formatNumber(value, { minimumFractionDigits = 0, maximumFractionDigits = 0 } = {}) {
+    const number = Number(value);
+    const max = Math.max(minimumFractionDigits, maximumFractionDigits);
+    const locale = FormatUtils.uiLocale();
+    if (locale && typeof Intl !== 'undefined' && typeof Intl.NumberFormat === 'function') {
+      try {
+        return new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits: max, useGrouping: false, numberingSystem: 'latn' }).format(number);
+      } catch (_) { /* the plain number below */ }
+    }
+    const fixed = number.toFixed(max);
+    // Drop the zeros beyond the minimum, as Intl does
+    if (max > minimumFractionDigits && fixed.includes('.')) {
+      const [whole, fraction] = fixed.split('.');
+      const kept = fraction.replace(/0+$/, '').padEnd(minimumFractionDigits, '0');
+      return kept ? `${whole}.${kept}` : whole;
+    }
+    return fixed;
+  }
+
+  /**
    * Format a relative time in the UI language with Intl.RelativeTimeFormat
    * ("3h ago", "hace 3 h", "3時間前"). Returns null when Intl or the UI locale
    * is unavailable, or the locale is rejected, so the caller can fall back.

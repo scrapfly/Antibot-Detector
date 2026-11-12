@@ -6790,5 +6790,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "單行"
+  },
+  "labelValueFmt": {
+    "message": "{0}：{1}"
   }
 }

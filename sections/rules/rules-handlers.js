@@ -436,7 +436,7 @@ Rules.prototype.handleRestoreOfficial = async function() {
   const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
   const failMessage = (error) => {
     const reason = error && error.message ? error.message : String(error);
-    return `${_tr('failedRestoreOfficialDetectors', 'Failed to restore official detectors')}: ${reason}`;
+    return FormatUtils.labelValue(_tr('failedRestoreOfficialDetectors', 'Failed to restore official detectors'), reason);
   };
   // The latest release on GitHub, as Rules → Update uses; without it the
   // copies included in the extension are used

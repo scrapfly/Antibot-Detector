@@ -76,7 +76,7 @@ Rules.prototype.decoratePagePickRow = function(item) {
 
 Rules.prototype.markPagePickUnsupported = function(button) {
   if (!button) return;
-  button.title = `${ruleSuggestText('pagePickButton', 'From this page')}: ${ruleSuggestText('suggestRuleUnsupported', 'Open the popup on a website to build a rule from it.')}`;
+  button.title = FormatUtils.labelValue(ruleSuggestText('pagePickButton', 'From this page'), ruleSuggestText('suggestRuleUnsupported', 'Open the popup on a website to build a rule from it.'));
   button.setAttribute('aria-disabled', 'true');
 };
 

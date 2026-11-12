@@ -6792,5 +6792,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Una línea"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
   }
 }
