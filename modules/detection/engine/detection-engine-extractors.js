@@ -46,6 +46,16 @@ function demIsJavaScriptElement(script) {
     return !type || type === 'module' || demIsJavaScriptMimeType(type);
 }
 
+// Inline scripts that carry the page's own data, not code: the Next.js App Router's flight data (self.__next_f.push),
+// Remix and React Router's loader data and its stream, Nuxt 2's state, Redux, Apollo and React Router stores. An article
+// that mentions window.bmak or turnstile.render ships its text in one of these; read as code, it reads as the vendor's.
+// Anchored at the start: a script that only uses one of these names later on is still read.
+const DEM_PAGE_DATA_SCRIPT = /^\s*(?:(?:\(\s*self\.__next_f\s*=\s*self\.__next_f\s*\|\|\s*\[\s*\]\s*\)|self\.__next_f)\.push\(|window\.(?:(?:__remixContext|__reactRouterContext)(?:\s*=|\.streamController\.enqueue\()|(?:__NUXT__|__INITIAL_STATE__|__APOLLO_STATE__|__PRELOADED_STATE__|__staticRouterHydrationData)\s*=(?!=)))/;
+
+function demIsPageDataScript(content) {
+    return DEM_PAGE_DATA_SCRIPT.test(content);
+}
+
 function demExtractScriptElements() {
     const scripts = [];
     const scriptElements = document.querySelectorAll('script');
@@ -63,7 +73,7 @@ function demExtractScriptElements() {
         }
         else if (script.textContent || script.innerHTML) {
             const content = (script.textContent || script.innerHTML || '').trim();
-            if (content.length > 0) {
+            if (content.length > 0 && !demIsPageDataScript(content)) {
                 scripts.push({
                     type: 'inline',
                     src: null,

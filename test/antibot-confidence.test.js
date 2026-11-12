@@ -308,6 +308,42 @@ test('benign lookalikes from real pages identify no anti-bot vendor', () => {
   }
 });
 
+// Frameworks ship the page's own data as inline scripts: an article that names vendor globals is text, not their code
+const pageDataScripts = text => [
+  `self.__next_f.push([1,${JSON.stringify(text)}])`, `(self.__next_f=self.__next_f||[]).push([0]);self.__next_f.push([1,${JSON.stringify(text)}])`,
+  `\n  (self.__next_f = self.__next_f || []).push([1, ${JSON.stringify(text)}])`,
+  `window.__remixContext = {"state":{"loaderData":{"routes/blog":{"body":${JSON.stringify(text)}}}}};`,
+  `window.__remixContext.streamController.enqueue(${JSON.stringify(text)});`,
+  `window.__reactRouterContext = {"state":{"loaderData":{"body":${JSON.stringify(text)}}}};`,
+  `window.__NUXT__=(function(a,b){return {data:[{body:${JSON.stringify(text)}}],state:{}}}(null,false));`,
+  `window.__INITIAL_STATE__ = ${JSON.stringify({ article: text })};`, `window.__APOLLO_STATE__=${JSON.stringify({ 'Post:1': { body: text } })};`,
+  `window.__PRELOADED_STATE__ = ${JSON.stringify({ post: text })}`, `window.__staticRouterHydrationData = JSON.parse(${JSON.stringify(JSON.stringify({ body: text }))});`
+];
+/** The inline scripts a page has, as the content script collects them */
+function collectedScripts(texts) {
+  context.document = { querySelectorAll: selector => selector === 'script' ? texts.map(textContent => ({ type: '', src: '', textContent })) : [] };
+  try { return vm.runInContext('demExtractScriptElements()', context); } finally { delete context.document; }
+}
+test('an article that names vendor globals, shipped as a framework\'s page data, identifies no anti-bot vendor', () => {
+  for (const d of Object.values(definitions)) {
+    const sources = Object.values(fixtures[d.id]).filter(fx => fx.source).map(fx => fx.source);
+    if (!sources.length) continue;
+    const text = `How bot protection works: ${sources.join(' and ')}.`;
+    const own = collectedScripts(sources);
+    assert.equal(own.length, sources.length, `${d.id}: its own inline snippets are still read`);
+    assert.equal(collectedScripts([`var ready = 1; window.__INITIAL_STATE__ = {}; ${sources[0]}`, `if (window.__NUXT__ === undefined) { ${sources[0]} }`]).length, 2,
+      `${d.id}: code that only uses one of those names is still read`);
+    for (const script of pageDataScripts(text)) {
+      const content = collectedScripts([script]);
+      assert.deepEqual(Array.from(content), [], `${d.id}: page data read as code: ${script.slice(0, 60)}`);
+    }
+  }
+  // Every vendor's article in one Next.js page
+  const all = Object.values(definitions).flatMap(d => Object.values(fixtures[d.id]).filter(fx => fx.source).map(fx => fx.source)).join(' ');
+  const page = { url: 'https://example.test/blog', headers: {}, allCookies: [], networkUrls: [], dom: [], content: collectedScripts(pageDataScripts(all)) };
+  for (const d of Object.values(definitions)) assert.equal(detect(d, { page }).confidence, 0, d.id);
+});
+
 // Any page can have an input called metadata1; with Amazon's FWCIM script or command it is the sign-in form's fingerprint field
 test('detect-amazon: a field named metadata1 alone is not Amazon, with its FWCIM script it is', () => {
   const d = definitions['detect-amazon'];

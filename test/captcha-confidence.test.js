@@ -77,6 +77,11 @@ Engine.storeDetection = async (_, page, results) => {
 Engine.getStoredDetection = async () => null;
 const registry = {};
 context.registerDetectionHandlers(registry, {});
+/** The inline scripts a page has, as the content script collects them */
+function collectedScripts(texts) {
+  context.document = { querySelectorAll: selector => selector === 'script' ? texts.map(textContent => ({ type: '', src: '', textContent })) : [] };
+  try { return vm.runInContext('demExtractScriptElements()', context); } finally { delete context.document; }
+}
 function patterns(detector) {
   return Object.entries(detector.detection).flatMap(([method, rules]) => rules.map(rule => ({ method, ...rule })));
 }
@@ -318,10 +323,18 @@ for (const detector of Object.values(captcha)) {
     const result = await detect(detector, profile);
     assert.ok((result?.confidence || 0) <= 20, detector.id);
     const source = profile.page.content.map(script => script.content).join('\n');
+    assert.equal(collectedScripts(profile.page.content.map(script => script.content)).length, profile.page.content.length,
+      `${detector.id}: its own inline snippets are still read`);
     for (const page of [
       { pageHTML: `<p>${source}</p>` }, { pageHTML: `<style>${source}</style>` },
       { pageHTML: `<script type="application/ld+json">${JSON.stringify({ text: source })}</script>` },
-      { externalContent: [{ type: 'css', url: 'https://example.test/style.css', content: source }] }
+      { externalContent: [{ type: 'css', url: 'https://example.test/style.css', content: source }] },
+      // An article about the vendor in a framework's page data (Next.js App Router, Remix, Nuxt 2, a Redux store)
+      { content: collectedScripts([`self.__next_f.push([1,${JSON.stringify(`<p>${source}</p>`)}])`,
+        `(self.__next_f=self.__next_f||[]).push([0]);self.__next_f.push([1,${JSON.stringify(source)}])`,
+        `window.__remixContext = ${JSON.stringify({ state: { loaderData: { body: source } } })};`,
+        `window.__NUXT__=(function(a,b){return {data:[{body:${JSON.stringify(source)}}]}}(null,false));`,
+        `window.__INITIAL_STATE__=${JSON.stringify({ article: source })}`]) }
     ]) assert.equal(await detect(detector, { page: { url: 'https://example.test/', ...page }, runtime: {} }), undefined, detector.id);
   });
   test(`${detector.id}: identifier lookalikes cannot manufacture source evidence`, async () => {
