@@ -15,7 +15,6 @@ class Rules {
     this.initialized = false;
     this.eventListenersSetup = false;
     this.paginationManager = null;
-    this.colorManager = null;
     this.allDetectors = [];
     this.filteredDetectors = [];
     // The filter chips under the search (RulesFilter): kept while the popup is open
@@ -53,7 +52,6 @@ class Rules {
         // Keep WINDOW condition dropdowns aligned with the shared condition language (no duplicated lists).
         this.refreshWindowConditionWizardDropdown();
         this.setupPagination();
-        this.initializeColorManager();
         this.setupEventListeners();
         if (typeof this.setupDialogFocus === 'function') this.setupDialogFocus();
         this.initialized = true;
@@ -333,22 +331,6 @@ class Rules {
     });
     // preventScroll: a list that scrolled (which closes the menu) is not scrolled back to the button
     if (focusTarget && typeof focusTarget.focus === 'function') focusTarget.focus({ preventScroll: true });
-  }
-
-  /**
-   * Initialize color manager
-   */
-  initializeColorManager() {
-    this.colorManager = new ColorManager();
-    this.colorManager.initialize({
-      onColorSelect: (color) => {
-        Logger.debug('UI', 'Color selected:', color);
-        // Note: Colors are managed by CategoryManager in Settings, not stored per detector
-      },
-      onColorChange: (color) => {
-        Logger.debug('UI', 'Color changed:', color);
-      }
-    });
   }
 
   /**

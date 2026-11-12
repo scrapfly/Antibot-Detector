@@ -457,9 +457,6 @@
   "ruleFieldAuthor": {
     "message": "Author"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Badge Color"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Detection Methods"
   },
@@ -1050,6 +1047,10 @@
   "detectorExportedFmt": {
     "message": "Exported {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Rules exported: {0}",
+    "description": "Message after Rules → Export or Export shown rules downloads a file. {0} is the number of rules in it; keep it after a label, for any number"
+  },
   "failedImportDetectors": {
     "message": "Failed to import detectors. Check the file format."
   },
@@ -1061,6 +1062,10 @@
   },
   "detectorDeletedFmt": {
     "message": "Deleted \"{0}\""
+  },
+  "ruleSavedFmt": {
+    "message": "Saved \"{0}\"",
+    "description": "Message after a rule is saved in the rule editor. {0} is the rule's name"
   },
   "failedClearDetectors": {
     "message": "Failed to clear detectors"
@@ -1683,12 +1688,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "This will permanently delete all captured data for this provider."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Cancel"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Content Search Scope"
@@ -3498,10 +3497,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "Change detector icon",
     "description": "Screen-reader label of the detector icon button"
-  },
-  "rulesUiCustomColor": {
-    "message": "Custom Color",
-    "description": "Tooltip of the rainbow swatch that opens the custom colour picker"
   },
   "iconPickerTitle": {
     "message": "Choose Icon"

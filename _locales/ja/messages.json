@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "作成者"
   },
-  "ruleSectionBadgeColor": {
-    "message": "バッジの色"
-  },
   "ruleSectionDetectionMethods": {
     "message": "検出方法"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} をエクスポートしました"
   },
+  "rulesExportedFmt": {
+    "message": "{0}件のルールをエクスポートしました"
+  },
   "failedImportDetectors": {
     "message": "ディテクターのインポートに失敗しました。ファイル形式を確認してください。"
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "「{0}」を削除しました"
+  },
+  "ruleSavedFmt": {
+    "message": "「{0}」を保存しました"
   },
   "failedClearDetectors": {
     "message": "ディテクターのクリアに失敗しました"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "このプロバイダーのキャプチャしたすべてのデータが永久に削除されます。"
-  },
-  "rulesColorPickerCancel": {
-    "message": "キャンセル"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "コンテンツ検索スコープ"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "検出器のアイコンを変更"
-  },
-  "rulesUiCustomColor": {
-    "message": "カスタムカラー"
   },
   "iconPickerTitle": {
     "message": "アイコンを選択"

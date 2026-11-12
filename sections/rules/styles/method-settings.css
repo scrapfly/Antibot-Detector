@@ -180,10 +180,9 @@
   transition: border-color 0.15s ease;
 }
 
+/* The arrow is the shared one (.ui-select, one colour per theme); this keeps room for it at the end in either direction */
 #editRuleModal .form-select {
-  padding-right: 26px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1.2 1.5L5 5.3l3.8-3.8' fill='none' stroke='%23e0e0e0' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-position: right 10px center;
+  padding-inline-end: 30px;
 }
 
 #editRuleModal .form-select option {
@@ -247,53 +246,6 @@
   opacity: 1;
   cursor: default;
   pointer-events: none;
-}
-
-/* ---------- Badge colour ---------- */
-/* Lives in the Detector Information card, as its last field */
-#editRuleModal .form-group-badge-color {
-  margin: 0;
-}
-
-#editRuleModal .color-picker-card {
-  display: block;
-  padding: 0;
-  background: none;
-  border-radius: 0;
-}
-
-#editRuleModal .color-picker-grid {
-  grid-template-columns: repeat(8, 28px);
-  gap: 8px;
-  padding: 1px;
-  justify-content: start;
-}
-
-#editRuleModal .color-option {
-  width: 28px;
-  height: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 6px;
-  box-shadow: none;
-  transform: none;
-}
-
-#editRuleModal .color-option:hover {
-  border-color: rgba(255, 255, 255, 0.6);
-  box-shadow: none;
-  transform: none;
-}
-
-#editRuleModal .color-option:focus,
-#editRuleModal .color-option:focus-visible,
-#editRuleModal .color-option.selected {
-  border-color: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 0 0 2px var(--re-card-bg), 0 0 0 3px var(--re-text);
-  transform: none;
-}
-
-#editRuleModal .color-option.selected::after {
-  display: none;
 }
 
 /* ---------- Detection methods ---------- */
@@ -617,7 +569,7 @@
 #methodSettingsModal .scope-select,
 #methodSettingsModal .method-input {
   height: 32px;
-  padding: 0 26px 0 10px;
+  padding: 0 10px;
   background-color: var(--re-field-bg);
   border: 1px solid var(--re-border);
   border-radius: 6px;
@@ -628,9 +580,9 @@
   box-shadow: none;
 }
 
+/* The arrow is the shared one (.ui-select); room for it at the end in either direction */
 #methodSettingsModal .scope-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1.2 1.5L5 5.3l3.8-3.8' fill='none' stroke='%23e0e0e0' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-position: right 10px center;
+  padding-inline-end: 30px;
 }
 
 #methodSettingsModal .method-input {

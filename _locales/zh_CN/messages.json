@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "作者"
   },
-  "ruleSectionBadgeColor": {
-    "message": "徽章颜色"
-  },
   "ruleSectionDetectionMethods": {
     "message": "检测方法"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "已导出 {0}"
   },
+  "rulesExportedFmt": {
+    "message": "已导出 {0} 条规则"
+  },
   "failedImportDetectors": {
     "message": "导入检测器失败。请检查文件格式。"
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "已删除 \"{0}\""
+  },
+  "ruleSavedFmt": {
+    "message": "已保存 \"{0}\""
   },
   "failedClearDetectors": {
     "message": "清除检测器失败"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "此操作将永久删除该提供商的所有已捕获数据。"
-  },
-  "rulesColorPickerCancel": {
-    "message": "取消"
-  },
-  "rulesColorPickerOk": {
-    "message": "确定"
   },
   "rulesContentSearchScopeTitle": {
     "message": "内容搜索范围"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "更改检测器图标"
-  },
-  "rulesUiCustomColor": {
-    "message": "自定义颜色"
   },
   "iconPickerTitle": {
     "message": "选择图标"

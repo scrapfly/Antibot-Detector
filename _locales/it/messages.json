@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Autore"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Colore badge"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Metodi di rilevamento"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} esportato"
   },
+  "rulesExportedFmt": {
+    "message": "Regole esportate: {0}"
+  },
   "failedImportDetectors": {
     "message": "Impossibile importare i detector. Controlla il formato del file."
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" eliminato"
+  },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" salvato"
   },
   "failedClearDetectors": {
     "message": "Impossibile eliminare i detector"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Verranno eliminati in modo permanente tutti i dati catturati per questo provider."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Annulla"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Ambito di ricerca dei contenuti"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Cambia l’icona del rilevatore"
-  },
-  "rulesUiCustomColor": {
-    "message": "Colore personalizzato"
   },
   "iconPickerTitle": {
     "message": "Scegli icona"

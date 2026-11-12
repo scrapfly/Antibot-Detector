@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Автор"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Колір значка"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Методи виявлення"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "Експортовано: {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Експортовано правил: {0}"
+  },
   "failedImportDetectors": {
     "message": "Не вдалося імпортувати детектори. Перевірте формат файлу."
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "Видалено «{0}»"
+  },
+  "ruleSavedFmt": {
+    "message": "Збережено «{0}»"
   },
   "failedClearDetectors": {
     "message": "Не вдалося видалити детектори"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Це безповоротно видалить усі захоплені дані цього провайдера."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Скасувати"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Область пошуку за вмістом"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Змінити піктограму детектора"
-  },
-  "rulesUiCustomColor": {
-    "message": "Власний колір"
   },
   "iconPickerTitle": {
     "message": "Вибір піктограми"

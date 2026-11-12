@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Yazar"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Rozet rengi"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Tespit yöntemleri"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} dışa aktarıldı"
   },
+  "rulesExportedFmt": {
+    "message": "{0} kural dışa aktarıldı"
+  },
   "failedImportDetectors": {
     "message": "Dedektörler içe aktarılamadı. Dosya biçimini kontrol edin."
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" silindi"
+  },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" kaydedildi"
   },
   "failedClearDetectors": {
     "message": "Dedektörler temizlenemedi"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Bu sağlayıcı için yakalanan tüm veriler kalıcı olarak silinecek."
-  },
-  "rulesColorPickerCancel": {
-    "message": "İptal"
-  },
-  "rulesColorPickerOk": {
-    "message": "Tamam"
   },
   "rulesContentSearchScopeTitle": {
     "message": "İçerik arama kapsamı"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Dedektör simgesini değiştir"
-  },
-  "rulesUiCustomColor": {
-    "message": "Özel renk"
   },
   "iconPickerTitle": {
     "message": "Simge seç"

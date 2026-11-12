@@ -94,6 +94,21 @@ class PaginationManager {
   }
 
   /**
+   * Show the page that holds an item of the list (a rule just saved, which may have landed on another page). The list is not
+   * scrolled: the caller focuses what it wants seen.
+   * @param {number} index - the item's index in the list given to setItems
+   * @returns {boolean} false when the list has no such item (the page is left alone)
+   */
+  showItem(index) {
+    if (!Number.isInteger(index) || index < 0 || index >= this.filteredItems.length) return false;
+    let page = 1;
+    while (page < this.getTotalPages() && this.getPageRange(page + 1)[0] <= index) page++;
+    this.currentPage = page;
+    this.render();
+    return true;
+  }
+
+  /**
    * A page the person turned to starts at its top. The footers of Detection, History and Rules are stuck to the bottom of the
    * popup's one scrollport (popup-scroll.css): they stay where they are while the list above them is replaced, so without this
    * the new page was drawn at the old offset, its first entries above the viewport. A pager that is not such a footer (one

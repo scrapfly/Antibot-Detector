@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "作者"
   },
-  "ruleSectionBadgeColor": {
-    "message": "徽章顏色"
-  },
   "ruleSectionDetectionMethods": {
     "message": "偵測方法"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "已匯出 {0}"
   },
+  "rulesExportedFmt": {
+    "message": "已匯出 {0} 條規則"
+  },
   "failedImportDetectors": {
     "message": "無法匯入偵測器。請檢查檔案格式。"
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "已刪除「{0}」"
+  },
+  "ruleSavedFmt": {
+    "message": "已儲存「{0}」"
   },
   "failedClearDetectors": {
     "message": "無法清除偵測器"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "這會永久刪除此供應商所有已擷取的資料。"
-  },
-  "rulesColorPickerCancel": {
-    "message": "取消"
-  },
-  "rulesColorPickerOk": {
-    "message": "確定"
   },
   "rulesContentSearchScopeTitle": {
     "message": "內容搜尋範圍"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "變更偵測器圖示"
-  },
-  "rulesUiCustomColor": {
-    "message": "自訂顏色"
   },
   "iconPickerTitle": {
     "message": "選擇圖示"

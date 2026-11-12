@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Auteur"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Couleur du badge"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Méthodes de détection"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} exporté"
   },
+  "rulesExportedFmt": {
+    "message": "Règles exportées : {0}"
+  },
   "failedImportDetectors": {
     "message": "Échec de l'importation des détecteurs. Vérifiez le format du fichier."
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "« {0} » supprimé"
+  },
+  "ruleSavedFmt": {
+    "message": "« {0} » enregistré"
   },
   "failedClearDetectors": {
     "message": "Échec de la suppression des détecteurs"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Cela supprimera définitivement toutes les données capturées pour ce fournisseur."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Annuler"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Portée de la recherche de contenu"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Changer l’icône du détecteur"
-  },
-  "rulesUiCustomColor": {
-    "message": "Couleur personnalisée"
   },
   "iconPickerTitle": {
     "message": "Choisir une icône"

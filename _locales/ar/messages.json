@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "المؤلف"
   },
-  "ruleSectionBadgeColor": {
-    "message": "لون الشارة"
-  },
   "ruleSectionDetectionMethods": {
     "message": "طرق الكشف"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "تم تصدير {0}"
   },
+  "rulesExportedFmt": {
+    "message": "القواعد المُصدَّرة: {0}"
+  },
   "failedImportDetectors": {
     "message": "تعذَّر استيراد الكواشف. تحقق من تنسيق الملف."
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "تم حذف \"{0}\""
+  },
+  "ruleSavedFmt": {
+    "message": "تم حفظ \"{0}\""
   },
   "failedClearDetectors": {
     "message": "تعذَّر مسح الكواشف"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "سيؤدي هذا إلى حذف جميع البيانات الملتقطة لهذا المزوِّد بشكل دائم."
-  },
-  "rulesColorPickerCancel": {
-    "message": "إلغاء"
-  },
-  "rulesColorPickerOk": {
-    "message": "موافق"
   },
   "rulesContentSearchScopeTitle": {
     "message": "نطاق البحث في المحتوى"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "تغيير أيقونة الكاشف"
-  },
-  "rulesUiCustomColor": {
-    "message": "لون مخصص"
   },
   "iconPickerTitle": {
     "message": "اختيار أيقونة"

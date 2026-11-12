@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Autor"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Kolor plakietki"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Metody wykrywania"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "Wyeksportowano: {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Wyeksportowane reguły: {0}"
+  },
   "failedImportDetectors": {
     "message": "Nie udało się zaimportować detektorów. Sprawdź format pliku."
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "Usunięto „{0}”"
+  },
+  "ruleSavedFmt": {
+    "message": "Zapisano „{0}”"
   },
   "failedClearDetectors": {
     "message": "Nie udało się wyczyścić detektorów"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Spowoduje to trwałe usunięcie wszystkich przechwyconych danych dla tego dostawcy."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Anuluj"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Zakres wyszukiwania treści"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Zmień ikonę detektora"
-  },
-  "rulesUiCustomColor": {
-    "message": "Kolor niestandardowy"
   },
   "iconPickerTitle": {
     "message": "Wybierz ikonę"

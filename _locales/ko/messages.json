@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "작성자"
   },
-  "ruleSectionBadgeColor": {
-    "message": "배지 색상"
-  },
   "ruleSectionDetectionMethods": {
     "message": "탐지 방법"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} 내보냄"
   },
+  "rulesExportedFmt": {
+    "message": "규칙 {0}개를 내보냈습니다"
+  },
   "failedImportDetectors": {
     "message": "감지기를 가져오지 못했습니다. 파일 형식을 확인하세요."
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\"을(를) 삭제했습니다"
+  },
+  "ruleSavedFmt": {
+    "message": "\"{0}\"을(를) 저장했습니다"
   },
   "failedClearDetectors": {
     "message": "감지기를 지우지 못했습니다"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "이 공급자에 대해 캡처된 모든 데이터가 영구적으로 삭제됩니다."
-  },
-  "rulesColorPickerCancel": {
-    "message": "취소"
-  },
-  "rulesColorPickerOk": {
-    "message": "확인"
   },
   "rulesContentSearchScopeTitle": {
     "message": "콘텐츠 검색 범위"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "탐지기 아이콘 변경"
-  },
-  "rulesUiCustomColor": {
-    "message": "사용자 지정 색상"
   },
   "iconPickerTitle": {
     "message": "아이콘 선택"

@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Autor"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Barva odznaku"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Metody detekce"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "Exportováno: {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Exportováno pravidel: {0}"
+  },
   "failedImportDetectors": {
     "message": "Detektory se nepodařilo importovat. Zkontrolujte formát souboru."
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "Smazáno: „{0}“"
+  },
+  "ruleSavedFmt": {
+    "message": "Uloženo: „{0}“"
   },
   "failedClearDetectors": {
     "message": "Detektory se nepodařilo vymazat"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Tím se trvale smažou všechna zachycená data tohoto poskytovatele."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Zrušit"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Rozsah hledání v obsahu"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Změnit ikonu detektoru"
-  },
-  "rulesUiCustomColor": {
-    "message": "Vlastní barva"
   },
   "iconPickerTitle": {
     "message": "Zvolit ikonu"

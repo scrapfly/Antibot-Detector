@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Автор"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Цвет значка"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Методы обнаружения"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0}: экспортировано"
   },
+  "rulesExportedFmt": {
+    "message": "Экспортировано правил: {0}"
+  },
   "failedImportDetectors": {
     "message": "Не удалось импортировать детекторы. Проверьте формат файла."
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "Удалён \"{0}\""
+  },
+  "ruleSavedFmt": {
+    "message": "Сохранено: \"{0}\""
   },
   "failedClearDetectors": {
     "message": "Не удалось удалить детекторы"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Это безвозвратно удалит все захваченные данные для этого провайдера."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Отмена"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Область поиска по содержимому"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Изменить значок детектора"
-  },
-  "rulesUiCustomColor": {
-    "message": "Свой цвет"
   },
   "iconPickerTitle": {
     "message": "Выбор значка"

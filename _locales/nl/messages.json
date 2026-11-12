@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Auteur"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Badgekleur"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Detectiemethoden"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} geëxporteerd"
   },
+  "rulesExportedFmt": {
+    "message": "Regels geëxporteerd: {0}"
+  },
   "failedImportDetectors": {
     "message": "Detectors importeren mislukt. Controleer de bestandsindeling."
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" verwijderd"
+  },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" opgeslagen"
   },
   "failedClearDetectors": {
     "message": "Detectors wissen mislukt"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Hiermee worden alle opgenomen gegevens van deze aanbieder definitief verwijderd."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Annuleren"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Zoekbereik voor inhoud"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Detectorpictogram wijzigen"
-  },
-  "rulesUiCustomColor": {
-    "message": "Aangepaste kleur"
   },
   "iconPickerTitle": {
     "message": "Pictogram kiezen"

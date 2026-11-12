@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Författare"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Märkesfärg"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Upptäcktsmetoder"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "Exporterade {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Exporterade regler: {0}"
+  },
   "failedImportDetectors": {
     "message": "Det gick inte att importera detektorerna. Kontrollera filformatet."
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" togs bort"
+  },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" sparades"
   },
   "failedClearDetectors": {
     "message": "Det gick inte att rensa detektorerna"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Detta tar permanent bort alla insamlade data för den här leverantören."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Avbryt"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Sökomfång för innehåll"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Byt detektorikon"
-  },
-  "rulesUiCustomColor": {
-    "message": "Egen färg"
   },
   "iconPickerTitle": {
     "message": "Välj ikon"

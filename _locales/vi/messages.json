@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Tác giả"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Màu huy hiệu"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Phương thức phát hiện"
   },
@@ -1033,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "Đã xuất {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Đã xuất {0} quy tắc"
+  },
   "failedImportDetectors": {
     "message": "Không thể nhập trình phát hiện. Hãy kiểm tra định dạng tệp."
   },
@@ -1044,6 +1044,9 @@
   },
   "detectorDeletedFmt": {
     "message": "Đã xóa \"{0}\""
+  },
+  "ruleSavedFmt": {
+    "message": "Đã lưu \"{0}\""
   },
   "failedClearDetectors": {
     "message": "Không thể xóa trình phát hiện"
@@ -1662,12 +1665,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Thao tác này sẽ xóa vĩnh viễn tất cả dữ liệu đã ghi của nhà cung cấp này."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Hủy"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Phạm vi tìm kiếm nội dung"
@@ -3302,9 +3299,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Đổi biểu tượng trình phát hiện"
-  },
-  "rulesUiCustomColor": {
-    "message": "Màu tùy chỉnh"
   },
   "iconPickerTitle": {
     "message": "Chọn biểu tượng"

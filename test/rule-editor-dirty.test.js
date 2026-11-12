@@ -24,7 +24,7 @@ function editor({ confirmAnswer = true } = {}) {
       if (sel === '.notification-confirm[data-open="true"], .icon-picker-modal') return extra.confirm || extra.picker;
       return elements[sel] || null;
     },
-    querySelectorAll: (sel) => (sel === '.rh-modal, #advancedColorModal' ? extra.all : []),
+    querySelectorAll: (sel) => (sel === '.rh-modal' ? extra.all : []),
     body: { style: { overflow: 'hidden' } }
   };
   const context = vm.createContext({
