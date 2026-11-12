@@ -252,58 +252,69 @@ async function scenario(name, fn) {
   await scenario('Rules focus: a rule deleted from the keyboard keeps the page and the focus goes to the card that took its place', async () => {
     const popup = await popupFor();
     await openRules(popup);
-    const total = await pagerTotal(popup);
-    await nextPage(popup, 2);                                       // page 3: rules 5 and 6 of the list
-    const from = await pagerFrom(popup);
-    assert.equal(from, 5, 'two to a page: page 3 starts at 5');
-    const order = await popup.evaluate(() => window.popupInstance.rules.filteredDetectors.map(e => e.detectorName));
-    assert.deepEqual(await ruleIds(popup), [order[4], order[5]]);
-    // The first card of the page: More actions → Delete → confirm, all from the keyboard
-    await pressMenuItem(popup, '#rulesList .detector-card:nth-child(1)', 'delete-btn');
-    await popup.waitForSelector('.notification-confirm[data-open="true"]', { timeout: 8000 });
-    // (Cancel is where the dialog starts: Escape leaves everything as it was, and the focus goes back to the button)
-    await popup.keyboard.press('Escape');
-    await popup.waitForFunction(() => !document.querySelector('.notification-confirm[data-open="true"]'), null, { polling: 100, timeout: 5000 });
-    assert.deepEqual(await ruleIds(popup), [order[4], order[5]], 'cancelled: nothing deleted');
-    assert.equal((await focused(popup)).card, order[4], 'cancelled: the focus is back on that card\'s menu button');
-    await pressMenuItem(popup, '#rulesList .detector-card:nth-child(1)', 'delete-btn');
-    await confirmWithKeyboard(popup);
-    await until(async () => !(await ruleIds(popup)).includes(order[4]), 8000, 'the card to go');
-    assert.equal(await pagerTotal(popup), total - 1, 'one rule fewer');
-    assert.equal(await pagerFrom(popup), 5, 'still page 3: a delete no longer sends the list back to page 1');
-    assert.deepEqual(await ruleIds(popup), [order[5], order[6]], 'the next rules slid up');
-    let now = await focused(popup);
-    assert.equal(now.body, undefined, 'the focus did not fall to the page');
-    assert.equal(now.card, order[5], `the card now where the deleted one was has the focus: ${JSON.stringify(now)}`);
-    assert.match(now.classes, /rules-menu-trigger/, 'on its More actions button');
-    await shot(popup, 'rules-focus-after-delete');
+    // It deletes the rules that happen to sit at places 5, 7 and last of the list (newest first: 3.1.8 dated Cloudflare 2026-11-12,
+    // which put it at place 5), so the shipped set is put back afterwards: the scenarios below edit Cloudflare
+    const KEYS = ['scrapfly_detectors', 'scrapfly_deleted_official_detectors'];
+    const saved = await popup.evaluate((keys) => chrome.storage.local.get(keys), KEYS);
+    try {
+      const total = await pagerTotal(popup);
+      await nextPage(popup, 2);                                       // page 3: rules 5 and 6 of the list
+      const from = await pagerFrom(popup);
+      assert.equal(from, 5, 'two to a page: page 3 starts at 5');
+      const order = await popup.evaluate(() => window.popupInstance.rules.filteredDetectors.map(e => e.detectorName));
+      assert.deepEqual(await ruleIds(popup), [order[4], order[5]]);
+      // The first card of the page: More actions → Delete → confirm, all from the keyboard
+      await pressMenuItem(popup, '#rulesList .detector-card:nth-child(1)', 'delete-btn');
+      await popup.waitForSelector('.notification-confirm[data-open="true"]', { timeout: 8000 });
+      // (Cancel is where the dialog starts: Escape leaves everything as it was, and the focus goes back to the button)
+      await popup.keyboard.press('Escape');
+      await popup.waitForFunction(() => !document.querySelector('.notification-confirm[data-open="true"]'), null, { polling: 100, timeout: 5000 });
+      assert.deepEqual(await ruleIds(popup), [order[4], order[5]], 'cancelled: nothing deleted');
+      assert.equal((await focused(popup)).card, order[4], 'cancelled: the focus is back on that card\'s menu button');
+      await pressMenuItem(popup, '#rulesList .detector-card:nth-child(1)', 'delete-btn');
+      await confirmWithKeyboard(popup);
+      await until(async () => !(await ruleIds(popup)).includes(order[4]), 8000, 'the card to go');
+      assert.equal(await pagerTotal(popup), total - 1, 'one rule fewer');
+      assert.equal(await pagerFrom(popup), 5, 'still page 3: a delete no longer sends the list back to page 1');
+      assert.deepEqual(await ruleIds(popup), [order[5], order[6]], 'the next rules slid up');
+      let now = await focused(popup);
+      assert.equal(now.body, undefined, 'the focus did not fall to the page');
+      assert.equal(now.card, order[5], `the card now where the deleted one was has the focus: ${JSON.stringify(now)}`);
+      assert.match(now.classes, /rules-menu-trigger/, 'on its More actions button');
+      await shot(popup, 'rules-focus-after-delete');
 
-    // The same from the second card of a page; then the last card of the last page
-    await pressMenuItem(popup, '#rulesList .detector-card:nth-child(2)', 'delete-btn');
-    await confirmWithKeyboard(popup);
-    await until(async () => !(await ruleIds(popup)).includes(order[6]), 8000, 'the second card to go');
-    assert.equal(await pagerFrom(popup), 5);
-    now = await focused(popup);
-    assert.equal(now.card, order[7], 'the next rule, which came up from the following page, has the focus');
+      // The same from the second card of a page; then the last card of the last page
+      await pressMenuItem(popup, '#rulesList .detector-card:nth-child(2)', 'delete-btn');
+      await confirmWithKeyboard(popup);
+      await until(async () => !(await ruleIds(popup)).includes(order[6]), 8000, 'the second card to go');
+      assert.equal(await pagerFrom(popup), 5);
+      now = await focused(popup);
+      assert.equal(now.card, order[7], 'the next rule, which came up from the following page, has the focus');
 
-    // The last page: with the odd number of rules left it holds one card; deleting it takes the page, and the card before it has the focus
-    const last = await popup.evaluate(() => { const p = window.popupInstance.rules.paginationManager; p.goToPage(p.getTotalPages()); return p.currentPage; });
-    const remaining = await pagerTotal(popup);
-    const lastIds = await ruleIds(popup);
-    const all = await popup.evaluate(() => window.popupInstance.rules.filteredDetectors.map(e => e.detectorName));
-    const target = lastIds[lastIds.length - 1];
-    assert.equal(target, all[all.length - 1]);
-    await pressMenuItem(popup, `#rulesList .detector-card:nth-child(${lastIds.length})`, 'delete-btn');
-    await confirmWithKeyboard(popup);
-    await until(async () => (await pagerTotal(popup)) === remaining - 1, 8000, 'the last card to go');
-    const after = await ruleIds(popup);
-    now = await focused(popup);
-    assert.equal(now.body, undefined, 'the focus did not fall to the page');
-    assert.ok(after.includes(now.card), `the focus is on a card of the page now shown: ${JSON.stringify(now)} in ${after}`);
-    assert.equal(now.card, after[after.length - 1], 'the card before the deleted one, the last of the page now shown');
-    assert.ok(await pagerFrom(popup) <= last * 2, 'the list did not jump back to page 1');
-    assert.notEqual(await pagerFrom(popup), 1, 'not page 1');
-    await popup.close();
+      // The last page: with the odd number of rules left it holds one card; deleting it takes the page, and the card before it has the focus
+      const last = await popup.evaluate(() => { const p = window.popupInstance.rules.paginationManager; p.goToPage(p.getTotalPages()); return p.currentPage; });
+      const remaining = await pagerTotal(popup);
+      const lastIds = await ruleIds(popup);
+      const all = await popup.evaluate(() => window.popupInstance.rules.filteredDetectors.map(e => e.detectorName));
+      const target = lastIds[lastIds.length - 1];
+      assert.equal(target, all[all.length - 1]);
+      await pressMenuItem(popup, `#rulesList .detector-card:nth-child(${lastIds.length})`, 'delete-btn');
+      await confirmWithKeyboard(popup);
+      await until(async () => (await pagerTotal(popup)) === remaining - 1, 8000, 'the last card to go');
+      const after = await ruleIds(popup);
+      now = await focused(popup);
+      assert.equal(now.body, undefined, 'the focus did not fall to the page');
+      assert.ok(after.includes(now.card), `the focus is on a card of the page now shown: ${JSON.stringify(now)} in ${after}`);
+      assert.equal(now.card, after[after.length - 1], 'the card before the deleted one, the last of the page now shown');
+      assert.ok(await pagerFrom(popup) <= last * 2, 'the list did not jump back to page 1');
+      assert.notEqual(await pagerFrom(popup), 1, 'not page 1');
+    } finally {
+      await popup.evaluate(async ({ keys, saved }) => {
+        await chrome.storage.local.remove(keys.filter(key => !(key in saved)));
+        await chrome.storage.local.set(saved);
+      }, { keys: KEYS, saved });
+      await popup.close();
+    }
   });
 
   // ===============================================================================================
