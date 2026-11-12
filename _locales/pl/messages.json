@@ -1441,6 +1441,18 @@
   "settingsBadgeColorHigh": {
     "message": "Wysoka"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Liczba na pasku narzędzi"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Co liczy liczba na ikonie na pasku narzędzi. Fingerprinting działa na większości stron; okienko i Historia nadal pokazują wszystko."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Każde wykrycie"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Tylko anti-bot i CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Włącz zdarzenia JS API"
   },

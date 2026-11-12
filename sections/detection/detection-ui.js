@@ -591,15 +591,14 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       if (tabs && tabs[0]) {
-        const detectionCount = detections.length;
-
-        // Get badge colors from CategoryManager
+        // Get badge colors from CategoryManager, and what the number counts (Settings → General → Toolbar number)
         const badgeColors = await CategoryManager.getBadgeColors();
+        const detectionCount = DetectionUtils.badgeCount(detections, await DetectionUtils.readBadgeCountMode(CategoryManager));
         if (!this.isShowingResults || !this.isExtensionEnabled || this.blacklistedDomain) return;
 
-        // Badge color should match the UI difficulty (not raw detection count)
-        const count = detectionCount.toString();
-        const color = DetectionUtils.getBadgeColor(detections, badgeColors);
+        // Badge color should match the UI difficulty (not raw detection count); nothing counted is the clean badge
+        const count = detectionCount > 0 ? detectionCount.toString() : BADGE.TEXT.CLEAN;
+        const color = detectionCount > 0 ? DetectionUtils.getBadgeColor(detections, badgeColors) : BADGE.COLORS.CLEAN;
 
         // Update badge text and color
         await setBadgeTextColor(tabs[0].id, false, color);

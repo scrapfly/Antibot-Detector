@@ -2273,11 +2273,14 @@ class DetectionEngineManager {
         if (storedData) {
             Logger.detection(`${Logger.hostOf(pageUrl)}: ${storedData.detectionCount} detections from cache`);
 
-            // Update badge with cached detection count
-            if (storedData.detectionCount > 0) {
+            // Update badge with cached detection count (Settings → General → Toolbar number decides what it counts)
+            const storedResults = Array.isArray(storedData.detectionResults) ? storedData.detectionResults : [];
+            const badgeCount = DetectionUtils.badgeCount(storedResults, await DetectionUtils.readBadgeCountMode(CategoryManager), storedData.detectionCount);
+            if (!await isCurrentDocument()) return ignored;
+            if (badgeCount > 0) {
                 const badgeColors = await CategoryManager.getBadgeColors();
                 if (!await isCurrentDocument()) return ignored;
-                const count = storedData.detectionCount.toString();
+                const count = badgeCount.toString();
                 const color = DetectionUtils.getBadgeColor(storedData.detectionResults || [], badgeColors);
                 chrome.action.setBadgeText({ text: count, tabId: tabId }).catch(() => {});
                 setBadgeTextColor(tabId, false, color);
@@ -2287,7 +2290,7 @@ class DetectionEngineManager {
                 chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: tabId }).catch(() => {});
                 setBadgeTextColor(tabId);
                 chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: tabId }).catch(() => {});
-                if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'clean');
+                if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, storedResults.length ? 'found' : 'clean', storedResults);
             }
 
             // Notify popup if open

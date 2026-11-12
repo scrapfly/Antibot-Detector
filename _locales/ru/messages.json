@@ -1441,6 +1441,18 @@
   "settingsBadgeColorHigh": {
     "message": "Высокая"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Число на панели инструментов"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Что считает число на значке в панели инструментов. Фингерпринтинг работает на большинстве сайтов; во всплывающем окне и в истории по-прежнему видно всё."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Все обнаружения"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Только анти-бот и CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Включить события JS API"
   },

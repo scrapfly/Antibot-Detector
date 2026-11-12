@@ -1441,6 +1441,18 @@
   "settingsBadgeColorHigh": {
     "message": "Vysoká"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Číslo na liště"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Co počítá číslo na ikoně v liště nástrojů. Fingerprinting běží na většině webů; vyskakovací okno a Historie dál ukazují vše."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Každá detekce"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Jen anti-bot a CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Zapnout události JS API"
   },

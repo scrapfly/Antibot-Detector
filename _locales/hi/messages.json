@@ -1441,6 +1441,18 @@
   "settingsBadgeColorHigh": {
     "message": "उच्च"
   },
+  "settingsBadgeCountTitle": {
+    "message": "टूलबार की संख्या"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "टूलबार आइकन पर दिखने वाली संख्या क्या गिनती है। फ़िंगरप्रिंटिंग ज़्यादातर साइटों पर चलती है; पॉपअप और इतिहास फिर भी सब कुछ दिखाते हैं।"
+  },
+  "settingsBadgeCountAll": {
+    "message": "हर पहचान"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "केवल एंटी-बॉट और CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "JS API इवेंट सक्षम करें"
   },

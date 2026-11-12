@@ -346,11 +346,13 @@ DetectionActions.removeFromBlacklist = async function(domain) {
                 const detections = this.currentResults;
 
                 if (detections.length > 0) {
-                  chrome.action.setBadgeText({ text: detections.length.toString(), tabId: tab.id }).catch((error) => {
+                  // The number Settings → General → Toolbar number asks for; nothing counted is the clean badge
+                  const badgeCount = DetectionUtils.badgeCount(detections, await DetectionUtils.readBadgeCountMode(CategoryManager));
+                  chrome.action.setBadgeText({ text: badgeCount > 0 ? badgeCount.toString() : BADGE.TEXT.CLEAN, tabId: tab.id }).catch((error) => {
                     if (this.debugMode) Logger.debug('UI', 'Failed to update badge after blacklist removal:', error.message);
                   });
                   const badgeColors = await CategoryManager.getBadgeColors();
-                  const color = DetectionUtils.getBadgeColor(detections, badgeColors);
+                  const color = badgeCount > 0 ? DetectionUtils.getBadgeColor(detections, badgeColors) : BADGE.COLORS.CLEAN;
                   await setBadgeTextColor(tab.id, false, color);
                   chrome.action.setBadgeBackgroundColor({ color: color, tabId: tab.id }).catch((error) => {
                     if (this.debugMode) Logger.debug('UI', 'Failed to set badge color:', error.message);

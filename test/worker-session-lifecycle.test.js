@@ -32,8 +32,8 @@ function harness() {
     UrlUtils: { normalizeFaviconForStorage: () => null, getHostnameFromUrl: () => 'example.test' },
     Utils: { getHistorySettings: async () => ({}), isUrlBlacklisted: async () => false },
     HistoryRecorder: { shouldSaveToHistory: async () => true, saveDetectionToHistory: async (...args) => calls.history.push(args) },
-    CategoryManager: { getBadgeColors: async () => ({}) },
-    DetectionUtils: { getBadgeColor: () => '#112233' },
+    CategoryManager: { getBadgeColors: async () => ({}), getBadgeCountMode: async () => 'all' },
+    DetectionUtils: { getBadgeColor: () => '#112233', badgeCount: require('../utils/detection-utils.js').badgeCount, readBadgeCountMode: require('../utils/detection-utils.js').readBadgeCountMode },
     Settings: { sendWebhookIfEnabled: async () => {} },
     sendProgressUpdate: () => {},
     isExtensionEnabled: async () => true,
@@ -61,7 +61,7 @@ function harness() {
   return { ctx: context, calls, timers, begin };
 }
 
-for (const boundary of ['late requests', 'site list', 'cache write', 'badge settings', 'history settings']) {
+for (const boundary of ['late requests', 'site list', 'cache write', 'badge settings', 'badge count setting', 'history settings']) {
   test(`a superseded finalizer cannot repaint or delete its replacement after ${boundary}`, async () => {
     const h = harness();
     const gate = deferred();
@@ -74,6 +74,7 @@ for (const boundary of ['late requests', 'site list', 'cache write', 'badge sett
     if (boundary === 'site list') h.ctx.Utils.isUrlBlacklisted = () => wait(false);
     if (boundary === 'cache write') h.ctx.DetectionEngineManager.storeDetection = () => wait({});
     if (boundary === 'badge settings') h.ctx.CategoryManager.getBadgeColors = () => wait({});
+    if (boundary === 'badge count setting') h.ctx.CategoryManager.getBadgeCountMode = () => wait('all');
     if (boundary === 'history settings') h.ctx.Utils.getHistorySettings = () => wait({});
     const old = h.begin();
     const finishing = h.ctx.finalizeDetection(7, old);

@@ -1441,6 +1441,18 @@
   "settingsBadgeColorHigh": {
     "message": "Hög"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Siffran i verktygsfältet"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Vad siffran på ikonen i verktygsfältet räknar. Fingerprinting körs på de flesta webbplatser; popupen och Historik visar fortfarande allt."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Varje identifiering"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Bara anti-bot och CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Aktivera JS API-händelser"
   },

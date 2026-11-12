@@ -1441,6 +1441,18 @@
   "settingsBadgeColorHigh": {
     "message": "Hoch"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Zahl in der Symbolleiste"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Was die Zahl am Symbol in der Symbolleiste zählt. Fingerprinting läuft auf den meisten Websites; Popup und Verlauf zeigen weiterhin alles."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Jede Erkennung"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Nur Anti-Bot und CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "JS-API-Ereignisse aktivieren"
   },

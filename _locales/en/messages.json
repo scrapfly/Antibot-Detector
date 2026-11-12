@@ -1461,6 +1461,22 @@
   "settingsBadgeColorHigh": {
     "message": "High"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Toolbar number",
+    "description": "Settings → General → title of the dropdown that chooses what the number on the toolbar icon (the badge) counts"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "What the number on the toolbar icon counts. Fingerprinting runs on most sites; the popup and History still list everything.",
+    "description": "Settings → General → Toolbar number: description. Fingerprinting detections fire on most sites, so they inflate the number; the popup and History are not affected"
+  },
+  "settingsBadgeCountAll": {
+    "message": "Every detection",
+    "description": "Settings → General → Toolbar number: option (default) that counts every detection on the page"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Anti-bot and CAPTCHA only",
+    "description": "Settings → General → Toolbar number: option that counts only anti-bot and CAPTCHA detections, not fingerprinting"
+  },
   "settingsEnableJsApi": {
     "message": "Enable JS API Events"
   },

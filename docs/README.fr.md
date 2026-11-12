@@ -175,7 +175,7 @@ Les résultats et les captures sont conservés 30 minutes dans **Avancé → His
 
 ### Paramètres
 
-- **Général :** langue de l'interface (22 langues ; celle du navigateur par défaut), thème (Sombre, Clair ou Système), notifications, mode débogage, mises à jour planifiées des détecteurs et les couleurs du badge, des catégories et des étiquettes.
+- **Général :** langue de l'interface (22 langues ; celle du navigateur par défaut), thème (Sombre, Clair ou Système), notifications, mode débogage, mises à jour planifiées des détecteurs, ce que compte le nombre de la barre d'outils (toutes les détections, ou seulement anti-bot et CAPTCHA) et les couleurs du badge, des catégories et des étiquettes.
 - **Détection :** durée et portée du cache, l'ordre des catégories dans les résultats, le seuil de confiance des outils avancés, quels sites sont analysés (tous sauf ceux que vous ignorez, ou seulement ceux que vous choisissez), événements JS API, webhooks et liens de partage.
 - **Historique :** ce qui est enregistré (mettre l'Historique en pause, ignorer les fenêtres privées, sites ignorés, confiance minimale, ignorer les pages avec seulement du fingerprinting), combien d'entrées sont conservées (jusqu'à 10 000 ; 0 conserve les 1 000 plus récentes), supprimer les entrées après un certain nombre de jours ou à la fermeture du navigateur, ignorer ou actualiser les analyses répétées, alertes quand les protections d'une page changent, le format d'export par défaut, une jauge de stockage avec son avertissement et une sauvegarde automatique dans votre dossier Téléchargements.
 

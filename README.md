@@ -177,7 +177,7 @@ Results and captures are kept for 30 minutes in **Advanced → History**, where 
 
 ### Settings
 
-- **General:** interface language (22 languages, following your browser by default), theme (Dark, Light or System), notifications, debug mode, scheduled detector updates, and the colors of the badge, categories and tags.
+- **General:** interface language (22 languages, following your browser by default), theme (Dark, Light or System), notifications, debug mode, scheduled detector updates, what the toolbar number counts (every detection, or anti-bot and CAPTCHA only), and the colors of the badge, categories and tags.
 - **Detection:** cache duration and scope, the order of categories in the results, the Advanced tools confidence limit, which sites are scanned (every site except the ones you skip, or only the sites you choose), JS API events, webhooks and share links.
 - **History:** what to record (pause History, skip private windows, ignored sites, minimum confidence, skip fingerprint-only pages), how many entries to keep (up to 10,000; 0 keeps the newest 1,000), deleting entries after a number of days or when the browser closes, skipping or updating repeated scans, notifications when a page's protections change, the default export format, a storage meter with its warning, and an automatic backup to your Downloads folder.
 

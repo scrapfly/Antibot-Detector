@@ -1441,6 +1441,18 @@
   "settingsBadgeColorHigh": {
     "message": "Tinggi"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Angka di toolbar"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Apa yang dihitung oleh angka pada ikon toolbar. Fingerprinting berjalan di sebagian besar situs; popup dan Riwayat tetap menampilkan semuanya."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Setiap deteksi"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Hanya anti-bot dan CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Aktifkan event JS API"
   },

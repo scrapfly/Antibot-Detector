@@ -441,6 +441,22 @@ class CategoryManager {
         const saved = await CategoryManager.getSavedBadgeColors();
         return saved || { low: BADGE.COLORS.LOW, medium: BADGE.COLORS.MEDIUM, high: BADGE.COLORS.HIGH };
     }
+
+    /**
+     * What the toolbar number counts (Settings → General → Toolbar number), read raw from storage like the badge colours:
+     * 'all' (the default, also when nothing is saved or it cannot be read) or 'protections' (DetectionUtils.badgeCountMode).
+     * @returns {Promise<string>}
+     */
+    static async getBadgeCountMode() {
+        try {
+            const result = await chrome.storage.local.get(['scrapfly_settings']);
+            const raw = result.scrapfly_settings;
+            const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+            return DetectionUtils.badgeCountMode((parsed?.settings || parsed)?.badgeCount);
+        } catch (error) {
+            return 'all';
+        }
+    }
 }
 
 if (typeof window !== 'undefined') {

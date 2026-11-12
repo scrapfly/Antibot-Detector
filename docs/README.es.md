@@ -175,7 +175,7 @@ Los resultados y las capturas se guardan 30 minutos en **Avanzado → Historial*
 
 ### Ajustes
 
-- **General:** idioma de la interfaz (22 idiomas; por defecto sigue al navegador), tema (Oscuro, Claro o Sistema), notificaciones, modo de depuración, actualizaciones programadas de detectores y los colores del distintivo, las categorías y las etiquetas.
+- **General:** idioma de la interfaz (22 idiomas; por defecto sigue al navegador), tema (Oscuro, Claro o Sistema), notificaciones, modo de depuración, actualizaciones programadas de detectores, qué cuenta el número de la barra de herramientas (todas las detecciones, o solo anti-bot y CAPTCHA) y los colores del distintivo, las categorías y las etiquetas.
 - **Detección:** duración y alcance de la caché, el orden de las categorías en los resultados, el límite de confianza de las herramientas avanzadas, qué sitios se analizan (todos salvo los que omitas, o solo los que elijas), eventos JS API, webhooks y enlaces para compartir.
 - **Historial:** qué se registra (pausar el Historial, omitir ventanas privadas, sitios ignorados, confianza mínima, omitir páginas solo con fingerprinting), cuántas entradas se guardan (hasta 10.000; 0 guarda las 1.000 más recientes), borrar entradas tras un número de días o al cerrar el navegador, omitir o actualizar análisis repetidos, avisos cuando cambian las protecciones de una página, el formato de exportación por defecto, un medidor de almacenamiento con su aviso y una copia de seguridad automática en tu carpeta de Descargas.
 

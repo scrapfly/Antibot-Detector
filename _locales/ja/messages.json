@@ -1441,6 +1441,18 @@
   "settingsBadgeColorHigh": {
     "message": "高"
   },
+  "settingsBadgeCountTitle": {
+    "message": "ツールバーの数字"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "ツールバーのアイコンに表示される数字が数える対象です。フィンガープリンティングはほとんどのサイトで動いています。ポップアップと履歴には引き続きすべて表示されます。"
+  },
+  "settingsBadgeCountAll": {
+    "message": "すべての検出"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "アンチボットと CAPTCHA のみ"
+  },
   "settingsEnableJsApi": {
     "message": "JS API イベントを有効化"
   },

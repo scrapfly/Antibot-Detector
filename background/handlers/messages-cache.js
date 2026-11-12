@@ -102,8 +102,8 @@ function registerCacheHandlers(registry, context) {
                 Logger.debug('BACKGROUND', '[Background] [Early Cache] Content script exited early due to cache hit for:', url);
 
                 if (detectionData && tabId) {
-                    const detectionCount = detectionData.detectionCount || 0;
                     const detections = Array.isArray(detectionData.detectionResults) ? detectionData.detectionResults : [];
+                    const detectionCount = DetectionUtils.badgeCount(detections, await DetectionUtils.readBadgeCountMode(CategoryManager), detectionData.detectionCount);
 
                     if (detectionCount > 0) {
                         const badgeColors = await CategoryManager.getBadgeColors();
@@ -131,8 +131,8 @@ function registerCacheHandlers(registry, context) {
                             color: BADGE.COLORS.CLEAN,
                             tabId: tabId
                         });
-                        Logger.debug('BACKGROUND', '[Background] [Early Cache] Badge: clean page (no detections)');
-                        if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'clean');
+                        Logger.debug('BACKGROUND', '[Background] [Early Cache] Badge: clean page (nothing the toolbar number counts)');
+                        if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, detections.length ? 'found' : 'clean', detections);
                     }
                 }
 

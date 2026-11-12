@@ -175,7 +175,7 @@ Os resultados e as capturas ficam guardados por 30 minutos em **Avançado → Hi
 
 ### Configurações
 
-- **Geral:** idioma da interface (22 idiomas; por padrão segue o navegador), tema (Escuro, Claro ou Sistema), notificações, modo de depuração, atualizações agendadas de detectores e as cores do selo, das categorias e dos rótulos.
+- **Geral:** idioma da interface (22 idiomas; por padrão segue o navegador), tema (Escuro, Claro ou Sistema), notificações, modo de depuração, atualizações agendadas de detectores, o que o número na barra de ferramentas conta (todas as detecções, ou só anti-bot e CAPTCHA) e as cores do selo, das categorias e dos rótulos.
 - **Detecção:** duração e escopo do cache, a ordem das categorias nos resultados, o limite de confiança das ferramentas avançadas, quais sites são analisados (todos, exceto os que você ignora, ou apenas os que você escolhe), eventos da JS API, webhooks e links de compartilhamento.
 - **Histórico:** o que é registrado (pausar o Histórico, ignorar janelas anônimas, sites ignorados, confiança mínima, ignorar páginas só com fingerprinting), quantas entradas são guardadas (até 10.000; 0 guarda as 1.000 mais recentes), apagar entradas após um número de dias ou ao fechar o navegador, ignorar ou atualizar análises repetidas, avisos quando as proteções de uma página mudam, o formato de exportação padrão, um medidor de armazenamento com seu aviso e um backup automático na sua pasta Downloads.
 

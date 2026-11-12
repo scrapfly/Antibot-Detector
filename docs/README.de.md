@@ -175,7 +175,7 @@ Ergebnisse und Mitschnitte werden 30 Minuten lang unter **Erweitert → Verlauf*
 
 ### Einstellungen
 
-- **Allgemein:** Oberflächensprache (22 Sprachen; standardmäßig die des Browsers), Design (Dunkel, Hell oder System), Benachrichtigungen, Debug-Modus, geplante Detektor-Updates und die Farben für Symbol, Kategorien und Labels.
+- **Allgemein:** Oberflächensprache (22 Sprachen; standardmäßig die des Browsers), Design (Dunkel, Hell oder System), Benachrichtigungen, Debug-Modus, geplante Detektor-Updates, was die Zahl in der Symbolleiste zählt (jede Erkennung oder nur Anti-Bot und CAPTCHA) und die Farben für Symbol, Kategorien und Labels.
 - **Erkennung:** Dauer und Geltungsbereich des Caches, die Reihenfolge der Kategorien in den Ergebnissen, die Konfidenzschwelle für erweiterte Werkzeuge, welche Websites gescannt werden (alle außer den übersprungenen oder nur die gewählten), JS-API-Ereignisse, Webhooks und Links zum Teilen.
 - **Verlauf:** was aufgezeichnet wird (Verlauf pausieren, private Fenster überspringen, ignorierte Websites, Mindestkonfidenz, Seiten nur mit Fingerprinting überspringen), wie viele Einträge behalten werden (bis zu 10.000; 0 behält die letzten 1.000), Einträge nach einer Anzahl von Tagen oder beim Schließen des Browsers löschen, wiederholte Scans überspringen oder aktualisieren, Hinweise bei geänderten Schutzmaßnahmen einer Seite, das Standard-Exportformat, eine Speicheranzeige mit Warnung und ein automatisches Backup in Ihren Downloads-Ordner.
 

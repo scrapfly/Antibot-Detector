@@ -131,7 +131,9 @@ async function setBadgeForDetections(tabId, url, detectionResults, ownsSession =
         return;
     }
     try {
-        const detectionCount = detectionResults.length;
+        // The number the badge shows (Settings → General → Toolbar number): 0 is the clean badge, and the hover text still names what was found
+        const detectionCount = DetectionUtils.badgeCount(detectionResults, await DetectionUtils.readBadgeCountMode(CategoryManager));
+        if (!isCurrent()) return false;
         const isBlacklisted = url ? await Utils.isUrlBlacklisted(url) : false;
         if (!isCurrent()) return false;
         await setPausedIcon(tabId, isBlacklisted);
@@ -161,7 +163,7 @@ async function setBadgeForDetections(tabId, url, detectionResults, ownsSession =
                 setBadgeTextColor(tabId),
                 chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId }),
                 chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId }),
-                setToolbarTitle(tabId, 'clean')
+                detectionResults.length ? setToolbarTitle(tabId, 'found', detectionResults) : setToolbarTitle(tabId, 'clean')
             ]);
         }
     } catch (error) {

@@ -1441,6 +1441,18 @@
   "settingsBadgeColorHigh": {
     "message": "สูง"
   },
+  "settingsBadgeCountTitle": {
+    "message": "ตัวเลขบนแถบเครื่องมือ"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "สิ่งที่ตัวเลขบนไอคอนในแถบเครื่องมือนับ Fingerprinting ทำงานอยู่บนเว็บไซต์ส่วนใหญ่ ป๊อปอัปและประวัติยังคงแสดงทุกอย่าง"
+  },
+  "settingsBadgeCountAll": {
+    "message": "ทุกการตรวจพบ"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "เฉพาะ anti-bot และ CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "เปิดใช้เหตุการณ์ JS API"
   },

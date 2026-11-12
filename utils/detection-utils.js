@@ -204,6 +204,49 @@ class DetectionUtils {
   }
 
   /**
+   * What the number on the toolbar badge counts (Settings → General → "Toolbar number", the root setting `badgeCount`):
+   * every detection (the default), or only the anti-bot and CAPTCHA ones, since fingerprinting runs on most sites.
+   */
+  static BADGE_COUNT_ALL = 'all';
+  static BADGE_COUNT_PROTECTIONS = 'protections';
+
+  /** The badge count mode of a saved value: anything but 'protections' (a missing or unknown value) is every detection. */
+  static badgeCountMode(value) {
+    return value === DetectionUtils.BADGE_COUNT_PROTECTIONS ? DetectionUtils.BADGE_COUNT_PROTECTIONS : DetectionUtils.BADGE_COUNT_ALL;
+  }
+
+  /**
+   * The saved badge count mode, read through the given manager (CategoryManager.getBadgeCountMode), never failing: a manager
+   * without the reader, or a read that throws or rejects, is every detection, so the badge is still painted with its colours.
+   * @param {object} manager
+   * @returns {Promise<string>}
+   */
+  static async readBadgeCountMode(manager) {
+    try {
+      return DetectionUtils.badgeCountMode(await manager.getBadgeCountMode());
+    } catch (_) {
+      return DetectionUtils.BADGE_COUNT_ALL;
+    }
+  }
+
+  /**
+   * The number on the toolbar badge for a page's detections: the one count every badge painter uses (worker and popup).
+   * 0 means the page gets the clean badge; its hover text still names what was found.
+   * @param {Array} detections - the page's results
+   * @param {string} [mode] - the saved `badgeCount` setting (badgeCountMode)
+   * @param {number} [total] - the page's saved detection count: what every detection shows when a cached page has one, as before
+   * @returns {number}
+   */
+  static badgeCount(detections, mode, total) {
+    const list = Array.isArray(detections) ? detections.filter(d => d && typeof d === 'object') : [];
+    if (DetectionUtils.badgeCountMode(mode) === DetectionUtils.BADGE_COUNT_PROTECTIONS) {
+      return list.filter(d => DetectionUtils.isProtection(d)).length;
+    }
+    const saved = Number(total);
+    return total !== undefined && total !== null && Number.isInteger(saved) && saved >= 0 ? saved : list.length;
+  }
+
+  /**
    * The confidence from which a protection counts as present on a page: History's own line (HistoryPolicy.CHANGE_SURE, under
    * 25% it is absent). A script that only names a vendor scores 5-10%, so it never sets the page difficulty.
    */

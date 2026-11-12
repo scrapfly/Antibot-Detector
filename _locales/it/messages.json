@@ -1441,6 +1441,18 @@
   "settingsBadgeColorHigh": {
     "message": "Alto"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Numero nella barra degli strumenti"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Cosa conta il numero sull’icona nella barra degli strumenti. Il fingerprinting è presente sulla maggior parte dei siti; il popup e la Cronologia mostrano comunque tutto."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Ogni rilevamento"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Solo anti-bot e CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Attiva eventi JS API"
   },

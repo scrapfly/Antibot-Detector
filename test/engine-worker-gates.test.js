@@ -40,7 +40,7 @@ function worker({ store = { scrapfly_enabled: true }, get, stored = null, tabsGe
     chrome, WorkerMessages, AbortController,
     setTimeout: () => 1, clearTimeout() {}, // the pending-scan timer of a request must not keep the test process alive
     setPausedIcon() {}, startBadgeSpinner() {}, setBadgeTextColor() {},
-    DetectionUtils: { getBadgeColor: () => '#000000' }
+    DetectionUtils: { getBadgeColor: () => '#000000', badgeCount: require('../utils/detection-utils.js').badgeCount, readBadgeCountMode: require('../utils/detection-utils.js').readBadgeCountMode }
   }, { files: [...ENGINE_FILES, 'modules/core/storage-manager.js', 'modules/core/badge-constants.js'] });
   const Utils = {
     isUrlBlacklisted: async () => false, getHistorySettings: async () => ({}), shouldSkipDetection: () => false,
@@ -48,7 +48,7 @@ function worker({ store = { scrapfly_enabled: true }, get, stored = null, tabsGe
   };
   Engine.getStoredDetection = async () => stored;
   const dependencies = {
-    chrome, Utils, CategoryManager: { getBadgeColors: async () => ({}) }, HistoryRecorder: {}, categoryManager: {}, recentDetectionRequests: new Map(),
+    chrome, Utils, CategoryManager: { getBadgeColors: async () => ({}), getBadgeCountMode: async () => 'all' }, HistoryRecorder: {}, categoryManager: {}, recentDetectionRequests: new Map(),
     Settings: { sendWebhookIfEnabled: (page, results, options) => { webhooks.push({ page, results, options }); return Promise.resolve(); } },
     activeDetections: new Map()
   };
