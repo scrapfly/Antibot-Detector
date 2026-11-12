@@ -7,6 +7,13 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.1.9] - 2026-11-12
 
+### Fixed
+
+- Detection and Rules stay on the page you were viewing when you come back to their tab.
+- In Arabic, the arrow keys move through the Advanced code window's language tabs in reading order.
+- Settings: removing a site or a webhook header keeps keyboard focus in the list, and copying a webhook template variable says when the browser refuses it.
+- Light theme: the Settings dropdown arrows and the icon of Advanced tools without a logo are visible again.
+
 ## [3.1.8] - 2026-11-12
 
 ### Added
