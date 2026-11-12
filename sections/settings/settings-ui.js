@@ -54,6 +54,19 @@ SettingsUI.collapseCards = function(root) {
     });
 };
 
+/**
+ * A row's remove button took the row with it when the list was drawn again: the keyboard goes on to the button now in its
+ * place, the one before it when it was the last, or `fallback` (the control that adds one) when nothing is left.
+ * @param {ArrayLike<HTMLElement>} buttons - the remove buttons of the list as drawn now
+ * @param {number} position - where the removed row's button was among the buttons drawn before
+ * @param {HTMLElement|null} fallback
+ */
+SettingsUI.focusAfterRemove = function(buttons, position, fallback) {
+    const list = Array.from(buttons || []);
+    const target = list.length ? list[Math.min(Math.max(position, 0), list.length - 1)] : fallback;
+    if (target && typeof target.focus === 'function') target.focus();
+};
+
 SettingsUI.showSettings = function() {
     const settingsModal = document.querySelector('#settingsModal');
     if (settingsModal) {
