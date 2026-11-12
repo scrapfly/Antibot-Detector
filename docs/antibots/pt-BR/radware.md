@@ -12,7 +12,7 @@ Site oficial: [https://www.radware.com/products/bot-manager/](https://www.radwar
 
 ## Como saber se um site usa Radware Bot Manager
 
-Estes sinais são gerados a partir das regras de detecção da própria extensão para `detect-radware` (versão da regra 2.2.0, última atualização 2026-10-16). Um sinal é apenas um indício: a confiança indica o quanto a extensão tem certeza quando vê aquele sinal isolado. Os sinais marcados como "apenas corroboração" nunca contam por si sós, porque outros produtos também podem produzi-los.
+Estes sinais são gerados a partir das regras de detecção da própria extensão para `detect-radware` (versão da regra 2.3.0, última atualização 2026-11-12). Um sinal é apenas um indício: a confiança indica o quanto a extensão tem certeza quando vê aquele sinal isolado. Os sinais marcados como "apenas corroboração" nunca contam por si sós, porque outros produtos também podem produzi-los.
 
 ### Cookies
 
@@ -47,8 +47,8 @@ Texto encontrado dentro da página ou de seus scripts.
 
 | Sinal | Confiança | O que indica |
 | --- | --- | --- |
-| `CloudWebSec.radware.com` | 20% (apenas corroboração) | Script reference to the CloudWebSec vendor portal host |
-| `Unauthorized Request Blocked` | 20% (apenas corroboração) | Script reference to the Radware block-page message |
+| `CloudWebSec[.@]radware\.com` | 20% (apenas corroboração) | CloudWebSec contact address on the Radware block page |
+| `Unauthorized Request Blocked` | 20% (apenas corroboração) | Radware block-page message |
 
 ### Variáveis globais de JavaScript (window)
 
@@ -65,9 +65,9 @@ Alguns sinais pontuam mais juntos do que sozinhos. A extensão também relata es
 
 | Combinação | Confiança | Requer |
 | --- | --- | --- |
-| Block-page message with the vendor portal reference | 70% | Script reference to the CloudWebSec vendor portal host e Script reference to the Radware block-page message |
-| Component-state header with block-page evidence | 80% | Radware SecureLink component-state response header e (Script reference to the CloudWebSec vendor portal host ou Script reference to the Radware block-page message) |
-| Component-state header with both block-page signals | 90% | Radware SecureLink component-state response header e Script reference to the CloudWebSec vendor portal host e Script reference to the Radware block-page message |
+| Block-page message with the vendor portal reference | 70% | CloudWebSec contact address on the Radware block page e Radware block-page message |
+| Component-state header with block-page evidence | 80% | Radware SecureLink component-state response header e (CloudWebSec contact address on the Radware block page ou Radware block-page message) |
+| Component-state header with both block-page signals | 90% | Radware SecureLink component-state response header e CloudWebSec contact address on the Radware block page e Radware block-page message |
 | Bot Manager cookies with its first-party script | 100% | Radware Bot Manager session cookies (__uzma … __uzmf) e First-party Radware Bot Manager script (stormcaster.js) |
 | Bot Manager cookies, script and connector object | 100% | Radware Bot Manager session cookies (__uzma … __uzmf) e First-party Radware Bot Manager script (stormcaster.js) e Radware Bot Manager JavaScript connector object |
 | Bot Manager captcha host with its session cookies | 100% | Radware Bot Manager captcha / validation host e Radware Bot Manager session cookies (__uzma … __uzmf) |

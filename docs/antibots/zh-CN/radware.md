@@ -12,7 +12,7 @@ Radware Bot Manager，前身为 ShieldSquare，是 Radware 的机器人管理产
 
 ## 如何判断网站使用了 Radware Bot Manager
 
-这些特征由扩展自身针对 `detect-radware` 的检测规则生成（规则版本 2.2.0，最后更新于 2026-10-16）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
+这些特征由扩展自身针对 `detect-radware` 的检测规则生成（规则版本 2.3.0，最后更新于 2026-11-12）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
 
 ### Cookie
 
@@ -47,8 +47,8 @@ Radware Bot Manager，前身为 ShieldSquare，是 Radware 的机器人管理产
 
 | 特征 | 置信度 | 含义 |
 | --- | --- | --- |
-| `CloudWebSec.radware.com` | 20% (仅作佐证) | Script reference to the CloudWebSec vendor portal host |
-| `Unauthorized Request Blocked` | 20% (仅作佐证) | Script reference to the Radware block-page message |
+| `CloudWebSec[.@]radware\.com` | 20% (仅作佐证) | CloudWebSec contact address on the Radware block page |
+| `Unauthorized Request Blocked` | 20% (仅作佐证) | Radware block-page message |
 
 ### JavaScript 全局变量（window）
 
@@ -65,9 +65,9 @@ Radware Bot Manager，前身为 ShieldSquare，是 Radware 的机器人管理产
 
 | 组合 | 置信度 | 条件 |
 | --- | --- | --- |
-| Block-page message with the vendor portal reference | 70% | Script reference to the CloudWebSec vendor portal host和Script reference to the Radware block-page message |
-| Component-state header with block-page evidence | 80% | Radware SecureLink component-state response header和(Script reference to the CloudWebSec vendor portal host或Script reference to the Radware block-page message) |
-| Component-state header with both block-page signals | 90% | Radware SecureLink component-state response header和Script reference to the CloudWebSec vendor portal host和Script reference to the Radware block-page message |
+| Block-page message with the vendor portal reference | 70% | CloudWebSec contact address on the Radware block page和Radware block-page message |
+| Component-state header with block-page evidence | 80% | Radware SecureLink component-state response header和(CloudWebSec contact address on the Radware block page或Radware block-page message) |
+| Component-state header with both block-page signals | 90% | Radware SecureLink component-state response header和CloudWebSec contact address on the Radware block page和Radware block-page message |
 | Bot Manager cookies with its first-party script | 100% | Radware Bot Manager session cookies (__uzma … __uzmf)和First-party Radware Bot Manager script (stormcaster.js) |
 | Bot Manager cookies, script and connector object | 100% | Radware Bot Manager session cookies (__uzma … __uzmf)和First-party Radware Bot Manager script (stormcaster.js)和Radware Bot Manager JavaScript connector object |
 | Bot Manager captcha host with its session cookies | 100% | Radware Bot Manager captcha / validation host和Radware Bot Manager session cookies (__uzma … __uzmf) |

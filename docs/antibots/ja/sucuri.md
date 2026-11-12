@@ -12,7 +12,7 @@ Sucuri はウェブサイトセキュリティの企業で、そのクラウド 
 
 ## サイトが Sucuri WAF を使っているかを見分ける方法
 
-これらのシグナルは、`detect-sucuri` に対する拡張機能自身の検出ルール（ルールのバージョン 2.1.0、最終更新日 2026-10-16）から生成されています。シグナルはあくまで目安です。信頼度とは、そのシグナル単体が確認されたときに拡張機能がどの程度確信を持つかを表します。「補強のみ」とマークされたシグナルは、他の製品でも発生しうるため、それだけでは判定に加算されません。
+これらのシグナルは、`detect-sucuri` に対する拡張機能自身の検出ルール（ルールのバージョン 2.2.0、最終更新日 2026-11-12）から生成されています。シグナルはあくまで目安です。信頼度とは、そのシグナル単体が確認されたときに拡張機能がどの程度確信を持つかを表します。「補強のみ」とマークされたシグナルは、他の製品でも発生しうるため、それだけでは判定に加算されません。
 
 ### Cookie
 
@@ -39,7 +39,7 @@ Sucuri はウェブサイトセキュリティの企業で、そのクラウド 
 
 | シグナル | 信頼度 | 示唆する内容 |
 | --- | --- | --- |
-| `Sucuri WebSite Firewall - Access Denied` | 30% (補強のみ) | Sucuri block page title |
+| `Sucuri Web ?Site Firewall - (?:CloudProxy - )?Access Denied\|Access Denied - Sucuri Web ?Site Firewall` | 30% (補強のみ) | Sucuri block page title |
 | `Block ID:` | 20% (補強のみ) | Block ID label on the Sucuri block page |
 | `sucuri_cloudproxy_js` | 10% | Sucuri CloudProxy JS challenge variable |
 

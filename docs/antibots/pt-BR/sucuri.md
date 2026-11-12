@@ -12,7 +12,7 @@ Site oficial: [https://sucuri.net/](https://sucuri.net/)
 
 ## Como saber se um site usa Sucuri WAF
 
-Estes sinais são gerados a partir das regras de detecção da própria extensão para `detect-sucuri` (versão da regra 2.1.0, última atualização 2026-10-16). Um sinal é apenas um indício: a confiança indica o quanto a extensão tem certeza quando vê aquele sinal isolado. Os sinais marcados como "apenas corroboração" nunca contam por si sós, porque outros produtos também podem produzi-los.
+Estes sinais são gerados a partir das regras de detecção da própria extensão para `detect-sucuri` (versão da regra 2.2.0, última atualização 2026-11-12). Um sinal é apenas um indício: a confiança indica o quanto a extensão tem certeza quando vê aquele sinal isolado. Os sinais marcados como "apenas corroboração" nunca contam por si sós, porque outros produtos também podem produzi-los.
 
 ### Cookies
 
@@ -39,7 +39,7 @@ Texto encontrado dentro da página ou de seus scripts.
 
 | Sinal | Confiança | O que indica |
 | --- | --- | --- |
-| `Sucuri WebSite Firewall - Access Denied` | 30% (apenas corroboração) | Sucuri block page title |
+| `Sucuri Web ?Site Firewall - (?:CloudProxy - )?Access Denied\|Access Denied - Sucuri Web ?Site Firewall` | 30% (apenas corroboração) | Sucuri block page title |
 | `Block ID:` | 20% (apenas corroboração) | Block ID label on the Sucuri block page |
 | `sucuri_cloudproxy_js` | 10% | Sucuri CloudProxy JS challenge variable |
 

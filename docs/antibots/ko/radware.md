@@ -12,7 +12,7 @@ Radware Bot Manager는 이전 이름이 ShieldSquare이며 Radware의 봇 관리
 
 ## 사이트가 Radware Bot Manager을(를) 사용하는지 확인하는 방법
 
-이 신호들은 `detect-radware`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.2.0, 최종 업데이트 2026-10-16)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
+이 신호들은 `detect-radware`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.3.0, 최종 업데이트 2026-11-12)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
 
 ### 쿠키
 
@@ -47,8 +47,8 @@ Radware Bot Manager는 이전 이름이 ShieldSquare이며 Radware의 봇 관리
 
 | 신호 | 신뢰도 | 의미 |
 | --- | --- | --- |
-| `CloudWebSec.radware.com` | 20% (보조 근거로만 사용) | Script reference to the CloudWebSec vendor portal host |
-| `Unauthorized Request Blocked` | 20% (보조 근거로만 사용) | Script reference to the Radware block-page message |
+| `CloudWebSec[.@]radware\.com` | 20% (보조 근거로만 사용) | CloudWebSec contact address on the Radware block page |
+| `Unauthorized Request Blocked` | 20% (보조 근거로만 사용) | Radware block-page message |
 
 ### JavaScript 전역 변수(window)
 
@@ -65,9 +65,9 @@ Radware Bot Manager는 이전 이름이 ShieldSquare이며 Radware의 봇 관리
 
 | 조합 | 신뢰도 | 필요 조건 |
 | --- | --- | --- |
-| Block-page message with the vendor portal reference | 70% | Script reference to the CloudWebSec vendor portal host 그리고 Script reference to the Radware block-page message |
-| Component-state header with block-page evidence | 80% | Radware SecureLink component-state response header 그리고 (Script reference to the CloudWebSec vendor portal host 또는 Script reference to the Radware block-page message) |
-| Component-state header with both block-page signals | 90% | Radware SecureLink component-state response header 그리고 Script reference to the CloudWebSec vendor portal host 그리고 Script reference to the Radware block-page message |
+| Block-page message with the vendor portal reference | 70% | CloudWebSec contact address on the Radware block page 그리고 Radware block-page message |
+| Component-state header with block-page evidence | 80% | Radware SecureLink component-state response header 그리고 (CloudWebSec contact address on the Radware block page 또는 Radware block-page message) |
+| Component-state header with both block-page signals | 90% | Radware SecureLink component-state response header 그리고 CloudWebSec contact address on the Radware block page 그리고 Radware block-page message |
 | Bot Manager cookies with its first-party script | 100% | Radware Bot Manager session cookies (__uzma … __uzmf) 그리고 First-party Radware Bot Manager script (stormcaster.js) |
 | Bot Manager cookies, script and connector object | 100% | Radware Bot Manager session cookies (__uzma … __uzmf) 그리고 First-party Radware Bot Manager script (stormcaster.js) 그리고 Radware Bot Manager JavaScript connector object |
 | Bot Manager captcha host with its session cookies | 100% | Radware Bot Manager captcha / validation host 그리고 Radware Bot Manager session cookies (__uzma … __uzmf) |
