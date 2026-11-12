@@ -7,6 +7,12 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.1.9] - 2026-11-12
 
+### Added
+
+- Detection: a "Strong (≥80%)" toggle inside the search box shows only detections with strong evidence.
+- Detection details: explains what the difficulty level means and links the vendor's website and its detection guide in your language.
+- Detection details: Open tools goes straight to the Advanced tools for that protection.
+
 ### Fixed
 
 - Detection and Rules stay on the page you were viewing when you come back to their tab.
