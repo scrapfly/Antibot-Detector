@@ -51,6 +51,17 @@
   filter: brightness(0.62) saturate(1.4);
 }
 
+/* Settings dropdowns draw a white arrow for the dark field: on the light
+   field it is drawn in the shared dropdown's light-theme grey */
+:root[data-theme="light"] #settingsModal .select-field {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1.2 1.5L5 5.3l3.8-3.8' fill='none' stroke='%23595d66' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Advanced: the shield shown for a tool without a logo, on its white tile */
+:root[data-theme="light"] .advanced-launch-icon {
+  color: var(--text-secondary);
+}
+
 /* Shadows: softer on white */
 :root[data-theme="light"] .rule-modal-content {
   box-shadow: 0 6px 24px rgba(9, 30, 66, 0.12);
