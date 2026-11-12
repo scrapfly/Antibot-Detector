@@ -29,6 +29,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Rules: saving keeps the list on the rule's page with focus on its Edit button and confirms the save; both exports confirm how many rules they wrote.
 - Rules: the warning that a pattern is also in another rule now fires when only the description differs.
 - Rules editor: dropdown arrows are visible in the light theme, and the helpers' search icon sits on the correct side in Arabic.
+- Switching the extension off now stops a running watchlist check and pauses a Bulk scan at once; Settings and the Bulk page say why.
+- The toolbar icon's hover text no longer names an old result after Clear cache, or says a site is skipped after it is scanned again.
+- Settings → Log collector: Export saves a full log and says so when the file cannot be saved.
 - Backups to keep deletes older backups only after the new one is fully saved; a backup that fails to save is reported and deletes nothing.
 - Backups to keep no longer deletes newer backups after the browser's downloads list was cleared and the browser restarted; its note says pre-3.1.7 backups stay.
 - Resuming a paused site reloads the page, so its scan includes headers and cookies instead of saving an incomplete result.
