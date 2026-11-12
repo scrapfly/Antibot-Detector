@@ -1,0 +1,110 @@
+{
+  "id": "detect-bunny-shield",
+  "name": "Bunny Shield",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-11-12",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://bunny.net/shield/",
+  "icon": "custom.png",
+  "description": "bunny.net's edge security with a WAF, rate limiting, bot detection by browser fingerprint and a JavaScript proof-of-work challenge",
+  "detection": {
+    "cookie": [
+      {
+        "id": "bunny-shield-pow-cookie",
+        "name": "^bunny_shield$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "bunny_shield cookie that marks a passed Bunny Shield proof-of-work challenge (bunny.net docs)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "bunny-shield-checksum-cookie",
+        "name": "^bunny_shield_chk$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "bunny_shield_chk checksum cookie that protects the bunny_shield cookie (bunny.net docs)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "bunny-shield-id-cookie",
+        "name": "^bunny_shield_id$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "bunny_shield_id identifier cookie of Bunny Shield bot detection (bunny.net docs)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "bunny-shield-fingerprint-cookie",
+        "name": "^bunny_shield_bd$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "bunny_shield_bd cookie holding the browser fingerprint Bunny Shield bot detection takes (bunny.net docs)",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "header": [
+      {
+        "id": "bunnycdn-server-header",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^BunnyCDN-[A-Z0-9]{2,6}-[0-9]{1,8}$",
+        "valueRegex": true,
+        "confidence": 40,
+        "description": "Server header BunnyCDN-<PoP>-<server id> of a bunny.net edge; proves the CDN, not protection",
+        "standalone": false,
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "bunny-shield-challenge-passed",
+      "name": "Proof-of-work cookie with its checksum",
+      "confidence": 100,
+      "when": {
+        "all": [
+          { "pattern": "bunny-shield-pow-cookie" },
+          { "pattern": "bunny-shield-checksum-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "bunny-shield-bot-detection",
+      "name": "Bot detection identifier and fingerprint cookies",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "bunny-shield-id-cookie" },
+          { "pattern": "bunny-shield-fingerprint-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "bunny-shield-edge-cookie",
+      "name": "Bunny Shield cookie on a bunny.net edge response",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              { "pattern": "bunny-shield-pow-cookie" },
+              { "pattern": "bunny-shield-checksum-cookie" },
+              { "pattern": "bunny-shield-id-cookie" },
+              { "pattern": "bunny-shield-fingerprint-cookie" }
+            ]
+          },
+          { "pattern": "bunnycdn-server-header" }
+        ]
+      }
+    }
+  ]
+}

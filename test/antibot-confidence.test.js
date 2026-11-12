@@ -130,7 +130,9 @@ const PROOF = new Set([
   'detect-fastly/fastly-challenge-script', 'detect-fastly/fastly-detection-script', 'detect-fastly/fastly-challenge-start-cookie',
   'detect-fastly/fastly-challenge-complete-cookie', 'detect-fastly/fastly-detection-cookie', 'detect-kount/kount-collector-sdk',
   'detect-kount/kount-collector-endpoint', 'detect-riskified/riskified-beacon-script', 'detect-riskified/riskified-collector',
-  'detect-siteground-captcha/sg-captcha-header', 'detect-siteground-captcha/sgcaptcha-wellknown-path'
+  'detect-siteground-captcha/sg-captcha-header', 'detect-siteground-captcha/sgcaptcha-wellknown-path',
+  'detect-edgeone/edgeone-attestation-sdk', 'detect-edgeone/edgeone-sec-bot-path', 'detect-signifyd/signifyd-script-tag',
+  'detect-signifyd/signifyd-profiling-modules', 'detect-signifyd/signifyd-profiling-endpoint'
 ]);
 // Detectors whose top tier stays below 100: legacy vendors (Ocule, Meetrics)
 // and edges that prove a CDN rather than protection (Azure Front Door, Yundun);
@@ -138,13 +140,13 @@ const PROOF = new Set([
 const CAPPED = new Set(['detect-ocule', 'detect-meetrics', 'detect-azurefrontdoor', 'detect-yundun', 'detect-hunt']);
 const isProof = (d, r) => PROOF.has(`${d.id}/${r.id}`);
 
-test('forty-four anti-bot definitions: v2, explicit ids, graded combinations', () => {
-  assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aliyunwaf', 'detect-amazon', 'detect-anubis', 'detect-aws-waf',
-    'detect-azurefrontdoor', 'detect-botguard', 'detect-castle', 'detect-cheq', 'detect-cloudflare', 'detect-cloudflare-waitingroom', 'detect-datadome',
-    'detect-ddosguard', 'detect-deepseek-pow', 'detect-f5', 'detect-fastly', 'detect-fingerprintjs', 'detect-forter', 'detect-huaweicloud-waf', 'detect-hunt', 'detect-incapsula',
+test('forty-nine anti-bot definitions: v2, explicit ids, graded combinations', () => {
+  assert.deepEqual(Object.keys(antibot).sort(), ['detect-akamai', 'detect-aliyunwaf', 'detect-amazon', 'detect-anubis', 'detect-aws-waf', 'detect-azure-waf',
+    'detect-azurefrontdoor', 'detect-botguard', 'detect-bunny-shield', 'detect-castle', 'detect-cheq', 'detect-cloud-armor', 'detect-cloudflare', 'detect-cloudflare-waitingroom', 'detect-datadome',
+    'detect-ddosguard', 'detect-deepseek-pow', 'detect-edgeone', 'detect-f5', 'detect-fastly', 'detect-fingerprintjs', 'detect-forter', 'detect-huaweicloud-waf', 'detect-hunt', 'detect-incapsula',
     'detect-iovation', 'detect-jiasule', 'detect-kasada', 'detect-kount', 'detect-meetrics', 'detect-netacea', 'detect-ocule', 'detect-openai-sentinel',
     'detect-perimeterx', 'detect-queueit', 'detect-radware', 'detect-reblaze', 'detect-riskified', 'detect-ruishu', 'detect-seon', 'detect-shapesecurity',
-    'detect-sift', 'detect-siteground-captcha', 'detect-sucuri', 'detect-threatmetrix', 'detect-vercel', 'detect-wordfence', 'detect-yundun']);
+    'detect-sift', 'detect-signifyd', 'detect-siteground-captcha', 'detect-sucuri', 'detect-threatmetrix', 'detect-vercel', 'detect-wordfence', 'detect-yundun']);
   for (const d of Object.values(definitions)) {
     assert.match(d.version, /^2\.\d+\.\d+$/, d.id);
     const rules = patterns(d);
@@ -297,7 +299,17 @@ const benign = {
   // A SiteGround-hosted page that challenges nobody (vocationalmedia.com, 2026-11-05: only the platform's headers), the classic
   // captcha path the challenge page falls back to, and names that merely start like the challenge's constants
   'detect-siteground-captcha': { headers: { server: 'nginx', 'x-httpd-modphp': '1', 'host-header': '6b7412fb82ca5edfd0917e3957f05d89', 'x-proxy-cache': 'MISS', 'x-proxy-cache-info': '0 NC:000000 UP:' },
-    urls: ['https://www.siteground.com/', 'https://example.test/.well-known/captcha/?r=/', 'https://example.test/sgcaptcha/'], sources: ['var sgchallenges = 1; window.sgsubmit = 2;'] }
+    urls: ['https://www.siteground.com/', 'https://example.test/.well-known/captcha/?r=/', 'https://example.test/sgcaptcha/'], sources: ['var sgchallenges = 1; window.sgsubmit = 2;'] },
+  // 3.1.8: a plain EdgeOne or bunny.net CDN response (edge headers only), the vendors' marketing hosts, names and paths that only start
+  // like theirs, a Front Door or reCAPTCHA page without the WAF's clearance cookies
+  'detect-edgeone': { headers: { server: 'TencentEdgeOne', 'eo-log-uuid': '4105283880544427145', 'eo-cache-status': 'HIT' },
+    cookies: ['EO_Bot', 'EO-Bot-Session', 'eo_bot_ssid_x'], urls: ['https://edgeone.ai/', 'https://cdnstatic.tencentcs.com/edgeone/other/sdk.min.js', 'https://example.test/eo-sec-bot/'] },
+  'detect-bunny-shield': { headers: { server: 'BunnyCDN-DE1-1052', 'cdn-pullzone': '876725', 'cdn-cache': 'HIT' }, cookies: ['bunny_session', 'bunnyshield', 'bunny_shield_x'] },
+  'detect-signifyd': { urls: ['https://www.signifyd.com/', 'https://example.test/api/script.js', 'https://example.test/o/lite.json', 'https://example.test/fp-web/x',
+    // two of the three routes its proxy guide keeps, without the script tag: a coincidence of paths
+    'https://example.test/api/script-tag.js', 'https://example.test/fp-web'] },
+  'detect-azure-waf': { headers: { 'x-azure-ref': '20261112T090000Z-abc', 'x-cache': 'TCP_MISS' }, cookies: ['azwaf_jsclearance', 'afd_azwaf', 'appgw_azwaf_captcha', 'afd_azwaf_jsclearance_x'] },
+  'detect-cloud-armor': { cookies: ['recaptcha-ca', 'recaptcha-ca-x', '_GRECAPTCHA'], urls: ['https://www.google.com/recaptcha/enterprise.js?render=KEY', 'https://www.google.com/recaptcha/api.js?waf=sessions'] }
 };
 test('benign lookalikes from real pages identify no anti-bot vendor', () => {
   for (const [id, b] of Object.entries(benign)) {

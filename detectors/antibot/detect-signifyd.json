@@ -1,0 +1,181 @@
+{
+  "id": "detect-signifyd",
+  "name": "Signifyd",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Low",
+  "lastUpdated": "2026-11-12",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.signifyd.com/",
+  "icon": "custom.png",
+  "description": "Signifyd commerce fraud protection with a device profiling script that sends device, browser and navigation data to Signifyd",
+  "detection": {
+    "url": [
+      {
+        "id": "signifyd-script-tag",
+        "confidence": 100,
+        "description": "Signifyd device profiling script script-tag.js on cdn-scripts.signifyd.com (standard, BigCommerce or Shopify)",
+        "text": "^https://cdn-scripts\\.signifyd\\.com/(?:api|bigcommerce|shopify)/script-tag\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "signifyd-profiling-modules",
+        "confidence": 100,
+        "description": "Other Signifyd scripts on cdn-scripts.signifyd.com (company_toolkit.js, loader.js, lite.js, BigCommerce conversion-tracking.js)",
+        "text": "^https://cdn-scripts\\.signifyd\\.com/(?:api/company_toolkit|o/(?:loader|lite)|bigcommerce/conversion-tracking)\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "signifyd-profiling-endpoint",
+        "confidence": 100,
+        "description": "Device profile sent to dp.signifyd.com/fp-web",
+        "text": "^https://dp\\.signifyd\\.com/fp-web(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "signifyd-proxied-script-tag",
+        "confidence": 40,
+        "description": "First-party /api/script-tag.js, the path Signifyd's proxy guide keeps for its script; supporting signal only",
+        "text": "^https?://[^/?#]+/api/script-tag\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": false
+      },
+      {
+        "id": "signifyd-proxied-lite",
+        "confidence": 30,
+        "description": "First-party /o/lite.js profiling module path from Signifyd's proxy guide; supporting signal only",
+        "text": "^https?://[^/?#]+/o/lite\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": false
+      },
+      {
+        "id": "signifyd-proxied-fp-web",
+        "confidence": 30,
+        "description": "First-party /fp-web profiling endpoint from Signifyd's proxy guide; supporting signal only",
+        "text": "^https?://[^/?#]+/fp-web(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": false
+      }
+    ],
+    "dom": [
+      {
+        "id": "signifyd-script-element",
+        "selector": "script#script-tag-api[data-order-session-id], script#sig-api[data-order-session-id], script#sig-bc[data-store-id]",
+        "confidence": 60,
+        "description": "Signifyd script tag with a documented id and its data-order-session-id or data-store-id attribute"
+      }
+    ],
+    "window": [
+      {
+        "id": "signifyd-page-view",
+        "path": "signifyd.pageView",
+        "condition": "typeof function",
+        "confidence": 60,
+        "description": "signifyd.pageView method the Signifyd script exposes for single-page applications"
+      },
+      {
+        "id": "signifyd-script-loader",
+        "path": "sigScriptLoader",
+        "condition": "typeof object",
+        "confidence": 60,
+        "description": "sigScriptLoader object of the Signifyd script, with its isInitialized flag"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "signifyd-proxied-tag",
+      "name": "Signifyd script tag served from the site with its profiling routes",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "signifyd-script-element"
+          },
+          {
+            "pattern": "signifyd-proxied-script-tag"
+          },
+          {
+            "any": [
+              {
+                "pattern": "signifyd-proxied-lite"
+              },
+              {
+                "pattern": "signifyd-proxied-fp-web"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "signifyd-tag-runtime",
+      "name": "Signifyd script tag with its runtime",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "signifyd-script-element"
+          },
+          {
+            "any": [
+              {
+                "pattern": "signifyd-page-view"
+              },
+              {
+                "pattern": "signifyd-script-loader"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "signifyd-proxied-routes",
+      "name": "All three Signifyd routes served from the site",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "signifyd-proxied-script-tag"
+          },
+          {
+            "pattern": "signifyd-proxied-lite"
+          },
+          {
+            "pattern": "signifyd-proxied-fp-web"
+          }
+        ]
+      }
+    },
+    {
+      "id": "signifyd-runtime",
+      "name": "Signifyd loader and page-view method",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "signifyd-page-view"
+          },
+          {
+            "pattern": "signifyd-script-loader"
+          }
+        ]
+      }
+    }
+  ]
+}
