@@ -13,7 +13,7 @@ const detectorsWith = (detection, extra = {}) => ({ antibot: { 'detect-x': { id:
 
 /** A page: its document (with counters on what is read), its window and the storage of hook hits. */
 function pageWith({ href = 'https://site.test/path', scripts = [], styles = [], cookie = '', html = '<p>body</p>', title = 'A title', hookHits, body = [] } = {}) {
-  const reads = { cookie: 0, html: 0, scripts: 0 };
+  const reads = { cookie: 0, html: 0, scripts: 0, storage: 0 };
   const doc = documentOf({ body });
   Object.defineProperty(doc, 'cookie', { get() { reads.cookie++; return cookie; } });
   doc.title = title;
@@ -26,6 +26,7 @@ function pageWith({ href = 'https://site.test/path', scripts = [], styles = [], 
   };
   const url = new URL(href);
   const chrome = { storage: { local: { get(keys, callback) {
+    reads.storage += 1;
     callback({ scrapfly_js_hook_detections: hookHits === undefined ? undefined : { [href]: hookHits } });
   } } } };
   const fetched = [];
@@ -64,9 +65,11 @@ test('the page data names the page, and reads cookies, scripts, DOM and HTML onl
   assert.equal(data.favicon, '');
   assert.match(data.timestamp, /^\d{4}-\d\d-\d\dT/);
   assert.deepEqual(plain(data.headers), []);
-  assert.deepEqual(plain(data.jsHooks), [{ detectorId: 'detect-x', target: 'navigator.userAgent' }], 'the hook hits already recorded for this address');
+  // Hook hits reach the worker in their own batches; nothing writes the old storage key, so a scan no longer reads it
+  assert.deepEqual(plain(data.jsHooks), [], 'nothing taken from storage');
+  assert.equal(page.reads.storage, 0, 'storage is not read');
   assert.equal(typeof data.collectMs, 'number');
-  assert.deepEqual({ ...page.reads }, { cookie: 0, html: 0, scripts: 0 }, 'nothing read yet');
+  assert.deepEqual({ ...page.reads }, { cookie: 0, html: 0, scripts: 0, storage: 0 }, 'nothing read yet');
 
   assert.deepEqual(plain(data.cookies).map(cookie => cookie.name), ['a', 'b']);
   const cookieReads = page.reads.cookie;
@@ -95,7 +98,7 @@ test('a value set on the page data replaces what the getter would read', async (
   assert.deepEqual(plain(data.content), []);
   assert.equal(data.pageHTML, 'set');
   assert.deepEqual(plain(data.dom), []);
-  assert.deepEqual({ ...page.reads }, { cookie: 0, html: 0, scripts: 0 }, 'the page was never read');
+  assert.deepEqual({ ...page.reads }, { cookie: 0, html: 0, scripts: 0, storage: 0 }, 'the page was never read');
 });
 
 test('kinds of data no loaded rule uses are not collected: the property is absent', async () => {
@@ -127,7 +130,7 @@ test('with no detectors loaded everything is collected, but no external script i
   assert.ok(logs.warn.some(entry => String(entry[1]).includes('No detectors loaded')));
 });
 
-test('a page with no title is "Untitled", and hook hits of another address are not this page\'s', async () => {
+test('a page with no title is "Untitled", and carries no hook hits from storage', async () => {
   const page = pageWith({ title: '', hookHits: undefined });
   const { engine } = engineFor(page, detectorsWith({ url: [{ text: 'x' }] }));
   const data = await engine.collectPageData();

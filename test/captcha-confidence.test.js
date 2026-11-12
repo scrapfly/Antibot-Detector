@@ -78,6 +78,11 @@ Engine.storeDetection = async (_, page, results) => {
 Engine.getStoredDetection = async () => null;
 const registry = {};
 context.registerDetectionHandlers(registry, {});
+/** The inline scripts a page has, as the content script collects them */
+function collectedScripts(texts) {
+  context.document = { querySelectorAll: selector => selector === 'script' ? texts.map(textContent => ({ type: '', src: '', textContent })) : [] };
+  try { return vm.runInContext('demExtractScriptElements()', context); } finally { delete context.document; }
+}
 function patterns(detector) {
   return Object.entries(detector.detection).flatMap(([method, rules]) => rules.map(rule => ({ method, ...rule })));
 }
@@ -217,7 +222,8 @@ test('all twenty-four definitions have explicit IDs, conservative standalone evi
   for (const detector of Object.values(captcha)) {
     // Semver: bump the minor version whenever rules change, so Rules → Update offers it
     assert.match(detector.version, /^1\.\d+\.\d+$/, detector.id);
-    // 2026-11-04: Turnstile 1.2.1 (response-body rules need the 2.8.8 engine); 2026-11-11: CaptchaFox 1.0.0; 2026-11-12: EU CAPTCHA (Myra) 1.0.0
+    // 2026-11-04: Turnstile 1.2.1 (response-body rules need the 2.8.8 engine); 2026-11-11: CaptchaFox 1.0.0;
+    // 2026-11-12: EU CAPTCHA (Myra) 1.0.0, Binance 1.2.0 (the standalone validateId rule removed)
     assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[3-9]|1[0-7]|26)|11-(?:04|1[12]))$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
@@ -319,10 +325,18 @@ for (const detector of Object.values(captcha)) {
     const result = await detect(detector, profile);
     assert.ok((result?.confidence || 0) <= 20, detector.id);
     const source = profile.page.content.map(script => script.content).join('\n');
+    assert.equal(collectedScripts(profile.page.content.map(script => script.content)).length, profile.page.content.length,
+      `${detector.id}: its own inline snippets are still read`);
     for (const page of [
       { pageHTML: `<p>${source}</p>` }, { pageHTML: `<style>${source}</style>` },
       { pageHTML: `<script type="application/ld+json">${JSON.stringify({ text: source })}</script>` },
-      { externalContent: [{ type: 'css', url: 'https://example.test/style.css', content: source }] }
+      { externalContent: [{ type: 'css', url: 'https://example.test/style.css', content: source }] },
+      // An article about the vendor in a framework's page data (Next.js App Router, Remix, Nuxt 2, a Redux store)
+      { content: collectedScripts([`self.__next_f.push([1,${JSON.stringify(`<p>${source}</p>`)}])`,
+        `(self.__next_f=self.__next_f||[]).push([0]);self.__next_f.push([1,${JSON.stringify(source)}])`,
+        `window.__remixContext = ${JSON.stringify({ state: { loaderData: { body: source } } })};`,
+        `window.__NUXT__=(function(a,b){return {data:[{body:${JSON.stringify(source)}}]}}(null,false));`,
+        `window.__INITIAL_STATE__=${JSON.stringify({ article: source })}`]) }
     ]) assert.equal(await detect(detector, { page: { url: 'https://example.test/', ...page }, runtime: {} }), undefined, detector.id);
   });
   test(`${detector.id}: identifier lookalikes cannot manufacture source evidence`, async () => {
@@ -450,6 +464,15 @@ test('generic sitekeys, routes, query URL copies and lookalike authorities produ
         { tagName: 'iframe', attributes: { src: url }, src: url }] });
     assert.deepEqual(Array.from(result, item => item.detector.id), [], url);
   }
+});
+
+// validateId is a common field name (form validators, payment SDKs): a page whose scripts use it is not Binance's captcha
+test('a script that merely uses a field called validateId identifies no CAPTCHA', async () => {
+  const engine = new Engine();
+  engine.setDetectors({ captcha });
+  const result = await engine.detectOnPage({ url: 'https://shop.example/checkout', networkUrls: [], dom: [], externalContent: [],
+    content: [{ type: 'inline', content: 'form.submit({ validateId: field.id, onValidate: check });' }] });
+  assert.deepEqual(Array.from(result, item => item.detector.id), []);
 });
 
 test('requests made after the page snapshot still count when the scan finishes', async () => {

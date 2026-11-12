@@ -374,12 +374,14 @@ function registerDetectionHandlers(registry, context) {
 
                     if (detections.length === 0) return;
 
-                    // Extract URL for cache check
-                    const url = detections[0]?.url;
+                    // The sending document's address, as for the window checks: each hit names the address the page had
+                    // when it fired, and a page that changes its own address at startup (a redirect from '' to /home,
+                    // ?utm_* stripped with replaceState) is still the same document. The document check rejects any other
+                    const url = sender.url || sender.tab.url;
                     if (!url) return;
 
                     const document = await resolveDetectionMessageDocument(sender, url);
-                    if (!document || detections.some(item => normalizeDetectionMessageUrl(item.url) !== normalizeDetectionMessageUrl(url))) return;
+                    if (!document) return;
                     state = detectionStateForDocument(document);
                     // Own the batch across every async lookup so finalization
                     // cannot overtake already-admitted hook evidence.

@@ -420,24 +420,6 @@ class DetectionEngineManager {
         // The page's own icon link; the background prefers Chrome's tab favicon
         const favicon = UrlUtils.findPageIconHref(document);
 
-        // Get JS Hook detections from storage
-        let jsHooks = [];
-        try {
-            const hookData = await new Promise((resolve) => {
-                chrome.storage.local.get(['scrapfly_js_hook_detections'], (result) => {
-                    resolve(result.scrapfly_js_hook_detections || {});
-                });
-            });
-
-            const currentHooks = hookData[window.location.href];
-            if (currentHooks && currentHooks.hooks) {
-                jsHooks = currentHooks.hooks;
-                Logger.debug('DETECTION', `${jsHooks.length} hook hits already recorded`);
-            }
-        } catch (error) {
-            Logger.warn('HOOKS', '[runDetection] Hook detections load failed', error);
-        }
-
         // Smart lazy data collection
         let cachedPageHTML = null;
         let cachedCookies = null;
@@ -452,7 +434,9 @@ class DetectionEngineManager {
             timestamp: new Date().toISOString(),
 
             externalContent: externalContent,
-            jsHooks: jsHooks,
+            // Hook hits reach the worker in their own batches (JS_HOOK_DETECTION_BATCH); the storage key a scan once read
+            // here is written by nothing, so reading it cost every scan a storage round trip for an empty answer
+            jsHooks: [],
             headers: [],
 
             _extractCookies: () => this.extractCookies(),
@@ -835,9 +819,18 @@ class DetectionEngineManager {
         const contentPatterns = detector.detection?.content;
 
         if (contentPatterns && (pageHTML || content.length > 0 || externalContent.length > 0)) {
-            // Lowercase the (potentially large) pageHTML once and reuse it across
-            // every content pattern instead of re-lowercasing per pattern.
-            const pageHTMLLower = pageHTML.toLowerCase();
+            // One lowercased copy of each text (a script, a fetched resource, the page's HTML) for the whole scan: detectOnPage
+            // passes its map, so 7.7 MB of scripts are lowercased once rather than once per case-insensitive rule
+            const lowerTexts = options && options.lowerTexts instanceof Map ? options.lowerTexts : new Map();
+            const preparedFor = (text, matchOptions) => {
+                if (matchOptions.caseSensitive || !text) return undefined;
+                let lower = lowerTexts.get(text);
+                if (lower === undefined) {
+                    lower = text.toLowerCase();
+                    lowerTexts.set(text, lower);
+                }
+                return lower;
+            };
             for (const contentPattern of contentPatterns) {
                 if (contentPattern.enabled === false) continue;
                 const patternText = contentPattern.text || '';
@@ -858,7 +851,7 @@ class DetectionEngineManager {
 
                 if (!checkScripts) {
                     // No restrictions = check entire page HTML + external content (default behavior)
-                    if (this.matchPattern(pageHTML, patternText, matchOptions, pageHTMLLower)) {
+                    if (this.matchPattern(pageHTML, patternText, matchOptions, preparedFor(pageHTML, matchOptions))) {
                         found = true;
                         foundIn = 'page content';
                     }
@@ -866,7 +859,7 @@ class DetectionEngineManager {
                     // Also search external fetched content
                     if (!found && pageData.externalContent && pageData.externalContent.length > 0) {
                         for (const resource of pageData.externalContent) {
-                            if (this.matchPattern(resource.content, patternText, matchOptions)) {
+                            if (this.matchPattern(resource.content, patternText, matchOptions, preparedFor(resource.content, matchOptions))) {
                                 found = true;
                                 foundIn = resource.url;
                                 break;
@@ -879,7 +872,7 @@ class DetectionEngineManager {
                     for (const script of content) {
                         const scriptContent = script.content || '';
                         if (!scriptContent || scriptContent === script.src) continue;
-                        if (this.matchPattern(scriptContent, patternText, matchOptions)) {
+                        if (this.matchPattern(scriptContent, patternText, matchOptions, preparedFor(scriptContent, matchOptions))) {
                             found = true;
                             foundIn = script.src || 'inline script';
                             break;
@@ -890,7 +883,7 @@ class DetectionEngineManager {
                     if (!found) {
                         for (const resource of externalContent) {
                             if (resource.type !== 'javascript') continue;
-                            if (this.matchPattern(resource.content, patternText, matchOptions)) {
+                            if (this.matchPattern(resource.content, patternText, matchOptions, preparedFor(resource.content, matchOptions))) {
                                 found = true;
                                 foundIn = resource.url;
                                 break;
@@ -1498,6 +1491,8 @@ class DetectionEngineManager {
         // loop a turn every ~40 ms of matching. Results are unchanged.
         const canYield = typeof setTimeout === 'function';
         let sliceStart = Date.now();
+        // Each text lowercased once for the whole scan, shared by every detector's case-insensitive content rules
+        const lowerTexts = new Map();
 
         // A confident match says nothing about the remaining vendors. Evaluate
         // every enabled detector, including partial evidence for combinations.
@@ -1507,7 +1502,7 @@ class DetectionEngineManager {
                 sliceStart = Date.now();
             }
             // requestHeaders: request-scope header rules read them (they were dropped here before)
-            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, responses, networkUrls, allCookies, responseCookies }, { groupElements: true });
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, responses, networkUrls, allCookies, responseCookies }, { groupElements: true, lowerTexts });
             if (detection.detected || detection.partial) {
                 const detectionObj = {
                     ...detection,

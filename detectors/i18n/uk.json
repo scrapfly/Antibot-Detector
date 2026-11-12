@@ -588,7 +588,6 @@
   "Binance antibot API the captcha reports to": "Антибот-API Binance, до якого звітує captcha",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "Посилання в скрипті на конструктор BCaptcha; інтеграцію не підтверджено",
   "Script reference to the captcha's validation id field": "Посилання в скрипті на поле ідентифікатора валідації captcha",
-  "Script reference to validateId; a common name, weak on its own": "Посилання в скрипті на validateId; поширена назва, сама по собі слабка ознака",
   "BCaptcha constructor on the page": "Конструктор BCaptcha на сторінці",
   "Captcha script calling the antibot API": "Скрипт captcha викликає антибот-API",
   "Captcha script with the BCaptcha constructor": "Скрипт captcha з конструктором BCaptcha",

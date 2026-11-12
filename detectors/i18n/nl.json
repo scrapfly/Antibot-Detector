@@ -588,7 +588,6 @@
   "Binance antibot API the captcha reports to": "Binance-antibot-API waaraan de captcha rapporteert",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "Scriptverwijzing naar de BCaptcha-constructor; integratie niet bevestigd",
   "Script reference to the captcha's validation id field": "Scriptverwijzing naar het validatie-id-veld van de captcha",
-  "Script reference to validateId; a common name, weak on its own": "Scriptverwijzing naar validateId; een veelvoorkomende naam, op zichzelf zwak",
   "BCaptcha constructor on the page": "BCaptcha-constructor op de pagina",
   "Captcha script calling the antibot API": "Captchascript dat de antibot-API aanroept",
   "Captcha script with the BCaptcha constructor": "Captchascript met de BCaptcha-constructor",

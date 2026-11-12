@@ -588,7 +588,6 @@
   "Binance antibot API the captcha reports to": "Captcha'nın rapor verdiği Binance antibot API'si",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "BCaptcha yapıcısına komut dosyası başvurusu; entegrasyon doğrulanmadı",
   "Script reference to the captcha's validation id field": "Captcha'nın doğrulama kimliği alanına komut dosyası başvurusu",
-  "Script reference to validateId; a common name, weak on its own": "validateId'ye komut dosyası başvurusu; yaygın bir ad, tek başına zayıf",
   "BCaptcha constructor on the page": "Sayfadaki BCaptcha yapıcısı",
   "Captcha script calling the antibot API": "Antibot API'sini çağıran captcha komut dosyası",
   "Captcha script with the BCaptcha constructor": "BCaptcha yapıcısı ile birlikte captcha komut dosyası",

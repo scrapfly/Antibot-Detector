@@ -829,7 +829,6 @@
   "Binance antibot API the captcha reports to": "CAPTCHA が報告する Binance の antibot API",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "BCaptcha コンストラクターへのスクリプト参照。統合は未確認",
   "Script reference to the captcha's validation id field": "CAPTCHA の検証 ID フィールドへのスクリプト参照",
-  "Script reference to validateId; a common name, weak on its own": "validateId へのスクリプト参照。一般的な名前のため単独では弱い",
   "BCaptcha constructor on the page": "ページ上の BCaptcha コンストラクター",
   "Captcha script calling the antibot API": "antibot API を呼び出す CAPTCHA スクリプト",
   "Captcha script with the BCaptcha constructor": "CAPTCHA スクリプトと BCaptcha コンストラクター",

@@ -829,7 +829,6 @@
   "Binance antibot API the captcha reports to": "Binance antibot API, जिसे captcha रिपोर्ट करता है",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "BCaptcha कंस्ट्रक्टर का स्क्रिप्ट संदर्भ; इंटीग्रेशन अपुष्ट",
   "Script reference to the captcha's validation id field": "captcha के validation id फ़ील्ड का स्क्रिप्ट संदर्भ",
-  "Script reference to validateId; a common name, weak on its own": "validateId का स्क्रिप्ट संदर्भ; आम नाम, अकेले कमज़ोर संकेत",
   "BCaptcha constructor on the page": "पेज पर BCaptcha कंस्ट्रक्टर",
   "Captcha script calling the antibot API": "antibot API को कॉल करती captcha स्क्रिप्ट",
   "Captcha script with the BCaptcha constructor": "BCaptcha कंस्ट्रक्टर के साथ captcha स्क्रिप्ट",
