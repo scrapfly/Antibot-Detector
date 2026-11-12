@@ -2,7 +2,7 @@
 
 # AWS WAF のボット対策: 検出方法とスクレイピングへの影響
 
-AWS WAF は、一部のウェブサイトがページの手前に置くボット対策（アンチボット）または不正利用対策のレイヤーです。AWS WAF の回避方法を調べている場合も、サイトで AWS WAF を検出したい場合も、AWS WAF によるスクレイピングのブロックを調査している場合も、最初にやることは同じです。リクエストに応答しているのが本当に AWS WAF かどうかを確認することです。このページでは、Scrapfly Antibot Detector 拡張機能が AWS WAF のボット検出を見分けるために使う 12 件の公開シグナルと、それぞれがどの程度 AWS WAF を示唆するか、そして自動化クライアントにとってそれが通常何を意味するかをまとめています。
+AWS WAF は、一部のウェブサイトがページの手前に置くボット対策（アンチボット）または不正利用対策のレイヤーです。AWS WAF の回避方法を調べている場合も、サイトで AWS WAF を検出したい場合も、AWS WAF によるスクレイピングのブロックを調査している場合も、最初にやることは同じです。リクエストに応答しているのが本当に AWS WAF かどうかを確認することです。このページでは、Scrapfly Antibot Detector 拡張機能が AWS WAF のボット検出を見分けるために使う 14 件の公開シグナルと、それぞれがどの程度 AWS WAF を示唆するか、そして自動化クライアントにとってそれが通常何を意味するかをまとめています。
 
 ## 概要
 
@@ -12,7 +12,7 @@ AWS WAF は Amazon Web Services のウェブアプリケーションファイア
 
 ## サイトが AWS WAF を使っているかを見分ける方法
 
-これらのシグナルは、`detect-aws-waf` に対する拡張機能自身の検出ルール（ルールのバージョン 2.2.0、最終更新日 2026-11-09）から生成されています。シグナルはあくまで目安です。信頼度とは、そのシグナル単体が確認されたときに拡張機能がどの程度確信を持つかを表します。「補強のみ」とマークされたシグナルは、他の製品でも発生しうるため、それだけでは判定に加算されません。
+これらのシグナルは、`detect-aws-waf` に対する拡張機能自身の検出ルール（ルールのバージョン 2.3.0、最終更新日 2026-11-12）から生成されています。シグナルはあくまで目安です。信頼度とは、そのシグナル単体が確認されたときに拡張機能がどの程度確信を持つかを表します。「補強のみ」とマークされたシグナルは、他の製品でも発生しうるため、それだけでは判定に加算されません。
 
 ### Cookie
 
@@ -21,6 +21,7 @@ AWS WAF は Amazon Web Services のウェブアプリケーションファイア
 | シグナル | 信頼度 | 示唆する内容 |
 | --- | --- | --- |
 | `^aws-waf-token$ = ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[A-Za-z0-9+/=_:-]{20,}` | 100% | AWS WAF token cookie set after a challenge |
+| `^aws-waf-token$` | 85% | AWS WAF token cookie by name; its value format is not documented |
 
 ### レスポンスヘッダー
 
@@ -37,9 +38,10 @@ AWS WAF は Amazon Web Services のウェブアプリケーションファイア
 
 | シグナル | 信頼度 | 示唆する内容 |
 | --- | --- | --- |
-| `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.token\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge\|captcha\|jsapi)\.js(?:[?#]\|$)` | 100% | Integration SDK from the regional token.awswaf.com host |
-| `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.token\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs\|verify\|telemetry\|voucher\|mp_verify)(?:[?#/]\|$)` | 100% | Any request to the regional token.awswaf.com host (inputs, verify, telemetry) |
+| `^https://(?:[a-z0-9-]+\.)+(?:token\|sdk)\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge\|captcha\|jsapi)\.js(?:[?#]\|$)` | 100% | Integration SDK from the regional token.awswaf.com host |
+| `^https://(?:[a-z0-9-]+\.)+(?:token\|sdk)\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs\|verify\|telemetry\|voucher\|mp_verify)(?:[?#/]\|$)` | 100% | Any request to the regional token.awswaf.com host (inputs, verify, telemetry) |
 | `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.captcha\.awswaf\.com/` | 100% | AWS WAF CAPTCHA host |
+| `^https://(?:[a-z0-9-]+\.)+awswaf\.com(?:[/?#:]\|$)` | 100% | Any request to an AWS WAF host (*.awswaf.com) |
 
 ### ページとスクリプトの内容
 
@@ -69,7 +71,7 @@ AWS WAF は Amazon Web Services のウェブアプリケーションファイア
 | --- | --- | --- |
 | Challenge response with its bootstrap | 100% | (AWS WAF challenge or captcha action header または AWS WAF challenge id header) および (Challenge page bootstrap object (gokuProps) または Challenge page bootstrap variable (window.gokuProps) または Integration SDK from the regional token.awswaf.com host) |
 | Integration SDK with token traffic or cookie | 100% | (Integration SDK from the regional token.awswaf.com host または AWS WAF Integration SDK object) および (AWS WAF token cookie set after a challenge または Any request to the regional token.awswaf.com host (inputs, verify, telemetry) または Token cookie domain list for the Integration SDK) |
-| Token cookie with SDK reference | 90% | AWS WAF token cookie set after a challenge および (Integration SDK namespace reference または Challenge page bootstrap variable (window.gokuProps) または Token cookie domain list for the Integration SDK) |
+| Token cookie with SDK reference | 90% | (AWS WAF token cookie set after a challenge または AWS WAF token cookie by name; its value format is not documented) および (Integration SDK namespace reference または Challenge page bootstrap variable (window.gokuProps) または Token cookie domain list for the Integration SDK) |
 
 ## 難易度
 

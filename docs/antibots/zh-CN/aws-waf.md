@@ -2,7 +2,7 @@
 
 # AWS WAF 反爬防护：如何检测网站是否使用它（以及它对网页抓取意味着什么）
 
-AWS WAF 是一些网站放在页面前面的反爬虫（反机器人）或反滥用防护层。无论你是在寻找 AWS WAF 绕过方法、想检测某个网站是否使用了 AWS WAF，还是在排查网页抓取被 AWS WAF 拦截的问题，第一步都是一样的：确认响应你请求的确实是 AWS WAF。本页列出 Scrapfly Antibot Detector 扩展用来识别 AWS WAF 机器人检测的 12 个公开特征，说明每个特征指向它的可信程度，以及这通常对自动化客户端意味着什么。
+AWS WAF 是一些网站放在页面前面的反爬虫（反机器人）或反滥用防护层。无论你是在寻找 AWS WAF 绕过方法、想检测某个网站是否使用了 AWS WAF，还是在排查网页抓取被 AWS WAF 拦截的问题，第一步都是一样的：确认响应你请求的确实是 AWS WAF。本页列出 Scrapfly Antibot Detector 扩展用来识别 AWS WAF 机器人检测的 14 个公开特征，说明每个特征指向它的可信程度，以及这通常对自动化客户端意味着什么。
 
 ## 它是什么
 
@@ -12,7 +12,7 @@ AWS WAF 是 Amazon Web Services 的 Web 应用防火墙。它的 Bot Control 和
 
 ## 如何判断网站使用了 AWS WAF
 
-这些特征由扩展自身针对 `detect-aws-waf` 的检测规则生成（规则版本 2.2.0，最后更新于 2026-11-09）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
+这些特征由扩展自身针对 `detect-aws-waf` 的检测规则生成（规则版本 2.3.0，最后更新于 2026-11-12）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
 
 ### Cookie
 
@@ -21,6 +21,7 @@ AWS WAF 是 Amazon Web Services 的 Web 应用防火墙。它的 Bot Control 和
 | 特征 | 置信度 | 含义 |
 | --- | --- | --- |
 | `^aws-waf-token$ = ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[A-Za-z0-9+/=_:-]{20,}` | 100% | AWS WAF token cookie set after a challenge |
+| `^aws-waf-token$` | 85% | AWS WAF token cookie by name; its value format is not documented |
 
 ### 响应头
 
@@ -37,9 +38,10 @@ AWS WAF 是 Amazon Web Services 的 Web 应用防火墙。它的 Bot Control 和
 
 | 特征 | 置信度 | 含义 |
 | --- | --- | --- |
-| `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.token\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge\|captcha\|jsapi)\.js(?:[?#]\|$)` | 100% | Integration SDK from the regional token.awswaf.com host |
-| `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.token\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs\|verify\|telemetry\|voucher\|mp_verify)(?:[?#/]\|$)` | 100% | Any request to the regional token.awswaf.com host (inputs, verify, telemetry) |
+| `^https://(?:[a-z0-9-]+\.)+(?:token\|sdk)\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge\|captcha\|jsapi)\.js(?:[?#]\|$)` | 100% | Integration SDK from the regional token.awswaf.com host |
+| `^https://(?:[a-z0-9-]+\.)+(?:token\|sdk)\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs\|verify\|telemetry\|voucher\|mp_verify)(?:[?#/]\|$)` | 100% | Any request to the regional token.awswaf.com host (inputs, verify, telemetry) |
 | `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.captcha\.awswaf\.com/` | 100% | AWS WAF CAPTCHA host |
+| `^https://(?:[a-z0-9-]+\.)+awswaf\.com(?:[/?#:]\|$)` | 100% | Any request to an AWS WAF host (*.awswaf.com) |
 
 ### 页面和脚本内容
 
@@ -69,7 +71,7 @@ AWS WAF 是 Amazon Web Services 的 Web 应用防火墙。它的 Bot Control 和
 | --- | --- | --- |
 | Challenge response with its bootstrap | 100% | (AWS WAF challenge or captcha action header或AWS WAF challenge id header)和(Challenge page bootstrap object (gokuProps)或Challenge page bootstrap variable (window.gokuProps)或Integration SDK from the regional token.awswaf.com host) |
 | Integration SDK with token traffic or cookie | 100% | (Integration SDK from the regional token.awswaf.com host或AWS WAF Integration SDK object)和(AWS WAF token cookie set after a challenge或Any request to the regional token.awswaf.com host (inputs, verify, telemetry)或Token cookie domain list for the Integration SDK) |
-| Token cookie with SDK reference | 90% | AWS WAF token cookie set after a challenge和(Integration SDK namespace reference或Challenge page bootstrap variable (window.gokuProps)或Token cookie domain list for the Integration SDK) |
+| Token cookie with SDK reference | 90% | (AWS WAF token cookie set after a challenge或AWS WAF token cookie by name; its value format is not documented)和(Integration SDK namespace reference或Challenge page bootstrap variable (window.gokuProps)或Token cookie domain list for the Integration SDK) |
 
 ## 难度
 

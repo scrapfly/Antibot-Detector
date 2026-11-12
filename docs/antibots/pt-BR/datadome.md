@@ -2,7 +2,7 @@
 
 # Proteção antibot DataDome: como detectar (e o que ela significa para o web scraping)
 
-DataDome é uma camada de proteção contra bots ou contra abuso que alguns sites colocam na frente de suas páginas. Se você procura como contornar o DataDome, quer detectar o DataDome em um site ou está investigando um web scraping bloqueado pelo DataDome, o primeiro passo é o mesmo: confirmar que é mesmo o DataDome que responde às suas requisições. Esta página lista os 11 sinais públicos que a extensão Scrapfly Antibot Detector usa para reconhecer a detecção de bots do DataDome, o quanto cada um aponta para ele e o que isso costuma significar para um cliente automatizado.
+DataDome é uma camada de proteção contra bots ou contra abuso que alguns sites colocam na frente de suas páginas. Se você procura como contornar o DataDome, quer detectar o DataDome em um site ou está investigando um web scraping bloqueado pelo DataDome, o primeiro passo é o mesmo: confirmar que é mesmo o DataDome que responde às suas requisições. Esta página lista os 13 sinais públicos que a extensão Scrapfly Antibot Detector usa para reconhecer a detecção de bots do DataDome, o quanto cada um aponta para ele e o que isso costuma significar para um cliente automatizado.
 
 ## O que é
 
@@ -12,7 +12,7 @@ Site oficial: [https://datadome.co/](https://datadome.co/)
 
 ## Como saber se um site usa DataDome
 
-Estes sinais são gerados a partir das regras de detecção da própria extensão para `detect-datadome` (versão da regra 2.1.0, última atualização 2026-10-16). Um sinal é apenas um indício: a confiança indica o quanto a extensão tem certeza quando vê aquele sinal isolado. Os sinais marcados como "apenas corroboração" nunca contam por si sós, porque outros produtos também podem produzi-los.
+Estes sinais são gerados a partir das regras de detecção da própria extensão para `detect-datadome` (versão da regra 2.2.0, última atualização 2026-11-12). Um sinal é apenas um indício: a confiança indica o quanto a extensão tem certeza quando vê aquele sinal isolado. Os sinais marcados como "apenas corroboração" nunca contam por si sós, porque outros produtos também podem produzi-los.
 
 ### Cookies
 
@@ -39,8 +39,8 @@ Endereços de scripts, frames e requisições que a página carrega. São padrõ
 
 | Sinal | Confiança | O que indica |
 | --- | --- | --- |
-| `^https://(?:js\|api-js)\.datadome\.co/(?:tags\.js\|js/)` | 100% | Official DataDome JavaScript tag or its collection endpoint |
-| `^https://(?:geo\|ct\|c\|t)\.captcha-delivery\.com/` | 100% | DataDome challenge or CAPTCHA delivery host |
+| `^https://(?:js\|api-js)\.datadome\.co/` | 100% | Official DataDome JavaScript tag or its collection endpoint |
+| `^https://(?:[a-z0-9-]+\.)+captcha-delivery\.com(?:[/?#:]\|$)` | 100% | DataDome challenge or CAPTCHA delivery host |
 | `^https?://[^/?#]+/(?:tags\.js\|js/)(?:[?#]\|$)` | 30% (apenas corroboração) | First-party tags.js or js/ collection path; the name is generic, corroboration only |
 
 ### Conteúdo da página e dos scripts
@@ -59,6 +59,8 @@ Propriedades que o contexto JavaScript da própria página expõe em `window`.
 | Sinal | Confiança | O que indica |
 | --- | --- | --- |
 | `ddjskey (typeof string)` | 60% | DataDome JS key set by the integration snippet |
+| `ddoptions (typeof object)` | 60% | DataDome tag options object (window.ddoptions) |
+| `displayDataDomeResponsePage (typeof function)` | 85% | DataDome response page function (window.displayDataDomeResponsePage) |
 
 ### Combinações
 
@@ -68,8 +70,8 @@ Alguns sinais pontuam mais juntos do que sozinhos. A extensão também relata es
 | --- | --- | --- |
 | DataDome tag with its session cookie | 100% | (Official DataDome JavaScript tag or its collection endpoint ou DataDome JS key set by the integration snippet ou Integration snippet setting window.ddjskey) e DataDome session cookie |
 | DataDome response headers with its cookie | 100% | (DataDome client ID response header ou DataDome protection response header ou Response served by DataDome itself (block or challenge page)) e DataDome session cookie |
-| First-party DataDome tag with its JS key | 85% | First-party tags.js or js/ collection path; the name is generic, corroboration only e (DataDome JS key set by the integration snippet ou Integration snippet setting window.ddjskey) |
-| DataDome block page | 95% | DataDome block page bootstrap (var dd={'rt':...}) e (DataDome client ID response header ou DataDome block-type header on challenge responses ou DataDome challenge or CAPTCHA delivery host ou DataDome session cookie) |
+| First-party DataDome tag with its JS key | 85% | First-party tags.js or js/ collection path; the name is generic, corroboration only e (DataDome JS key set by the integration snippet ou Integration snippet setting window.ddjskey ou DataDome tag options object (window.ddoptions)) |
+| DataDome block page | 95% | (DataDome block page bootstrap (var dd={'rt':...}) ou DataDome response page function (window.displayDataDomeResponsePage)) e (DataDome client ID response header ou DataDome block-type header on challenge responses ou DataDome challenge or CAPTCHA delivery host ou DataDome session cookie) |
 
 ## Dificuldade
 

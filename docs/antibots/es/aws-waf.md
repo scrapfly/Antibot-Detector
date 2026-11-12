@@ -2,7 +2,7 @@
 
 # Protección anti-bot AWS WAF: cómo detectarla (y qué implica para el web scraping)
 
-AWS WAF es una capa de protección contra bots o contra abusos que algunos sitios web colocan delante de sus páginas. Si buscas un bypass de AWS WAF, quieres detectar AWS WAF en un sitio o investigas un web scraping bloqueado por AWS WAF, el primer paso es el mismo: confirmar que AWS WAF es realmente quien responde a tus solicitudes. Esta página enumera las 12 señales públicas que la extensión Scrapfly Antibot Detector usa para reconocer la detección de bots de AWS WAF, con qué fuerza apunta cada una hacia ella y qué suele significar para un cliente automatizado.
+AWS WAF es una capa de protección contra bots o contra abusos que algunos sitios web colocan delante de sus páginas. Si buscas un bypass de AWS WAF, quieres detectar AWS WAF en un sitio o investigas un web scraping bloqueado por AWS WAF, el primer paso es el mismo: confirmar que AWS WAF es realmente quien responde a tus solicitudes. Esta página enumera las 14 señales públicas que la extensión Scrapfly Antibot Detector usa para reconocer la detección de bots de AWS WAF, con qué fuerza apunta cada una hacia ella y qué suele significar para un cliente automatizado.
 
 ## Qué es
 
@@ -12,7 +12,7 @@ Sitio oficial: [https://aws.amazon.com/waf/](https://aws.amazon.com/waf/)
 
 ## Cómo saber si un sitio usa AWS WAF
 
-Estas señales se generan a partir de las reglas de detección de la propia extensión para `detect-aws-waf` (versión de la regla 2.2.0, última actualización 2026-11-09). Una señal es solo un indicio: la confianza es el grado de seguridad que tiene la extensión cuando ve esa señal concreta. Las señales marcadas como «solo corroboración» nunca cuentan por sí solas, porque otros productos también pueden generarlas.
+Estas señales se generan a partir de las reglas de detección de la propia extensión para `detect-aws-waf` (versión de la regla 2.3.0, última actualización 2026-11-12). Una señal es solo un indicio: la confianza es el grado de seguridad que tiene la extensión cuando ve esa señal concreta. Las señales marcadas como «solo corroboración» nunca cuentan por sí solas, porque otros productos también pueden generarlas.
 
 ### Cookies
 
@@ -21,6 +21,7 @@ Nombres de cookies (y valores, cuando se compara uno) establecidas en la página
 | Señal | Confianza | Qué indica |
 | --- | --- | --- |
 | `^aws-waf-token$ = ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[A-Za-z0-9+/=_:-]{20,}` | 100% | AWS WAF token cookie set after a challenge |
+| `^aws-waf-token$` | 85% | AWS WAF token cookie by name; its value format is not documented |
 
 ### Cabeceras de respuesta
 
@@ -37,9 +38,10 @@ Direcciones de scripts, marcos y solicitudes que carga la página. Son patrones 
 
 | Señal | Confianza | Qué indica |
 | --- | --- | --- |
-| `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.token\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge\|captcha\|jsapi)\.js(?:[?#]\|$)` | 100% | Integration SDK from the regional token.awswaf.com host |
-| `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.token\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs\|verify\|telemetry\|voucher\|mp_verify)(?:[?#/]\|$)` | 100% | Any request to the regional token.awswaf.com host (inputs, verify, telemetry) |
+| `^https://(?:[a-z0-9-]+\.)+(?:token\|sdk)\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge\|captcha\|jsapi)\.js(?:[?#]\|$)` | 100% | Integration SDK from the regional token.awswaf.com host |
+| `^https://(?:[a-z0-9-]+\.)+(?:token\|sdk)\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs\|verify\|telemetry\|voucher\|mp_verify)(?:[?#/]\|$)` | 100% | Any request to the regional token.awswaf.com host (inputs, verify, telemetry) |
 | `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.captcha\.awswaf\.com/` | 100% | AWS WAF CAPTCHA host |
+| `^https://(?:[a-z0-9-]+\.)+awswaf\.com(?:[/?#:]\|$)` | 100% | Any request to an AWS WAF host (*.awswaf.com) |
 
 ### Contenido de la página y de los scripts
 
@@ -69,7 +71,7 @@ Algunas señales puntúan más juntas que por separado. La extensión también i
 | --- | --- | --- |
 | Challenge response with its bootstrap | 100% | (AWS WAF challenge or captcha action header o AWS WAF challenge id header) y (Challenge page bootstrap object (gokuProps) o Challenge page bootstrap variable (window.gokuProps) o Integration SDK from the regional token.awswaf.com host) |
 | Integration SDK with token traffic or cookie | 100% | (Integration SDK from the regional token.awswaf.com host o AWS WAF Integration SDK object) y (AWS WAF token cookie set after a challenge o Any request to the regional token.awswaf.com host (inputs, verify, telemetry) o Token cookie domain list for the Integration SDK) |
-| Token cookie with SDK reference | 90% | AWS WAF token cookie set after a challenge y (Integration SDK namespace reference o Challenge page bootstrap variable (window.gokuProps) o Token cookie domain list for the Integration SDK) |
+| Token cookie with SDK reference | 90% | (AWS WAF token cookie set after a challenge o AWS WAF token cookie by name; its value format is not documented) y (Integration SDK namespace reference o Challenge page bootstrap variable (window.gokuProps) o Token cookie domain list for the Integration SDK) |
 
 ## Dificultad
 

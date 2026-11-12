@@ -2,7 +2,7 @@
 
 # Cloudflare Bot Management 反爬防护：如何检测网站是否使用它（以及它对网页抓取意味着什么）
 
-Cloudflare Bot Management 是一些网站放在页面前面的反爬虫（反机器人）或反滥用防护层。无论你是在寻找 Cloudflare Bot Management 绕过方法、想检测某个网站是否使用了 Cloudflare Bot Management，还是在排查网页抓取被 Cloudflare Bot Management 拦截的问题，第一步都是一样的：确认响应你请求的确实是 Cloudflare Bot Management。本页列出 Scrapfly Antibot Detector 扩展用来识别 Cloudflare Bot Management 机器人检测的 11 个公开特征，说明每个特征指向它的可信程度，以及这通常对自动化客户端意味着什么。
+Cloudflare Bot Management 是一些网站放在页面前面的反爬虫（反机器人）或反滥用防护层。无论你是在寻找 Cloudflare Bot Management 绕过方法、想检测某个网站是否使用了 Cloudflare Bot Management，还是在排查网页抓取被 Cloudflare Bot Management 拦截的问题，第一步都是一样的：确认响应你请求的确实是 Cloudflare Bot Management。本页列出 Scrapfly Antibot Detector 扩展用来识别 Cloudflare Bot Management 机器人检测的 19 个公开特征，说明每个特征指向它的可信程度，以及这通常对自动化客户端意味着什么。
 
 ## 它是什么
 
@@ -12,7 +12,7 @@ Cloudflare Bot Management 是 Cloudflare 的付费机器人检测产品，通过
 
 ## 如何判断网站使用了 Cloudflare Bot Management
 
-这些特征由扩展自身针对 `detect-cloudflare` 的检测规则生成（规则版本 2.3.0，最后更新于 2026-10-26）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
+这些特征由扩展自身针对 `detect-cloudflare` 的检测规则生成（规则版本 2.4.0，最后更新于 2026-11-12）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
 
 ### Cookie
 
@@ -22,7 +22,12 @@ Cloudflare Bot Management 是 Cloudflare 的付费机器人检测产品，通过
 | --- | --- | --- |
 | `^cf_clearance$ = ^[A-Za-z0-9_.-]{43}-[0-9]{10}-1\.[0-9]\.[0-9]\.[0-9]-[A-Za-z0-9_.-]{20,}` | 100% | Challenge clearance cookie, set after passing a Cloudflare challenge |
 | `^__cf_bm$ = ^[A-Za-z0-9_.-]{43}-[0-9]{10}\.[0-9]{5,8}-1\.[0-9]\.[0-9]\.[0-9]-[A-Za-z0-9_.-]{20,}` | 100% | Bot Management cookie in its <token>-<timestamp.fraction>-1.x.x.x-<signature> shape; Cloudflare sets it on every zone with bot management or Bot Fight Mode |
+| `^cf_clearance$` | 85% | Challenge clearance cookie by name; its value is encrypted and its shape may change |
+| `^__cf_bm$` | 85% | Bot Management cookie by name; its value is encrypted and its shape may change |
 | `^cf_chl_rc_(?:i\|ni\|m)$` | 85% | Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m) |
+| `^__cfseq(?:-[A-Za-z0-9_-]{1,64})?$` | 90% | Sequence cookie of Cloudflare's bot products (__cfseq) |
+| `^_cfuvid$` | 50% | Rate limiting cookie Cloudflare sets per visitor (_cfuvid); not bot management on its own |
+| `^__cfruid$` | 40% (仅作佐证) | Cloudflare cookie that identifies trusted traffic (__cfruid); corroboration only |
 
 ### 响应头
 
@@ -39,9 +44,11 @@ Cloudflare Bot Management 是 Cloudflare 的付费机器人检测产品，通过
 
 | 特征 | 置信度 | 含义 |
 | --- | --- | --- |
-| `^https?://(?!challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page\|managed\|jsch\|captcha)/` | 100% | Challenge page orchestrator under /cdn-cgi/challenge-platform/ |
-| `^https?://(?!challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?scripts/jsd/(?:[0-9a-f]{6,20}/)?main\.js(?:[?#]\|$)` | 100% | Bot Management JavaScript detections script |
-| `^https?://(?!challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?jsd/oneshot/` | 100% | Bot Management JavaScript detections report (/cdn-cgi/challenge-platform/…/jsd/oneshot/) |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page\|managed\|jsch\|captcha)/` | 100% | Challenge page orchestrator under /cdn-cgi/challenge-platform/ |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?scripts/jsd/(?:[0-9a-f]{6,20}/)?(?:main\|api)\.js(?:[?#]\|$)` | 100% | Bot Management JavaScript detections script |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?jsd/oneshot/` | 100% | Bot Management JavaScript detections report (/cdn-cgi/challenge-platform/…/jsd/oneshot/) |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?pat/` | 100% | Private Access Token request of a Cloudflare challenge (/cdn-cgi/challenge-platform/…/pat/) |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/` | 80% | Any other request under /cdn-cgi/challenge-platform/, the path of Cloudflare's challenges and bot detections |
 | `^https://challenges\.cloudflare\.com/` | 40% (仅作佐证) | Request to challenges.cloudflare.com; also used by Turnstile, so corroboration only |
 
 ### 页面和脚本内容
@@ -59,6 +66,7 @@ Cloudflare Bot Management 是 Cloudflare 的付费机器人检测产品，通过
 | 特征 | 置信度 | 含义 |
 | --- | --- | --- |
 | `_cf_chl_opt (typeof object)` | 85% | Challenge options object present on a Cloudflare challenge page |
+| `cloudflare.jsd.executeOnce (typeof function)` | 70% | JavaScript detections function Cloudflare defines (window.cloudflare.jsd.executeOnce) |
 
 ### 组合特征
 
@@ -71,6 +79,8 @@ Cloudflare Bot Management 是 Cloudflare 的付费机器人检测产品，通过
 | Bot Management script on a Cloudflare zone | 75% | Bot Management JavaScript detections script和(Bot Management cookie in its <token>-<timestamp.fraction>-1.x.x.x-<signature> shape; Cloudflare sets it on every zone with bot management or Bot Fight Mode或Served through Cloudflare; CDN delivery, not bot management on its own) |
 | Challenge host request on a Cloudflare zone with a challenge signal | 90% | Request to challenges.cloudflare.com; also used by Turnstile, so corroboration only和(Challenge clearance cookie, set after passing a Cloudflare challenge或Challenge options object present on a Cloudflare challenge page或Challenge page orchestrator under /cdn-cgi/challenge-platform/) |
 | Challenge platform cookie with a Cloudflare clearance, server header or challenge | 95% | Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)和(Challenge clearance cookie, set after passing a Cloudflare challenge或Served through Cloudflare; CDN delivery, not bot management on its own或Challenge page orchestrator under /cdn-cgi/challenge-platform/或Challenge options object present on a Cloudflare challenge page) |
+| Cloudflare bot cookie with a Cloudflare server header or visitor cookie | 95% | (Challenge clearance cookie by name; its value is encrypted and its shape may change或Bot Management cookie by name; its value is encrypted and its shape may change或Sequence cookie of Cloudflare's bot products (__cfseq))和(Served through Cloudflare; CDN delivery, not bot management on its own或Cloudflare cookie that identifies trusted traffic (__cfruid); corroboration only或Rate limiting cookie Cloudflare sets per visitor (_cfuvid); not bot management on its own) |
+| Challenge platform request or detections runtime on a Cloudflare zone | 90% | (Any other request under /cdn-cgi/challenge-platform/, the path of Cloudflare's challenges and bot detections或JavaScript detections function Cloudflare defines (window.cloudflare.jsd.executeOnce))和(Served through Cloudflare; CDN delivery, not bot management on its own或Bot Management cookie by name; its value is encrypted and its shape may change或Rate limiting cookie Cloudflare sets per visitor (_cfuvid); not bot management on its own) |
 
 ## 难度
 

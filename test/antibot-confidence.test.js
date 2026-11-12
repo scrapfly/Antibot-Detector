@@ -97,10 +97,10 @@ const PROOF = new Set([
   'detect-akamai/sbsd-endpoint', 'detect-akamai/sensor-data-payload', 'detect-aliyunwaf/acw-sc-v2-cookie',
   'detect-amazon/fwcim-assets-script', 'detect-anubis/anubis-auth-cookie', 'detect-anubis/anubis-endpoint-resource',
   'detect-anubis/anubis-verification-cookie', 'detect-aws-waf/aws-waf-token-cookie', 'detect-aws-waf/captcha-host',
-  'detect-aws-waf/token-host-endpoint', 'detect-aws-waf/token-host-script', 'detect-aws-waf/waf-action-header',
+  'detect-aws-waf/token-host-endpoint', 'detect-aws-waf/token-host-script', 'detect-aws-waf/waf-action-header', 'detect-aws-waf/awswaf-host',
   'detect-botguard/botguard-bg-interpreter', 'detect-botguard/botguard-interpreter', 'detect-botguard/gmail-waa',
   'detect-botguard/waa-create', 'detect-cheq/cheq-first-party-endpoint', 'detect-cheq/cheqzone-host', 'detect-cloudflare-waitingroom/cf-waitingroom-cookie',
-  'detect-cloudflare/bot-management-script', 'detect-cloudflare/cf-bm-cookie', 'detect-cloudflare/cf-clearance-cookie',
+  'detect-cloudflare/bot-management-script', 'detect-cloudflare/cf-bm-cookie', 'detect-cloudflare/cf-clearance-cookie', 'detect-cloudflare/challenge-pat',
   'detect-cloudflare/cf-mitigated-header', 'detect-cloudflare/challenge-orchestrator', 'detect-cloudflare/jsd-oneshot',
   'detect-datadome/datadome-captcha', 'detect-datadome/datadome-cid-header', 'detect-datadome/datadome-cookie',
   'detect-datadome/datadome-protected-header', 'detect-datadome/datadome-server-header', 'detect-datadome/datadome-tag',
@@ -115,9 +115,9 @@ const PROOF = new Set([
   'detect-openai-sentinel/proof-of-work-answer', 'detect-openai-sentinel/requirements-token-payload', 'detect-openai-sentinel/sentinel-frame',
   'detect-openai-sentinel/sentinel-req', 'detect-openai-sentinel/sentinel-sdk-build', 'detect-openai-sentinel/sentinel-sdk-loader',
   'detect-openai-sentinel/so-required-response', 'detect-perimeterx/px-captcha', 'detect-perimeterx/px-client-script',
-  'detect-perimeterx/px-collector', 'detect-perimeterx/px3-cookie', 'detect-perimeterx/pxhd-cookie', 'detect-perimeterx/pxvid-cookie',
+  'detect-perimeterx/px-collector', 'detect-perimeterx/px-vendor-host', 'detect-perimeterx/px3-cookie', 'detect-perimeterx/pxhd-cookie', 'detect-perimeterx/pxvid-cookie',
   'detect-radware/radware-stormcaster-script', 'detect-radware/radware-uzm-cookie', 'detect-radware/radware-validate-host',
-  'detect-reblaze/rbz-session-cookie', 'detect-reblaze/reblaze-lib-script', 'detect-ruishu/fssbbi-cookie',
+  'detect-reblaze/rbz-session-cookie', 'detect-reblaze/reblaze-lib-script', 'detect-reblaze/reblaze-passive-challenge', 'detect-ruishu/fssbbi-cookie',
   'detect-sucuri/sucuri-block-header', 'detect-sucuri/sucuri-cloudproxy-cookie', 'detect-sucuri/sucuri-id-header',
   'detect-sucuri/sucuri-server-header', 'detect-threatmetrix/tmx-check', 'detect-threatmetrix/tmx-tags',
   'detect-queueit/queueit-connector-script', 'detect-queueit/queueit-integration-config', 'detect-queueit/queueit-queue-page-assets',
@@ -246,27 +246,34 @@ test('Reblaze namespace/configuration stays at 90 until a proof signal is presen
 // Benign shapes seen on real, unprotected pages (or other vendors' signals).
 // Each must not identify the named detector at all.
 const benign = {
-  'detect-akamai': { headers: { server: 'AkamaiGHost' }, cookies: ['AKA_A2', 'bm_s'], urls: ['https://github.com/a/b/blob/main/src/x', 'https://example.test/akamai/13/x.js'] },
-  'detect-aws-waf': { urls: ['https://example.test/static/challenge.js', 'https://example.test/api/verify', 'https://example.test/telemetry', 'https://example.test/inputs?client=browser'] },
+  'detect-akamai': { headers: { server: 'AkamaiGHost' }, cookies: ['AKA_A2', 'bm_s', 'bm_svc'], urls: ['https://github.com/a/b/blob/main/src/x', 'https://example.test/akamai/13/x.js'] },
+  'detect-aws-waf': { urls: ['https://example.test/static/challenge.js', 'https://example.test/api/verify', 'https://example.test/telemetry', 'https://example.test/inputs?client=browser',
+    'https://aws.amazon.com/waf/', 'https://example.test/awswaf.com/challenge.js'], cookies: ['aws-waf-token-backup'] },
   'detect-botguard': { urls: ['https://www.google.com/recaptcha/api.js', 'https://www.google.com/js/bg/abc.js', 'https://www.google.com/js/th/abc.js',
     'https://mail.google.com/mail/u/0/', 'https://mail.google.com/mail/u/0/?view=waa', 'https://mail.google.com/mail/u/0/waaffle'], sources: ["var mode = 'botguard';"] },
   'detect-cheq': { sources: ["var cheque = 'cheq';"], urls: ['https://example.test/cheq.js'] },
   'detect-cloudflare': { headers: { server: 'cloudflare', 'cf-ray': '8c1-AMS' }, urls: ['https://example.test/cdn-cgi/l/email-protection', 'https://challenges.cloudflare.com/turnstile/v0/api.js',
     // A Turnstile widget's own frames: a CAPTCHA, not Bot Management
     'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/orchestrate/captcha/v1?ray=8c1', 'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/if/ov2/av0/rcv/x',
-    'https://challenges.cloudflare-cn.com/cdn-cgi/challenge-platform/h/b/orchestrate/captcha/v1?ray=8c1', 'https://challenges.fed.cloudflare.com/cdn-cgi/challenge-platform/h/b/orchestrate/captcha/v1?ray=8c1'] },
+    'https://challenges.cloudflare-cn.com/cdn-cgi/challenge-platform/h/b/orchestrate/captcha/v1?ray=8c1', 'https://challenges.fed.cloudflare.com/cdn-cgi/challenge-platform/h/b/orchestrate/captcha/v1?ray=8c1',
+    // Turnstile's newer challenge hosts (Cloudflare changelog, 2026-07-22), and a path that merely starts like the platform's
+    'https://hagen.challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/if/ov2/av0/rcv/x', 'https://brunhild.challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/pat/x',
+    'https://example.test/cdn-cgi/challenge-platform-docs/'],
+    // Cloudflare's load balancer and other cookies that only start like the bot products' ones
+    cookies: ['__cflb', '__cfsequence', 'cf_clearance_backup', '_cfuvid_x'] },
   'detect-deepseek-pow': { urls: ['https://chat.deepseek.com/api/v0/chat/history_messages', 'https://example.test/api/v0/chat/create_pow_challenge',
     'https://example.test/static/sha3_wasm_bg.7b9ca65ddd.wasm', 'https://www.deepseek.com/'] },
   'detect-openai-sentinel': { urls: ['https://chatgpt.com/backend-api/conversation', 'https://example.test/backend-api/sentinel/chat-requirements',
     'https://example.test/backend-api/sentinel/sdk.js', 'https://chatgpt.com/assets/conversation-shared-DYlOMt6E.js'] },
-  'detect-datadome': { urls: ['https://example.test/tags.js', 'https://example.test/js/'], sources: ["var dd = {};"] },
+  'detect-datadome': { urls: ['https://example.test/tags.js', 'https://example.test/js/', 'https://datadome.co/', 'https://example.test/captcha-delivery.com/'], sources: ["var dd = {};"] },
   'detect-f5': { cookies: ['TSession', 'TSID', 'TSabc', 'BIGipServerpool_web'] },
   'detect-incapsula': { cookies: ['_impv_routing', 'incap_session'] },
   'detect-kasada': { urls: ['https://www.zillow.com/7e84c9ce-057e-4c91-87ef-56e6d4914637/a84e7f07-b7d6-4b7a-af51-89d7fb6d34f4/consent.js', 'https://example.test/static/ips.js'] },
   'detect-meetrics': { urls: ['https://example.test/mtrcs_123.js'] },
   'detect-ocule': { urls: ['https://example.test/molecule/ocules.js'] },
-  'detect-perimeterx': { urls: ['https://example.test/pxl/init.js', 'https://example.test/abcdefgh/captcha/captcha.js'], cookies: ['pxcts'] },
-  'detect-reblaze': { cookies: ['rbz_theme'] },
+  'detect-perimeterx': { urls: ['https://example.test/pxl/init.js', 'https://example.test/abcdefgh/captcha/captcha.js', 'https://www.humansecurity.com/', 'https://px-cloud.net/',
+    'https://example.test/static/init.js', 'https://example.test/api/v1/collector', 'https://example.test/assets/js/xhr/api/v1/collector'], cookies: ['pxcts', '_pxm', '__pxvidx', '_pxdata'] },
+  'detect-reblaze': { cookies: ['rbz_theme'], urls: ['https://example.test/c3650cdf-216a-4ba2-80b0-9d6c540b105e', 'https://example.test/c3650cdf-216a-4ba2-80b0-9d6c540b105e58d2670b-ea0f-484e-b88c-0e2c1499ec9bd71e4b42-8570-44e3-89b6-845326fa43b6.css'] },
   'detect-shapesecurity': { headers: { 'x-datadome-cid': 'AHrl', 'x-amzn-waf-action': 'challenge', 'x-frame-options': 'DENY' }, urls: ['https://example.test/app.js?seed=42'], cookies: ['Ad34bsY56'] },
   'detect-sucuri': { sources: ["var plugin = 'sucuri-scanner';"] },
   'detect-threatmetrix': { urls: ['https://example.test/api?org_id=123'] },
@@ -477,4 +484,54 @@ test('a cookie value rule is tested against every cookie of that name, and the o
     assert.deepEqual([...new Set(result.matches.map(m => m.value))], ['_abck=abc~0~def'], 'the cookie that matched is the evidence');
   }
   assert.ok(!run([bad]).detected, 'a value that does not match is still not found');
+});
+
+
+// 3.1.8: signals the vendors document that the rules used to miss. Each address, cookie or variable here is a shape the
+// vendor's own documentation gives (or the 3.1.7 rule's shape, still matched): the widened rule must reach every one of them.
+test('documented vendor signals that 3.1.7 missed are matched by the rule that covers them', () => {
+  const cases = [
+    ['detect-cloudflare', 'bot-management-script', { url: 'https://www.example-shop.test/cdn-cgi/challenge-platform/scripts/jsd/api.js' }],
+    ['detect-cloudflare', 'bot-management-script', { url: 'https://www.example-shop.test/cdn-cgi/challenge-platform/h/g/scripts/jsd/d2d3316b729e/main.js' }],
+    ['detect-cloudflare', 'challenge-pat', { url: 'https://www.example-shop.test/cdn-cgi/challenge-platform/pat/8c1a2b3c' }],
+    ['detect-cloudflare', 'cfseq-cookie', { cookie: ['__cfseq', 'x9Kd2Lm4Nq'] }],
+    ['detect-cloudflare', 'cf-clearance-cookie-name', { cookie: ['cf_clearance', 'an encrypted value of any shape'] }],
+    ['detect-datadome', 'datadome-tag', { url: 'https://js.datadome.co/v5.1.13/tags.js' }],
+    ['detect-datadome', 'datadome-tag', { url: 'https://api-js.datadome.co/js/' }],
+    ['detect-datadome', 'datadome-captcha', { url: 'https://geo.captcha-delivery.com/captcha/?initialCid=AHrl' }],
+    ['detect-datadome', 'datadome-captcha', { url: 'https://ct.captcha-delivery.com/c.js' }],
+    ['detect-datadome', 'datadome-captcha', { url: 'https://interstitial.captcha-delivery.com/i.js' }],
+    ['detect-perimeterx', 'px-vendor-host', { url: 'https://client.px-cloud.net/PXu6b0qd2S/main.min.js' }],
+    ['detect-perimeterx', 'px-vendor-host', { url: 'https://collector-pxu6b0qd2s.pxchk.net/api/v2/collector' }],
+    ['detect-perimeterx', 'px-vendor-host', { url: 'https://captcha.px-cdn.net/PXu6b0qd2S/captcha.js' }],
+    ['detect-perimeterx', 'px-vendor-host', { url: 'https://b.px-client.net/x' }],
+    ['detect-perimeterx', 'px-vendor-host', { url: 'https://client.perimeterx.net/PXu6b0qd2S/main.min.js' }],
+    ['detect-perimeterx', 'px-first-party-collector', { url: 'https://www.example-shop.test/PXu6b0qd2S/xhr/api/v2/collector' }],
+    ['detect-perimeterx', 'px-documented-cookie', { cookie: ['_pxttld', '1'] }],
+    ['detect-perimeterx', 'px-documented-cookie', { cookie: ['_pxac', '1'] }],
+    ['detect-aws-waf', 'token-host-script', { url: 'https://fe4385362baa.edge.sdk.awswaf.com/fe4385362baa/306922cde096/8b22eb923d34/challenge.js' }],
+    ['detect-aws-waf', 'token-host-endpoint', { url: 'https://fe4385362baa.us-east-1.token.awswaf.com/fe4385362baa/306922cde096/8b22eb923d34/inputs?client=browser' }],
+    ['detect-aws-waf', 'awswaf-host', { url: 'https://fe4385362baa.ead381d8.eu-west-1.captcha.awswaf.com/fe4385362baa/jsapi.js' }],
+    ['detect-aws-waf', 'aws-waf-token-name', { cookie: ['aws-waf-token', 'a value in any format'] }],
+    ['detect-akamai', 'bm-sv-cookie', { cookie: ['bm_sv', 'x'] }]
+  ];
+  for (const [id, ruleId, signal] of cases) {
+    const d = definitions[id];
+    const page = { url: 'https://example.test/', content: [], dom: [], headers: {}, allCookies: [], responseCookies: [], networkUrls: [], payloads: [], responses: [] };
+    if (signal.url) page.networkUrls.push({ url: signal.url, type: 'script', method: 'GET' });
+    else page.allCookies.push({ name: signal.cookie[0], value: signal.cookie[1] });
+    const result = detect(d, { page });
+    assert.ok(matched(d, result, ruleId), `${id}/${ruleId}: ${signal.url || signal.cookie[0]}`);
+  }
+  // Turnstile on Cloudflare's newer challenge hosts is a CAPTCHA, not Bot Management
+  const cloudflare = definitions['detect-cloudflare'];
+  for (const url of ['https://hagen.challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/orchestrate/captcha/v1?ray=8c1',
+    'https://brunhild.challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/scripts/jsd/main.js']) {
+    assert.equal(detect(cloudflare, { page: { url: 'https://example.test/', content: [], dom: [], headers: {}, allCookies: [], networkUrls: [{ url }] } }).confidence, 0, url);
+  }
+  // bm_sv left the corroboration-only cookie family: on its own it is Akamai at 60, the other short names still score nothing
+  const akamai = definitions['detect-akamai'];
+  const cookies = names => ({ page: { url: 'https://example.test/', content: [], dom: [], headers: {}, allCookies: names.map(name => ({ name, value: 'x' })), networkUrls: [] } });
+  assert.equal(detect(akamai, cookies(['bm_sv'])).confidence, 60);
+  assert.equal(detect(akamai, cookies(['bm_mi', 'bm_s', 'bm_so'])).confidence, 0);
 });

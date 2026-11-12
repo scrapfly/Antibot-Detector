@@ -2,7 +2,7 @@
 
 # DataDome Bot-Schutz: so erkennen Sie ihn (und was er für Web Scraping bedeutet)
 
-DataDome ist ein Bot-Schutz bzw. eine Anti-Abuse-Schicht, die manche Websites vor ihre Seiten schalten. Wenn Sie DataDome umgehen möchten, DataDome auf einer Website erkennen wollen oder untersuchen, warum Web Scraping von DataDome blockiert wird, ist der erste Schritt immer derselbe: Prüfen Sie, ob tatsächlich DataDome Ihre Anfragen beantwortet. Diese Seite listet die 11 öffentlichen Signale auf, mit denen die Erweiterung Scrapfly Antibot Detector die Bot-Erkennung von DataDome identifiziert, wie stark jedes einzelne Signal darauf hinweist und was das in der Regel für einen automatisierten Client bedeutet.
+DataDome ist ein Bot-Schutz bzw. eine Anti-Abuse-Schicht, die manche Websites vor ihre Seiten schalten. Wenn Sie DataDome umgehen möchten, DataDome auf einer Website erkennen wollen oder untersuchen, warum Web Scraping von DataDome blockiert wird, ist der erste Schritt immer derselbe: Prüfen Sie, ob tatsächlich DataDome Ihre Anfragen beantwortet. Diese Seite listet die 13 öffentlichen Signale auf, mit denen die Erweiterung Scrapfly Antibot Detector die Bot-Erkennung von DataDome identifiziert, wie stark jedes einzelne Signal darauf hinweist und was das in der Regel für einen automatisierten Client bedeutet.
 
 ## Was es ist
 
@@ -12,7 +12,7 @@ Offizielle Website: [https://datadome.co/](https://datadome.co/)
 
 ## Woran erkenne ich, ob eine Website DataDome nutzt?
 
-Diese Signale werden aus den eigenen Erkennungsregeln der Erweiterung für `detect-datadome` erzeugt (Regelversion 2.1.0, zuletzt aktualisiert am 2026-10-16). Ein Signal ist nur ein Hinweis: Die Konfidenz gibt an, wie sicher sich die Erweiterung ist, wenn genau dieses eine Signal auftritt. Signale mit der Kennzeichnung „nur zur Bestätigung“ zählen nie allein, weil auch andere Produkte sie erzeugen können.
+Diese Signale werden aus den eigenen Erkennungsregeln der Erweiterung für `detect-datadome` erzeugt (Regelversion 2.2.0, zuletzt aktualisiert am 2026-11-12). Ein Signal ist nur ein Hinweis: Die Konfidenz gibt an, wie sicher sich die Erweiterung ist, wenn genau dieses eine Signal auftritt. Signale mit der Kennzeichnung „nur zur Bestätigung“ zählen nie allein, weil auch andere Produkte sie erzeugen können.
 
 ### Cookies
 
@@ -39,8 +39,8 @@ Adressen von Skripten, Frames und Anfragen, die die Seite lädt. Es handelt sich
 
 | Signal | Konfidenz | Worauf es hinweist |
 | --- | --- | --- |
-| `^https://(?:js\|api-js)\.datadome\.co/(?:tags\.js\|js/)` | 100% | Official DataDome JavaScript tag or its collection endpoint |
-| `^https://(?:geo\|ct\|c\|t)\.captcha-delivery\.com/` | 100% | DataDome challenge or CAPTCHA delivery host |
+| `^https://(?:js\|api-js)\.datadome\.co/` | 100% | Official DataDome JavaScript tag or its collection endpoint |
+| `^https://(?:[a-z0-9-]+\.)+captcha-delivery\.com(?:[/?#:]\|$)` | 100% | DataDome challenge or CAPTCHA delivery host |
 | `^https?://[^/?#]+/(?:tags\.js\|js/)(?:[?#]\|$)` | 30% (nur zur Bestätigung) | First-party tags.js or js/ collection path; the name is generic, corroboration only |
 
 ### Seiten- und Skriptinhalt
@@ -59,6 +59,8 @@ Eigenschaften, die der JavaScript-Kontext der Seite selbst auf `window` bereitst
 | Signal | Konfidenz | Worauf es hinweist |
 | --- | --- | --- |
 | `ddjskey (typeof string)` | 60% | DataDome JS key set by the integration snippet |
+| `ddoptions (typeof object)` | 60% | DataDome tag options object (window.ddoptions) |
+| `displayDataDomeResponsePage (typeof function)` | 85% | DataDome response page function (window.displayDataDomeResponsePage) |
 
 ### Kombinationen
 
@@ -68,8 +70,8 @@ Manche Signale erreichen zusammen eine höhere Bewertung als einzeln. Diese Komb
 | --- | --- | --- |
 | DataDome tag with its session cookie | 100% | (Official DataDome JavaScript tag or its collection endpoint oder DataDome JS key set by the integration snippet oder Integration snippet setting window.ddjskey) und DataDome session cookie |
 | DataDome response headers with its cookie | 100% | (DataDome client ID response header oder DataDome protection response header oder Response served by DataDome itself (block or challenge page)) und DataDome session cookie |
-| First-party DataDome tag with its JS key | 85% | First-party tags.js or js/ collection path; the name is generic, corroboration only und (DataDome JS key set by the integration snippet oder Integration snippet setting window.ddjskey) |
-| DataDome block page | 95% | DataDome block page bootstrap (var dd={'rt':...}) und (DataDome client ID response header oder DataDome block-type header on challenge responses oder DataDome challenge or CAPTCHA delivery host oder DataDome session cookie) |
+| First-party DataDome tag with its JS key | 85% | First-party tags.js or js/ collection path; the name is generic, corroboration only und (DataDome JS key set by the integration snippet oder Integration snippet setting window.ddjskey oder DataDome tag options object (window.ddoptions)) |
+| DataDome block page | 95% | (DataDome block page bootstrap (var dd={'rt':...}) oder DataDome response page function (window.displayDataDomeResponsePage)) und (DataDome client ID response header oder DataDome block-type header on challenge responses oder DataDome challenge or CAPTCHA delivery host oder DataDome session cookie) |
 
 ## Schwierigkeit
 

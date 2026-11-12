@@ -2,7 +2,7 @@
 
 # Akamai Bot Manager のボット対策: 検出方法とスクレイピングへの影響
 
-Akamai Bot Manager は、一部のウェブサイトがページの手前に置くボット対策（アンチボット）または不正利用対策のレイヤーです。Akamai Bot Manager の回避方法を調べている場合も、サイトで Akamai Bot Manager を検出したい場合も、Akamai Bot Manager によるスクレイピングのブロックを調査している場合も、最初にやることは同じです。リクエストに応答しているのが本当に Akamai Bot Manager かどうかを確認することです。このページでは、Scrapfly Antibot Detector 拡張機能が Akamai Bot Manager のボット検出を見分けるために使う 19 件の公開シグナルと、それぞれがどの程度 Akamai Bot Manager を示唆するか、そして自動化クライアントにとってそれが通常何を意味するかをまとめています。
+Akamai Bot Manager は、一部のウェブサイトがページの手前に置くボット対策（アンチボット）または不正利用対策のレイヤーです。Akamai Bot Manager の回避方法を調べている場合も、サイトで Akamai Bot Manager を検出したい場合も、Akamai Bot Manager によるスクレイピングのブロックを調査している場合も、最初にやることは同じです。リクエストに応答しているのが本当に Akamai Bot Manager かどうかを確認することです。このページでは、Scrapfly Antibot Detector 拡張機能が Akamai Bot Manager のボット検出を見分けるために使う 20 件の公開シグナルと、それぞれがどの程度 Akamai Bot Manager を示唆するか、そして自動化クライアントにとってそれが通常何を意味するかをまとめています。
 
 ## 概要
 
@@ -12,7 +12,7 @@ Akamai Bot Manager は、CDN およびセキュリティ企業 Akamai Technologi
 
 ## サイトが Akamai Bot Manager を使っているかを見分ける方法
 
-これらのシグナルは、`detect-akamai` に対する拡張機能自身の検出ルール（ルールのバージョン 2.2.0、最終更新日 2026-10-26）から生成されています。シグナルはあくまで目安です。信頼度とは、そのシグナル単体が確認されたときに拡張機能がどの程度確信を持つかを表します。「補強のみ」とマークされたシグナルは、他の製品でも発生しうるため、それだけでは判定に加算されません。
+これらのシグナルは、`detect-akamai` に対する拡張機能自身の検出ルール（ルールのバージョン 2.3.0、最終更新日 2026-11-12）から生成されています。シグナルはあくまで目安です。信頼度とは、そのシグナル単体が確認されたときに拡張機能がどの程度確信を持つかを表します。「補強のみ」とマークされたシグナルは、他の製品でも発生しうるため、それだけでは判定に加算されません。
 
 ### Cookie
 
@@ -23,7 +23,8 @@ Akamai Bot Manager は、CDN およびセキュリティ企業 Akamai Technologi
 | `_abck = ^[0-9A-F]{32}~-?[0-9]+~` | 100% | Bot Manager sensor cookie in its documented hash~state~token shape |
 | `bm_sz = ^[0-9A-F]{32}~` | 100% | Bot Manager session cookie (hash~token) |
 | `^ak_bmsc$ = ^[0-9A-F]{32}~0{3,}~` | 100% | Bot Manager edge session cookie |
-| `^bm_(?:mi\|sv\|s\|so\|lso)$` | 30% (補強のみ) | Other Bot Manager cookies (bm_mi, bm_sv, bm_s, bm_so); short names, corroboration only |
+| `^bm_(?:mi\|s\|so\|lso)$` | 30% (補強のみ) | Other Bot Manager cookies (bm_mi, bm_s, bm_so); short names, corroboration only |
+| `^bm_sv$` | 60% | Bot Manager cookie bm_sv, named in Akamai's cookie documentation |
 | `^sbsd(?:_o)?$` | 65% | SBSD challenge cookie |
 | `^(?:AKA_A2\|akavpau_[A-Za-z0-9_]+)$` | 15% (補強のみ) | Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own |
 | `^sec_cpt$ = ~[0-9]~` | 70% | sec_cpt cookie of the Bot Manager crypto challenge (state ~1~ open, ~3~ solved) |
@@ -81,12 +82,12 @@ Akamai Bot Manager は、CDN およびセキュリティ企業 Akamai Technologi
 
 | 組み合わせ | 信頼度 | 必要な条件 |
 | --- | --- | --- |
-| Sensor cookie with session cookie | 90% | Bot Manager sensor cookie in its documented hash~state~token shape および (Bot Manager session cookie (hash~token) または Bot Manager edge session cookie または Other Bot Manager cookies (bm_mi, bm_sv, bm_s, bm_so); short names, corroboration only) |
+| Sensor cookie with session cookie | 90% | Bot Manager sensor cookie in its documented hash~state~token shape および (Bot Manager session cookie (hash~token) または Bot Manager edge session cookie または Other Bot Manager cookies (bm_mi, bm_s, bm_so); short names, corroboration only または Bot Manager cookie bm_sv, named in Akamai's cookie documentation) |
 | Sensor script or object with a Bot Manager cookie | 100% | (First-party Bot Manager sensor script under /akam/<version>/ または Bot Manager sensor object (bmak) または Bot Manager sensor_data POST body) および (Bot Manager sensor cookie in its documented hash~state~token shape または Bot Manager session cookie (hash~token) または Bot Manager edge session cookie) |
 | Random-path first-party script on an Akamai edge with Bot Manager cookies | 85% | First-party script on a long random multi-segment path, the shape of the Bot Manager sensor script および Bot Manager sensor cookie in its documented hash~state~token shape および (Akamai edge server header; CDN delivery, not Bot Manager on its own または Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own または Bot Manager session cookie (hash~token)) |
 | SBSD challenge endpoint with its cookie | 90% | (SBSD challenge endpoint または SBSD challenge POST to the sbsd endpoint) および SBSD challenge cookie |
-| Akamai edge with a Bot Manager sensor or session cookie | 80% | (Akamai edge server header; CDN delivery, not Bot Manager on its own または Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own) および (Bot Manager sensor cookie in its documented hash~state~token shape または Bot Manager session cookie (hash~token) または Bot Manager edge session cookie) |
-| Bot Manager edge session with its companion cookie | 85% | Bot Manager edge session cookie および Other Bot Manager cookies (bm_mi, bm_sv, bm_s, bm_so); short names, corroboration only |
+| Akamai edge with a Bot Manager sensor or session cookie | 80% | (Akamai edge server header; CDN delivery, not Bot Manager on its own または Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own) および (Bot Manager sensor cookie in its documented hash~state~token shape または Bot Manager session cookie (hash~token) または Bot Manager edge session cookie または Bot Manager cookie bm_sv, named in Akamai's cookie documentation) |
+| Bot Manager edge session with its companion cookie | 85% | Bot Manager edge session cookie および (Other Bot Manager cookies (bm_mi, bm_s, bm_so); short names, corroboration only または Bot Manager cookie bm_sv, named in Akamai's cookie documentation) |
 | Crypto challenge path with its sec_cpt or Bot Manager cookie | 95% | Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/ および (sec_cpt cookie of the Bot Manager crypto challenge (state ~1~ open, ~3~ solved) または Bot Manager sensor cookie in its documented hash~state~token shape または Bot Manager session cookie (hash~token)) |
 
 ## 難易度

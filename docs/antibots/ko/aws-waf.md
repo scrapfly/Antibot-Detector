@@ -2,7 +2,7 @@
 
 # AWS WAF 봇 차단: 감지 방법과 웹 스크래핑에 미치는 영향
 
-AWS WAF은(는) 일부 웹사이트가 페이지 앞단에 두는 봇 차단 또는 어뷰징 방지 계층입니다. AWS WAF 우회 방법을 찾고 있거나, 사이트에서 AWS WAF을(를) 감지하려 하거나, AWS WAF이(가) 막는 웹 스크래핑을 조사하는 경우에도 첫 단계는 같습니다. 요청에 실제로 응답하는 것이 AWS WAF인지 확인하는 것입니다. 이 페이지는 Scrapfly Antibot Detector 확장 프로그램이 AWS WAF 봇 탐지를 식별하는 데 쓰는 공개 신호 12개와 각 신호가 얼마나 강하게 AWS WAF을(를) 가리키는지, 그리고 자동화 클라이언트에 대체로 어떤 의미인지를 정리합니다.
+AWS WAF은(는) 일부 웹사이트가 페이지 앞단에 두는 봇 차단 또는 어뷰징 방지 계층입니다. AWS WAF 우회 방법을 찾고 있거나, 사이트에서 AWS WAF을(를) 감지하려 하거나, AWS WAF이(가) 막는 웹 스크래핑을 조사하는 경우에도 첫 단계는 같습니다. 요청에 실제로 응답하는 것이 AWS WAF인지 확인하는 것입니다. 이 페이지는 Scrapfly Antibot Detector 확장 프로그램이 AWS WAF 봇 탐지를 식별하는 데 쓰는 공개 신호 14개와 각 신호가 얼마나 강하게 AWS WAF을(를) 가리키는지, 그리고 자동화 클라이언트에 대체로 어떤 의미인지를 정리합니다.
 
 ## 개요
 
@@ -12,7 +12,7 @@ AWS WAF는 Amazon Web Services의 웹 애플리케이션 방화벽입니다. Bot
 
 ## 사이트가 AWS WAF을(를) 사용하는지 확인하는 방법
 
-이 신호들은 `detect-aws-waf`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.2.0, 최종 업데이트 2026-11-09)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
+이 신호들은 `detect-aws-waf`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.3.0, 최종 업데이트 2026-11-12)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
 
 ### 쿠키
 
@@ -21,6 +21,7 @@ AWS WAF는 Amazon Web Services의 웹 애플리케이션 방화벽입니다. Bot
 | 신호 | 신뢰도 | 의미 |
 | --- | --- | --- |
 | `^aws-waf-token$ = ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[A-Za-z0-9+/=_:-]{20,}` | 100% | AWS WAF token cookie set after a challenge |
+| `^aws-waf-token$` | 85% | AWS WAF token cookie by name; its value format is not documented |
 
 ### 응답 헤더
 
@@ -37,9 +38,10 @@ AWS WAF는 Amazon Web Services의 웹 애플리케이션 방화벽입니다. Bot
 
 | 신호 | 신뢰도 | 의미 |
 | --- | --- | --- |
-| `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.token\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge\|captcha\|jsapi)\.js(?:[?#]\|$)` | 100% | Integration SDK from the regional token.awswaf.com host |
-| `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.token\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs\|verify\|telemetry\|voucher\|mp_verify)(?:[?#/]\|$)` | 100% | Any request to the regional token.awswaf.com host (inputs, verify, telemetry) |
+| `^https://(?:[a-z0-9-]+\.)+(?:token\|sdk)\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge\|captcha\|jsapi)\.js(?:[?#]\|$)` | 100% | Integration SDK from the regional token.awswaf.com host |
+| `^https://(?:[a-z0-9-]+\.)+(?:token\|sdk)\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs\|verify\|telemetry\|voucher\|mp_verify)(?:[?#/]\|$)` | 100% | Any request to the regional token.awswaf.com host (inputs, verify, telemetry) |
 | `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.captcha\.awswaf\.com/` | 100% | AWS WAF CAPTCHA host |
+| `^https://(?:[a-z0-9-]+\.)+awswaf\.com(?:[/?#:]\|$)` | 100% | Any request to an AWS WAF host (*.awswaf.com) |
 
 ### 페이지 및 스크립트 콘텐츠
 
@@ -69,7 +71,7 @@ AWS WAF는 Amazon Web Services의 웹 애플리케이션 방화벽입니다. Bot
 | --- | --- | --- |
 | Challenge response with its bootstrap | 100% | (AWS WAF challenge or captcha action header 또는 AWS WAF challenge id header) 그리고 (Challenge page bootstrap object (gokuProps) 또는 Challenge page bootstrap variable (window.gokuProps) 또는 Integration SDK from the regional token.awswaf.com host) |
 | Integration SDK with token traffic or cookie | 100% | (Integration SDK from the regional token.awswaf.com host 또는 AWS WAF Integration SDK object) 그리고 (AWS WAF token cookie set after a challenge 또는 Any request to the regional token.awswaf.com host (inputs, verify, telemetry) 또는 Token cookie domain list for the Integration SDK) |
-| Token cookie with SDK reference | 90% | AWS WAF token cookie set after a challenge 그리고 (Integration SDK namespace reference 또는 Challenge page bootstrap variable (window.gokuProps) 또는 Token cookie domain list for the Integration SDK) |
+| Token cookie with SDK reference | 90% | (AWS WAF token cookie set after a challenge 또는 AWS WAF token cookie by name; its value format is not documented) 그리고 (Integration SDK namespace reference 또는 Challenge page bootstrap variable (window.gokuProps) 또는 Token cookie domain list for the Integration SDK) |
 
 ## 난이도
 

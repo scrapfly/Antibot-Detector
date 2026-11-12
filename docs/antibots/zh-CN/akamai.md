@@ -2,7 +2,7 @@
 
 # Akamai Bot Manager 反爬防护：如何检测网站是否使用它（以及它对网页抓取意味着什么）
 
-Akamai Bot Manager 是一些网站放在页面前面的反爬虫（反机器人）或反滥用防护层。无论你是在寻找 Akamai Bot Manager 绕过方法、想检测某个网站是否使用了 Akamai Bot Manager，还是在排查网页抓取被 Akamai Bot Manager 拦截的问题，第一步都是一样的：确认响应你请求的确实是 Akamai Bot Manager。本页列出 Scrapfly Antibot Detector 扩展用来识别 Akamai Bot Manager 机器人检测的 19 个公开特征，说明每个特征指向它的可信程度，以及这通常对自动化客户端意味着什么。
+Akamai Bot Manager 是一些网站放在页面前面的反爬虫（反机器人）或反滥用防护层。无论你是在寻找 Akamai Bot Manager 绕过方法、想检测某个网站是否使用了 Akamai Bot Manager，还是在排查网页抓取被 Akamai Bot Manager 拦截的问题，第一步都是一样的：确认响应你请求的确实是 Akamai Bot Manager。本页列出 Scrapfly Antibot Detector 扩展用来识别 Akamai Bot Manager 机器人检测的 20 个公开特征，说明每个特征指向它的可信程度，以及这通常对自动化客户端意味着什么。
 
 ## 它是什么
 
@@ -12,7 +12,7 @@ Akamai Bot Manager 是 CDN 和安全公司 Akamai Technologies 的机器人管�
 
 ## 如何判断网站使用了 Akamai Bot Manager
 
-这些特征由扩展自身针对 `detect-akamai` 的检测规则生成（规则版本 2.2.0，最后更新于 2026-10-26）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
+这些特征由扩展自身针对 `detect-akamai` 的检测规则生成（规则版本 2.3.0，最后更新于 2026-11-12）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
 
 ### Cookie
 
@@ -23,7 +23,8 @@ Akamai Bot Manager 是 CDN 和安全公司 Akamai Technologies 的机器人管�
 | `_abck = ^[0-9A-F]{32}~-?[0-9]+~` | 100% | Bot Manager sensor cookie in its documented hash~state~token shape |
 | `bm_sz = ^[0-9A-F]{32}~` | 100% | Bot Manager session cookie (hash~token) |
 | `^ak_bmsc$ = ^[0-9A-F]{32}~0{3,}~` | 100% | Bot Manager edge session cookie |
-| `^bm_(?:mi\|sv\|s\|so\|lso)$` | 30% (仅作佐证) | Other Bot Manager cookies (bm_mi, bm_sv, bm_s, bm_so); short names, corroboration only |
+| `^bm_(?:mi\|s\|so\|lso)$` | 30% (仅作佐证) | Other Bot Manager cookies (bm_mi, bm_s, bm_so); short names, corroboration only |
+| `^bm_sv$` | 60% | Bot Manager cookie bm_sv, named in Akamai's cookie documentation |
 | `^sbsd(?:_o)?$` | 65% | SBSD challenge cookie |
 | `^(?:AKA_A2\|akavpau_[A-Za-z0-9_]+)$` | 15% (仅作佐证) | Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own |
 | `^sec_cpt$ = ~[0-9]~` | 70% | sec_cpt cookie of the Bot Manager crypto challenge (state ~1~ open, ~3~ solved) |
@@ -81,12 +82,12 @@ Akamai Bot Manager 是 CDN 和安全公司 Akamai Technologies 的机器人管�
 
 | 组合 | 置信度 | 条件 |
 | --- | --- | --- |
-| Sensor cookie with session cookie | 90% | Bot Manager sensor cookie in its documented hash~state~token shape和(Bot Manager session cookie (hash~token)或Bot Manager edge session cookie或Other Bot Manager cookies (bm_mi, bm_sv, bm_s, bm_so); short names, corroboration only) |
+| Sensor cookie with session cookie | 90% | Bot Manager sensor cookie in its documented hash~state~token shape和(Bot Manager session cookie (hash~token)或Bot Manager edge session cookie或Other Bot Manager cookies (bm_mi, bm_s, bm_so); short names, corroboration only或Bot Manager cookie bm_sv, named in Akamai's cookie documentation) |
 | Sensor script or object with a Bot Manager cookie | 100% | (First-party Bot Manager sensor script under /akam/<version>/或Bot Manager sensor object (bmak)或Bot Manager sensor_data POST body)和(Bot Manager sensor cookie in its documented hash~state~token shape或Bot Manager session cookie (hash~token)或Bot Manager edge session cookie) |
 | Random-path first-party script on an Akamai edge with Bot Manager cookies | 85% | First-party script on a long random multi-segment path, the shape of the Bot Manager sensor script和Bot Manager sensor cookie in its documented hash~state~token shape和(Akamai edge server header; CDN delivery, not Bot Manager on its own或Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own或Bot Manager session cookie (hash~token)) |
 | SBSD challenge endpoint with its cookie | 90% | (SBSD challenge endpoint或SBSD challenge POST to the sbsd endpoint)和SBSD challenge cookie |
-| Akamai edge with a Bot Manager sensor or session cookie | 80% | (Akamai edge server header; CDN delivery, not Bot Manager on its own或Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own)和(Bot Manager sensor cookie in its documented hash~state~token shape或Bot Manager session cookie (hash~token)或Bot Manager edge session cookie) |
-| Bot Manager edge session with its companion cookie | 85% | Bot Manager edge session cookie和Other Bot Manager cookies (bm_mi, bm_sv, bm_s, bm_so); short names, corroboration only |
+| Akamai edge with a Bot Manager sensor or session cookie | 80% | (Akamai edge server header; CDN delivery, not Bot Manager on its own或Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own)和(Bot Manager sensor cookie in its documented hash~state~token shape或Bot Manager session cookie (hash~token)或Bot Manager edge session cookie或Bot Manager cookie bm_sv, named in Akamai's cookie documentation) |
+| Bot Manager edge session with its companion cookie | 85% | Bot Manager edge session cookie和(Other Bot Manager cookies (bm_mi, bm_s, bm_so); short names, corroboration only或Bot Manager cookie bm_sv, named in Akamai's cookie documentation) |
 | Crypto challenge path with its sec_cpt or Bot Manager cookie | 95% | Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/和(sec_cpt cookie of the Bot Manager crypto challenge (state ~1~ open, ~3~ solved)或Bot Manager sensor cookie in its documented hash~state~token shape或Bot Manager session cookie (hash~token)) |
 
 ## 难度

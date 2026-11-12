@@ -2,7 +2,7 @@
 
 # Proteção antibot HUMAN (PerimeterX): como detectar (e o que ela significa para o web scraping)
 
-HUMAN (PerimeterX) é uma camada de proteção contra bots ou contra abuso que alguns sites colocam na frente de suas páginas. Se você procura como contornar o HUMAN (PerimeterX), quer detectar o HUMAN (PerimeterX) em um site ou está investigando um web scraping bloqueado pelo HUMAN (PerimeterX), o primeiro passo é o mesmo: confirmar que é mesmo o HUMAN (PerimeterX) que responde às suas requisições. Esta página lista os 12 sinais públicos que a extensão Scrapfly Antibot Detector usa para reconhecer a detecção de bots do HUMAN (PerimeterX), o quanto cada um aponta para ele e o que isso costuma significar para um cliente automatizado.
+HUMAN (PerimeterX) é uma camada de proteção contra bots ou contra abuso que alguns sites colocam na frente de suas páginas. Se você procura como contornar o HUMAN (PerimeterX), quer detectar o HUMAN (PerimeterX) em um site ou está investigando um web scraping bloqueado pelo HUMAN (PerimeterX), o primeiro passo é o mesmo: confirmar que é mesmo o HUMAN (PerimeterX) que responde às suas requisições. Esta página lista os 22 sinais públicos que a extensão Scrapfly Antibot Detector usa para reconhecer a detecção de bots do HUMAN (PerimeterX), o quanto cada um aponta para ele e o que isso costuma significar para um cliente automatizado.
 
 ## O que é
 
@@ -12,7 +12,7 @@ Site oficial: [https://www.humansecurity.com/](https://www.humansecurity.com/)
 
 ## Como saber se um site usa HUMAN (PerimeterX)
 
-Estes sinais são gerados a partir das regras de detecção da própria extensão para `detect-perimeterx` (versão da regra 2.3.1, última atualização 2026-10-30). Um sinal é apenas um indício: a confiança indica o quanto a extensão tem certeza quando vê aquele sinal isolado. Os sinais marcados como "apenas corroboração" nunca contam por si sós, porque outros produtos também podem produzi-los.
+Estes sinais são gerados a partir das regras de detecção da própria extensão para `detect-perimeterx` (versão da regra 2.4.0, última atualização 2026-11-12). Um sinal é apenas um indício: a confiança indica o quanto a extensão tem certeza quando vê aquele sinal isolado. Os sinais marcados como "apenas corroboração" nunca contam por si sós, porque outros produtos também podem produzi-los.
 
 ### Cookies
 
@@ -24,6 +24,8 @@ Nomes de cookies (e valores, quando algum é comparado) definidos na página. Os
 | `^_pxhd$ = ^[A-Za-z0-9+/=_-]{60,120}(?::\|$)` | 100% | PerimeterX first-party server cookie |
 | `^_pxvid$ = ^[0-9a-f]{8}-[0-9a-f]{4}-1[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$` | 100% | PerimeterX visitor ID cookie |
 | `^(?:pxcts\|_pxde\|_pxff_[A-Za-z0-9_]+)$` | 50% (apenas corroboração) | Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*) |
+| `^(?:_pxmvid\|_pxttld\|_pxwvm\|_pxmd\|_pxda\|_pxac)$` | 60% | Other cookies HUMAN documents for its sensor (_pxmvid, _pxttld, _pxwvm, _pxmd, _pxda, _pxac) |
+| `^__pxvid$` | 60% | HUMAN Code Defender visitor cookie (__pxvid) |
 
 ### URLs de scripts e requisições
 
@@ -36,6 +38,9 @@ Endereços de scripts, frames e requisições que a página carrega. São padrõ
 | `^https://collector-(?:PX[A-Za-z0-9]{6,10}\|[a-z])\.(?:px-cloud\.net\|perimeterx\.net\|hsprotect\.net)/` | 100% | PerimeterX collector endpoint |
 | `^https://captcha\.px-cdn\.net/PX[A-Za-z0-9]{6,10}/` | 100% | PerimeterX challenge (Press & Hold) script host |
 | `^https?://[^/?#]+/[A-Za-z0-9]{8}/captcha/captcha\.js(?:[?#]\|$)` | 30% (apenas corroboração) | First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js) |
+| `^https://(?:[a-z0-9-]+\.)+(?:px-cloud\.net\|px-cdn\.net\|px-client\.net\|pxchk\.net\|perimeterx\.net\|hsprotect\.net)(?:[/?#:]\|$)` | 100% | Request to a HUMAN (PerimeterX) sensor, collector or challenge host |
+| `^https?://[^/?#]+/(?:PX)?[A-Za-z0-9]{8}/xhr/api/v[0-9]/collector(?:[/?#]\|$)` | 85% | First-party HUMAN collector under the app ID (/<appid>/xhr/api/v1/collector) |
+| `^https?://[^/?#]+/[A-Za-z0-9]{8}/init\.js(?:[?#]\|$)` | 30% (apenas corroboração) | First-party init.js under an app-ID path without the PX prefix; corroboration only |
 
 ### Conteúdo da página e dos scripts
 
@@ -53,6 +58,18 @@ Propriedades que o contexto JavaScript da própria página expõe em `window`.
 | --- | --- | --- |
 | `_pxAppId (typeof string)` | 70% | PerimeterX application ID |
 | `pxInit (typeof function)` | 30% (apenas corroboração) | Optional PerimeterX init callback defined by the site |
+| `_pxUuid (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+| `_pxVid (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+| `_pxBlockedUrl (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+| `_pxJsClientSrc (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+
+### Elementos do DOM
+
+Elementos encontrados por seletor CSS.
+
+| Sinal | Confiança | O que indica |
+| --- | --- | --- |
+| `div#px-captcha` | 60% | HUMAN challenge container (div#px-captcha) |
 
 ### Combinações
 
@@ -64,6 +81,8 @@ Alguns sinais pontuam mais juntos do que sozinhos. A extensão também relata es
 | Several PerimeterX cookies together | 100% | pelo menos 2 de: PerimeterX risk token cookie (_px2 or _px3); PerimeterX first-party server cookie; PerimeterX visitor ID cookie; Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*) |
 | PerimeterX challenge with the app ID | 100% | PerimeterX challenge (Press & Hold) script host e (PerimeterX application ID ou Script assigning the PerimeterX app ID (window._pxAppId) ou Optional PerimeterX init callback defined by the site) |
 | First-party PerimeterX challenge with the app ID | 95% | First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js) e (PerimeterX application ID ou Script assigning the PerimeterX app ID (window._pxAppId) ou Optional PerimeterX init callback defined by the site) |
+| First-party HUMAN sensor with its app ID or cookies | 95% | (First-party init.js under an app-ID path without the PX prefix; corroboration only ou First-party HUMAN collector under the app ID (/<appid>/xhr/api/v1/collector)) e (PerimeterX application ID ou Script assigning the PerimeterX app ID (window._pxAppId) ou Optional PerimeterX init callback defined by the site ou Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*) ou Other cookies HUMAN documents for its sensor (_pxmvid, _pxttld, _pxwvm, _pxmd, _pxda, _pxac)) |
+| HUMAN block page with its challenge | 95% | (HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) ou HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) ou HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) ou HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) ou HUMAN challenge container (div#px-captcha)) e (PerimeterX challenge (Press & Hold) script host ou First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js) ou Request to a HUMAN (PerimeterX) sensor, collector or challenge host) |
 
 ## Dificuldade
 

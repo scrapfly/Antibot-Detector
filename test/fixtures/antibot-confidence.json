@@ -92,6 +92,12 @@
   },
   "cp-challenge-path": {
    "url": "https://www.example.com/_sec/cp_challenge/verify"
+  },
+  "bm-sv-cookie": {
+   "cookie": [
+    "bm_sv",
+    "A3C6B0E5F2D1C4B7A8E9F0D3C2B5A6E7~YAAQ3W1lX0RagPKgAQ~xyz"
+   ]
   }
  },
  "detect-aws-waf": {
@@ -138,6 +144,15 @@
    "header": [
     "x-amzn-waf-challenge-id",
     "Root=1-6ac282d2-2194a6c628fe94635633071e"
+   ]
+  },
+  "awswaf-host": {
+   "url": "https://fe4385362baa.edge.sdk.awswaf.com/fe4385362baa/306922cde096/challenge.compact.js"
+  },
+  "aws-waf-token-name": {
+   "cookie": [
+    "aws-waf-token",
+    "Q2x1c3RlclZhbHVlRXhhbXBsZTAxMjM0NTY3"
    ]
   }
  },
@@ -268,6 +283,45 @@
     "cf_chl_rc_ni",
     "1"
    ]
+  },
+  "challenge-pat": {
+   "url": "https://www.example-shop.test/cdn-cgi/challenge-platform/h/g/pat/8c1a2b3c4d5e6f70/1759600000/0b6f2c"
+  },
+  "challenge-platform-path": {
+   "url": "https://www.example-shop.test/cdn-cgi/challenge-platform/h/g/flow/ov1/0.2576:1792062023:x/8c1a2b3c4d5e6f70"
+  },
+  "cf-clearance-cookie-name": {
+   "cookie": [
+    "cf_clearance",
+    "Zx3nQ7vLm2Pq9Rt4Yw8Kc1Hb6Jd5Fg0Sa"
+   ]
+  },
+  "cf-bm-cookie-name": {
+   "cookie": [
+    "__cf_bm",
+    "Zx3nQ7vLm2Pq9Rt4Yw8Kc1Hb6Jd5Fg0Sa"
+   ]
+  },
+  "cfseq-cookie": {
+   "cookie": [
+    "__cfseq-0b6f2c1a",
+    "x9Kd2Lm4Nq"
+   ]
+  },
+  "cfuvid-cookie": {
+   "cookie": [
+    "_cfuvid",
+    "k9cCU2HrMT2qW8nXb.V4Jm3Lp0RzYtQe7sHfGaIdCw1-1759600000025-0.0.1.1-604800000"
+   ]
+  },
+  "cfruid-cookie": {
+   "cookie": [
+    "__cfruid",
+    "3f0a9c2e7b1d4a6f8c0e2b4d6f8a0c2e4b6d8f0a-1759600000"
+   ]
+  },
+  "jsd-execute-once": {
+   "runtimeType": "function"
   }
  },
  "detect-datadome": {
@@ -318,6 +372,12 @@
   },
   "ddjskey-variable": {
    "runtimeType": "string"
+  },
+  "ddoptions-object": {
+   "runtimeType": "object"
+  },
+  "dd-response-page-function": {
+   "runtimeType": "function"
   }
  },
  "detect-f5": {
@@ -516,6 +576,47 @@
     "_pxvid",
     "b3a1c2d4-c94e-11f1-8f2a-3d9e7c1b5a60"
    ]
+  },
+  "px-documented-cookie": {
+   "cookie": [
+    "_pxmvid",
+    "b3a1c2d4-c94e-11f1-8f2a-3d9e7c1b5a60"
+   ]
+  },
+  "px-code-defender-cookie": {
+   "cookie": [
+    "__pxvid",
+    "b3a1c2d4-c94e-11f1-8f2a-3d9e7c1b5a60"
+   ]
+  },
+  "px-vendor-host": {
+   "url": "https://tzm.px-cloud.net/ns?c=b3a1c2d4-c94e-11f1-8f2a-3d9e7c1b5a60"
+  },
+  "px-first-party-collector": {
+   "url": "https://www.example-shop.test/u6b0qd2S/xhr/api/v1/collector"
+  },
+  "px-first-party-init": {
+   "url": "https://www.example-shop.test/u6b0qd2S/init.js"
+  },
+  "px-captcha-container": {
+   "dom": {
+    "tagName": "div",
+    "attributes": {
+     "id": "px-captcha"
+    }
+   }
+  },
+  "px-block-uuid": {
+   "runtimeType": "string"
+  },
+  "px-block-vid": {
+   "runtimeType": "string"
+  },
+  "px-block-blockedurl": {
+   "runtimeType": "string"
+  },
+  "px-block-jsclientsrc": {
+   "runtimeType": "string"
   }
  },
  "detect-reblaze": {
@@ -548,6 +649,9 @@
   },
   "reblaze-lib-script": {
    "url": "https://www.elal.com/kramericaindustries.ac_v2.lib.js"
+  },
+  "reblaze-passive-challenge": {
+   "url": "https://www.example-shop.test/c3650cdf-216a-4ba2-80b0-9d6c540b105e58d2670b-ea0f-484e-b88c-0e2c1499ec9bd71e4b42-8570-44e3-89b6-845326fa43b6"
   }
  },
  "detect-shapesecurity": {

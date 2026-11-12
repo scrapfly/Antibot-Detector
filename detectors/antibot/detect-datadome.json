@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-16",
-  "version": "2.1.0",
+  "lastUpdated": "2026-11-12",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://datadome.co/",
   "icon": "datadome_official.png",
@@ -71,7 +71,7 @@
         "id": "datadome-tag",
         "confidence": 100,
         "description": "Official DataDome JavaScript tag or its collection endpoint",
-        "text": "^https://(?:js|api-js)\\.datadome\\.co/(?:tags\\.js|js/)",
+        "text": "^https://(?:js|api-js)\\.datadome\\.co/",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -80,7 +80,7 @@
         "id": "datadome-captcha",
         "confidence": 100,
         "description": "DataDome challenge or CAPTCHA delivery host",
-        "text": "^https://(?:geo|ct|c|t)\\.captcha-delivery\\.com/",
+        "text": "^https://(?:[a-z0-9-]+\\.)+captcha-delivery\\.com(?:[/?#:]|$)",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -125,6 +125,20 @@
         "condition": "typeof string",
         "confidence": 60,
         "description": "DataDome JS key set by the integration snippet"
+      },
+      {
+        "id": "ddoptions-object",
+        "path": "ddoptions",
+        "condition": "typeof object",
+        "confidence": 60,
+        "description": "DataDome tag options object (window.ddoptions)"
+      },
+      {
+        "id": "dd-response-page-function",
+        "path": "displayDataDomeResponsePage",
+        "condition": "typeof function",
+        "confidence": 85,
+        "description": "DataDome response page function (window.displayDataDomeResponsePage)"
       }
     ]
   },
@@ -195,6 +209,9 @@
               },
               {
                 "pattern": "ddjskey-reference"
+              },
+              {
+                "pattern": "ddoptions-object"
               }
             ]
           }
@@ -208,7 +225,14 @@
       "when": {
         "all": [
           {
-            "pattern": "datadome-block-page"
+            "any": [
+              {
+                "pattern": "datadome-block-page"
+              },
+              {
+                "pattern": "dd-response-page-function"
+              }
+            ]
           },
           {
             "any": [

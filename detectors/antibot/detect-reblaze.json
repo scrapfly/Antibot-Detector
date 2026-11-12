@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-16",
-  "version": "2.1.0",
+  "lastUpdated": "2026-11-12",
+  "version": "2.2.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.reblaze.com/",
   "icon": "reblaze_official.png",
@@ -48,6 +48,15 @@
         "confidence": 100,
         "description": "Reblaze active-challenge library (<name>.ac_v2.lib.js)",
         "text": "^https?://[^/?#]+/[A-Za-z0-9_-]{3,40}\\.ac_v2\\.lib\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "reblaze-passive-challenge",
+        "confidence": 100,
+        "description": "Reblaze passive challenge script at its fixed first-party path",
+        "text": "^https?://[^/?#]+/c3650cdf-216a-4ba2-80b0-9d6c540b105e58d2670b-ea0f-484e-b88c-0e2c1499ec9bd71e4b42-8570-44e3-89b6-845326fa43b6(?:[?#]|$)",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"

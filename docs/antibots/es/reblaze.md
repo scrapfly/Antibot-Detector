@@ -2,7 +2,7 @@
 
 # Protección anti-bot Reblaze: cómo detectarla (y qué implica para el web scraping)
 
-Reblaze es una capa de protección contra bots o contra abusos que algunos sitios web colocan delante de sus páginas. Si buscas un bypass de Reblaze, quieres detectar Reblaze en un sitio o investigas un web scraping bloqueado por Reblaze, el primer paso es el mismo: confirmar que Reblaze es realmente quien responde a tus solicitudes. Esta página enumera las 7 señales públicas que la extensión Scrapfly Antibot Detector usa para reconocer la detección de bots de Reblaze, con qué fuerza apunta cada una hacia ella y qué suele significar para un cliente automatizado.
+Reblaze es una capa de protección contra bots o contra abusos que algunos sitios web colocan delante de sus páginas. Si buscas un bypass de Reblaze, quieres detectar Reblaze en un sitio o investigas un web scraping bloqueado por Reblaze, el primer paso es el mismo: confirmar que Reblaze es realmente quien responde a tus solicitudes. Esta página enumera las 8 señales públicas que la extensión Scrapfly Antibot Detector usa para reconocer la detección de bots de Reblaze, con qué fuerza apunta cada una hacia ella y qué suele significar para un cliente automatizado.
 
 ## Qué es
 
@@ -12,7 +12,7 @@ Sitio oficial: [https://www.reblaze.com/](https://www.reblaze.com/)
 
 ## Cómo saber si un sitio usa Reblaze
 
-Estas señales se generan a partir de las reglas de detección de la propia extensión para `detect-reblaze` (versión de la regla 2.1.0, última actualización 2026-10-16). Una señal es solo un indicio: la confianza es el grado de seguridad que tiene la extensión cuando ve esa señal concreta. Las señales marcadas como «solo corroboración» nunca cuentan por sí solas, porque otros productos también pueden generarlas.
+Estas señales se generan a partir de las reglas de detección de la propia extensión para `detect-reblaze` (versión de la regla 2.2.0, última actualización 2026-11-12). Una señal es solo un indicio: la confianza es el grado de seguridad que tiene la extensión cuando ve esa señal concreta. Las señales marcadas como «solo corroboración» nunca cuentan por sí solas, porque otros productos también pueden generarlas.
 
 ### Cookies
 
@@ -31,6 +31,7 @@ Direcciones de scripts, marcos y solicitudes que carga la página. Son patrones 
 | Señal | Confianza | Qué indica |
 | --- | --- | --- |
 | `^https?://[^/?#]+/[A-Za-z0-9_-]{3,40}\.ac_v2\.lib\.js(?:[?#]\|$)` | 100% | Reblaze active-challenge library (<name>.ac_v2.lib.js) |
+| `^https?://[^/?#]+/c3650cdf-216a-4ba2-80b0-9d6c540b105e58d2670b-ea0f-484e-b88c-0e2c1499ec9bd71e4b42-8570-44e3-89b6-845326fa43b6(?:[?#]\|$)` | 100% | Reblaze passive challenge script at its fixed first-party path |
 
 ### Contenido de la página y de los scripts
 
