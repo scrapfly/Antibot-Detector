@@ -26,6 +26,7 @@ const PROOF = new Set([
   'detect-dingxiang/dingxiang-captcha-api', 'detect-dingxiang/dingxiang-engine-resource', 'detect-dingxiang/dingxiang-sdk-resource',
   'detect-friendlycaptcha/frc-v1-puzzle-url', 'detect-friendlycaptcha/frc-v2-captcha-url', 'detect-funcaptcha/arkose-client-api',
   'detect-funcaptcha/arkose-enforcement-frame', 'detect-funcaptcha/arkose-session-request', 'detect-funcaptcha/funcaptcha-legacy-api',
+  'detect-funcaptcha/arkose-vendor-host', 'detect-funcaptcha/arkose-sri-params', 'detect-hcaptcha/hcaptcha-vendor-host', 'detect-recaptcha/google-challenge-endpoint',
   'detect-geetest/geetest-v3-api', 'detect-geetest/geetest-v3-resource', 'detect-geetest/geetest-v4-api',
   'detect-geetest/geetest-v4-resource', 'detect-hcaptcha/hcaptcha-api-resource', 'detect-hcaptcha/hcaptcha-challenge-api',
   'detect-hcaptcha/hcaptcha-widget-frame-request', 'detect-lemin/lemin-captcha-script', 'detect-mtcaptcha/mtcaptcha-challenge-api', 'detect-mtcaptcha/mtcaptcha-sdk-resource',
@@ -217,7 +218,8 @@ test('all twenty-three definitions have explicit IDs, conservative standalone ev
     // Semver: bump the minor version whenever rules change, so Rules → Update offers it
     assert.match(detector.version, /^1\.\d+\.\d+$/, detector.id);
     // 2026-11-04: Turnstile 1.2.1 (response-body rules need the 2.8.8 engine); 2026-11-11: CaptchaFox 1.0.0
-    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[3-9]|1[0-7]|26)|11-(?:04|11))$/, detector.id);
+    // 2026-11-12: reCAPTCHA, hCaptcha, Arkose and Turnstile catch more of the hosts and fields their vendors document
+    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[3-9]|1[0-7]|26)|11-(?:04|1[12]))$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate IDs`);
@@ -433,7 +435,11 @@ test('generic sitekeys, routes, query URL copies and lookalike authorities produ
   engine.setDetectors({ captcha });
   const urls = ['https://example.test/get.php', 'https://example.test/api/captcha',
     'https://example.test/tdc.js', 'https://example.test/gettype.php', 'https://example.test/getcaptcha',
-    'https://example.test/checksiteconfig', 'https://example.test/punish?x5secdata=sample'];
+    'https://example.test/checksiteconfig', 'https://example.test/punish?x5secdata=sample',
+    // Vendors' own sites and docs, and paths that only look like their endpoints
+    'https://www.hcaptcha.com/privacy', 'https://docs.hcaptcha.com/configuration', 'https://dashboard.hcaptcha.com/signup', 'https://www.arkoselabs.com/',
+    'https://example.test/recaptcha/api2/reload?k=x', 'https://example.test/params/sri/ABC-123',
+    'https://example.test/1/secure-api.js', 'https://hagen.example.test/cdn-cgi/challenge-platform/h/b/turnstile/if/ov2/'];
   for (const detector of Object.values(captcha)) for (const rule of detector.detection.url || []) {
     const positive = fixtures[detector.id]?.[rule.id]?.url;
     assert.ok(positive, `${rule.id}: URL fixture required`);
@@ -482,4 +488,32 @@ test('requests made after the page snapshot still count when the scan finishes',
     context.detectionEngine = undefined;
     context.networkUrlsStore.clear();
   }
+});
+
+
+// 3.1.8: hosts, files and fields the vendors document that the rules used to miss
+test('documented CAPTCHA signals that 3.1.7 missed are matched by the rule that covers them', async () => {
+  const engine = new Engine();
+  engine.setDetectors({ captcha });
+  const cases = [
+    ['detect-hcaptcha', 'hcaptcha-api-resource', 'https://js.hcaptcha.com/1/secure-api.js?render=explicit'],
+    ['detect-hcaptcha', 'hcaptcha-vendor-host', 'https://api.hcaptcha.com/getcaptcha/10000000-ffff-ffff-ffff-000000000001'],
+    ['detect-hcaptcha', 'hcaptcha-vendor-host', 'https://imgs.hcaptcha.com/tip/86591f996c36877668d253e353e36fac/0.png'],
+    ['detect-recaptcha', 'google-runtime', 'https://www.gstatic.com/recaptcha/releases/guXhH0v-XMzwgr6KUGswGxeS/recaptcha__es_419.js'],
+    ['detect-recaptcha', 'google-challenge-endpoint', 'https://www.recaptcha.net/recaptcha/enterprise/userverify?k=6Lc_test'],
+    ['detect-turnstile', 'turnstile-widget-frame-url', 'https://brunhild.challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/f/ov2/av0/rch/x'],
+    ['detect-turnstile', 'turnstile-challenge-subhost', 'https://brunhild.challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/pat/x'],
+    ['detect-funcaptcha', 'arkose-vendor-host', 'https://iframe.arkoselabs.com/476068BF-9607-4799-B53D-966BE98E2B81/lightbox.html'],
+    ['detect-funcaptcha', 'arkose-vendor-host', 'https://cdn.arkoselabs.com/fc/assets/ec-game-core/bootstrap/1.0.0/standard/game_core_bootstrap.js'],
+    ['detect-funcaptcha', 'arkose-vendor-host', 'https://status.arkoselabs.com/api/v2/status.json'],
+    ['detect-funcaptcha', 'arkose-sri-params', 'https://example-api.arkoselabs.com/params/sri/476068BF-9607-4799-B53D-966BE98E2B81']
+  ];
+  for (const [id, ruleId, url] of cases) {
+    const result = (await engine.detectOnPage({ networkUrls: [{ url, type: 'script' }] }, { includePartial: true })).find(item => item.detector.id === id);
+    assert.ok(result?.matches.some(match => Array.from(Combinations.matchPatternIds(captcha[id], match)).includes(ruleId)), `${id}/${ruleId}: ${url}`);
+  }
+  // reCAPTCHA's badge with its configuration object is the score-based widget at 70; the object alone scores nothing
+  const google = captcha['detect-recaptcha'];
+  assert.equal((await detect(google, pageFor(google, ['google-badge', 'google-config-object']))).confidence, 70);
+  assert.equal((await detect(google, pageFor(google, ['google-config-object'])))?.confidence || 0, 0);
 });

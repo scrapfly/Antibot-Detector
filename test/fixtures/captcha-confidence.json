@@ -35,7 +35,9 @@
     "arkose-session-request": { "url": "https://client-api.arkoselabs.com/fc/gt2/public_key/476068BF-9607-4799-B53D-966BE98E2B81" },
     "funcaptcha-source-reference": { "source": "const provider = 'funcaptcha';" },
     "funcaptcha-container": { "dom": { "tagName": "div", "id": "FunCaptcha", "attributes": { "id": "FunCaptcha" } } },
-    "funcaptcha-challenge-frame": { "dom": { "tagName": "iframe", "src": "https://client-api.arkoselabs.com/fc/challenge", "attributes": { "src": "https://client-api.arkoselabs.com/fc/challenge" } } }
+    "funcaptcha-challenge-frame": { "dom": { "tagName": "iframe", "src": "https://client-api.arkoselabs.com/fc/challenge", "attributes": { "src": "https://client-api.arkoselabs.com/fc/challenge" } } },
+    "arkose-vendor-host": { "url": "https://iframe.arkoselabs.com/476068BF-9607-4799-B53D-966BE98E2B81/index.html" },
+    "arkose-sri-params": { "url": "https://client-api.arkoselabs.com/params/sri/476068BF-9607-4799-B53D-966BE98E2B81" }
   },
   "detect-geetest": {
     "geetest-v3-resource": { "url": "https://static.geetest.com/static/js/gt.0.5.0.js" },
@@ -58,7 +60,9 @@
     "hcaptcha-widget-frame": { "dom": { "tagName": "iframe", "src": "https://newassets.hcaptcha.com/captcha/v1/test/static/hcaptcha.html", "attributes": { "src": "https://newassets.hcaptcha.com/captcha/v1/test/static/hcaptcha.html" } } },
     "hcaptcha-runtime-object": { "runtimeType": "object" },
     "hcaptcha-runtime-render": { "runtimeType": "function" },
-    "hcaptcha-runtime-execute": { "runtimeType": "function" }
+    "hcaptcha-runtime-execute": { "runtimeType": "function" },
+    "hcaptcha-vendor-host": { "url": "https://imgs3.hcaptcha.com/tip/86591f996c36877668d253e353e36fac/0.png" },
+    "hcaptcha-response-field": { "dom": { "tagName": "textarea", "attributes": { "name": "h-captcha-response", "id": "h-captcha-response-0w1k2a", "style": "display: none;" } } }
   },
   "detect-qcloud": {
     "qcloud-sdk": { "url": "https://turing.captcha.qcloud.com/TCaptcha.js" },
@@ -81,7 +85,10 @@
     "standard-render-api": { "runtimeType": "function" },
     "standard-execute-api": { "runtimeType": "function" },
     "enterprise-render-api": { "runtimeType": "function" },
-    "enterprise-execute-api": { "runtimeType": "function" }
+    "enterprise-execute-api": { "runtimeType": "function" },
+    "google-challenge-endpoint": { "url": "https://www.google.com/recaptcha/api2/reload?k=6Lc_test" },
+    "google-badge": { "dom": { "tagName": "div", "class": "grecaptcha-badge", "attributes": { "class": "grecaptcha-badge", "data-style": "bottomright" } } },
+    "google-config-object": { "runtimeType": "object" }
   },
   "detect-turnstile": {
     "turnstile-api-resource": { "url": "https://challenges.cloudflare.com/turnstile/v0/api.js?compat=recaptcha" },
@@ -92,7 +99,8 @@
     "turnstile-runtime-render": { "runtimeType": "function" },
     "turnstile-runtime-execute": { "runtimeType": "function" },
     "openai-turnstile-required-response": { "response": { "method": "POST", "url": "https://chatgpt.com/backend-api/sentinel/chat-requirements/prepare", "data": "{\"persona\":\"chatgpt-paid\",\"prepare_token\":\"gAAAAABexampleprepareTokenOnly00…3768\",\"turnstile\":{\"required\":true,\"dx\":\"PBexampleTurnstileProgramOnly000…15904\"},\"proofofwork\":{\"required\":true,\"seed\":\"0.2823693021564392\",\"difficulty\":\"06243b\"}}" } },
-    "openai-turnstile-answer": { "payload": { "method": "POST", "url": "https://chatgpt.com/unauth-mweb/sentinel/chat-requirements/finalize", "data": "{\"prepare_token\":\"gAAAAABexampleprepareTokenOnly00\",\"proofofwork\":\"gAAAAABexample0\",\"turnstile\":\"TexampleTurnstileAnswerOnly000000000\"}" } }
+    "openai-turnstile-answer": { "payload": { "method": "POST", "url": "https://chatgpt.com/unauth-mweb/sentinel/chat-requirements/finalize", "data": "{\"prepare_token\":\"gAAAAABexampleprepareTokenOnly00\",\"proofofwork\":\"gAAAAABexample0\",\"turnstile\":\"TexampleTurnstileAnswerOnly000000000\"}" } },
+    "turnstile-challenge-subhost": { "url": "https://hagen.challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/turnstile/if/ov2/av0/rcv/abc12/0x4AAAAAAAtest/light/fbE/new/normal/auto/" }
   },
   "detect-yidun": {
     "yidun-sdk-resource": { "url": "https://cstaticdun.126.net/load.min.js" },

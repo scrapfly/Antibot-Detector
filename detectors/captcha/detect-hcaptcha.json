@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "CAPTCHA",
   "difficulty": "High",
-  "lastUpdated": "2026-10-16",
-  "version": "1.3.0",
+  "lastUpdated": "2026-11-12",
+  "version": "1.4.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.hcaptcha.com/",
   "icon": "hcaptcha_official.png",
@@ -17,7 +17,7 @@
         "id": "hcaptcha-api-resource",
         "confidence": 100,
         "description": "Official hCaptcha JavaScript API resource, including the legacy hcaptcha.com/1 path",
-        "text": "^https://(?:js\\.)?hcaptcha\\.com/1/api\\.js(?:[?#]|$)",
+        "text": "^https://(?:js\\.)?hcaptcha\\.com/1/(?:secure-)?api\\.js(?:[?#]|$)",
         "textRegex": true,
         "textWholeWord": false,
         "textCaseSensitive": true,
@@ -43,6 +43,16 @@
         "textCaseSensitive": true,
         "textScope": "all",
         "standalone": true
+      },
+      {
+        "id": "hcaptcha-vendor-host",
+        "confidence": 100,
+        "description": "Request to an hCaptcha host (*.hcaptcha.com)",
+        "text": "^https://(?!(?:www|docs|dashboard)\\.)(?:[a-z0-9-]+\\.)+hcaptcha\\.com(?:[/?#:]|$)",
+        "textRegex": true,
+        "textWholeWord": false,
+        "textCaseSensitive": true,
+        "textScope": "all"
       }
     ],
     "content": [
@@ -74,6 +84,15 @@
         "selector": "iframe[src^='https://newassets.hcaptcha.com/captcha/v1/'], iframe[src^='https://assets.hcaptcha.com/captcha/v1/']",
         "confidence": 60,
         "description": "hCaptcha widget frame resource presence; visibility and completion unconfirmed",
+        "selectorRegex": false,
+        "selectorWholeWord": false,
+        "selectorCaseSensitive": true
+      },
+      {
+        "id": "hcaptcha-response-field",
+        "selector": "textarea[name='h-captcha-response'], input[name='h-captcha-response']",
+        "confidence": 50,
+        "description": "Response field hCaptcha adds to the form (h-captcha-response); token value is never read",
         "selectorRegex": false,
         "selectorWholeWord": false,
         "selectorCaseSensitive": true
