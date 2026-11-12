@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "Son kontrolde uzantı kapalıydı, bu yüzden hiçbir şey kontrol edilmedi."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Son kontrol, uzantı kapatıldığı için durdu."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Son kontrol, geçmiş duraklatıldığı için durdu."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "İzleme listesi kapalı, günlük veya haftalık olmalıdır"
   },

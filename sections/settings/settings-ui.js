@@ -1667,7 +1667,9 @@ SettingsUI.refreshHistoryWatch = async function() {
     let outcome;
     if (!state) outcome = text('settingsHistoryWatchNever', 'No check yet.');
     else if (state.error === 'no_window') outcome = text('settingsHistoryWatchNoWindow', 'The last check found no browser window to open pages in.');
-    else if (state.error === 'off') outcome = text('settingsHistoryWatchOff', 'The extension is switched off, so nothing is checked.');
+    // A check that stopped part way says why it stopped, not the page it was on as one that could not be checked
+    else if (state.stopped === true && (state.error === 'off' || state.error === 'paused')) outcome = SettingsUI.watchStoppedText(state.error);
+    else if (state.error === 'off') outcome = text('settingsHistoryWatchOff', 'The last check found the extension switched off, so nothing was checked.');
     else if (state.ok === false) outcome = text('settingsHistoryWatchFailed', 'The last check failed.');
     else outcome = text('settingsHistoryWatchLastFmt', 'Last check: {0} · {1} checked, {2} changed', FormatUtils.formatDateTime(state.at), state.checked || 0, state.changed || 0);
     // Pages that did not load, went elsewhere or did not answer in time are said too, or a check where every site was
@@ -1677,6 +1679,13 @@ SettingsUI.refreshHistoryWatch = async function() {
   } catch (_) {
     last.textContent = '';
   }
+};
+
+/** Why a watchlist check stopped part way: the extension switched off ('off') or History paused ('paused'). */
+SettingsUI.watchStoppedText = function(error) {
+  return error === 'paused'
+    ? FormatUtils.t('settingsHistoryWatchStoppedPaused', 'The last check stopped because History was paused.')
+    : FormatUtils.t('settingsHistoryWatchStoppedOff', 'The last check stopped because the extension was switched off.');
 };
 
 /** "Check now": the worker scans the watched pages in background tabs; the result is shown beside the button. */
@@ -1689,10 +1698,12 @@ SettingsUI.checkWatchNow = async function(button) {
       NotificationHelper.error(text('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."));
     } else if (result && result.error === 'no_window') {
       NotificationHelper.error(text('settingsHistoryWatchNoWindow', 'The last check found no browser window to open pages in.'));
+    } else if (result && result.stopped === true && (result.error === 'off' || result.error === 'paused')) {
+      NotificationHelper.error(SettingsUI.watchStoppedText(result.error));
     } else if (result && result.error === 'paused') {
       NotificationHelper.error(text('settingsHistoryWatchPaused', 'History is paused, so nothing is checked.'));
     } else if (result && result.error === 'off') {
-      NotificationHelper.error(text('settingsHistoryWatchOff', 'The extension is switched off, so nothing is checked.'));
+      NotificationHelper.error(text('settingsHistoryWatchOff', 'The last check found the extension switched off, so nothing was checked.'));
     } else if (result && result.status === 'ok') {
       const failed = Number(result.failed) || 0;
       const done = result.checked + result.skipped + failed === 0

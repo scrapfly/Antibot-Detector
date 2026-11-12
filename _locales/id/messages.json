@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "Pemeriksaan terakhir mendapati ekstensi dinonaktifkan, jadi tidak ada yang diperiksa."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Pemeriksaan terakhir berhenti karena ekstensi dinonaktifkan."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Pemeriksaan terakhir berhenti karena riwayat dijeda."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Pemantauan harus nonaktif, setiap hari, atau setiap minggu"
   },

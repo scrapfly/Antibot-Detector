@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "Při poslední kontrole bylo rozšíření vypnuté, proto se nic nezkontrolovalo."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Poslední kontrola se zastavila, protože bylo rozšíření vypnuto."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Poslední kontrola se zastavila, protože byla historie pozastavena."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Sledování musí být vypnuté, denní nebo týdenní"
   },

@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "Bei der letzten Prüfung war die Erweiterung ausgeschaltet, daher wurde nichts geprüft."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Die letzte Prüfung wurde angehalten, weil die Erweiterung ausgeschaltet wurde."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Die letzte Prüfung wurde angehalten, weil der Verlauf pausiert wurde."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Die Überwachung muss aus, täglich oder wöchentlich sein"
   },

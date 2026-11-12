@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "Lần kiểm tra gần nhất thấy tiện ích đang tắt, nên không có gì được kiểm tra."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Lần kiểm tra gần nhất đã dừng vì tiện ích bị tắt."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Lần kiểm tra gần nhất đã dừng vì lịch sử bị tạm dừng."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Chức năng theo dõi phải là tắt, hằng ngày hoặc hằng tuần"
   },

@@ -21,6 +21,9 @@ function registerSettingsHandlers(registry, context) {
                         DetectionSessionStore.cancel(tabId, 'disabled');
                         if (typeof stopBadgeSpinner === 'function') stopBadgeSpinner(tabId);
                     }
+                    // Nor does background work go on. No page is scanned while the extension is off, so a background tab would only
+                    // wait out its time limit: the watchlist's check stops now, closing its tab, and opens no other page
+                    if (typeof HistoryWatch !== 'undefined') HistoryWatch.stop('off');
                 }
                 await Settings.handleEnableToggle(enabled, {
                     DetectionEngineManager,

@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "上次检查时扩展已关闭，因此没有检查任何内容。"
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "扩展被关闭，因此上次检查已中途停止。"
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "历史记录被暂停，因此上次检查已中途停止。"
+  },
   "settingsUiErrHistoryWatch": {
     "message": "监视列表必须为关闭、每天或每周"
   },

@@ -62,3 +62,16 @@ test('switching off does not arm the retry alarm', async () => {
   await h.send(false);
   assert.ok(!h.order.includes('webhook-retries'));
 });
+
+test('switching off stops the background work too: the watchlist check under way, before the OFF badges are written', async () => {
+  const h = harness();
+  h.context.HistoryWatch = { stop: (reason) => { h.order.push(`watch-stop:${reason}`); return true; } };
+  h.context.detectionStates.set(3, {});
+  assert.equal((await h.send(false)).status, 'success');
+  assert.deepEqual(h.order, ['cancel:3:disabled', 'watch-stop:off', 'toggle:false']);
+  // Switched on again, nothing of it is stopped
+  const on = harness();
+  on.context.HistoryWatch = { stop: (reason) => { on.order.push(`watch-stop:${reason}`); return true; } };
+  await on.send(true);
+  assert.ok(!on.order.some(step => step.startsWith('watch-stop')));
+});

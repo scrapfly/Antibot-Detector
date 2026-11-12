@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "A última verificação encontrou a extensão desativada, então nada foi verificado."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "A última verificação parou porque a extensão foi desativada."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "A última verificação parou porque o histórico foi pausado."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "A lista de monitoramento deve estar desativada, diária ou semanal"
   },

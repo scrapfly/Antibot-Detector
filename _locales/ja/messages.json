@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "前回の確認では拡張機能がオフになっていたため、何も確認されませんでした。"
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "拡張機能がオフにされたため、前回の確認は途中で停止しました。"
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "履歴が一時停止されたため、前回の確認は途中で停止しました。"
+  },
   "settingsUiErrHistoryWatch": {
     "message": "監視リストはオフ、毎日、毎週のいずれかにしてください"
   },

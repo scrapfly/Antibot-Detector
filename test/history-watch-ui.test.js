@@ -86,6 +86,29 @@ test('pages that could not be checked are said: in the last-check line, and as a
   assert.deepEqual(await run({ status: 'ok', checked: 0, changed: 0, skipped: 0, failed: 3 }), [['error', 'Checked 0 pages, 0 changed · 3 could not be checked']], 'every site down is not a success');
 });
 
+test('a check that stopped part way says why (the extension switched off, History paused), not how many pages failed', async () => {
+  const en = JSON.parse(read('_locales/en/messages.json'));
+  const line = async (state) => {
+    const h = settingsHarness({ stored: { scrapfly_history: watchedItems(3), scrapfly_history_watch: state } });
+    await h.SettingsUI.refreshHistoryWatch();
+    return h.last.textContent;
+  };
+  // (the record of a stopped check: what it had checked, and why it stopped)
+  const stopped = (error) => ({ at: 1234, ok: false, checked: 1, changed: 0, skipped: 0, failed: 0, error, stopped: true });
+  assert.equal(await line(stopped('off')), `3 of 10 pages watched · ${en.settingsHistoryWatchStoppedOff.message}`);
+  assert.equal(await line(stopped('paused')), `3 of 10 pages watched · ${en.settingsHistoryWatchStoppedPaused.message}`);
+  assert.equal(en.settingsHistoryWatchStoppedOff.message, 'The last check stopped because the extension was switched off.');
+  assert.equal(en.settingsHistoryWatchStoppedPaused.message, 'The last check stopped because History was paused.');
+  assert.match(await line(stopped('unreadable_settings')), /· The last check failed\.$/, 'settings that could not be read: a failure');
+  // A check the switch kept from starting still says so in its own words
+  assert.equal(await line({ at: 1, ok: false, checked: 0, changed: 0, skipped: 0, failed: 0, error: 'off' }), `3 of 10 pages watched · ${en.settingsHistoryWatchOff.message}`);
+
+  const toast = async (reply) => { const h = settingsHarness({ reply }); await h.SettingsUI.checkWatchNow.call({}, h.button); return h.toasts; };
+  assert.deepEqual(await toast({ status: 'error', ok: false, checked: 2, changed: 0, skipped: 0, failed: 0, error: 'off', stopped: true }), [['error', en.settingsHistoryWatchStoppedOff.message]]);
+  assert.deepEqual(await toast({ status: 'error', ok: false, checked: 0, changed: 0, skipped: 0, failed: 0, error: 'paused', stopped: true }), [['error', en.settingsHistoryWatchStoppedPaused.message]]);
+  assert.deepEqual(await toast({ status: 'error', ok: false, error: 'off' }), [['error', en.settingsHistoryWatchOff.message]]);
+});
+
 // ---- The entry menu and the card
 function historyView({ reply = { status: 'ok', updated: 1 }, mode = 'daily' } = {}) {
   const toasts = [], changes = [];

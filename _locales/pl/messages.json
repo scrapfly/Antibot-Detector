@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "Podczas ostatniego sprawdzania rozszerzenie było wyłączone, więc nic nie zostało sprawdzone."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Ostatnie sprawdzanie zostało przerwane, ponieważ wyłączono rozszerzenie."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Ostatnie sprawdzanie zostało przerwane, ponieważ wstrzymano historię."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Lista obserwowanych musi być wyłączona, codzienna lub cotygodniowa"
   },

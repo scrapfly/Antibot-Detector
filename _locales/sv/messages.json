@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "Vid den senaste kontrollen var tillägget inaktiverat, så inget kontrollerades."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Den senaste kontrollen avbröts eftersom tillägget stängdes av."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Den senaste kontrollen avbröts eftersom historiken pausades."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Bevakningen måste vara av, dagligen eller veckovis"
   },

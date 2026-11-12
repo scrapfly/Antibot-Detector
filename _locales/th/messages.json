@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "การตรวจสอบครั้งล่าสุดพบว่าส่วนขยายปิดอยู่ จึงไม่ได้ตรวจสอบอะไร"
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "การตรวจสอบครั้งล่าสุดหยุดลง เพราะส่วนขยายถูกปิด"
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "การตรวจสอบครั้งล่าสุดหยุดลง เพราะประวัติถูกหยุดชั่วคราว"
+  },
   "settingsUiErrHistoryWatch": {
     "message": "การติดตามต้องเป็นปิด รายวัน หรือรายสัปดาห์"
   },

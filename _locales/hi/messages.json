@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "पिछली जाँच में एक्सटेंशन बंद मिला, इसलिए कुछ नहीं जाँचा गया।"
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "पिछली जाँच रुक गई, क्योंकि एक्सटेंशन बंद कर दिया गया।"
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "पिछली जाँच रुक गई, क्योंकि इतिहास रोक दिया गया।"
+  },
   "settingsUiErrHistoryWatch": {
     "message": "नज़र रखना बंद, रोज़ाना या साप्ताहिक होना चाहिए"
   },

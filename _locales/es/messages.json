@@ -6112,6 +6112,12 @@
   "settingsHistoryWatchOff": {
     "message": "La última comprobación encontró la extensión desactivada, así que no se comprobó nada."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "La última comprobación se detuvo porque se desactivó la extensión."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "La última comprobación se detuvo porque se pausó el historial."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "La lista de vigilancia debe estar desactivada, ser diaria o semanal"
   },

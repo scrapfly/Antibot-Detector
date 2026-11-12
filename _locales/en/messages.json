@@ -6610,6 +6610,14 @@
     "message": "The last check found the extension switched off, so nothing was checked.",
     "description": "The watchlist line in Settings for a check that found the extension switched off with its main toggle (a past event: it may be on again), and the error after Check now"
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "The last check stopped because the extension was switched off.",
+    "description": "The watchlist line in Settings → History, and the error after Check now, for a check that stopped part way because the extension was switched off with its main toggle (a past event: it may be on again)"
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "The last check stopped because History was paused.",
+    "description": "The watchlist line in Settings → History, and the error after Check now, for a check that stopped part way because History was paused (a paused History is not written to)"
+  },
   "settingsUiErrHistoryWatch": {
     "message": "The watchlist must be off, daily or weekly",
     "description": "Error when the watchlist setting is not one of the offered choices"

@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "Під час останньої перевірки розширення було вимкнено, тому нічого не перевірялося."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Останню перевірку зупинено, бо розширення вимкнули."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Останню перевірку зупинено, бо історію призупинили."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Стеження має бути вимкнене або виконуватися щодня чи щотижня"
   },
