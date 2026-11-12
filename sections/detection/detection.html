@@ -246,6 +246,8 @@
       <!-- Search sits in the summary card, under the stats -->
       <div class="search-container detection-search">
         <input type="text" id="detectionSearch" class="search-input" placeholder="Search detections..." data-i18n-placeholder="detectionSearchPlaceholder" aria-label="Search detections..." data-i18n-aria-label="detectionSearchPlaceholder">
+        <!-- Inside the search field, at its end: only the results with strong evidence (80% or more). Not a chip, so the row below keeps four -->
+        <button type="button" id="detectionStrongToggle" class="detection-strong-toggle" aria-pressed="false" data-i18n="detectionStrongToggle">Strong (≥80%)</button>
         <!-- Filter chips under the search: one per category (any of the chosen ones, combined with the search with AND) -->
         <div id="detectionFilters" class="detection-filters" role="group" aria-label="Filter detections" data-i18n-aria-label="detectionFiltersLabel">
           <button type="button" class="history-filter-chip" data-filter="antibot" data-category="antibot" aria-pressed="false">

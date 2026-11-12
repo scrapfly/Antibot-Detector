@@ -6790,5 +6790,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "سطر واحد"
+  },
+  "detectionStrongToggle": {
+    "message": "قوية (≥80%)"
   }
 }

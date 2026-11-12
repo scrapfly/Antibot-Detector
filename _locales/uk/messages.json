@@ -6790,5 +6790,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Один рядок"
+  },
+  "detectionStrongToggle": {
+    "message": "Сильні (≥80%)"
   }
 }

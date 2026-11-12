@@ -6790,5 +6790,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Tek satır"
+  },
+  "detectionStrongToggle": {
+    "message": "Güçlü (≥%80)"
   }
 }

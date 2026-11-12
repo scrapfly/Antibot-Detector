@@ -1796,9 +1796,9 @@ DetectionUI.getMethodBadges = function(matches) {
     return badges.join('');
 };
 
-/** Whether the search box or a category chip narrows the list. */
+/** Whether the search box, its Strong toggle or a category chip narrows the list. */
 DetectionUI.isFiltering = function() {
-    return !!this.searchQuery || (!!this.activeChips && DetectionFilter.isActive(this.activeChips));
+    return !!this.searchQuery || this.strongOnly === true || (!!this.activeChips && DetectionFilter.isActive(this.activeChips));
 };
 
 /**
@@ -1811,6 +1811,7 @@ DetectionUI.getFilteredResults = function() {
     const filtered = DetectionFilter.filter(this.currentResults, {
       query: this.searchQuery,
       chips: this.activeChips,
+      strong: this.strongOnly === true,
       firedOf: detection => HistoryFilter.firedCombinations([detection]),
       categoryOf: detection => Categories.keyOf(detection),
       // The search finds the name, the category and the description, in English and in the UI language
@@ -1872,9 +1873,16 @@ DetectionUI.toggleFilterChip = function(key) {
     DetectionUI.applyFilters.call(this);
 };
 
-/** Back to every result: every chip off and the search emptied. */
+/** The Strong toggle inside the search box: only the results with strong evidence (80% or more), or every one again. */
+DetectionUI.toggleStrongFilter = function() {
+    this.strongOnly = this.strongOnly !== true;
+    DetectionUI.applyFilters.call(this);
+};
+
+/** Back to every result: every chip and the Strong toggle off, and the search emptied. */
 DetectionUI.clearFilters = function() {
     this.activeChips = DetectionFilter.normalizeChips();
+    this.strongOnly = false;
     this.searchQuery = '';
     const input = typeof document !== 'undefined' ? document.querySelector('#detectionSearch') : null;
     if (input) input.value = '';
@@ -1891,6 +1899,8 @@ DetectionUI.clearFilters = function() {
  */
 DetectionUI.syncFilterChips = function() {
     if (typeof document === 'undefined') return;
+    const strong = document.querySelector('#detectionStrongToggle');
+    if (strong) strong.setAttribute('aria-pressed', this.strongOnly === true ? 'true' : 'false');
     const row = document.querySelector('#detectionFilters');
     if (!row) return;
     const chips = DetectionFilter.normalizeChips(this.activeChips);

@@ -6790,5 +6790,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Satu baris"
+  },
+  "detectionStrongToggle": {
+    "message": "Kuat (≥80%)"
   }
 }

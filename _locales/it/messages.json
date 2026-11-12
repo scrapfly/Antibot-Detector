@@ -6790,5 +6790,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Una riga"
+  },
+  "detectionStrongToggle": {
+    "message": "Solida (≥80%)"
   }
 }

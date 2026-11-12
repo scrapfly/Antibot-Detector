@@ -7503,5 +7503,9 @@
   "detectionCopyMenuOneLine": {
     "message": "One line",
     "description": "Detection tab Copy menu item: the scan as a single line of text, like \"shop.example: Cloudflare 95%\""
+  },
+  "detectionStrongToggle": {
+    "message": "Strong (≥80%)",
+    "description": "Detection tab: toggle inside the search box that keeps only the results with strong evidence (confidence 80% or more)"
   }
 }

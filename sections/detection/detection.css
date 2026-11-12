@@ -599,6 +599,49 @@
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
 }
 
+/* The Strong toggle sits inside the search field, at its end (the field leaves it room); a small pill like the chips below */
+#detectionResults .detection-search .search-input {
+  padding-inline-end: 118px;
+}
+
+#detectionResults .detection-search .detection-strong-toggle {
+  position: absolute;
+  top: 11px;
+  inset-inline-end: 16px;
+  max-width: 108px;
+  height: 24px;
+  padding: 0 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+}
+
+#detectionResults .detection-search .detection-strong-toggle:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+#detectionResults .detection-search .detection-strong-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+#detectionResults .detection-search .detection-strong-toggle[aria-pressed="true"] {
+  color: var(--text-primary);
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.14);
+}
+
 /* Filter chips under the search, in the summary card's last strip. The chips are History's (.history-filter-chip, in history.css,
    which the popup links too); only the row is restated here, as History's is scoped to its own tab. */
 #detectionResults .detection-filters {

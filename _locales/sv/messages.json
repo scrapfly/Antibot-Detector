@@ -6790,5 +6790,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "En rad"
+  },
+  "detectionStrongToggle": {
+    "message": "Stark (≥80 %)"
   }
 }

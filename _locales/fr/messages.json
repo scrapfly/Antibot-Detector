@@ -6790,5 +6790,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Une ligne"
+  },
+  "detectionStrongToggle": {
+    "message": "Solide (≥80 %)"
   }
 }

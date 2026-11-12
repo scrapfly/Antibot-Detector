@@ -6790,5 +6790,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Jeden řádek"
+  },
+  "detectionStrongToggle": {
+    "message": "Silné (≥80 %)"
   }
 }

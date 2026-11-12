@@ -6790,5 +6790,8 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Eén regel"
+  },
+  "detectionStrongToggle": {
+    "message": "Sterk (≥80%)"
   }
 }
