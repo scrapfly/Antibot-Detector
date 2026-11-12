@@ -6793,5 +6793,20 @@
   },
   "detectionStrongToggle": {
     "message": "強 (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "難度低：通常放行一般流量，帶有真實標頭和 Cookie 的請求也常能通過。"
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "難度中：簡單的 HTTP 用戶端常會遇到驗證挑戰；設定一致的真實瀏覽器通常能通過。"
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "難度高：很難通過。它會檢查瀏覽器、其行為以及來源網路，並封鎖簡單的 HTTP 用戶端。"
+  },
+  "detectionModalWebsite": {
+    "message": "官方網站"
+  },
+  "detectionModalDocs": {
+    "message": "偵測指南"
   }
 }

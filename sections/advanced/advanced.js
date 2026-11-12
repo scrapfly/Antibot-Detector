@@ -1,5 +1,7 @@
 class Advanced {
   static AVAILABLE_MODULES = AdvancedVendorRegistry.modules;
+  static REQUEST_TTL_MS = 60000;
+  static requestedTools = null;
 
   /**
    * Localised "<product> Tools" label for a module entry. The product name
@@ -10,6 +12,23 @@ class Advanced {
   static toolsDisplayName(moduleInfo) {
     const name = (moduleInfo && moduleInfo.productName) || '';
     return (typeof I18n !== 'undefined' && I18n.format('advPanelToolsNameFmt', name)) || `${name} Tools`;
+  }
+
+  /**
+   * Detection details → Open tools: the protection whose tools the Advanced tab opens on next, for a minute at most (the tab is
+   * drawn after the popup switches to it, so the request waits here until then).
+   * @param {string} detectorId
+   * @param {number} [now]
+   */
+  static requestTools(detectorId, now = Date.now()) {
+    Advanced.requestedTools = typeof detectorId === 'string' && detectorId ? { detectorId, at: now } : null;
+  }
+
+  /** The protection asked for, once, or null when none was or the request is older than a minute. */
+  static takeRequestedTools(now = Date.now()) {
+    const request = Advanced.requestedTools;
+    Advanced.requestedTools = null;
+    return request && now - request.at >= 0 && now - request.at < Advanced.REQUEST_TTL_MS ? request.detectorId : null;
   }
 
   constructor(detectorManager, detectionSection) {

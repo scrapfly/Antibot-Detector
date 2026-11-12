@@ -7507,5 +7507,25 @@
   "detectionStrongToggle": {
     "message": "Strong (≥80%)",
     "description": "Detection tab: toggle inside the search box that keeps only the results with strong evidence (confidence 80% or more)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Low difficulty: it usually lets ordinary traffic through, and requests with realistic headers and cookies often pass.",
+    "description": "Detection details dialog, under the description: what the Low difficulty level means for this protection"
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Medium difficulty: plain HTTP clients are often challenged; a real browser with consistent settings usually gets through.",
+    "description": "Detection details dialog, under the description: what the Medium difficulty level means for this protection"
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "High difficulty: hard to get past. It checks the browser, its behaviour and the network it comes from, and blocks plain HTTP clients.",
+    "description": "Detection details dialog, under the description: what the High difficulty level means for this protection"
+  },
+  "detectionModalWebsite": {
+    "message": "Website",
+    "description": "Detection details dialog: link to the vendor's official website (opens a new tab)"
+  },
+  "detectionModalDocs": {
+    "message": "Detection guide",
+    "description": "Detection details dialog: link to this protection's page in the extension's documentation on GitHub (opens a new tab)"
   }
 }

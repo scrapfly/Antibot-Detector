@@ -82,8 +82,14 @@ DetectionModals.initializeModalElements = function() {
       description: modal.querySelector('#detectionModalDescription'),
       methods: modal.querySelector('#detectionModalMethods'),
       combinationsSection: modal.querySelector('#detectionModalCombinationsSection'),
-      combinations: modal.querySelector('#detectionModalCombinations')
+      combinations: modal.querySelector('#detectionModalCombinations'),
+      difficultyNote: modal.querySelector('#detectionModalDifficultyNote'),
+      links: modal.querySelector('#detectionModalLinks'),
+      website: modal.querySelector('#detectionModalWebsite'),
+      docs: modal.querySelector('#detectionModalDocs'),
+      openTools: modal.querySelector('#detectionModalOpenTools')
     };
+    DetectionModals.bindAboutLinks.call(this);
 
     const closeHandler = () => this.closeDetectionModal();
 
@@ -284,6 +290,9 @@ DetectionModals.renderDetectionModalContent = function(detection) {
       this.modalElements.description.textContent = description;
     }
 
+    // What the difficulty means, the vendor's site, its docs page and its Advanced tools
+    DetectionModals.renderAbout.call(this, detection, difficulty);
+
     // Combinations of the detector that matched (see DetectionCombinations),
     // each as a checklist of what it looks for (CombinationChecklist)
     if (this.modalElements.combinations && this.modalElements.combinationsSection) {
@@ -301,6 +310,102 @@ DetectionModals.renderDetectionModalContent = function(detection) {
         empty.textContent = _dmText('detectionUiNoMethodsRecorded', 'No detection methods recorded for this detector.');
         this.modalElements.methods.replaceChildren(empty);
       }
+    }
+};
+
+/** What each difficulty level means for the protection, in the dialog under its description. */
+DetectionModals.DIFFICULTY_MEANINGS = Object.freeze({
+    Low: ['detectionModalDifficultyLow', 'Low difficulty: it usually lets ordinary traffic through, and requests with realistic headers and cookies often pass.'],
+    Medium: ['detectionModalDifficultyMedium', 'Medium difficulty: plain HTTP clients are often challenged; a real browser with consistent settings usually gets through.'],
+    High: ['detectionModalDifficultyHigh', 'High difficulty: hard to get past. It checks the browser, its behaviour and the network it comes from, and blocks plain HTTP clients.']
+});
+
+/** The links row's listener, bound once per dialog: Open tools goes to the Advanced tools of the protection shown. */
+DetectionModals.bindAboutLinks = function() {
+    const button = this.modalElements && this.modalElements.openTools;
+    if (!button || button.dataset?.bound === 'true') return;
+    if (button.dataset) button.dataset.bound = 'true';
+    button.addEventListener('click', () => DetectionModals.openVendorTools.call(this));
+};
+
+/** A link of the row: shown with its address, or hidden with none (no address of an earlier protection left behind). */
+const _dmSetLink = (link, url) => {
+    if (!link) return;
+    link.hidden = !url;
+    if (url) {
+      link.setAttribute('href', url);
+      link.setAttribute('target', '_blank');
+      link.setAttribute('rel', 'noopener noreferrer');
+    } else {
+      link.removeAttribute('href');
+    }
+};
+
+/** The Advanced tools entry (AdvancedVendorRegistry) for a detector id, if the vendor has tools. */
+const _dmToolsEntry = (detectorId) => {
+    const modules = typeof AdvancedVendorRegistry !== 'undefined' ? AdvancedVendorRegistry.modules : null;
+    const key = typeof detectorId === 'string' ? detectorId.replace(/^detect-/, '') : '';
+    return modules && key && Object.prototype.hasOwnProperty.call(modules, key) ? modules[key] : null;
+};
+
+/**
+ * Under the description: what the difficulty means, the vendor's website and the protection's docs page (VendorLinks: official
+ * detectors only, the page in the interface language when it exists), and Open tools when Advanced lists the protection (the
+ * vendor has tools and the confidence is above Settings → Detection → Advanced tools' minimum, as Advanced decides).
+ * @returns {Promise<void>} settles once the minimum confidence is read and Open tools shown or hidden
+ */
+DetectionModals.renderAbout = async function(detection, difficulty) {
+    const elements = this.modalElements || {};
+    const meaning = DetectionModals.DIFFICULTY_MEANINGS[difficulty];
+    if (elements.difficultyNote) {
+      elements.difficultyNote.textContent = meaning ? _dmText(meaning[0], meaning[1]) : '';
+      elements.difficultyNote.hidden = !meaning;
+    }
+
+    const detectorId = detection?.detector?.id;
+    const definition = DetectionModals.findDetectorDefinition.call(this, detection) || {};
+    const author = DetectionModals.resolveDetectorDefinition.call(this, detection)?.author;
+    const official = typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.isOfficialDetector === 'function'
+      && DetectionUtils.isOfficialDetector({ id: detectorId, author });
+    const links = typeof VendorLinks !== 'undefined' ? VendorLinks : null;
+    const locale = typeof I18n !== 'undefined' && typeof I18n.locale === 'function' ? I18n.locale() : 'en';
+    const website = links ? links.websiteUrl(definition, { official }) : '';
+    const docs = links ? links.docsUrl({ id: detectorId }, { official, category: FormatUtils.categoryKey(detection), locale }) : '';
+    _dmSetLink(elements.website, website);
+    _dmSetLink(elements.docs, docs);
+
+    // Open tools: hidden until the minimum is read, so it never offers tools Advanced would not list
+    const token = {};
+    this.aboutRenderToken = token;
+    this.modalToolsDetectorId = null;
+    if (elements.openTools) elements.openTools.hidden = true;
+    const syncRow = () => {
+      if (elements.links) elements.links.hidden = !website && !docs && !(elements.openTools && !elements.openTools.hidden);
+    };
+    syncRow();
+    if (!elements.openTools || !_dmToolsEntry(detectorId) || typeof Advanced === 'undefined') return;
+    let minimum = Advanced.MIN_TOOL_CONFIDENCE;
+    try {
+      if (typeof Advanced.readMinToolConfidence === 'function') minimum = await Advanced.readMinToolConfidence();
+    } catch (_) { /* keep the default */ }
+    if (this.aboutRenderToken !== token) return;
+    const offered = (Number(detection?.confidence) || 0) > minimum;
+    elements.openTools.hidden = !offered;
+    this.modalToolsDetectorId = offered ? detectorId : null;
+    syncRow();
+};
+
+/** Open tools: the dialog closes and the Advanced tab opens with this protection's tools. */
+DetectionModals.openVendorTools = async function() {
+    const detectorId = this.modalToolsDetectorId;
+    const popup = typeof window !== 'undefined' ? window.popupInstance : null;
+    if (!detectorId || !popup || typeof popup.switchTab !== 'function' || typeof Advanced === 'undefined') return;
+    if (typeof Advanced.requestTools === 'function') Advanced.requestTools(detectorId);
+    this.closeDetectionModal();
+    try {
+      await popup.switchTab('advanced');
+    } catch (error) {
+      Logger.warn('UI', '[Detection] Could not open the Advanced tools', error);
     }
 };
 

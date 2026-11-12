@@ -6793,5 +6793,20 @@
   },
   "detectionStrongToggle": {
     "message": "मज़बूत (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "कम कठिनाई: यह आम तौर पर सामान्य ट्रैफ़िक को जाने देता है, और यथार्थवादी हेडर और कुकी वाले अनुरोध अक्सर पार हो जाते हैं।"
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "मध्यम कठिनाई: साधारण HTTP क्लाइंट को अक्सर चुनौती मिलती है; एक जैसी सेटिंग वाला असली ब्राउज़र आम तौर पर पार हो जाता है।"
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "उच्च कठिनाई: पार करना कठिन। यह ब्राउज़र, उसके व्यवहार और उसके नेटवर्क की जाँच करता है, और साधारण HTTP क्लाइंट को रोकता है।"
+  },
+  "detectionModalWebsite": {
+    "message": "वेबसाइट"
+  },
+  "detectionModalDocs": {
+    "message": "पहचान गाइड"
   }
 }

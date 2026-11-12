@@ -6793,5 +6793,20 @@
   },
   "detectionStrongToggle": {
     "message": "강함 (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "난이도 낮음: 일반 트래픽은 대개 통과시키며, 현실적인 헤더와 쿠키를 갖춘 요청도 자주 통과합니다."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "난이도 중간: 단순 HTTP 클라이언트는 자주 챌린지를 받으며, 설정이 일관된 실제 브라우저는 대개 통과합니다."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "난이도 높음: 통과하기 어렵습니다. 브라우저와 그 동작, 접속 네트워크를 확인하고 단순 HTTP 클라이언트는 차단합니다."
+  },
+  "detectionModalWebsite": {
+    "message": "웹사이트"
+  },
+  "detectionModalDocs": {
+    "message": "탐지 가이드"
   }
 }

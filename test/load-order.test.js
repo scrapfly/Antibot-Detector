@@ -66,7 +66,7 @@ test('every script that reads a shared global module loads after it, in the popu
     WebhookFilter: 'modules/core/webhook-filter.js', WebhookLog: 'modules/core/webhook-log.js', MessageSender: 'modules/core/message-sender.js', CookieTimeline: 'modules/core/cookie-timeline.js',
     WorkerMessages: 'modules/core/worker-messages.js', WorkerVersion: 'modules/core/worker-version.js', HistoryFilter: 'modules/core/history-filter.js', HistoryCompare: 'modules/core/history-compare.js',
     DetectionSummary: 'modules/core/detection-summary.js', HistorySort: 'modules/core/history-sort.js',
-    DetectionFilter: 'modules/core/detection-filter.js', RulesFilter: 'modules/core/rules-filter.js', RulesBulk: 'modules/core/rules-bulk.js', RulesSort: 'modules/core/rules-sort.js', RuleDuplicates: 'modules/core/rule-duplicates.js',
+    DetectionFilter: 'modules/core/detection-filter.js', VendorLinks: 'modules/core/vendor-links.js', RulesFilter: 'modules/core/rules-filter.js', RulesBulk: 'modules/core/rules-bulk.js', RulesSort: 'modules/core/rules-sort.js', RuleDuplicates: 'modules/core/rule-duplicates.js',
     StorageOverview: 'modules/settings/storage-overview.js', BackupBundle: 'modules/settings/backup-bundle.js', DiagnosticsReport: 'modules/settings/diagnostics-report.js',
     SettingsPresets: 'modules/settings/settings-presets.js', SettingsTransfer: 'modules/settings/settings-transfer.js',
     RuleSuggest: 'modules/core/rule-suggest.js',

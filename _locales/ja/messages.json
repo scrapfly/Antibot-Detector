@@ -6793,5 +6793,20 @@
   },
   "detectionStrongToggle": {
     "message": "強い (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "難易度 低: 通常のトラフィックはたいてい通過し、現実的なヘッダーと Cookie を持つリクエストも多くの場合通ります。"
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "難易度 中: 単純な HTTP クライアントはチャレンジを受けることが多く、設定に一貫性のある実際のブラウザーなら通常は通過します。"
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "難易度 高: 突破は困難です。ブラウザー、その挙動、接続元のネットワークを確認し、単純な HTTP クライアントはブロックします。"
+  },
+  "detectionModalWebsite": {
+    "message": "ウェブサイト"
+  },
+  "detectionModalDocs": {
+    "message": "検出ガイド"
   }
 }

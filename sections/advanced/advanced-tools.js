@@ -117,10 +117,12 @@ Advanced.prototype.renderAdvancedInterface = async function() {
       await this.updateCaptureCountBadge();
 
       if (noTools) {
+        // A protection asked for from Detection that has no tools here: the empty state says why
+        Advanced.takeRequestedTools();
         await this.setupNoToolsHistoryLink();
       } else {
         this.setupDetectionToolsListeners();
-        await this.openOnlyProtection();
+        await this.openRequestedOrOnlyProtection();
       }
       Logger.debug('UI', '[Advanced] renderAdvancedInterface complete!');
 
@@ -369,6 +371,20 @@ Advanced.prototype.openOnlyProtection = async function() {
     section?.classList.toggle('is-single', only);
     if (!only) return false;
     return this.loadSelectedDetectionTools(this.availableDetectionTools[0].detection.detector?.id, { auto: true });
+  };
+
+/**
+ * The tools of the protection asked for from the Detection details dialog (Open tools), on the Tools sub-tab, with focus on
+ * them since the person asked; else the usual view (openOnlyProtection). A protection Advanced does not list is not opened.
+ * @returns {Promise<boolean>} whether tools were opened
+ */
+Advanced.prototype.openRequestedOrOnlyProtection = async function() {
+    const requested = Advanced.takeRequestedTools();
+    const tools = this.availableDetectionTools || [];
+    if (!requested || !tools.some(({ detection }) => detection.detector?.id === requested)) return this.openOnlyProtection();
+    document.querySelector('.captcha-tools-section')?.classList.toggle('is-single', tools.length === 1);
+    if (document.querySelector('#advancedContent')?.classList.contains('is-captures-view')) await this.switchAdvancedTab('tools');
+    return this.loadSelectedDetectionTools(requested);
   };
 
 /**

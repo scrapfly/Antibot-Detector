@@ -6793,5 +6793,20 @@
   },
   "detectionStrongToggle": {
     "message": "Mocne (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Niska trudność: zwykle przepuszcza zwykły ruch, a żądania z realistycznymi nagłówkami i plikami cookie często przechodzą."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Średnia trudność: proste klienty HTTP często dostają wyzwanie; prawdziwa przeglądarka ze spójnymi ustawieniami zwykle przechodzi."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Wysoka trudność: trudna do obejścia. Sprawdza przeglądarkę, jej zachowanie i sieć, z której pochodzi, a proste klienty HTTP blokuje."
+  },
+  "detectionModalWebsite": {
+    "message": "Strona internetowa"
+  },
+  "detectionModalDocs": {
+    "message": "Przewodnik wykrywania"
   }
 }

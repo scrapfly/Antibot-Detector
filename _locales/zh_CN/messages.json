@@ -6793,5 +6793,20 @@
   },
   "detectionStrongToggle": {
     "message": "强 (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "难度低：通常放行普通流量，带有真实请求头和 Cookie 的请求也常能通过。"
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "难度中：简单的 HTTP 客户端常会遇到质询；设置一致的真实浏览器通常能通过。"
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "难度高：很难通过。它会检查浏览器、其行为以及来源网络，并拦截简单的 HTTP 客户端。"
+  },
+  "detectionModalWebsite": {
+    "message": "官方网站"
+  },
+  "detectionModalDocs": {
+    "message": "检测指南"
   }
 }

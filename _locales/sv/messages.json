@@ -6793,5 +6793,20 @@
   },
   "detectionStrongToggle": {
     "message": "Stark (≥80 %)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Låg svårighet: släpper oftast igenom vanlig trafik, och förfrågningar med realistiska headers och cookies går ofta igenom."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Medelhög svårighet: enkla HTTP-klienter får ofta en utmaning; en riktig webbläsare med konsekventa inställningar kommer oftast igenom."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Hög svårighet: svår att ta sig förbi. Kontrollerar webbläsaren, dess beteende och nätverket den kommer från, och blockerar enkla HTTP-klienter."
+  },
+  "detectionModalWebsite": {
+    "message": "Webbplats"
+  },
+  "detectionModalDocs": {
+    "message": "Guide till identifiering"
   }
 }
