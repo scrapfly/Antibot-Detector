@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "Které stránky znovu používají tyto výsledky z mezipaměti a na jak dlouho."
   },
+  "detectionStatHttpStatus": {
+    "message": "Stav HTTP"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Stavový kód HTTP, kterým stránka odpověděla při skenování. Chyba (4xx nebo 5xx) často znamená, že požadavek byl zablokován nebo dostal ověřovací výzvu."
+  },
   "tipCacheExpires": {
     "message": "Vyprší"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "Detekce: {0} · Spolehlivost: {1} % · Obtížnost: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "Stav HTTP: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Ochrana"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Zjištěné ochrany s jejich jistotou, oddělené čárkami"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Stavový kód HTTP stránky (0, pokud není znám)"
   },
   "historyCopyMarkdown": {
     "message": "Kopírovat jako Markdown"

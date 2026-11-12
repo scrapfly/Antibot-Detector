@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "이 캐시 결과를 재사용하는 페이지와 기간."
   },
+  "detectionStatHttpStatus": {
+    "message": "HTTP 상태"
+  },
+  "detectionTipHttpStatus": {
+    "message": "스캔할 때 페이지가 응답한 HTTP 상태 코드입니다. 오류(4xx 또는 5xx)는 요청이 차단되었거나 챌린지를 받았다는 뜻인 경우가 많습니다."
+  },
   "tipCacheExpires": {
     "message": "만료"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "탐지: {0} · 신뢰도: {1}% · 난이도: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP 상태: {0}"
+  },
   "detectionMdColProtection": {
     "message": "보호 기능"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "탐지된 보호 기능과 신뢰도(쉼표로 구분)"
+  },
+  "webhookVarHttpStatus": {
+    "message": "페이지의 HTTP 상태 코드(알 수 없으면 0)"
   },
   "historyCopyMarkdown": {
     "message": "Markdown으로 복사"

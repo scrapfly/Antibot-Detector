@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "Những trang nào dùng lại các kết quả đã lưu trong bộ nhớ đệm này, và trong bao lâu."
   },
+  "detectionStatHttpStatus": {
+    "message": "Trạng thái HTTP"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Mã trạng thái HTTP mà trang trả về khi được quét. Lỗi (4xx hoặc 5xx) thường có nghĩa là yêu cầu đã bị chặn hoặc bị thử thách."
+  },
   "tipCacheExpires": {
     "message": "Hết hạn"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "Phát hiện: {0} · Độ tin cậy: {1}% · Độ khó: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "Trạng thái HTTP: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Biện pháp bảo vệ"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Các biện pháp bảo vệ được phát hiện kèm độ tin cậy, phân tách bằng dấu phẩy"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Mã trạng thái HTTP của trang (0 nếu không rõ)"
   },
   "historyCopyMarkdown": {
     "message": "Sao chép dạng Markdown"

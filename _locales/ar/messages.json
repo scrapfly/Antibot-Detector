@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "الصفحات التي تعيد استخدام هذه النتائج المخزنة مؤقتًا، ولأي مدة."
   },
+  "detectionStatHttpStatus": {
+    "message": "حالة HTTP"
+  },
+  "detectionTipHttpStatus": {
+    "message": "رمز حالة HTTP الذي أجابت به الصفحة عند فحصها. الخطأ (4xx أو 5xx) يعني غالبًا أن الطلب حُظر أو خضع لتحدٍّ."
+  },
   "tipCacheExpires": {
     "message": "تنتهي"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "الكشوفات: {0} · الثقة: {1}% · الصعوبة: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "حالة HTTP: {0}"
+  },
   "detectionMdColProtection": {
     "message": "الحماية"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "الحمايات المكتشفة مع نسبة الثقة، مفصولة بفواصل"
+  },
+  "webhookVarHttpStatus": {
+    "message": "رمز حالة HTTP للصفحة (0 إذا لم يكن معروفًا)"
   },
   "historyCopyMarkdown": {
     "message": "نسخ بصيغة Markdown"

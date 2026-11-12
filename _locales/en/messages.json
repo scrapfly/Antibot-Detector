@@ -4771,6 +4771,14 @@
   "detectionTipCache": {
     "message": "Which pages reuse these cached results, and for how long."
   },
+  "detectionStatHttpStatus": {
+    "message": "HTTP status",
+    "description": "Detection tab: label of the small tile beside Cache with the page's HTTP status code (200, 403, 503…)"
+  },
+  "detectionTipHttpStatus": {
+    "message": "The HTTP status code the page answered with when it was scanned. An error (4xx or 5xx) often means the request was blocked or challenged.",
+    "description": "Detection tab and Bulk scan: hover text of the page's HTTP status code"
+  },
   "tipCacheExpires": {
     "message": "Expires"
   },
@@ -6666,6 +6674,10 @@
     "message": "Detections: {0} · Confidence: {1}% · Difficulty: {2}",
     "description": "Summary line of the copied Markdown. {0} = number of protections, {1} = average confidence (a number), {2} = difficulty (Low, Medium, High…)"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP status: {0}",
+    "description": "The page's HTTP status in a tile's hover title and the copied Markdown summary. {0} = the status code (a number such as 403)"
+  },
   "detectionMdColProtection": {
     "message": "Protection",
     "description": "Column heading in the copied Markdown table: the name of the anti-bot, CAPTCHA or fingerprinting system"
@@ -7396,6 +7408,10 @@
   },
   "webhookVarDetectionNames": {
     "message": "Detected protections with their confidence, comma-separated"
+  },
+  "webhookVarHttpStatus": {
+    "message": "HTTP status code of the page (0 when not known)",
+    "description": "Settings → Detection → Webhook: description of the <HTTP_STATUS> template variable"
   },
   "historyCopyMarkdown": {
     "message": "Copy as Markdown",

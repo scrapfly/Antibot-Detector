@@ -349,7 +349,9 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
         url: detectionData.url ?? nestedMeta.url,
         timestamp: detectionData.timestamp ?? nestedMeta.timestamp,
         favicon: detectionData.favicon ?? nestedMeta.favicon,
-        cacheScope: detectionData.cacheScope ?? nestedMeta.cacheScope
+        cacheScope: detectionData.cacheScope ?? nestedMeta.cacheScope,
+        // The page's HTTP status saved with the result (none in one saved before 3.1.8): the tile beside Cache
+        httpStatus: detectionData.httpStatus ?? nestedMeta.httpStatus
       } : null;
 
       if (detection.debugMode) {

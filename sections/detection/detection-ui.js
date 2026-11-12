@@ -778,6 +778,9 @@ DetectionUI.updateCacheInfo = function() {
       return;
     }
 
+    // The HTTP status tile shares the row
+    DetectionUI.updateHttpStatus.call(this);
+
     // One "Cache" tile: which pages reuse the results, and for how long
     const tile = cacheExpiry.closest('.stat-inline');
     const tr = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
@@ -815,6 +818,33 @@ DetectionUI.updateCacheInfo = function() {
       // An entry saved before the scope was recorded: the scope in Settings is the one it was saved under
       Utils.getCacheScope().then(showScope).catch(() => {});
     }
+};
+
+/**
+ * The page's HTTP status, the small tile beside Cache: the status code saved with the result shown (a cache hit shows the one of
+ * the result it reuses). Hidden when it is not known (a result saved before 3.1.8, a page its service worker answered or one
+ * restored from the back/forward cache). Graphite for 2xx and 3xx; an error is marked, quiet amber for 4xx and red for 5xx,
+ * because a block page (403, 429, a 503 from a challenge) is itself a sign of the protection.
+ */
+DetectionUI.updateHttpStatus = function() {
+    const tile = document.querySelector('#httpStatusTile');
+    const value = document.querySelector('#httpStatusValue');
+    if (!tile || !value) return;
+    const icon = tile.querySelector('.stat-icon-inline');
+    const status = typeof HttpStatus !== 'undefined' ? HttpStatus.of(this.cacheMetadata && this.cacheMetadata.httpStatus) : null;
+    const tones = { warn: 'tone-amber', error: 'tone-red' };
+    for (const element of [value, icon]) if (element) element.classList.remove(...Object.values(tones));
+    tile.hidden = !status;
+    if (!status) {
+      value.textContent = '-';
+      return;
+    }
+    // A protocol number: ASCII digits in every language, as DevTools shows it
+    value.textContent = String(status);
+    const tone = tones[HttpStatus.tone(status)];
+    if (tone) for (const element of [value, icon]) if (element) element.classList.add(tone);
+    FormatUtils.setTip(tile, FormatUtils.t('detectionHttpStatusFmt', 'HTTP status: {0}', status),
+      FormatUtils.t('detectionTipHttpStatus', 'The HTTP status code the page answered with when it was scanned. An error (4xx or 5xx) often means the request was blocked or challenged.'));
 };
 
 DetectionUI.formatExpiryRemaining = function(msRemaining) {
