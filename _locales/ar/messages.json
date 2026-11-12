@@ -282,7 +282,7 @@
     "message": "ستظهر النتائج هنا عند اكتمال الفحص."
   },
   "actionRemoveFromBlacklist": {
-    "message": "إزالة من القائمة السوداء"
+    "message": "إزالة من القائمة"
   },
   "statDetections": {
     "message": "الكشوفات"
@@ -537,7 +537,7 @@
     "message": "الأدوات"
   },
   "advancedSubtabHistory": {
-    "message": "السجل"
+    "message": "الالتقاطات"
   },
   "advancedFilterSite": {
     "message": "الموقع"
@@ -711,10 +711,10 @@
     "message": "أيام"
   },
   "blacklistedDomains": {
-    "message": "النطاقات المحظورة"
+    "message": "المواقع المتخطّاة"
   },
   "blacklistedDomainsDesc": {
-    "message": "النطاقات التي يتم فيها تخطي الكشف بالكامل"
+    "message": "لا يعمل الكشف أبدًا على هذه المواقع. كل إدخال هو اسم مضيف مطابق تمامًا: تظل نطاقاته الفرعية تُفحص."
   },
   "jsApiEvents": {
     "message": "أحداث JS API"
@@ -842,7 +842,7 @@
     "message": "مسح التخزين المؤقت"
   },
   "clearCacheConfirmMsg": {
-    "message": "سيؤدي هذا إلى إزالة بيانات الاكتشاف المخزَّنة مؤقتًا لهذا النطاق وتشغيل تحليل جديد."
+    "message": "سيؤدي هذا إلى إزالة نتيجة الكشف المحفوظة لهذه الصفحة (مع نطاق التخزين المؤقت «النطاق» أو «المسار» قد تشمل صفحات أخرى أيضًا). يُعاد فحص الصفحة عند إعادة تحميلها."
   },
   "clearCacheConfirmBtn": {
     "message": "مسح التخزين المؤقت"
@@ -860,28 +860,28 @@
     "message": "نطاق غير صالح"
   },
   "addBlacklistTitle": {
-    "message": "إضافة إلى القائمة السوداء"
+    "message": "تخطّي هذا الموقع"
   },
   "addBlacklistMsgFmt": {
-    "message": "سيتم استبعاد النطاق \"{0}\" من جميع عمليات الاكتشاف المستقبلية. يمكنك إزالته لاحقًا من الإعدادات."
+    "message": "لن يُفحص \"{0}\" من الآن فصاعدًا. يمكنك التراجع عن ذلك في الإعدادات ← الكشف ← المواقع المراد فحصها."
   },
   "addBlacklistBtn": {
-    "message": "إضافة إلى القائمة السوداء"
+    "message": "تخطّي هذا الموقع"
   },
   "alreadyBlacklistedFmt": {
-    "message": "النطاق \"{0}\" موجود بالفعل في القائمة السوداء"
+    "message": "\"{0}\" متخطّى بالفعل"
   },
   "addedToBlacklistFmt": {
-    "message": "تمت إضافة \"{0}\" إلى القائمة السوداء"
+    "message": "تمت إضافة \"{0}\" إلى المواقع المتخطّاة"
   },
   "failedAddBlacklistFmt": {
-    "message": "تعذَّرت الإضافة إلى القائمة السوداء: {0}"
+    "message": "تعذّر تخطّي هذا الموقع: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "تمت إزالة \"{0}\" من القائمة السوداء"
+    "message": "تمت إزالة \"{0}\" من المواقع المتخطّاة"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "تعذَّرت الإزالة من القائمة السوداء: {0}"
+    "message": "تعذّرت إزالة الموقع من المواقع المتخطّاة: {0}"
   },
   "historyNoDetections": {
     "message": "لا توجد اكتشافات"
@@ -914,10 +914,10 @@
     "message": "تعذَّر مسح التخزين المؤقت"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "تمت إضافة \"{0}\" إلى القائمة السوداء"
+    "message": "تمت إضافة \"{0}\" إلى المواقع المتخطّاة"
   },
   "notificationBlacklistFailed": {
-    "message": "تعذَّرت الإضافة إلى القائمة السوداء"
+    "message": "تعذّر تخطّي هذا الموقع"
   },
   "notificationHistoryItemDeleted": {
     "message": "تم حذف عنصر السجل"
@@ -989,7 +989,7 @@
     "message": "تعذَّر الحصول على URL الصفحة الحالية"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} موجود بالفعل في القائمة السوداء"
+    "message": "{0} متخطّى بالفعل"
   },
   "failedAddDomainFmt": {
     "message": "تعذَّرت إضافة النطاق: {0}"
@@ -1418,7 +1418,7 @@
     "message": "إعدادات التخزين المؤقت"
   },
   "settingsCardSkipDomains": {
-    "message": "تخطي النطاقات"
+    "message": "تخطّي هذه المواقع"
   },
   "settingsAddCurrentPage": {
     "message": "إضافة الصفحة الحالية"
@@ -1517,13 +1517,13 @@
     "message": "مثال على الاستخدام"
   },
   "detectionDisabledForDomain": {
-    "message": "تم تعطيل الاكتشاف لهذا النطاق"
+    "message": "تم إيقاف الكشف مؤقتًا: أنت تتخطّى هذا الموقع"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "إزالة من القائمة السوداء"
+    "message": "فحص هذا الموقع مجددًا"
   },
   "detectionBlacklistHint": {
-    "message": "أو انتقل إلى الإعدادات ← الاكتشاف ← النطاقات المحظورة للإدارة."
+    "message": "أو انتقل إلى الإعدادات ← الكشف ← المواقع المراد فحصها لإدارة القائمة."
   },
   "detectionNoDetectionsDesc": {
     "message": "لم يُعثر على أي إشارات مطابِقة لمكافحة البوتات أو CAPTCHA أو بصمة الجهاز في هذه الصفحة."
@@ -1541,7 +1541,7 @@
     "message": "تعذّر قراءة الإعدادات — تم إلغاء العملية"
   },
   "failedRemoveBlacklist": {
-    "message": "فشل الإزالة من القائمة السوداء"
+    "message": "تعذّرت إزالة الموقع من المواقع المتخطّاة"
   },
   "pasteConfirmTitle": {
     "message": "رفع الاكتشافات؟"
@@ -1562,7 +1562,7 @@
     "message": "نسخ النظرة العامة"
   },
   "detectionTitleBlockDomain": {
-    "message": "حظر هذا النطاق"
+    "message": "تخطّي هذا الموقع"
   },
   "detectionStatSite": {
     "message": "الموقع"
@@ -1589,7 +1589,7 @@
     "message": "من"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "هذا النطاق محظور"
+    "message": "هذا الموقع متخطّى"
   },
   "detectionModalConfidence": {
     "message": "درجة الثقة"
@@ -1858,7 +1858,7 @@
     "message": "أنظمة الحماية المدعومة"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "عرض سجل الالتقاطات ({0})"
+    "message": "عرض الالتقاطات ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "خطافات JavaScript"
@@ -3100,7 +3100,7 @@
     "message": "لا"
   },
   "advHcaptchaNoHistory": {
-    "message": "لا يوجد سجل التقاط بعد"
+    "message": "لا توجد التقاطات بعد"
   },
   "advHcaptchaNotAvailable": {
     "message": "غير متاح"
@@ -3289,10 +3289,10 @@
     "message": "غير متاح"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "تم مسح سجل التقاطات {0}"
+    "message": "تم مسح التقاطات {0}"
   },
   "advPanelFailedClearHistory": {
-    "message": "تعذَّر مسح السجل"
+    "message": "تعذَّر مسح الالتقاطات"
   },
   "rulesUiNewDetectorName": {
     "message": "كاشف جديد"
@@ -3550,16 +3550,16 @@
     "message": "خطأ: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "لا توجد نطاقات في القائمة السوداء"
+    "message": "لا توجد مواقع متخطّاة"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "لا توجد نطاقات تطابق بحثك"
+    "message": "لا توجد مواقع تطابق بحثك"
   },
   "settingsUiChecking": {
     "message": "جارٍ التحقق..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "يجب أن يكون حد السجل بين 0 (غير محدود) و10000"
+    "message": "يجب أن يكون حد السجل عددًا صحيحًا من 0 إلى 10000 (القيمة 0 تحتفظ بما يصل إلى 1000 إدخال)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "يجب أن تكون مدة التخزين المؤقت بين 1 و{0} ({1})"
@@ -6790,6 +6790,15 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "سطر واحد"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "الصفحات التي تتشارك نتيجة محفوظة واحدة. النطاق: كل صفحات الموقع. المسار: العنوان نفسه أيًّا كان الاستعلام. URL كامل: العنوان المطابق تمامًا فقط."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "يضيف تاريخ فحص كل صفحة إلى تصديرات CSV والنص العادي وMarkdown. تتضمّنه تصديرات JSON دائمًا."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "يسجّل الصفحة في السجل أيضًا عندما يُعاد استخدام نتيجتها من ذاكرة التخزين المؤقت بدلًا من فحص جديد."
   },
   "detectionStrongToggle": {
     "message": "قوية (≥80%)"

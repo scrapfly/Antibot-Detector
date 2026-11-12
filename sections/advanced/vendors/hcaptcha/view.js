@@ -96,7 +96,7 @@ HCaptchaAdvanced.prototype.displayVersionModal = function(data) {
      */
 HCaptchaAdvanced.prototype.renderCaptureHistoryItems = function(historyItems) {
         if (!historyItems || historyItems.length === 0) {
-            return `<div style="padding: 20px; text-align: center; color: var(--text-secondary);">${FormatUtils.escapeHtml(hcaptchaText('advHcaptchaNoHistory', 'No capture history yet'))}</div>`;
+            return `<div style="padding: 20px; text-align: center; color: var(--text-secondary);">${FormatUtils.escapeHtml(hcaptchaText('advHcaptchaNoHistory', 'No captures yet'))}</div>`;
         }
         const esc = FormatUtils.escapeHtml, attr = FormatUtils.escapeAttr;
         // Same card as the other vendors: site, time, version (+ Enterprise), site key

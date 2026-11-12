@@ -282,7 +282,7 @@
     "message": "Os resultados aparecerão aqui ao terminar."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Remover da lista negra"
+    "message": "Remover da lista"
   },
   "statDetections": {
     "message": "Detecções"
@@ -537,7 +537,7 @@
     "message": "Ferramentas"
   },
   "advancedSubtabHistory": {
-    "message": "Histórico"
+    "message": "Capturas"
   },
   "advancedFilterSite": {
     "message": "Site"
@@ -711,10 +711,10 @@
     "message": "Dias"
   },
   "blacklistedDomains": {
-    "message": "Domínios na lista negra"
+    "message": "Sites ignorados"
   },
   "blacklistedDomainsDesc": {
-    "message": "Domínios onde a detecção é completamente ignorada"
+    "message": "A detecção nunca é executada nestes sites. Cada entrada é um nome de host exato: os subdomínios dele continuam sendo analisados."
   },
   "jsApiEvents": {
     "message": "Eventos da JS API"
@@ -842,7 +842,7 @@
     "message": "Limpar cache"
   },
   "clearCacheConfirmMsg": {
-    "message": "Isso removerá os dados de detecção em cache para este domínio e disparará uma nova análise."
+    "message": "Isso remove o resultado de detecção salvo desta página (com o escopo do cache Domínio ou Caminho, ele pode valer também para outras páginas). A página é analisada de novo quando você a recarrega."
   },
   "clearCacheConfirmBtn": {
     "message": "Limpar cache"
@@ -860,28 +860,28 @@
     "message": "Domínio inválido"
   },
   "addBlacklistTitle": {
-    "message": "Adicionar à lista de bloqueio"
+    "message": "Ignorar este site"
   },
   "addBlacklistMsgFmt": {
-    "message": "O domínio \"{0}\" será excluído de todas as detecções futuras. Você pode removê-lo depois em Configurações."
+    "message": "\"{0}\" não será mais analisado a partir de agora. Você pode desfazer isso em Configurações → Detecção → Sites para analisar."
   },
   "addBlacklistBtn": {
-    "message": "Adicionar à lista de bloqueio"
+    "message": "Ignorar este site"
   },
   "alreadyBlacklistedFmt": {
-    "message": "O domínio \"{0}\" já está na lista de bloqueio"
+    "message": "\"{0}\" já é ignorado"
   },
   "addedToBlacklistFmt": {
-    "message": "\"{0}\" adicionado à lista de bloqueio"
+    "message": "\"{0}\" adicionado aos sites ignorados"
   },
   "failedAddBlacklistFmt": {
-    "message": "Falha ao adicionar à lista de bloqueio: {0}"
+    "message": "Não foi possível ignorar este site: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "\"{0}\" removido da lista de bloqueio"
+    "message": "\"{0}\" removido dos sites ignorados"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Falha ao remover da lista de bloqueio: {0}"
+    "message": "Não foi possível remover o site dos sites ignorados: {0}"
   },
   "historyNoDetections": {
     "message": "Nenhuma detecção"
@@ -914,10 +914,10 @@
     "message": "Falha ao limpar o cache"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "\"{0}\" adicionado à lista de bloqueio"
+    "message": "\"{0}\" adicionado aos sites ignorados"
   },
   "notificationBlacklistFailed": {
-    "message": "Falha ao adicionar à lista de bloqueio"
+    "message": "Não foi possível ignorar este site"
   },
   "notificationHistoryItemDeleted": {
     "message": "Item do histórico excluído"
@@ -989,7 +989,7 @@
     "message": "Não foi possível obter a URL da página atual"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} já está na lista de bloqueio"
+    "message": "{0} já é ignorado"
   },
   "failedAddDomainFmt": {
     "message": "Falha ao adicionar domínio: {0}"
@@ -1418,7 +1418,7 @@
     "message": "Configurações de cache"
   },
   "settingsCardSkipDomains": {
-    "message": "Ignorar domínios"
+    "message": "Ignorar estes sites"
   },
   "settingsAddCurrentPage": {
     "message": "Adicionar página atual"
@@ -1517,13 +1517,13 @@
     "message": "Exemplo de uso"
   },
   "detectionDisabledForDomain": {
-    "message": "Detecção desativada para este domínio"
+    "message": "Detecção pausada: você ignora este site"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Remover da lista de bloqueio"
+    "message": "Analisar este site de novo"
   },
   "detectionBlacklistHint": {
-    "message": "Ou vá em Configurações → Detecção → Domínios bloqueados para gerenciar."
+    "message": "Ou vá em Configurações → Detecção → Sites para analisar para gerenciar a lista."
   },
   "detectionNoDetectionsDesc": {
     "message": "Nenhum sinal correspondente de anti-bot, CAPTCHA ou fingerprinting foi encontrado nesta página."
@@ -1541,7 +1541,7 @@
     "message": "Não foi possível ler as configurações — operação cancelada"
   },
   "failedRemoveBlacklist": {
-    "message": "Falha ao remover da lista negra"
+    "message": "Não foi possível remover o site dos sites ignorados"
   },
   "pasteConfirmTitle": {
     "message": "Enviar detecções?"
@@ -1562,7 +1562,7 @@
     "message": "Copiar visão geral"
   },
   "detectionTitleBlockDomain": {
-    "message": "Bloquear este domínio"
+    "message": "Ignorar este site"
   },
   "detectionStatSite": {
     "message": "Site"
@@ -1589,7 +1589,7 @@
     "message": "de"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Este domínio está na lista de bloqueio"
+    "message": "Este site é ignorado"
   },
   "detectionModalConfidence": {
     "message": "Confiança"
@@ -1858,7 +1858,7 @@
     "message": "Proteções compatíveis"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Ver histórico de capturas ({0})"
+    "message": "Ver capturas ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "Interceptadores de JavaScript"
@@ -3100,7 +3100,7 @@
     "message": "Não"
   },
   "advHcaptchaNoHistory": {
-    "message": "Ainda não há histórico de capturas"
+    "message": "Ainda não há capturas"
   },
   "advHcaptchaNotAvailable": {
     "message": "N/D"
@@ -3289,10 +3289,10 @@
     "message": "N/D"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "Histórico de capturas do {0} limpo"
+    "message": "Capturas do {0} limpas"
   },
   "advPanelFailedClearHistory": {
-    "message": "Falha ao limpar o histórico"
+    "message": "Falha ao limpar as capturas"
   },
   "rulesUiNewDetectorName": {
     "message": "Novo detector"
@@ -3550,16 +3550,16 @@
     "message": "Erro: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "Nenhum domínio na lista negra"
+    "message": "Nenhum site ignorado"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Nenhum domínio corresponde à sua pesquisa"
+    "message": "Nenhum site corresponde à sua pesquisa"
   },
   "settingsUiChecking": {
     "message": "Verificando..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "O limite do histórico deve estar entre 0 (ilimitado) e 10000"
+    "message": "O limite do histórico deve ser um número inteiro de 0 a 10000 (0 guarda até 1.000 entradas)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "A duração do cache deve estar entre 1 e {0} ({1})"
@@ -6790,6 +6790,15 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Uma linha"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Quais páginas compartilham um mesmo resultado salvo. Domínio: todas as páginas do site. Caminho: o mesmo endereço, qualquer que seja a consulta. URL completa: só o endereço exato."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Adiciona a data de análise de cada página às exportações em CSV, texto simples e Markdown. As exportações em JSON sempre a incluem."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Registra uma página no Histórico também quando o resultado dela é reutilizado do cache em vez de uma nova análise."
   },
   "detectionStrongToggle": {
     "message": "Forte (≥80%)"

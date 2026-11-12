@@ -282,7 +282,7 @@
     "message": "Hasil akan muncul di sini setelah siap."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Hapus dari daftar hitam"
+    "message": "Hapus dari daftar"
   },
   "statDetections": {
     "message": "Deteksi"
@@ -537,7 +537,7 @@
     "message": "Alat"
   },
   "advancedSubtabHistory": {
-    "message": "Riwayat"
+    "message": "Rekaman"
   },
   "advancedFilterSite": {
     "message": "Situs"
@@ -711,10 +711,10 @@
     "message": "Hari"
   },
   "blacklistedDomains": {
-    "message": "Domain di daftar hitam"
+    "message": "Situs yang dilewati"
   },
   "blacklistedDomainsDesc": {
-    "message": "Domain yang deteksinya dilewati sepenuhnya"
+    "message": "Deteksi tidak pernah berjalan di situs ini. Setiap entri adalah nama host yang persis: subdomainnya tetap dipindai."
   },
   "jsApiEvents": {
     "message": "Event JS API"
@@ -842,7 +842,7 @@
     "message": "Hapus cache"
   },
   "clearCacheConfirmMsg": {
-    "message": "Ini akan menghapus data deteksi yang di-cache untuk domain ini dan memicu analisis baru."
+    "message": "Ini menghapus hasil deteksi tersimpan untuk halaman ini (dengan cakupan cache Domain atau Path, hasil itu juga bisa berlaku untuk halaman lain). Halaman dipindai lagi saat Anda memuat ulang."
   },
   "clearCacheConfirmBtn": {
     "message": "Hapus cache"
@@ -860,28 +860,28 @@
     "message": "Domain tidak valid"
   },
   "addBlacklistTitle": {
-    "message": "Tambahkan ke daftar hitam"
+    "message": "Lewati situs ini"
   },
   "addBlacklistMsgFmt": {
-    "message": "Domain \"{0}\" akan dikecualikan dari semua deteksi berikutnya. Anda dapat menghapusnya nanti di Pengaturan."
+    "message": "\"{0}\" tidak akan dipindai lagi mulai sekarang. Anda dapat membatalkannya di Pengaturan → Deteksi → Situs yang dipindai."
   },
   "addBlacklistBtn": {
-    "message": "Tambahkan ke daftar hitam"
+    "message": "Lewati situs ini"
   },
   "alreadyBlacklistedFmt": {
-    "message": "Domain \"{0}\" sudah ada di daftar hitam"
+    "message": "\"{0}\" sudah dilewati"
   },
   "addedToBlacklistFmt": {
-    "message": "\"{0}\" ditambahkan ke daftar hitam"
+    "message": "\"{0}\" ditambahkan ke situs yang dilewati"
   },
   "failedAddBlacklistFmt": {
-    "message": "Gagal menambahkan ke daftar hitam: {0}"
+    "message": "Gagal melewati situs ini: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "\"{0}\" dihapus dari daftar hitam"
+    "message": "\"{0}\" dihapus dari situs yang dilewati"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Gagal menghapus dari daftar hitam: {0}"
+    "message": "Gagal menghapus situs dari situs yang dilewati: {0}"
   },
   "historyNoDetections": {
     "message": "Tidak ada deteksi"
@@ -914,10 +914,10 @@
     "message": "Gagal menghapus cache"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "\"{0}\" ditambahkan ke daftar hitam"
+    "message": "\"{0}\" ditambahkan ke situs yang dilewati"
   },
   "notificationBlacklistFailed": {
-    "message": "Gagal menambahkan ke daftar hitam"
+    "message": "Gagal melewati situs ini"
   },
   "notificationHistoryItemDeleted": {
     "message": "Item riwayat dihapus"
@@ -989,7 +989,7 @@
     "message": "Tidak dapat mengambil URL halaman saat ini"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} sudah ada di daftar hitam"
+    "message": "{0} sudah dilewati"
   },
   "failedAddDomainFmt": {
     "message": "Gagal menambahkan domain: {0}"
@@ -1418,7 +1418,7 @@
     "message": "Pengaturan cache"
   },
   "settingsCardSkipDomains": {
-    "message": "Lewati domain"
+    "message": "Lewati situs-situs ini"
   },
   "settingsAddCurrentPage": {
     "message": "Tambah halaman saat ini"
@@ -1517,13 +1517,13 @@
     "message": "Contoh penggunaan"
   },
   "detectionDisabledForDomain": {
-    "message": "Deteksi dinonaktifkan untuk domain ini"
+    "message": "Deteksi dijeda: Anda melewati situs ini"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Hapus dari daftar hitam"
+    "message": "Pindai situs ini lagi"
   },
   "detectionBlacklistHint": {
-    "message": "Atau buka Pengaturan → Deteksi → Domain di daftar hitam untuk mengelolanya."
+    "message": "Atau buka Pengaturan → Deteksi → Situs yang dipindai untuk mengelola daftar."
   },
   "detectionNoDetectionsDesc": {
     "message": "Tidak ditemukan sinyal anti-bot, CAPTCHA, atau fingerprinting yang cocok di halaman ini."
@@ -1541,7 +1541,7 @@
     "message": "Tidak dapat membaca pengaturan — operasi dibatalkan"
   },
   "failedRemoveBlacklist": {
-    "message": "Gagal menghapus dari daftar hitam"
+    "message": "Gagal menghapus situs dari situs yang dilewati"
   },
   "pasteConfirmTitle": {
     "message": "Unggah deteksi?"
@@ -1562,7 +1562,7 @@
     "message": "Salin ringkasan"
   },
   "detectionTitleBlockDomain": {
-    "message": "Blokir domain ini"
+    "message": "Lewati situs ini"
   },
   "detectionStatSite": {
     "message": "Situs"
@@ -1589,7 +1589,7 @@
     "message": "dari"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Domain ini masuk daftar hitam"
+    "message": "Situs ini dilewati"
   },
   "detectionModalConfidence": {
     "message": "Kepercayaan"
@@ -1858,7 +1858,7 @@
     "message": "Proteksi yang didukung"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Lihat riwayat rekaman ({0})"
+    "message": "Lihat rekaman ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "Hook JavaScript"
@@ -3100,7 +3100,7 @@
     "message": "Tidak"
   },
   "advHcaptchaNoHistory": {
-    "message": "Belum ada riwayat rekaman"
+    "message": "Belum ada rekaman"
   },
   "advHcaptchaNotAvailable": {
     "message": "T/A"
@@ -3289,10 +3289,10 @@
     "message": "T/A"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "Riwayat rekaman {0} dihapus"
+    "message": "Rekaman {0} dihapus"
   },
   "advPanelFailedClearHistory": {
-    "message": "Gagal menghapus riwayat"
+    "message": "Gagal menghapus rekaman"
   },
   "rulesUiNewDetectorName": {
     "message": "Detektor baru"
@@ -3550,16 +3550,16 @@
     "message": "Kesalahan: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "Tidak ada domain di daftar hitam"
+    "message": "Tidak ada situs yang dilewati"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Tidak ada domain yang cocok dengan pencarian Anda"
+    "message": "Tidak ada situs yang cocok dengan pencarian Anda"
   },
   "settingsUiChecking": {
     "message": "Memeriksa..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "Batas riwayat harus antara 0 (tanpa batas) dan 10000"
+    "message": "Batas riwayat harus berupa bilangan bulat dari 0 sampai 10000 (0 menyimpan hingga 1.000 entri)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "Durasi cache harus antara 1 dan {0} {1}"
@@ -6790,6 +6790,15 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Satu baris"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Halaman mana yang berbagi satu hasil tersimpan. Domain: setiap halaman situs. Path: alamat yang sama, apa pun query-nya. URL lengkap: hanya alamat yang persis sama."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Menambahkan tanggal pemindaian setiap halaman ke ekspor CSV, teks biasa, dan Markdown. Ekspor JSON selalu menyertakannya."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Tetap mencatat halaman di Riwayat saat hasilnya dipakai ulang dari cache, bukan dari pemindaian baru."
   },
   "detectionStrongToggle": {
     "message": "Kuat (≥80%)"

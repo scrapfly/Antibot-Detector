@@ -180,7 +180,7 @@ test('Resume saves the site, reloads the page and shows the scanning screen; not
     assert.equal(h.detection.viewedTabId, 7);
     assert.deepEqual([...h.detection.currentResults], []);
     assert.equal(h.engineCalls(), 0);
-    assert.deepEqual(h.toasts, [['success', 'Removed "example.test" from blacklist']]);
+    assert.deepEqual(h.toasts, [['success', 'Removed "example.test" from the skipped sites']]);
     assert.deepEqual(h.errors, []);
 });
 

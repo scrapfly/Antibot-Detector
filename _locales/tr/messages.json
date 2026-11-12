@@ -282,7 +282,7 @@
     "message": "Sonuçlar hazır olduğunda burada görünecek."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Kara listeden kaldır"
+    "message": "Listeden kaldır"
   },
   "statDetections": {
     "message": "Tespitler"
@@ -537,7 +537,7 @@
     "message": "Araçlar"
   },
   "advancedSubtabHistory": {
-    "message": "Geçmiş"
+    "message": "Yakalamalar"
   },
   "advancedFilterSite": {
     "message": "Site"
@@ -711,10 +711,10 @@
     "message": "Gün"
   },
   "blacklistedDomains": {
-    "message": "Kara listedeki alan adları"
+    "message": "Atlanan siteler"
   },
   "blacklistedDomainsDesc": {
-    "message": "Tespitin tamamen atlandığı alan adları"
+    "message": "Bu sitelerde tespit hiç çalışmaz. Her girdi tam bir ana makine adıdır: alt alan adları taranmaya devam eder."
   },
   "jsApiEvents": {
     "message": "JS API olayları"
@@ -842,7 +842,7 @@
     "message": "Önbelleği temizle"
   },
   "clearCacheConfirmMsg": {
-    "message": "Bu alan adının önbelleğe alınmış tespit verileri kaldırılacak ve yeni bir analiz başlatılacak."
+    "message": "Bu işlem bu sayfanın kayıtlı tespit sonucunu kaldırır (Alan adı veya Yol önbellek kapsamında bu sonuç başka sayfaları da kapsayabilir). Sayfa, yeniden yüklediğinizde tekrar taranır."
   },
   "clearCacheConfirmBtn": {
     "message": "Önbelleği temizle"
@@ -860,28 +860,28 @@
     "message": "Geçersiz alan adı"
   },
   "addBlacklistTitle": {
-    "message": "Kara listeye ekle"
+    "message": "Bu siteyi atla"
   },
   "addBlacklistMsgFmt": {
-    "message": "\"{0}\" alan adı gelecekteki tüm tespitlerin dışında tutulacak. Daha sonra Ayarlar'dan kaldırabilirsiniz."
+    "message": "\"{0}\" bundan sonra taranmayacak. Bunu Ayarlar → Tespit → Taranacak siteler bölümünden geri alabilirsiniz."
   },
   "addBlacklistBtn": {
-    "message": "Kara listeye ekle"
+    "message": "Bu siteyi atla"
   },
   "alreadyBlacklistedFmt": {
-    "message": "\"{0}\" alan adı zaten kara listede"
+    "message": "\"{0}\" zaten atlanıyor"
   },
   "addedToBlacklistFmt": {
-    "message": "\"{0}\" kara listeye eklendi"
+    "message": "\"{0}\" atlanan sitelere eklendi"
   },
   "failedAddBlacklistFmt": {
-    "message": "Kara listeye eklenemedi: {0}"
+    "message": "Bu site atlanamadı: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "\"{0}\" kara listeden kaldırıldı"
+    "message": "\"{0}\" atlanan sitelerden kaldırıldı"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Kara listeden kaldırılamadı: {0}"
+    "message": "Site atlanan sitelerden kaldırılamadı: {0}"
   },
   "historyNoDetections": {
     "message": "Tespit yok"
@@ -914,10 +914,10 @@
     "message": "Önbellek temizlenemedi"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "\"{0}\" kara listeye eklendi"
+    "message": "\"{0}\" atlanan sitelere eklendi"
   },
   "notificationBlacklistFailed": {
-    "message": "Kara listeye eklenemedi"
+    "message": "Bu site atlanamadı"
   },
   "notificationHistoryItemDeleted": {
     "message": "Geçmiş öğesi silindi"
@@ -989,7 +989,7 @@
     "message": "Geçerli sayfa URL'si alınamadı"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} zaten kara listede"
+    "message": "{0} zaten atlanıyor"
   },
   "failedAddDomainFmt": {
     "message": "Alan adı eklenemedi: {0}"
@@ -1418,7 +1418,7 @@
     "message": "Önbellek ayarları"
   },
   "settingsCardSkipDomains": {
-    "message": "Atlanan alan adları"
+    "message": "Bu siteleri atla"
   },
   "settingsAddCurrentPage": {
     "message": "Geçerli sayfayı ekle"
@@ -1517,13 +1517,13 @@
     "message": "Kullanım örneği"
   },
   "detectionDisabledForDomain": {
-    "message": "Bu alan adı için tespit devre dışı"
+    "message": "Tespit duraklatıldı: bu siteyi atlıyorsunuz"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Kara listeden kaldır"
+    "message": "Bu siteyi yeniden tara"
   },
   "detectionBlacklistHint": {
-    "message": "Veya yönetmek için Ayarlar → Tespit → Kara listedeki alan adları bölümüne gidin."
+    "message": "Veya listeyi yönetmek için Ayarlar → Tespit → Taranacak siteler bölümüne gidin."
   },
   "detectionNoDetectionsDesc": {
     "message": "Bu sayfada eşleşen anti-bot, CAPTCHA veya parmak izi sinyali bulunamadı."
@@ -1541,7 +1541,7 @@
     "message": "Ayarlar okunamadı — işlem iptal edildi"
   },
   "failedRemoveBlacklist": {
-    "message": "Kara listeden kaldırılamadı"
+    "message": "Site atlanan sitelerden kaldırılamadı"
   },
   "pasteConfirmTitle": {
     "message": "Tespitler yüklensin mi?"
@@ -1562,7 +1562,7 @@
     "message": "Genel bakışı kopyala"
   },
   "detectionTitleBlockDomain": {
-    "message": "Bu alan adını engelle"
+    "message": "Bu siteyi atla"
   },
   "detectionStatSite": {
     "message": "Site"
@@ -1589,7 +1589,7 @@
     "message": "/"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Bu alan adı kara listede"
+    "message": "Bu site atlanıyor"
   },
   "detectionModalConfidence": {
     "message": "Güven"
@@ -1858,7 +1858,7 @@
     "message": "Desteklenen korumalar"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Yakalama geçmişini görüntüle ({0})"
+    "message": "Yakalamaları görüntüle ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript hook'ları"
@@ -3100,7 +3100,7 @@
     "message": "Hayır"
   },
   "advHcaptchaNoHistory": {
-    "message": "Henüz yakalama geçmişi yok"
+    "message": "Henüz yakalama yok"
   },
   "advHcaptchaNotAvailable": {
     "message": "Yok"
@@ -3289,10 +3289,10 @@
     "message": "Yok"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "{0} yakalama geçmişi temizlendi"
+    "message": "{0} yakalamaları temizlendi"
   },
   "advPanelFailedClearHistory": {
-    "message": "Geçmiş temizlenemedi"
+    "message": "Yakalamalar temizlenemedi"
   },
   "rulesUiNewDetectorName": {
     "message": "Yeni dedektör"
@@ -3550,16 +3550,16 @@
     "message": "Hata: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "Kara listeye alınmış alan adı yok"
+    "message": "Atlanan site yok"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Aramanızla eşleşen alan adı yok"
+    "message": "Aramanızla eşleşen site yok"
   },
   "settingsUiChecking": {
     "message": "Kontrol ediliyor..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "Geçmiş sınırı 0 (sınırsız) ile 10000 arasında olmalıdır"
+    "message": "Geçmiş sınırı 0 ile 10000 arasında bir tam sayı olmalıdır (0 en fazla 1.000 girdi tutar)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "Önbellek süresi 1 ile {0} {1} arasında olmalıdır"
@@ -6790,6 +6790,15 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Tek satır"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Hangi sayfaların tek bir kayıtlı sonucu paylaştığı. Alan adı: sitenin her sayfası. Yol: sorgu ne olursa olsun aynı adres. Tam URL: yalnızca birebir aynı adres."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "CSV, düz metin ve Markdown dışa aktarımlarına her sayfanın tarama tarihini ekler. JSON dışa aktarımları bunu her zaman içerir."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Bir sayfanın sonucu yeni bir tarama yerine önbellekten yeniden kullanıldığında da sayfayı Geçmişe kaydeder."
   },
   "detectionStrongToggle": {
     "message": "Güçlü (≥%80)"

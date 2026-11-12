@@ -287,7 +287,7 @@
     "message": "Results will appear here when ready."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Remove from Blacklist"
+    "message": "Remove from the list"
   },
   "statDetections": {
     "message": "Detections"
@@ -549,7 +549,7 @@
     "message": "Tools"
   },
   "advancedSubtabHistory": {
-    "message": "History"
+    "message": "Captures"
   },
   "advancedFilterSite": {
     "message": "Site"
@@ -723,10 +723,10 @@
     "message": "Days"
   },
   "blacklistedDomains": {
-    "message": "Blacklisted Domains"
+    "message": "Skipped sites"
   },
   "blacklistedDomainsDesc": {
-    "message": "Domains where detection is completely skipped"
+    "message": "Detection never runs on these sites. Each entry is an exact host name: its subdomains are still scanned."
   },
   "jsApiEvents": {
     "message": "JS API Events"
@@ -854,7 +854,7 @@
     "message": "Clear Cache"
   },
   "clearCacheConfirmMsg": {
-    "message": "This will remove cached detection data for this domain and trigger a fresh analysis."
+    "message": "This removes the saved detection result for this page (with the Domain or Path cache scope, it may cover other pages too). The page is scanned again when you reload it."
   },
   "clearCacheConfirmBtn": {
     "message": "Clear Cache"
@@ -872,28 +872,28 @@
     "message": "Invalid domain"
   },
   "addBlacklistTitle": {
-    "message": "Add to Blacklist"
+    "message": "Skip this site"
   },
   "addBlacklistMsgFmt": {
-    "message": "Domain \"{0}\" will be excluded from all future detections. You can remove it later in Settings."
+    "message": "\"{0}\" will not be scanned from now on. You can undo this in Settings → Detection → Sites to scan."
   },
   "addBlacklistBtn": {
-    "message": "Add to Blacklist"
+    "message": "Skip this site"
   },
   "alreadyBlacklistedFmt": {
-    "message": "Domain \"{0}\" is already blacklisted"
+    "message": "\"{0}\" is already skipped"
   },
   "addedToBlacklistFmt": {
-    "message": "Added \"{0}\" to blacklist"
+    "message": "Added \"{0}\" to the skipped sites"
   },
   "failedAddBlacklistFmt": {
-    "message": "Failed to add to blacklist: {0}"
+    "message": "Could not skip this site: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "Removed \"{0}\" from blacklist"
+    "message": "Removed \"{0}\" from the skipped sites"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Failed to remove from blacklist: {0}"
+    "message": "Could not remove the site from the skipped sites: {0}"
   },
   "historyNoDetections": {
     "message": "No detections"
@@ -926,10 +926,10 @@
     "message": "Failed to clear cache"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "Added \"{0}\" to blacklist"
+    "message": "Added \"{0}\" to the skipped sites"
   },
   "notificationBlacklistFailed": {
-    "message": "Failed to add to blacklist"
+    "message": "Could not skip this site"
   },
   "notificationHistoryItemDeleted": {
     "message": "History item deleted"
@@ -1004,7 +1004,7 @@
     "message": "Could not get current page URL"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} is already blacklisted"
+    "message": "{0} is already skipped"
   },
   "failedAddDomainFmt": {
     "message": "Failed to add domain: {0}"
@@ -1441,7 +1441,7 @@
     "message": "Cache Settings"
   },
   "settingsCardSkipDomains": {
-    "message": "Skip Domains"
+    "message": "Skip these sites"
   },
   "settingsAddCurrentPage": {
     "message": "Add Current Page"
@@ -1544,13 +1544,13 @@
     "message": "Usage Example"
   },
   "detectionDisabledForDomain": {
-    "message": "Detection disabled for this domain"
+    "message": "Detection paused: you skip this site"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Remove from Blacklist"
+    "message": "Scan this site again"
   },
   "detectionBlacklistHint": {
-    "message": "Or go to Settings → Detection → Blacklisted Domains to manage."
+    "message": "Or go to Settings → Detection → Sites to scan to manage the list."
   },
   "detectionNoDetectionsDesc": {
     "message": "No matching antibot, CAPTCHA, or fingerprinting signals were found on this page."
@@ -1568,7 +1568,7 @@
     "message": "Could not read settings — operation cancelled"
   },
   "failedRemoveBlacklist": {
-    "message": "Failed to remove from blacklist"
+    "message": "Could not remove the site from the skipped sites"
   },
   "pasteConfirmTitle": {
     "message": "Upload detections?"
@@ -1589,7 +1589,7 @@
     "message": "Copy overview"
   },
   "detectionTitleBlockDomain": {
-    "message": "Block this domain"
+    "message": "Skip this site"
   },
   "detectionStatSite": {
     "message": "Site"
@@ -1617,7 +1617,7 @@
     "message": "of"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "This domain is blacklisted"
+    "message": "This site is skipped"
   },
   "detectionModalConfidence": {
     "message": "Confidence"
@@ -1886,7 +1886,7 @@
     "message": "Supported protections"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "View capture history ({0})"
+    "message": "View captures ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript hooks"
@@ -3247,7 +3247,7 @@
     "description": "Answer to a yes/no field (pairs with advCommonYes)"
   },
   "advHcaptchaNoHistory": {
-    "message": "No capture history yet",
+    "message": "No captures yet",
     "description": "Empty state"
   },
   "advHcaptchaNotAvailable": {
@@ -3484,11 +3484,11 @@
     "description": "Placeholder when a value is not available (N/A)"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "{0} capture history cleared",
+    "message": "{0} captures cleared",
     "description": "{0} = protection product name"
   },
   "advPanelFailedClearHistory": {
-    "message": "Failed to clear history"
+    "message": "Failed to clear captures"
   },
   "rulesUiNewDetectorName": {
     "message": "New detector",
@@ -3811,17 +3811,17 @@
     "description": "Browser alert shown only when the in-page notification UI is missing. {0} = error message"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "No domains blacklisted"
+    "message": "No skipped sites"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "No domains match your search"
+    "message": "No sites match your search"
   },
   "settingsUiChecking": {
     "message": "Checking...",
     "description": "Button label while checking for detector updates"
   },
   "settingsUiErrHistoryLimit": {
-    "message": "History limit must be between 0 (unlimited) and 10000",
+    "message": "History limit must be a whole number from 0 to 10000 (0 keeps up to 1,000 entries)",
     "description": "Validation error shown in the \"Invalid settings:\" toast"
   },
   "settingsUiErrCacheDurationFmt": {
@@ -7503,6 +7503,18 @@
   "detectionCopyMenuOneLine": {
     "message": "One line",
     "description": "Detection tab Copy menu item: the scan as a single line of text, like \"shop.example: Cloudflare 95%\""
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Which pages share one saved result. Domain: every page of the site. Path: the same address, whatever the query. Full URL: only the exact address.",
+    "description": "Settings → Detection → Cache Scope: what the three choices (Domain, Path, Full URL) share one saved result between"
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Adds each page's scan date to CSV, plain text and Markdown exports. JSON exports always include it.",
+    "description": "Settings → History → Include Timestamps: what the switch changes in History exports"
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Also records a page in History when its result is reused from the cache instead of a new scan.",
+    "description": "Settings → History → Save on Cache Hits: what the switch changes (a page whose result is reused from the cache)"
   },
   "detectionStrongToggle": {
     "message": "Strong (≥80%)",

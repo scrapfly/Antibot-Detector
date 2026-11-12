@@ -636,7 +636,7 @@ class Detection {
           }
         } catch (error) {
           Logger.error('UI', 'Failed to remove from blacklist:', error);
-          const removeErrMsg = (typeof I18n !== 'undefined') ? I18n.tr('failedRemoveBlacklist', 'Failed to remove from blacklist') : 'Failed to remove from blacklist';
+          const removeErrMsg = (typeof I18n !== 'undefined') ? I18n.tr('failedRemoveBlacklist', 'Could not remove the site from the skipped sites') : 'Could not remove the site from the skipped sites';
           NotificationHelper.error(removeErrMsg);
         }
       });

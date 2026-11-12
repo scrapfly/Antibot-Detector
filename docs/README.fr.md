@@ -171,7 +171,7 @@ Des outils pratiques pour les protections qu'utilise une page. Une protection ob
 | Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
-Les résultats et les captures sont conservés 30 minutes dans **Avancé → Historique**, où vous pouvez les filtrer par site, éditeur et outil, les rouvrir et les exporter.
+Les résultats et les captures sont conservés 30 minutes dans **Avancé → Captures**, où vous pouvez les filtrer par site, éditeur et outil, les rouvrir et les exporter.
 
 ### Paramètres
 

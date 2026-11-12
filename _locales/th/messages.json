@@ -282,7 +282,7 @@
     "message": "ผลลัพธ์จะแสดงที่นี่เมื่อพร้อม"
   },
   "actionRemoveFromBlacklist": {
-    "message": "นำออกจากบัญชีดำ"
+    "message": "นำออกจากรายการ"
   },
   "statDetections": {
     "message": "การตรวจจับ"
@@ -537,7 +537,7 @@
     "message": "เครื่องมือ"
   },
   "advancedSubtabHistory": {
-    "message": "ประวัติ"
+    "message": "ข้อมูลที่จับ"
   },
   "advancedFilterSite": {
     "message": "ไซต์"
@@ -711,10 +711,10 @@
     "message": "วัน"
   },
   "blacklistedDomains": {
-    "message": "โดเมนในบัญชีดำ"
+    "message": "ไซต์ที่ข้าม"
   },
   "blacklistedDomainsDesc": {
-    "message": "โดเมนที่ข้ามการตรวจจับทั้งหมด"
+    "message": "การตรวจจับจะไม่ทำงานบนไซต์เหล่านี้เลย แต่ละรายการคือชื่อโฮสต์ที่ตรงกันทุกตัวอักษร โดเมนย่อยของไซต์ยังถูกสแกนอยู่"
   },
   "jsApiEvents": {
     "message": "เหตุการณ์ JS API"
@@ -842,7 +842,7 @@
     "message": "ล้างแคช"
   },
   "clearCacheConfirmMsg": {
-    "message": "การดำเนินการนี้จะลบข้อมูลการตรวจจับที่แคชไว้ของโดเมนนี้ และเริ่มการวิเคราะห์ใหม่"
+    "message": "การดำเนินการนี้จะลบผลการตรวจจับที่บันทึกไว้ของหน้านี้ (เมื่อขอบเขตแคชเป็นโดเมนหรือพาธ ผลนี้อาจครอบคลุมหน้าอื่นด้วย) หน้านี้จะถูกสแกนอีกครั้งเมื่อคุณโหลดหน้าใหม่"
   },
   "clearCacheConfirmBtn": {
     "message": "ล้างแคช"
@@ -860,28 +860,28 @@
     "message": "โดเมนไม่ถูกต้อง"
   },
   "addBlacklistTitle": {
-    "message": "เพิ่มในบัญชีดำ"
+    "message": "ข้ามไซต์นี้"
   },
   "addBlacklistMsgFmt": {
-    "message": "โดเมน \"{0}\" จะถูกยกเว้นจากการตรวจจับทั้งหมดต่อจากนี้ คุณนำออกได้ภายหลังในการตั้งค่า"
+    "message": "จะไม่สแกน \"{0}\" อีกต่อไปนับจากนี้ คุณยกเลิกได้ที่ การตั้งค่า → การตรวจจับ → ไซต์ที่จะสแกน"
   },
   "addBlacklistBtn": {
-    "message": "เพิ่มในบัญชีดำ"
+    "message": "ข้ามไซต์นี้"
   },
   "alreadyBlacklistedFmt": {
-    "message": "โดเมน \"{0}\" อยู่ในบัญชีดำแล้ว"
+    "message": "\"{0}\" ถูกข้ามอยู่แล้ว"
   },
   "addedToBlacklistFmt": {
-    "message": "เพิ่ม \"{0}\" ในบัญชีดำแล้ว"
+    "message": "เพิ่ม \"{0}\" ในไซต์ที่ข้ามแล้ว"
   },
   "failedAddBlacklistFmt": {
-    "message": "เพิ่มในบัญชีดำไม่สำเร็จ: {0}"
+    "message": "ข้ามไซต์นี้ไม่สำเร็จ: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "นำ \"{0}\" ออกจากบัญชีดำแล้ว"
+    "message": "นำ \"{0}\" ออกจากไซต์ที่ข้ามแล้ว"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "นำออกจากบัญชีดำไม่สำเร็จ: {0}"
+    "message": "นำไซต์ออกจากไซต์ที่ข้ามไม่สำเร็จ: {0}"
   },
   "historyNoDetections": {
     "message": "ไม่มีการตรวจจับ"
@@ -914,10 +914,10 @@
     "message": "ล้างแคชไม่สำเร็จ"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "เพิ่ม \"{0}\" ในบัญชีดำแล้ว"
+    "message": "เพิ่ม \"{0}\" ในไซต์ที่ข้ามแล้ว"
   },
   "notificationBlacklistFailed": {
-    "message": "เพิ่มในบัญชีดำไม่สำเร็จ"
+    "message": "ข้ามไซต์นี้ไม่สำเร็จ"
   },
   "notificationHistoryItemDeleted": {
     "message": "ลบรายการประวัติแล้ว"
@@ -989,7 +989,7 @@
     "message": "ไม่สามารถรับ URL ของหน้าปัจจุบันได้"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} อยู่ในบัญชีดำแล้ว"
+    "message": "{0} ถูกข้ามอยู่แล้ว"
   },
   "failedAddDomainFmt": {
     "message": "เพิ่มโดเมนไม่สำเร็จ: {0}"
@@ -1418,7 +1418,7 @@
     "message": "การตั้งค่าแคช"
   },
   "settingsCardSkipDomains": {
-    "message": "โดเมนที่ข้าม"
+    "message": "ข้ามไซต์เหล่านี้"
   },
   "settingsAddCurrentPage": {
     "message": "เพิ่มหน้าปัจจุบัน"
@@ -1517,13 +1517,13 @@
     "message": "ตัวอย่างการใช้งาน"
   },
   "detectionDisabledForDomain": {
-    "message": "ปิดใช้การตรวจจับสำหรับโดเมนนี้"
+    "message": "หยุดการตรวจจับชั่วคราว: คุณข้ามไซต์นี้"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "นำออกจากบัญชีดำ"
+    "message": "สแกนไซต์นี้อีกครั้ง"
   },
   "detectionBlacklistHint": {
-    "message": "หรือไปที่ การตั้งค่า → การตรวจจับ → โดเมนในบัญชีดำ เพื่อจัดการ"
+    "message": "หรือไปที่ การตั้งค่า → การตรวจจับ → ไซต์ที่จะสแกน เพื่อจัดการรายการ"
   },
   "detectionNoDetectionsDesc": {
     "message": "ไม่พบสัญญาณ anti-bot, CAPTCHA หรือ fingerprinting ที่ตรงกันในหน้านี้"
@@ -1541,7 +1541,7 @@
     "message": "ไม่สามารถอ่านการตั้งค่าได้ — ยกเลิกการดำเนินการแล้ว"
   },
   "failedRemoveBlacklist": {
-    "message": "นำออกจากบัญชีดำไม่สำเร็จ"
+    "message": "นำไซต์ออกจากไซต์ที่ข้ามไม่สำเร็จ"
   },
   "pasteConfirmTitle": {
     "message": "อัปโหลดการตรวจจับหรือไม่"
@@ -1562,7 +1562,7 @@
     "message": "คัดลอกภาพรวม"
   },
   "detectionTitleBlockDomain": {
-    "message": "บล็อกโดเมนนี้"
+    "message": "ข้ามไซต์นี้"
   },
   "detectionStatSite": {
     "message": "ไซต์"
@@ -1589,7 +1589,7 @@
     "message": "จาก"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "โดเมนนี้อยู่ในบัญชีดำ"
+    "message": "ไซต์นี้ถูกข้าม"
   },
   "detectionModalConfidence": {
     "message": "ความมั่นใจ"
@@ -1858,7 +1858,7 @@
     "message": "ระบบป้องกันที่รองรับ"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "ดูประวัติการจับข้อมูล ({0})"
+    "message": "ดูข้อมูลที่จับ ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript hooks"
@@ -3100,7 +3100,7 @@
     "message": "ไม่ใช่"
   },
   "advHcaptchaNoHistory": {
-    "message": "ยังไม่มีประวัติการจับข้อมูล"
+    "message": "ยังไม่มีข้อมูลที่จับ"
   },
   "advHcaptchaNotAvailable": {
     "message": "ไม่มีข้อมูล"
@@ -3289,10 +3289,10 @@
     "message": "ไม่มีข้อมูล"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "ล้างประวัติการจับข้อมูลของ {0} แล้ว"
+    "message": "ล้างข้อมูลที่จับของ {0} แล้ว"
   },
   "advPanelFailedClearHistory": {
-    "message": "ล้างประวัติไม่สำเร็จ"
+    "message": "ล้างข้อมูลที่จับไม่สำเร็จ"
   },
   "rulesUiNewDetectorName": {
     "message": "ตัวตรวจจับใหม่"
@@ -3550,16 +3550,16 @@
     "message": "ข้อผิดพลาด: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "ไม่มีโดเมนในบัญชีดำ"
+    "message": "ไม่มีไซต์ที่ข้าม"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "ไม่มีโดเมนที่ตรงกับการค้นหา"
+    "message": "ไม่มีไซต์ที่ตรงกับการค้นหา"
   },
   "settingsUiChecking": {
     "message": "กำลังตรวจสอบ..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "ขีดจำกัดประวัติต้องอยู่ระหว่าง 0 (ไม่จำกัด) ถึง 10000"
+    "message": "ขีดจำกัดประวัติต้องเป็นจำนวนเต็มตั้งแต่ 0 ถึง 10000 (0 จะเก็บได้สูงสุด 1,000 รายการ)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "ระยะเวลาแคชต้องอยู่ระหว่าง 1 ถึง {0} {1}"
@@ -6790,6 +6790,15 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "หนึ่งบรรทัด"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "หน้าที่ใช้ผลที่บันทึกไว้ร่วมกันหนึ่งชุด โดเมน: ทุกหน้าของไซต์ พาธ: ที่อยู่เดียวกันไม่ว่าคิวรีจะเป็นอะไร URL แบบเต็ม: เฉพาะที่อยู่ที่ตรงกันทุกตัวอักษร"
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "เพิ่มวันที่สแกนของแต่ละหน้าในการส่งออก CSV ข้อความธรรมดา และ Markdown การส่งออก JSON มีข้อมูลนี้เสมอ"
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "บันทึกหน้าในประวัติด้วย เมื่อผลของหน้านั้นนำกลับมาใช้จากแคชแทนการสแกนใหม่"
   },
   "detectionStrongToggle": {
     "message": "หนักแน่น (≥80%)"

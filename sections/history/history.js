@@ -1621,9 +1621,9 @@ class History {
       }
 
       const confirmed = await NotificationHelper.confirm({
-        title: _tr('addBlacklistTitle', 'Add to Blacklist'),
-        message: _fmt('addBlacklistMsgFmt', `Domain "${domain}" will be excluded from all future detections. You can remove it later in Settings.`, domain),
-        confirmText: _tr('addBlacklistBtn', 'Add to Blacklist'),
+        title: _tr('addBlacklistTitle', 'Skip this site'),
+        message: _fmt('addBlacklistMsgFmt', `"${domain}" will not be scanned from now on. You can undo this in Settings → Detection → Sites to scan.`, domain),
+        confirmText: _tr('addBlacklistBtn', 'Skip this site'),
         cancelText: _tr('btnCancel', 'Cancel'),
         type: 'danger',
         emphasizeAction: true
@@ -1641,7 +1641,7 @@ class History {
       }
 
       if (settings.detection.blacklistedDomains.includes(domain)) {
-        NotificationHelper.info(_fmt('alreadyBlacklistedFmt', `Domain "${domain}" is already blacklisted`, domain));
+        NotificationHelper.info(_fmt('alreadyBlacklistedFmt', `"${domain}" is already skipped`, domain));
         return;
       }
 
@@ -1652,10 +1652,10 @@ class History {
         throw new Error('Failed to save settings');
       }
 
-      NotificationHelper.success(_fmt('notificationDomainBlacklistedFmt', `Added "${domain}" to blacklist`, domain));
+      NotificationHelper.success(_fmt('notificationDomainBlacklistedFmt', `Added "${domain}" to the skipped sites`, domain));
     } catch (error) {
       Logger.warn('UI', '[History] Blacklist add failed', error);
-      NotificationHelper.error(_tr('notificationBlacklistFailed', 'Failed to add to blacklist'));
+      NotificationHelper.error(_tr('notificationBlacklistFailed', 'Could not skip this site'));
     }
   }
 
@@ -2654,7 +2654,7 @@ class History {
   /**
    * Load HTML template into history tab
    */
-  /** The entry menu offers "Add to Blacklist" or "Scan this site", whichever list Settings → Detection → Sites to scan reads. */
+  /** The entry menu offers "Skip this site" or "Scan this site", whichever list Settings → Detection → Sites to scan reads. */
   syncScanModeMenu() {
     const mode = this.scanMode || 'blocklist';
     for (const element of document.querySelectorAll('#historyItemMenu [data-scan-mode-show]')) element.hidden = element.dataset.scanModeShow !== mode;
