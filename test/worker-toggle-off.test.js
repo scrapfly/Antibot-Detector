@@ -75,3 +75,27 @@ test('switching off stops the background work too: the watchlist check under way
   await on.send(true);
   assert.ok(!on.order.some(step => step.startsWith('watch-stop')));
 });
+
+test('switching off pauses a Bulk scan at once (after the watchlist stops, before the OFF badges); switching on lets it be resumed', async () => {
+  const withBoth = () => {
+    const h = harness();
+    h.context.HistoryWatch = { stop: (reason) => { h.order.push(`watch-stop:${reason}`); return true; } };
+    h.context.BulkScanRunner = {
+      hold: async (reason) => { h.order.push(`bulk-hold:${reason}`); return true; },
+      release: async (reason) => { h.order.push(`bulk-release:${reason}`); return true; }
+    };
+    return h;
+  };
+  const off = withBoth();
+  assert.equal((await off.send(false)).status, 'success');
+  assert.deepEqual(off.order, ['watch-stop:off', 'bulk-hold:off', 'toggle:false']);
+  const on = withBoth();
+  assert.equal((await on.send(true)).status, 'success');
+  // On again, the run held for it stops saying the extension is off; it waits for the person's Resume
+  assert.deepEqual(on.order, ['toggle:true', 'webhook-retries', 'bulk-release:off']);
+  // A Bulk scan that cannot be reached does not keep the switch from being answered
+  const broken = withBoth();
+  broken.context.BulkScanRunner.hold = async () => { throw new Error('session storage unavailable'); };
+  assert.equal((await broken.send(false)).status, 'success');
+  assert.deepEqual(broken.order, ['watch-stop:off', 'toggle:false']);
+});

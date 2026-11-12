@@ -373,7 +373,10 @@
       ? fmt('bulkMostSeenFmt', 'Most seen: {0}', seen.map(row => `\u2068${row.name} (${number(row.pages)})\u2069`).join(' · '))
       : '';
     byId('bulkRunMostSeen').hidden = !seen.length;
-    const reason = run.status === 'stopped' && run.reason && run.reason !== 'user' ? label(STOP_TEXT[run.reason], '') : '';
+    // Why the run stopped, or why it waits (paused because the extension was switched off); a stop or a pause the person chose
+    // needs no words
+    const said = run.status === 'stopped' || run.status === 'paused';
+    const reason = said && run.reason && run.reason !== 'user' ? label(STOP_TEXT[run.reason], '') : '';
     byId('bulkRunReason').textContent = reason;
     byId('bulkRunReason').hidden = !reason;
     const notes = [];

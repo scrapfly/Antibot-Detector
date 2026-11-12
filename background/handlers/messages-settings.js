@@ -22,8 +22,12 @@ function registerSettingsHandlers(registry, context) {
                         if (typeof stopBadgeSpinner === 'function') stopBadgeSpinner(tabId);
                     }
                     // Nor does background work go on. No page is scanned while the extension is off, so a background tab would only
-                    // wait out its time limit: the watchlist's check stops now, closing its tab, and opens no other page
+                    // wait out its time limit: the watchlist's check stops now and a Bulk scan pauses (its page waits again), each
+                    // closing its tab, and neither opens another page
                     if (typeof HistoryWatch !== 'undefined') HistoryWatch.stop('off');
+                    if (typeof BulkScanRunner !== 'undefined') {
+                        await BulkScanRunner.hold('off').catch((error) => Logger.warn('BACKGROUND', '[Background] Could not pause the Bulk scan:', error));
+                    }
                 }
                 await Settings.handleEnableToggle(enabled, {
                     DetectionEngineManager,
@@ -33,6 +37,10 @@ function registerSettingsHandlers(registry, context) {
                 // A held webhook delivery whose retry alarm went off while the extension was off is retried by nothing else:
                 // arm the next alarm now that it can send again
                 if (enabled !== false && typeof SettingsRuntime !== 'undefined') await SettingsRuntime._scheduleWebhookRetries();
+                // A Bulk scan paused when the extension went off no longer says so: it waits for the person's Resume
+                if (enabled !== false && typeof BulkScanRunner !== 'undefined') {
+                    await BulkScanRunner.release('off').catch((error) => Logger.warn('BACKGROUND', '[Background] Could not update the Bulk scan:', error));
+                }
 
                 sendResponse({ status: 'success' });
             } catch (error) {
