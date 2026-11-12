@@ -200,7 +200,7 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="detectorCategorySelect" data-i18n="ruleFieldCategory">Category</label>
-                <select id="detectorCategorySelect" class="form-select">
+                <select id="detectorCategorySelect" class="form-select ui-select">
                   <option value="antibot" data-i18n="categoryAntibot">Anti-Bot</option>
                   <option value="captcha" data-i18n="categoryCaptcha">Captcha</option>
                   <option value="fingerprint" data-i18n="categoryFingerprint">Fingerprint</option>
@@ -208,7 +208,7 @@
               </div>
               <div class="form-group">
                 <label class="form-label" for="detectorDifficultySelect" data-i18n="ruleFieldDifficulty">Difficulty</label>
-                <select id="detectorDifficultySelect" class="form-select">
+                <select id="detectorDifficultySelect" class="form-select ui-select">
                   <option value="Low" data-i18n="difficultyLow">Low</option>
                   <option value="Medium" data-i18n="difficultyMedium">Medium</option>
                   <option value="High" data-i18n="difficultyHigh">High</option>
@@ -415,7 +415,7 @@
                   <span class="setting-label" id="nameScopeLabel" data-i18n="rulesNameScopeLabel">Name Scope</span>
                   <p class="option-hint" data-i18n="rulesNameScopeHint">Where to check for name/field matches</p>
                 </div>
-                <select id="nameScope" class="scope-select" aria-labelledby="nameScopeLabel">
+                <select id="nameScope" class="scope-select ui-select" aria-labelledby="nameScopeLabel">
                   <button type="button" class="select-button"><selectedcontent></selectedcontent></button>
                   <option value="request" data-i18n="rulesScopeRequest"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg><span class="opt-label">Request</span></option>
                   <option value="response" data-i18n="rulesScopeResponse"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 7L7 17M16 17H7V8"/></svg><span class="opt-label">Response</span></option>
@@ -427,7 +427,7 @@
                   <span id="valueScopeLabel" class="setting-label" data-i18n="rulesValueScopeLabel">Value Scope</span>
                   <p class="option-hint" data-i18n="rulesValueScopeHint">Where to check for value matches</p>
                 </div>
-                <select id="valueScope" class="scope-select" aria-labelledby="valueScopeLabel">
+                <select id="valueScope" class="scope-select ui-select" aria-labelledby="valueScopeLabel">
                   <button type="button" class="select-button"><selectedcontent></selectedcontent></button>
                   <option value="request" data-i18n="rulesScopeRequest"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg><span class="opt-label">Request</span></option>
                   <option value="response" data-i18n="rulesScopeResponse"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 7L7 17M16 17H7V8"/></svg><span class="opt-label">Response</span></option>
@@ -455,7 +455,7 @@
                   <span id="textScopeLabel" class="setting-label" data-i18n="rulesUrlScopeLabel">URL Scope</span>
                   <p class="option-hint" data-i18n="rulesUiUrlScopeHint">Page = current URL | Scripts = page + scripts | All = all requests</p>
                 </div>
-                <select id="textScope" class="scope-select" aria-labelledby="textScopeLabel">
+                <select id="textScope" class="scope-select ui-select" aria-labelledby="textScopeLabel">
                   <button type="button" class="select-button"><selectedcontent></selectedcontent></button>
                   <option value="page_only" data-i18n="rulesUrlScopePageOnly"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span class="opt-label">Page</span></option>
                   <option value="page_and_scripts" data-i18n="rulesUrlScopeScripts"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4"/></svg><span class="opt-label">Scripts</span></option>
@@ -806,7 +806,7 @@
       <div id="windowConditionSection" class="rh-dock" hidden>
         <div class="rh-field">
           <label class="rh-field-label" for="windowConditionSelect" data-i18n="rhCondition">Condition</label>
-          <select id="windowConditionSelect" class="rh-select rh-select--plain"></select>
+          <select id="windowConditionSelect" class="rh-select rh-select--plain ui-select"></select>
         </div>
         <p id="windowRuleSentence" class="rh-sentence" role="status"></p>
         <div id="windowConditionStatus" class="rh-status is-invalid" role="alert" hidden></div>

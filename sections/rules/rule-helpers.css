@@ -236,7 +236,7 @@
 
 .rh-search-icon {
   position: absolute;
-  left: 10px;
+  inset-inline-start: 10px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--rh-text-dim);
@@ -246,7 +246,8 @@
 .rh-search-input {
   width: 100%;
   height: 32px;
-  padding: 0 10px 0 31px;
+  padding-block: 0;
+  padding-inline: 31px 10px;
   background: var(--rh-field-bg);
   border: 1px solid var(--rh-border);
   border-radius: 6px;
@@ -604,11 +605,9 @@
 .rh-select {
   width: 100%;
   height: 32px;
-  padding: 0 26px 0 10px;
+  /* The arrow and the room for it at the end are the shared .ui-select ones */
+  padding: 0 10px;
   background-color: var(--rh-field-bg);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1.2 1.5L5 5.3l3.8-3.8' fill='none' stroke='%23e0e0e0' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
   border: 1px solid var(--rh-border);
   border-radius: 6px;
   color: var(--rh-text);
