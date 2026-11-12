@@ -3825,6 +3825,9 @@
   "tipDifficultyManyFmt": {
     "message": "Augmentée par {0} protections ensemble"
   },
+  "tipDifficultyNoneCounted": {
+    "message": "Aucun anti-bot ni CAPTCHA trouvé à 50 % ou plus"
+  },
   "tipLastUpdated": {
     "message": "Mis à jour"
   },

@@ -3825,6 +3825,9 @@
   "tipDifficultyManyFmt": {
     "message": "{0} सुरक्षा प्रणालियों के साथ होने से बढ़ी"
   },
+  "tipDifficultyNoneCounted": {
+    "message": "50% या उससे अधिक पर कोई एंटी-बॉट या CAPTCHA नहीं मिला"
+  },
   "tipLastUpdated": {
     "message": "अपडेट किया गया"
   },

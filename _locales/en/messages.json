@@ -4091,6 +4091,10 @@
   "tipDifficultyManyFmt": {
     "message": "Raised by {0} protections together"
   },
+  "tipDifficultyNoneCounted": {
+    "message": "No anti-bot or CAPTCHA found at 50% or more",
+    "description": "Detection tab and History → the Difficulty tip, when the page has no anti-bot or CAPTCHA protection found at 50% confidence or more: only those set the page difficulty (fingerprinting and passing mentions of a vendor do not)"
+  },
   "tipLastUpdated": {
     "message": "Updated"
   },

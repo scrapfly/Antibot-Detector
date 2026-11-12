@@ -516,7 +516,7 @@ DetectionActions.buildDetectionsPasteContent = function(pageUrl) {
     }
 
     const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
-    const { difficulty } = this.getDifficultyInfo(detections, avgConfidence);
+    const { difficulty } = this.getDifficultyInfo(detections);
 
     // Per detection, emit method counts (cookie/header/url/...) — NOT the
     // matched values, which carry live secrets like __cf_bm / datadome tokens.

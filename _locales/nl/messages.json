@@ -3825,6 +3825,9 @@
   "tipDifficultyManyFmt": {
     "message": "Verhoogd door {0} beveiligingen samen"
   },
+  "tipDifficultyNoneCounted": {
+    "message": "Geen anti-bot of CAPTCHA gevonden met 50% of meer"
+  },
   "tipLastUpdated": {
     "message": "Bijgewerkt"
   },

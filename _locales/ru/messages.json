@@ -3825,6 +3825,9 @@
   "tipDifficultyManyFmt": {
     "message": "Повышена из-за {0} защит вместе"
   },
+  "tipDifficultyNoneCounted": {
+    "message": "Анти-бот или CAPTCHA с уверенностью от 50% не найдены"
+  },
   "tipLastUpdated": {
     "message": "Обновлено"
   },

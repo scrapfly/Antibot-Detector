@@ -627,8 +627,8 @@ DetectionUI.updateStats = function(detections) {
       ? Math.round(detections.reduce((sum, d) => sum + (d.confidence || 0), 0) / totalDetections)
       : 0;
 
-    // Determine difficulty level based on detections mix + confidence
-    const { difficulty } = this.getDifficultyInfo(detections, avgConfidence);
+    // The page difficulty: the anti-bot and CAPTCHA protections found at 50% or more (DetectionUtils.difficultyOf)
+    const { difficulty } = this.getDifficultyInfo(detections);
 
     // Update UI elements
     // Difficulty is computed as Low/Medium/High; show it in the UI language
@@ -1769,8 +1769,8 @@ DetectionUI.clearBadgeForEmptyState = async function() {
     }
 };
 
-DetectionUI.getDifficultyInfo = function(detections = [], avgConfidence = 0) {
-    return DetectionUtils.getDifficultyInfo(detections, avgConfidence);
+DetectionUI.getDifficultyInfo = function(detections = []) {
+    return DetectionUtils.getDifficultyInfo(detections);
 };
 
 if (typeof self !== 'undefined') {

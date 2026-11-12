@@ -3825,6 +3825,9 @@
   "tipDifficultyManyFmt": {
     "message": "رفعتها {0} أنظمة حماية معًا"
   },
+  "tipDifficultyNoneCounted": {
+    "message": "لم يُعثر على مكافحة روبوتات أو CAPTCHA بنسبة 50% أو أكثر"
+  },
   "tipLastUpdated": {
     "message": "حُدّث"
   },

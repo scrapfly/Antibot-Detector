@@ -75,7 +75,8 @@ test('per-domain difficulty in the summary follows the production levels of the 
     vm.runInContext(fs.readFileSync(require.resolve(file), 'utf8'), context);
   }
   const input = [
-    visit({ hostname: 'high.example', detections: [{ detector: { name: 'Custom fingerprint', category: 'fingerprint', difficulty: 'High' }, confidence: 40 }] }),
+    // A detector's own High difficulty sets the level once it is present (an anti-bot or CAPTCHA at 50% or more: DetectionUtils.difficultyOf)
+    visit({ hostname: 'high.example', detections: [{ detector: { name: 'Custom anti-bot', category: 'antibot', difficulty: 'High' }, confidence: 60 }] }),
     visit({ hostname: 'low.example', detections: [{ detector: { name: 'Custom captcha', category: 'captcha', difficulty: 'Low' }, confidence: 40 }] }),
     visit({ hostname: 'none.example', detections: [] }),
     visit({ hostname: 'high.example', detections: [{ name: 'Other', category: 'fingerprint', confidence: 10 }] })
