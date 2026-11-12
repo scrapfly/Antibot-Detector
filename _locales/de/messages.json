@@ -6790,5 +6790,23 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Eine Zeile"
+  },
+  "detectionStrongToggle": {
+    "message": "Stark (≥80 %)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Niedrige Schwierigkeit: lässt normalen Verkehr meist durch, und Anfragen mit realistischen Headern und Cookies kommen oft durch."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Mittlere Schwierigkeit: einfache HTTP-Clients werden oft herausgefordert; ein echter Browser mit stimmigen Einstellungen kommt meist durch."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Hohe Schwierigkeit: schwer zu überwinden. Prüft den Browser, sein Verhalten und das Netz, aus dem er kommt, und blockiert einfache HTTP-Clients."
+  },
+  "detectionModalWebsite": {
+    "message": "Website"
+  },
+  "detectionModalDocs": {
+    "message": "Erkennungsleitfaden"
   }
 }

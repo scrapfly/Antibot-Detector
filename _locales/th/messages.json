@@ -6790,5 +6790,23 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "หนึ่งบรรทัด"
+  },
+  "detectionStrongToggle": {
+    "message": "หนักแน่น (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "ความยากต่ำ: มักปล่อยให้การรับส่งข้อมูลทั่วไปผ่าน และคำขอที่มีเฮดเดอร์และคุกกี้สมจริงมักผ่านได้"
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "ความยากปานกลาง: ไคลเอนต์ HTTP ธรรมดามักถูกท้าทาย ส่วนเบราว์เซอร์จริงที่ตั้งค่าสอดคล้องกันมักผ่านได้"
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "ความยากสูง: ผ่านได้ยาก ตรวจสอบเบราว์เซอร์ พฤติกรรม และเครือข่ายต้นทาง และบล็อกไคลเอนต์ HTTP ธรรมดา"
+  },
+  "detectionModalWebsite": {
+    "message": "เว็บไซต์"
+  },
+  "detectionModalDocs": {
+    "message": "คู่มือการตรวจจับ"
   }
 }

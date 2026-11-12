@@ -6790,5 +6790,23 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Tek satır"
+  },
+  "detectionStrongToggle": {
+    "message": "Güçlü (≥%80)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Düşük zorluk: sıradan trafiğe genellikle izin verir; gerçekçi başlıklar ve çerezler içeren istekler çoğu zaman geçer."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Orta zorluk: basit HTTP istemcileri sık sık doğrulamaya takılır; tutarlı ayarlara sahip gerçek bir tarayıcı genellikle geçer."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Yüksek zorluk: aşılması zor. Tarayıcıyı, davranışını ve geldiği ağı denetler, basit HTTP istemcilerini engeller."
+  },
+  "detectionModalWebsite": {
+    "message": "Web sitesi"
+  },
+  "detectionModalDocs": {
+    "message": "Tespit rehberi"
   }
 }

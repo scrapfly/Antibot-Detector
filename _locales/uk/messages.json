@@ -6790,5 +6790,23 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Один рядок"
+  },
+  "detectionStrongToggle": {
+    "message": "Сильні (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Низька складність: звичайний трафік зазвичай пропускає, а запити з реалістичними заголовками та cookie часто проходять."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Середня складність: прості HTTP-клієнти часто отримують перевірку; справжній браузер з узгодженими налаштуваннями зазвичай проходить."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Висока складність: обійти важко. Перевіряє браузер, його поведінку та мережу, з якої він приходить, і блокує прості HTTP-клієнти."
+  },
+  "detectionModalWebsite": {
+    "message": "Сайт"
+  },
+  "detectionModalDocs": {
+    "message": "Посібник із виявлення"
   }
 }

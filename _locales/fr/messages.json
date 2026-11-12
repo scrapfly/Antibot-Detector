@@ -6790,5 +6790,23 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Une ligne"
+  },
+  "detectionStrongToggle": {
+    "message": "Solide (≥80 %)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Difficulté faible : laisse généralement passer le trafic ordinaire, et les requêtes aux en-têtes et cookies réalistes passent souvent."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Difficulté moyenne : les clients HTTP simples reçoivent souvent un défi ; un vrai navigateur aux réglages cohérents passe en général."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Difficulté élevée : difficile à franchir. Vérifie le navigateur, son comportement et le réseau d’où il vient, et bloque les clients HTTP simples."
+  },
+  "detectionModalWebsite": {
+    "message": "Site web"
+  },
+  "detectionModalDocs": {
+    "message": "Guide de détection"
   }
 }

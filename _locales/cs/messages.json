@@ -6790,5 +6790,23 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Jeden řádek"
+  },
+  "detectionStrongToggle": {
+    "message": "Silné (≥80 %)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Nízká obtížnost: běžný provoz obvykle propustí a požadavky s realistickými hlavičkami a cookies často projdou."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Střední obtížnost: prosté HTTP klienty často podrobí výzvě; skutečný prohlížeč s konzistentním nastavením obvykle projde."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Vysoká obtížnost: těžko se obchází. Kontroluje prohlížeč, jeho chování i síť, ze které přichází, a prosté HTTP klienty blokuje."
+  },
+  "detectionModalWebsite": {
+    "message": "Web"
+  },
+  "detectionModalDocs": {
+    "message": "Průvodce detekcí"
   }
 }

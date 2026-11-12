@@ -6790,5 +6790,23 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Một dòng"
+  },
+  "detectionStrongToggle": {
+    "message": "Mạnh (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Độ khó thấp: thường cho lưu lượng thông thường đi qua, và các yêu cầu có header và cookie thực tế thường vượt qua được."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Độ khó trung bình: các ứng dụng HTTP đơn giản thường bị thử thách; một trình duyệt thật với cài đặt nhất quán thường vượt qua được."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Độ khó cao: khó vượt qua. Kiểm tra trình duyệt, hành vi của nó và mạng mà nó đến từ đó, đồng thời chặn các ứng dụng HTTP đơn giản."
+  },
+  "detectionModalWebsite": {
+    "message": "Trang web"
+  },
+  "detectionModalDocs": {
+    "message": "Hướng dẫn phát hiện"
   }
 }

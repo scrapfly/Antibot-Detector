@@ -6790,5 +6790,23 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Satu baris"
+  },
+  "detectionStrongToggle": {
+    "message": "Kuat (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Kesulitan rendah: biasanya meloloskan lalu lintas biasa, dan permintaan dengan header serta cookie yang realistis sering lolos."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Kesulitan sedang: klien HTTP biasa sering mendapat tantangan; browser asli dengan pengaturan yang konsisten biasanya lolos."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Kesulitan tinggi: sulit dilewati. Memeriksa browser, perilakunya, dan jaringan asalnya, serta memblokir klien HTTP biasa."
+  },
+  "detectionModalWebsite": {
+    "message": "Situs web"
+  },
+  "detectionModalDocs": {
+    "message": "Panduan deteksi"
   }
 }

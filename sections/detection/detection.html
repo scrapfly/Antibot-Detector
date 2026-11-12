@@ -246,6 +246,8 @@
       <!-- Search sits in the summary card, under the stats -->
       <div class="search-container detection-search">
         <input type="text" id="detectionSearch" class="search-input" placeholder="Search detections..." data-i18n-placeholder="detectionSearchPlaceholder" aria-label="Search detections..." data-i18n-aria-label="detectionSearchPlaceholder">
+        <!-- Inside the search field, at its end: only the results with strong evidence (80% or more). Not a chip, so the row below keeps four -->
+        <button type="button" id="detectionStrongToggle" class="detection-strong-toggle" aria-pressed="false" data-i18n="detectionStrongToggle">Strong (≥80%)</button>
         <!-- Filter chips under the search: one per category (any of the chosen ones, combined with the search with AND) -->
         <div id="detectionFilters" class="detection-filters" role="group" aria-label="Filter detections" data-i18n-aria-label="detectionFiltersLabel">
           <button type="button" class="history-filter-chip" data-filter="antibot" data-category="antibot" aria-pressed="false">
@@ -392,6 +394,14 @@
             <h4 data-i18n="detectionModalDescription">Description</h4>
           </div>
           <p id="detectionModalDescription" class="detection-modal-description" data-i18n="detectionModalNoDescription">No description available.</p>
+          <!-- What the difficulty level means for this protection -->
+          <p id="detectionModalDifficultyNote" class="detection-modal-difficulty-note" dir="auto" hidden></p>
+          <!-- The vendor's site and the protection's page in the docs (from the detector's data; official detectors only), and its Advanced tools -->
+          <div id="detectionModalLinks" class="detection-modal-links" hidden>
+            <a id="detectionModalWebsite" class="detection-modal-link" hidden><span data-i18n="detectionModalWebsite">Website</span><svg class="detection-modal-link-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+            <a id="detectionModalDocs" class="detection-modal-link" hidden><span data-i18n="detectionModalDocs">Detection guide</span><svg class="detection-modal-link-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+            <button type="button" id="detectionModalOpenTools" class="detection-modal-link detection-modal-link--tools" hidden><span data-i18n="advancedToolsLoadTools">Open tools</span></button>
+          </div>
         </div>
         <div class="detection-modal-section" id="detectionModalCombinationsSection" hidden>
           <div class="detection-modal-section-header">

@@ -6790,5 +6790,23 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Eén regel"
+  },
+  "detectionStrongToggle": {
+    "message": "Sterk (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Lage moeilijkheid: laat gewoon verkeer meestal door, en verzoeken met realistische headers en cookies komen vaak door."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Gemiddelde moeilijkheid: eenvoudige HTTP-clients krijgen vaak een uitdaging; een echte browser met consistente instellingen komt meestal door."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Hoge moeilijkheid: moeilijk te passeren. Controleert de browser, zijn gedrag en het netwerk waar hij vandaan komt, en blokkeert eenvoudige HTTP-clients."
+  },
+  "detectionModalWebsite": {
+    "message": "Website"
+  },
+  "detectionModalDocs": {
+    "message": "Detectiegids"
   }
 }

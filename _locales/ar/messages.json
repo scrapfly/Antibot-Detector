@@ -6790,5 +6790,23 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "سطر واحد"
+  },
+  "detectionStrongToggle": {
+    "message": "قوية (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "صعوبة منخفضة: عادةً ما تسمح بمرور الحركة العادية، وغالبًا ما تمر الطلبات ذات الترويسات وملفات تعريف الارتباط الواقعية."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "صعوبة متوسطة: غالبًا ما تواجه عملاء HTTP البسيطة تحديًا، بينما يمر عادةً متصفح حقيقي بإعدادات متسقة."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "صعوبة عالية: يصعب تجاوزها. تفحص المتصفح وسلوكه والشبكة التي يأتي منها، وتحظر عملاء HTTP البسيطة."
+  },
+  "detectionModalWebsite": {
+    "message": "الموقع الإلكتروني"
+  },
+  "detectionModalDocs": {
+    "message": "دليل الكشف"
   }
 }
