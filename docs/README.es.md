@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector es una extensión gratuita de Chrome que muestra cómo se protege un sitio web del tráfico automatizado. Navega como siempre: el número del icono de la barra de herramientas indica cuántas protecciones usa la página, y el popup las enumera con su confianza, su dificultad y las señales que las delataron.
 
-Reconoce 88 tecnologías de serie: 44 sistemas anti-bot, 23 CAPTCHAs y 21 técnicas de fingerprinting del navegador. Cada detector es un archivo JSON sencillo que puedes leer, cambiar o ampliar, y las reglas nuevas llegan con cada versión de este repositorio, así que **Reglas → Actualizar** puede instalarlas antes de que Chrome actualice la propia extensión.
+Reconoce 94 tecnologías de serie: 49 sistemas anti-bot, 24 CAPTCHAs y 21 técnicas de fingerprinting del navegador. Cada detector es un archivo JSON sencillo que puedes leer, cambiar o ampliar, y las reglas nuevas llegan con cada versión de este repositorio, así que **Reglas → Actualizar** puede instalarlas antes de que Chrome actualice la propia extensión.
 
 La creamos en [Scrapfly](https://scrapfly.io) porque todo proyecto de scraping empieza con la misma pregunta: ¿qué protege esta página? Es igual de útil para ver cómo se ve desde fuera la protección anti-bot de tu propio sitio, o para investigación de seguridad.
 
@@ -92,7 +92,7 @@ Cuando una página carga, la extensión reúne lo que la página revela de sí m
 | Interceptores de JavaScript | Llamadas a APIs del navegador muy usadas para fingerprinting | `HTMLCanvasElement.prototype.toDataURL` |
 | Carga útil | Cuerpos de las peticiones POST, PUT y PATCH, opcionalmente filtrados por URL y método, y las respuestas de las URL que nombra una regla | `sensor_data` (Akamai), `"proofofwork":{"required":true` (OpenAI Sentinel) |
 
-**Confianza.** Cada regla tiene su propia confianza, y los detectores definen combinaciones de reglas que puntúan más juntas. Un script que solo menciona el nombre de un proveedor puntúa un 5–10 %; una señal que solo produce el producto de ese proveedor (su propio host de scripts, su propia cookie, su endpoint de desafío) es una prueba y puntúa 100 % por sí sola, igual que la integración completa de un proveedor (su script junto con su cookie, el marco de su widget o su petición de desafío). Las señales compartidas o genéricas se quedan entre el 15 y el 90 %. La puntuación de cada detector es la de su regla o combinación más fuerte. La página recibe además una dificultad (Baja, Media o Alta), que marca el color del distintivo de la barra de herramientas.
+**Confianza.** Cada regla tiene su propia confianza, y los detectores definen combinaciones de reglas que puntúan más juntas. Un script que solo menciona el nombre de un proveedor puntúa un 5–10 %; una señal que solo produce el producto de ese proveedor (su propio host de scripts, su propia cookie, su endpoint de desafío) es una prueba y puntúa 100 % por sí sola, igual que la integración completa de un proveedor (su script junto con su cookie, el marco de su widget o su petición de desafío). Las señales compartidas o genéricas se quedan entre el 15 y el 90 %. La puntuación de cada detector es la de su regla o combinación más fuerte. La página recibe además una dificultad (Baja, Media o Alta), que marca el color del distintivo de la barra de herramientas. Solo la fijan las protecciones anti-bot y CAPTCHA encontradas con un 50 % o más: el fingerprinting y un script que solo menciona a un proveedor no cuentan.
 
 **Fingerprinting.** Los interceptores de API se instalan antes de que se ejecuten los scripts de la propia página, y también cubren los iframes del mismo origen, donde a menudo se esconde el código de fingerprinting. Por defecto vigilan al menos 4 segundos, después hasta que la página lleva 2 segundos en calma, y 8 segundos como máximo.
 
@@ -105,18 +105,18 @@ Estas listas son los detectores que vienen con la extensión. Puedes desactivar 
 Cada sistema anti-bot tiene su propia página, con las cookies, cabeceras y scripts que lo delatan: [páginas de detección anti-bot](antibots/es/README.md).
 
 <details>
-<summary><b>Sistemas anti-bot (44)</b></summary>
+<summary><b>Sistemas anti-bot (49)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Azure WAF · Bunny Shield · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Google Cloud Armor · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · Signifyd · SiteGround SG-CAPTCHA · Sucuri WAF · Tencent Cloud EdgeOne · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHAs (23)</b></summary>
+<summary><b>CAPTCHAs (24)</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · EU CAPTCHA (Myra) · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 
@@ -175,7 +175,7 @@ Los resultados y las capturas se guardan 30 minutos en **Avanzado → Historial*
 
 ### Ajustes
 
-- **General:** idioma de la interfaz (22 idiomas; por defecto sigue al navegador), tema (Oscuro, Claro o Sistema), notificaciones, modo de depuración, actualizaciones programadas de detectores y los colores del distintivo, las categorías y las etiquetas.
+- **General:** idioma de la interfaz (22 idiomas; por defecto sigue al navegador), tema (Oscuro, Claro o Sistema), notificaciones, modo de depuración, actualizaciones programadas de detectores, qué cuenta el número de la barra de herramientas (todas las detecciones, o solo anti-bot y CAPTCHA) y los colores del distintivo, las categorías y las etiquetas.
 - **Detección:** duración y alcance de la caché, el orden de las categorías en los resultados, el límite de confianza de las herramientas avanzadas, qué sitios se analizan (todos salvo los que omitas, o solo los que elijas), eventos JS API, webhooks y enlaces para compartir.
 - **Historial:** qué se registra (pausar el Historial, omitir ventanas privadas, sitios ignorados, confianza mínima, omitir páginas solo con fingerprinting), cuántas entradas se guardan (hasta 10.000; 0 guarda las 1.000 más recientes), borrar entradas tras un número de días o al cerrar el navegador, omitir o actualizar análisis repetidos, avisos cuando cambian las protecciones de una página, el formato de exportación por defecto, un medidor de almacenamiento con su aviso y una copia de seguridad automática en tu carpeta de Descargas.
 
@@ -212,7 +212,7 @@ Como estos eventos llegan a la propia página, cualquier sitio que visites puede
 
 ### Webhooks
 
-Cuando un análisis encuentra protecciones, la extensión puede enviar los resultados a tu propio endpoint. Elige el método HTTP, añade cabeceras y escribe el cuerpo como una plantilla con variables como `<SITEURL>`, `<HOSTNAME>`, `<TITLE>`, `<DETECTIONS>`, `<DETECTION_COUNT>`, `<DETECTION_NAMES>` (las protecciones con su confianza, en una sola línea), `<CATEGORIES>` y `<TIMESTAMP>`. **Empezar con una plantilla** (Slack, Mattermost o Google Chat, Discord o una línea de texto sin formato) rellena el Content-Type y un mensaje de chat ya preparado. Los webhooks solo van a direcciones HTTPS en hosts públicos, vienen desactivados e incluyen un botón **Probar**. Configúralos en **Ajustes → Detección → Integración de webhook**.
+Cuando un análisis encuentra protecciones, la extensión puede enviar los resultados a tu propio endpoint. Elige el método HTTP, añade cabeceras y escribe el cuerpo como una plantilla con variables como `<SITEURL>`, `<HOSTNAME>`, `<TITLE>`, `<DETECTIONS>`, `<DETECTION_COUNT>`, `<DETECTION_NAMES>` (las protecciones con su confianza, en una sola línea), `<HTTP_STATUS>` (el código de estado HTTP de la página, como 403 en una página de bloqueo), `<CATEGORIES>` y `<TIMESTAMP>`. **Empezar con una plantilla** (Slack, Mattermost o Google Chat, Discord o una línea de texto sin formato) rellena el Content-Type y un mensaje de chat ya preparado. Los webhooks solo van a direcciones HTTPS en hosts públicos, vienen desactivados e incluyen un botón **Probar**. Configúralos en **Ajustes → Detección → Integración de webhook**.
 
 **Envíos recientes y reintentos.** **Ajustes → Detección → Webhook** enumera los últimos 20 intentos (la página, el estado y cuánto tardó; nunca una dirección, una cabecera ni una carga útil). Un envío fallido puede mandarse otra vez con **Reintentar**, y con **Reintentar envíos fallidos** activado (por defecto) la extensión también reintenta sola tras 1, 5 y 15 minutos cuando no hubo respuesta o el servidor respondió 408, 425, 429 o 5xx; un rechazo como 401, 403 o 404 espera a tu **Reintentar**. Para ello, los datos de página de un envío fallido se guardan en memoria durante una hora (20 como máximo), nunca en disco, y desaparecen al cerrar el navegador; un reintento vuelve a construir la petición con tus ajustes de webhook actuales, así que se usa una dirección o un secreto corregidos y no se guarda ninguna cabecera ni secreto con él.
 

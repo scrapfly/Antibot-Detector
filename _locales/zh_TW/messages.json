@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "瀏覽網站時，偵測歷史記錄會顯示在這裡。"
   },
+  "historyPausedNote": {
+    "message": "歷史記錄已暫停，掃描過的網頁不會被記錄。"
+  },
   "rulesUpdateTitle": {
     "message": "從最新的 Scrapfly 發行版本安裝規則更新"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "作者"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "徽章顏色"
   },
   "ruleSectionDetectionMethods": {
     "message": "偵測方法"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "已匯出 {0}"
   },
+  "rulesExportedFmt": {
+    "message": "已匯出 {0} 條規則"
+  },
   "failedImportDetectors": {
     "message": "無法匯入偵測器。請檢查檔案格式。"
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "已刪除「{0}」"
+  },
+  "ruleSavedFmt": {
+    "message": "已儲存「{0}」"
   },
   "failedClearDetectors": {
     "message": "無法清除偵測器"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "高"
   },
+  "settingsBadgeCountTitle": {
+    "message": "工具列數字"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "工具列圖示上的數字計算哪些項目。大多數網站都有指紋辨識；彈出視窗和歷史記錄仍會列出全部項目。"
+  },
+  "settingsBadgeCountAll": {
+    "message": "全部偵測結果"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "僅反機器人和 CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "啟用 JS API 事件"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "這會永久刪除此供應商所有已擷取的資料。"
-  },
-  "rulesColorPickerCancel": {
-    "message": "取消"
-  },
-  "rulesColorPickerOk": {
-    "message": "確定"
   },
   "rulesContentSearchScopeTitle": {
     "message": "內容搜尋範圍"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "變更偵測器圖示"
   },
-  "rulesUiCustomColor": {
-    "message": "自訂顏色"
-  },
   "iconPickerTitle": {
     "message": "選擇圖示"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "因 {0} 項防護同時存在而提高"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "未找到信賴度 50% 以上的反機器人或 CAPTCHA"
   },
   "tipLastUpdated": {
     "message": "更新時間"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "哪些網頁會重複使用這些快取結果，以及使用多久。"
+  },
+  "detectionStatHttpStatus": {
+    "message": "HTTP 狀態"
+  },
+  "detectionTipHttpStatus": {
+    "message": "掃描時頁面回傳的 HTTP 狀態碼。錯誤（4xx 或 5xx）通常表示請求遭到封鎖或被要求驗證。"
   },
   "tipCacheExpires": {
     "message": "到期時間"
@@ -5439,7 +5457,7 @@
     "message": "保留的備份數量"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "每次備份後，超出此數量的舊備份會從「下載」資料夾中刪除（分成多個檔案儲存的一次備份只算一份）。只會刪除此擴充功能儲存的備份檔案。全部保留時不會刪除任何內容。"
+    "message": "每次備份後，超出此數量的舊備份會從「下載」資料夾中刪除（分成多個檔案儲存的一次備份只算一份）。只會刪除此擴充功能儲存的備份檔案。全部保留時不會刪除任何內容。在 3.1.7 版之前建立的備份會一直保留，直到您自行刪除。"
   },
   "settingsHistoryBackupNow": {
     "message": "立即備份"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "上次檢查時擴充功能已關閉，因此未檢查任何項目。"
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "擴充功能已被關閉，因此上次檢查已中途停止。"
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "歷史記錄已被暫停，因此上次檢查已中途停止。"
+  },
   "settingsUiErrHistoryWatch": {
     "message": "監看功能必須是關閉、每天或每週"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "偵測數：{0} · 信賴度：{1}% · 難度：{2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP 狀態：{0}"
+  },
   "detectionMdColProtection": {
     "message": "防護"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "立即重新掃描"
+  },
+  "detectionFromPageFmt": {
+    "message": "來自 {0} 的掃描，{1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "自 {0} 以來的變更：{1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "自 {0} 以來無變更"
   },
   "rulesDuplicate": {
     "message": "建立副本"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "歷史記錄已暫停：網頁會被掃描，但不會被記錄。"
   },
+  "bulkFromHistoryFmt": {
+    "message": "來自歷史記錄的網頁：{0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "批次掃描正在進行，因此未加入歷史記錄中的網頁。"
+  },
   "bulkReadingSitemaps": {
     "message": "正在讀取網站地圖…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "偵測到的防護及其信賴度，以逗號分隔"
+  },
+  "webhookVarHttpStatus": {
+    "message": "頁面的 HTTP 狀態碼（未知時為 0）"
   },
   "historyCopyMarkdown": {
     "message": "複製為 Markdown"

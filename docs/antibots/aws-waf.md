@@ -2,7 +2,7 @@
 
 # AWS WAF bot protection: how to detect it (and what it means for scraping)
 
-AWS WAF is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a AWS WAF bypass, trying to detect AWS WAF on a site, or investigating web scraping blocked by AWS WAF, the first step is the same: confirm that AWS WAF is really what answers your requests. This page lists the 12 public signals that the Scrapfly Antibot Detector extension uses to recognise AWS WAF bot detection, how strongly each one points to it, and what that usually means for an automated client.
+AWS WAF is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a AWS WAF bypass, trying to detect AWS WAF on a site, or investigating web scraping blocked by AWS WAF, the first step is the same: confirm that AWS WAF is really what answers your requests. This page lists the 14 public signals that the Scrapfly Antibot Detector extension uses to recognise AWS WAF bot detection, how strongly each one points to it, and what that usually means for an automated client.
 
 ## What it is
 
@@ -12,7 +12,7 @@ Official site: [https://aws.amazon.com/waf/](https://aws.amazon.com/waf/)
 
 ## How to tell a site uses AWS WAF
 
-These signals are generated from the extension's own detection rules for `detect-aws-waf` (rule version 2.2.0, last updated 2026-11-09). A signal is only an indication: confidence is how sure the extension is when that one signal is seen. Signals marked "corroboration only" never count on their own, because other products can produce them too.
+These signals are generated from the extension's own detection rules for `detect-aws-waf` (rule version 2.3.0, last updated 2026-11-12). A signal is only an indication: confidence is how sure the extension is when that one signal is seen. Signals marked "corroboration only" never count on their own, because other products can produce them too.
 
 ### Cookies
 
@@ -21,6 +21,7 @@ Cookie names (and values, where one is matched) set on the page. Patterns are re
 | Signal | Confidence | What it indicates |
 | --- | --- | --- |
 | `^aws-waf-token$ = ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[A-Za-z0-9+/=_:-]{20,}` | 100% | AWS WAF token cookie set after a challenge |
+| `^aws-waf-token$` | 85% | AWS WAF token cookie by name; its value format is not documented |
 
 ### Response headers
 
@@ -37,9 +38,10 @@ Addresses of scripts, frames and requests the page loads. These are patterns mat
 
 | Signal | Confidence | What it indicates |
 | --- | --- | --- |
-| `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.token\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge\|captcha\|jsapi)\.js(?:[?#]\|$)` | 100% | Integration SDK from the regional token.awswaf.com host |
-| `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.token\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs\|verify\|telemetry\|voucher\|mp_verify)(?:[?#/]\|$)` | 100% | Any request to the regional token.awswaf.com host (inputs, verify, telemetry) |
+| `^https://(?:[a-z0-9-]+\.)+(?:token\|sdk)\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge\|captcha\|jsapi)\.js(?:[?#]\|$)` | 100% | Integration SDK from the regional token.awswaf.com host |
+| `^https://(?:[a-z0-9-]+\.)+(?:token\|sdk)\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs\|verify\|telemetry\|voucher\|mp_verify)(?:[?#/]\|$)` | 100% | Any request to the regional token.awswaf.com host (inputs, verify, telemetry) |
 | `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.captcha\.awswaf\.com/` | 100% | AWS WAF CAPTCHA host |
+| `^https://(?:[a-z0-9-]+\.)+awswaf\.com(?:[/?#:]\|$)` | 100% | Any request to an AWS WAF host (*.awswaf.com) |
 
 ### Page and script content
 
@@ -69,7 +71,7 @@ Some signals score higher together than alone. These combinations are what the e
 | --- | --- | --- |
 | Challenge response with its bootstrap | 100% | (AWS WAF challenge or captcha action header or AWS WAF challenge id header) and (Challenge page bootstrap object (gokuProps) or Challenge page bootstrap variable (window.gokuProps) or Integration SDK from the regional token.awswaf.com host) |
 | Integration SDK with token traffic or cookie | 100% | (Integration SDK from the regional token.awswaf.com host or AWS WAF Integration SDK object) and (AWS WAF token cookie set after a challenge or Any request to the regional token.awswaf.com host (inputs, verify, telemetry) or Token cookie domain list for the Integration SDK) |
-| Token cookie with SDK reference | 90% | AWS WAF token cookie set after a challenge and (Integration SDK namespace reference or Challenge page bootstrap variable (window.gokuProps) or Token cookie domain list for the Integration SDK) |
+| Token cookie with SDK reference | 90% | (AWS WAF token cookie set after a challenge or AWS WAF token cookie by name; its value format is not documented) and (Integration SDK namespace reference or Challenge page bootstrap variable (window.gokuProps) or Token cookie domain list for the Integration SDK) |
 
 ## Difficulty
 

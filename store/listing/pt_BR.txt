@@ -3,7 +3,7 @@ Veja como qualquer site se defende de bots. O detector anti-bot da Scrapfly most
 O que você vê
 • Um número no ícone da barra de ferramentas: quantas proteções a página usa.
 • Um cartão por proteção, com o nível de confiança, a dificuldade e os sinais que a revelaram: URLs, cookies, cabeçalhos, código e elementos da página, chamadas de API do navegador e corpos de requisições.
-• Inclui 88 detectores: 44 sistemas anti-bot, 23 CAPTCHAs e 21 técnicas de fingerprinting. Cada um é um arquivo JSON simples que você pode ler, editar ou ampliar.
+• Inclui 94 detectores: 49 sistemas anti-bot, 24 CAPTCHAs e 21 técnicas de fingerprinting. Cada um é um arquivo JSON simples que você pode ler, editar ou ampliar.
 
 Dentro do popup
 • Detecção: o que a página atual usa, com as evidências por trás de cada correspondência.

@@ -2,7 +2,7 @@
 
 # Proteção antibot Akamai Bot Manager: como detectar (e o que ela significa para o web scraping)
 
-Akamai Bot Manager é uma camada de proteção contra bots ou contra abuso que alguns sites colocam na frente de suas páginas. Se você procura como contornar o Akamai Bot Manager, quer detectar o Akamai Bot Manager em um site ou está investigando um web scraping bloqueado pelo Akamai Bot Manager, o primeiro passo é o mesmo: confirmar que é mesmo o Akamai Bot Manager que responde às suas requisições. Esta página lista os 19 sinais públicos que a extensão Scrapfly Antibot Detector usa para reconhecer a detecção de bots do Akamai Bot Manager, o quanto cada um aponta para ele e o que isso costuma significar para um cliente automatizado.
+Akamai Bot Manager é uma camada de proteção contra bots ou contra abuso que alguns sites colocam na frente de suas páginas. Se você procura como contornar o Akamai Bot Manager, quer detectar o Akamai Bot Manager em um site ou está investigando um web scraping bloqueado pelo Akamai Bot Manager, o primeiro passo é o mesmo: confirmar que é mesmo o Akamai Bot Manager que responde às suas requisições. Esta página lista os 20 sinais públicos que a extensão Scrapfly Antibot Detector usa para reconhecer a detecção de bots do Akamai Bot Manager, o quanto cada um aponta para ele e o que isso costuma significar para um cliente automatizado.
 
 ## O que é
 
@@ -12,7 +12,7 @@ Site oficial: [https://www.akamai.com/products/bot-manager](https://www.akamai.c
 
 ## Como saber se um site usa Akamai Bot Manager
 
-Estes sinais são gerados a partir das regras de detecção da própria extensão para `detect-akamai` (versão da regra 2.2.0, última atualização 2026-10-26). Um sinal é apenas um indício: a confiança indica o quanto a extensão tem certeza quando vê aquele sinal isolado. Os sinais marcados como "apenas corroboração" nunca contam por si sós, porque outros produtos também podem produzi-los.
+Estes sinais são gerados a partir das regras de detecção da própria extensão para `detect-akamai` (versão da regra 2.3.0, última atualização 2026-11-12). Um sinal é apenas um indício: a confiança indica o quanto a extensão tem certeza quando vê aquele sinal isolado. Os sinais marcados como "apenas corroboração" nunca contam por si sós, porque outros produtos também podem produzi-los.
 
 ### Cookies
 
@@ -23,7 +23,8 @@ Nomes de cookies (e valores, quando algum é comparado) definidos na página. Os
 | `_abck = ^[0-9A-F]{32}~-?[0-9]+~` | 100% | Bot Manager sensor cookie in its documented hash~state~token shape |
 | `bm_sz = ^[0-9A-F]{32}~` | 100% | Bot Manager session cookie (hash~token) |
 | `^ak_bmsc$ = ^[0-9A-F]{32}~0{3,}~` | 100% | Bot Manager edge session cookie |
-| `^bm_(?:mi\|sv\|s\|so\|lso)$` | 30% (apenas corroboração) | Other Bot Manager cookies (bm_mi, bm_sv, bm_s, bm_so); short names, corroboration only |
+| `^bm_(?:mi\|s\|so\|lso)$` | 30% (apenas corroboração) | Other Bot Manager cookies (bm_mi, bm_s, bm_so); short names, corroboration only |
+| `^bm_sv$` | 60% | Bot Manager cookie bm_sv, named in Akamai's cookie documentation |
 | `^sbsd(?:_o)?$` | 65% | SBSD challenge cookie |
 | `^(?:AKA_A2\|akavpau_[A-Za-z0-9_]+)$` | 15% (apenas corroboração) | Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own |
 | `^sec_cpt$ = ~[0-9]~` | 70% | sec_cpt cookie of the Bot Manager crypto challenge (state ~1~ open, ~3~ solved) |
@@ -81,12 +82,12 @@ Alguns sinais pontuam mais juntos do que sozinhos. A extensão também relata es
 
 | Combinação | Confiança | Requer |
 | --- | --- | --- |
-| Sensor cookie with session cookie | 90% | Bot Manager sensor cookie in its documented hash~state~token shape e (Bot Manager session cookie (hash~token) ou Bot Manager edge session cookie ou Other Bot Manager cookies (bm_mi, bm_sv, bm_s, bm_so); short names, corroboration only) |
+| Sensor cookie with session cookie | 90% | Bot Manager sensor cookie in its documented hash~state~token shape e (Bot Manager session cookie (hash~token) ou Bot Manager edge session cookie ou Other Bot Manager cookies (bm_mi, bm_s, bm_so); short names, corroboration only ou Bot Manager cookie bm_sv, named in Akamai's cookie documentation) |
 | Sensor script or object with a Bot Manager cookie | 100% | (First-party Bot Manager sensor script under /akam/<version>/ ou Bot Manager sensor object (bmak) ou Bot Manager sensor_data POST body) e (Bot Manager sensor cookie in its documented hash~state~token shape ou Bot Manager session cookie (hash~token) ou Bot Manager edge session cookie) |
 | Random-path first-party script on an Akamai edge with Bot Manager cookies | 85% | First-party script on a long random multi-segment path, the shape of the Bot Manager sensor script e Bot Manager sensor cookie in its documented hash~state~token shape e (Akamai edge server header; CDN delivery, not Bot Manager on its own ou Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own ou Bot Manager session cookie (hash~token)) |
 | SBSD challenge endpoint with its cookie | 90% | (SBSD challenge endpoint ou SBSD challenge POST to the sbsd endpoint) e SBSD challenge cookie |
-| Akamai edge with a Bot Manager sensor or session cookie | 80% | (Akamai edge server header; CDN delivery, not Bot Manager on its own ou Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own) e (Bot Manager sensor cookie in its documented hash~state~token shape ou Bot Manager session cookie (hash~token) ou Bot Manager edge session cookie) |
-| Bot Manager edge session with its companion cookie | 85% | Bot Manager edge session cookie e Other Bot Manager cookies (bm_mi, bm_sv, bm_s, bm_so); short names, corroboration only |
+| Akamai edge with a Bot Manager sensor or session cookie | 80% | (Akamai edge server header; CDN delivery, not Bot Manager on its own ou Akamai edge platform cookie (CDN or waiting room); not Bot Manager on its own) e (Bot Manager sensor cookie in its documented hash~state~token shape ou Bot Manager session cookie (hash~token) ou Bot Manager edge session cookie ou Bot Manager cookie bm_sv, named in Akamai's cookie documentation) |
+| Bot Manager edge session with its companion cookie | 85% | Bot Manager edge session cookie e (Other Bot Manager cookies (bm_mi, bm_s, bm_so); short names, corroboration only ou Bot Manager cookie bm_sv, named in Akamai's cookie documentation) |
 | Crypto challenge path with its sec_cpt or Bot Manager cookie | 95% | Bot Manager crypto challenge resource or verification under /_sec/cp_challenge/ e (sec_cpt cookie of the Bot Manager crypto challenge (state ~1~ open, ~3~ solved) ou Bot Manager sensor cookie in its documented hash~state~token shape ou Bot Manager session cookie (hash~token)) |
 
 ## Dificuldade

@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Der Erkennungsverlauf wird hier angezeigt, während du im Web surfst."
   },
+  "historyPausedNote": {
+    "message": "Der Verlauf ist pausiert, daher werden gescannte Seiten nicht gespeichert."
+  },
   "rulesUpdateTitle": {
     "message": "Regel-Updates aus dem neuesten Scrapfly-Release installieren"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "Autor"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "Badge-Farbe"
   },
   "ruleSectionDetectionMethods": {
     "message": "Erkennungsmethoden"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "{0} exportiert"
   },
+  "rulesExportedFmt": {
+    "message": "Exportierte Regeln: {0}"
+  },
   "failedImportDetectors": {
     "message": "Detektoren konnten nicht importiert werden. Bitte das Dateiformat prüfen."
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" gelöscht"
+  },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" gespeichert"
   },
   "failedClearDetectors": {
     "message": "Detektoren konnten nicht gelöscht werden"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "Hoch"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Zahl in der Symbolleiste"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Was die Zahl am Symbol in der Symbolleiste zählt. Fingerprinting läuft auf den meisten Websites; Popup und Verlauf zeigen weiterhin alles."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Jede Erkennung"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Nur Anti-Bot und CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "JS-API-Ereignisse aktivieren"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Dadurch werden alle erfassten Daten für diesen Anbieter dauerhaft gelöscht."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Abbrechen"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Inhalts-Suchbereich"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "Detektorsymbol ändern"
   },
-  "rulesUiCustomColor": {
-    "message": "Eigene Farbe"
-  },
   "iconPickerTitle": {
     "message": "Symbol auswählen"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Erhöht durch {0} Schutzsysteme zusammen"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Kein Anti-Bot oder CAPTCHA mit 50 % oder mehr gefunden"
   },
   "tipLastUpdated": {
     "message": "Aktualisiert"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "Welche Seiten diese zwischengespeicherten Ergebnisse wiederverwenden und wie lange."
+  },
+  "detectionStatHttpStatus": {
+    "message": "HTTP-Status"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Der HTTP-Statuscode, mit dem die Seite beim Scan geantwortet hat. Ein Fehler (4xx oder 5xx) bedeutet oft, dass die Anfrage blockiert oder mit einer Challenge beantwortet wurde."
   },
   "tipCacheExpires": {
     "message": "Läuft ab"
@@ -5439,7 +5457,7 @@
     "message": "Sicherungen behalten"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Nach jeder Sicherung werden ältere Sicherungen über dieser Anzahl aus deinem Downloads-Ordner gelöscht (eine in mehreren Teilen gespeicherte Sicherung zählt als eine). Entfernt werden nur Sicherungsdateien, die diese Erweiterung gespeichert hat. Wenn du alle behältst, wird nichts gelöscht."
+    "message": "Nach jeder Sicherung werden ältere Sicherungen über dieser Anzahl aus deinem Downloads-Ordner gelöscht (eine in mehreren Teilen gespeicherte Sicherung zählt als eine). Entfernt werden nur Sicherungsdateien, die diese Erweiterung gespeichert hat. Wenn du alle behältst, wird nichts gelöscht. Sicherungen, die vor Version 3.1.7 erstellt wurden, bleiben erhalten, bis du sie selbst löschst."
   },
   "settingsHistoryBackupNow": {
     "message": "Jetzt sichern"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "Bei der letzten Prüfung war die Erweiterung ausgeschaltet, daher wurde nichts geprüft."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Die letzte Prüfung wurde angehalten, weil die Erweiterung ausgeschaltet wurde."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Die letzte Prüfung wurde angehalten, weil der Verlauf pausiert wurde."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Die Überwachung muss aus, täglich oder wöchentlich sein"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "Erkennungen: {0} · Konfidenz: {1}% · Schwierigkeit: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP-Status: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Schutzmaßnahme"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "Jetzt erneut scannen"
+  },
+  "detectionFromPageFmt": {
+    "message": "Aus einem Scan von {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Geändert seit {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Keine Änderung seit {0}"
   },
   "rulesDuplicate": {
     "message": "Duplizieren"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "Der Verlauf ist pausiert: Die Seiten werden gescannt, aber nicht gespeichert."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Seiten aus dem Verlauf: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Ein Massenscan läuft gerade, daher wurden die Seiten aus dem Verlauf nicht hinzugefügt."
+  },
   "bulkReadingSitemaps": {
     "message": "Sitemaps werden gelesen…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Erkannte Schutzmaßnahmen mit ihrer Konfidenz, durch Kommas getrennt"
+  },
+  "webhookVarHttpStatus": {
+    "message": "HTTP-Statuscode der Seite (0, wenn unbekannt)"
   },
   "historyCopyMarkdown": {
     "message": "Als Markdown kopieren"

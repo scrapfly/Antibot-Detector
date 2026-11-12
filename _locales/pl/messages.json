@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Historia wykryć pojawi się tutaj podczas przeglądania stron internetowych."
   },
+  "historyPausedNote": {
+    "message": "Historia jest wstrzymana, więc zeskanowane strony nie są zapisywane."
+  },
   "rulesUpdateTitle": {
     "message": "Zainstaluj aktualizacje reguł z najnowszego wydania Scrapfly"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "Autor"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "Kolor plakietki"
   },
   "ruleSectionDetectionMethods": {
     "message": "Metody wykrywania"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "Wyeksportowano: {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Wyeksportowane reguły: {0}"
+  },
   "failedImportDetectors": {
     "message": "Nie udało się zaimportować detektorów. Sprawdź format pliku."
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "Usunięto „{0}”"
+  },
+  "ruleSavedFmt": {
+    "message": "Zapisano „{0}”"
   },
   "failedClearDetectors": {
     "message": "Nie udało się wyczyścić detektorów"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "Wysoka"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Liczba na pasku narzędzi"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Co liczy liczba na ikonie na pasku narzędzi. Fingerprinting działa na większości stron; okienko i Historia nadal pokazują wszystko."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Każde wykrycie"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Tylko anti-bot i CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Włącz zdarzenia JS API"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Spowoduje to trwałe usunięcie wszystkich przechwyconych danych dla tego dostawcy."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Anuluj"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Zakres wyszukiwania treści"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "Zmień ikonę detektora"
   },
-  "rulesUiCustomColor": {
-    "message": "Kolor niestandardowy"
-  },
   "iconPickerTitle": {
     "message": "Wybierz ikonę"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Podniesiona przez wspólne działanie ochron: {0}"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Nie znaleziono anti-bota ani CAPTCHA z pewnością 50% lub więcej"
   },
   "tipLastUpdated": {
     "message": "Zaktualizowano"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "Które strony ponownie używają tych wyników z pamięci podręcznej i jak długo."
+  },
+  "detectionStatHttpStatus": {
+    "message": "Status HTTP"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Kod statusu HTTP, którym strona odpowiedziała podczas skanowania. Błąd (4xx lub 5xx) często oznacza, że żądanie zostało zablokowane lub otrzymało wyzwanie."
   },
   "tipCacheExpires": {
     "message": "Wygasa"
@@ -5439,7 +5457,7 @@
     "message": "Kopie zapasowe do zachowania"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Po każdej kopii starsze kopie ponad tę liczbę są usuwane z folderu Pobrane (kopia zapisana w kilku częściach liczy się jako jedna). Usuwane są tylko pliki kopii zapisane przez to rozszerzenie. Jeśli zachowasz wszystkie, nic nie zostanie usunięte."
+    "message": "Po każdej kopii starsze kopie ponad tę liczbę są usuwane z folderu Pobrane (kopia zapisana w kilku częściach liczy się jako jedna). Usuwane są tylko pliki kopii zapisane przez to rozszerzenie. Jeśli zachowasz wszystkie, nic nie zostanie usunięte. Kopie utworzone przed wersją 3.1.7 pozostają, dopóki ich nie usuniesz."
   },
   "settingsHistoryBackupNow": {
     "message": "Utwórz kopię teraz"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "Podczas ostatniego sprawdzania rozszerzenie było wyłączone, więc nic nie zostało sprawdzone."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Ostatnie sprawdzanie zostało przerwane, ponieważ wyłączono rozszerzenie."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Ostatnie sprawdzanie zostało przerwane, ponieważ wstrzymano historię."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Lista obserwowanych musi być wyłączona, codzienna lub cotygodniowa"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "Wykrycia: {0} · Pewność: {1}% · Trudność: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "Status HTTP: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Ochrona"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "Skanuj ponownie teraz"
+  },
+  "detectionFromPageFmt": {
+    "message": "Ze skanu {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Zmiany od {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Bez zmian od {0}"
   },
   "rulesDuplicate": {
     "message": "Duplikuj"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "Historia jest wstrzymana: strony są skanowane, ale nie zapisywane."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Strony z historii: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Trwa skanowanie zbiorcze, więc strony z historii nie zostały dodane."
+  },
   "bulkReadingSitemaps": {
     "message": "Odczytywanie map witryn…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Wykryte zabezpieczenia z ich pewnością, rozdzielone przecinkami"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Kod statusu HTTP strony (0, gdy nieznany)"
   },
   "historyCopyMarkdown": {
     "message": "Kopiuj jako Markdown"

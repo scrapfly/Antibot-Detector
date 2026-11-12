@@ -7,6 +7,8 @@
     "logCollectorEnabled": false,
     "logCollectorMaxLogs": 5000,
 
+    "badgeCount": "all",
+
     "badgeColors": {
       "low": "#22c55e",
       "medium": "#f59e0b",

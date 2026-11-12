@@ -5,6 +5,51 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.8] - 2026-11-12
+
+### Added
+
+- Detection: results taken from another page of the site name that page and when it was scanned; a clean result shows when it was last checked; both offer Scan again now.
+- Detection: a line under the stats says what changed since the page's previous saved scan, with Compare scans and Watch for changes.
+- Detection shows the page's HTTP status beside Cache, amber or red for an error, which often means a block page.
+- Bulk scan shows each page's HTTP status ("Done · 403") and adds it to the CSV, JSON and Markdown exports; webhooks get an `<HTTP_STATUS>` variable.
+- Settings → General → Toolbar number: count every detection, or only anti-bot and CAPTCHA, so fingerprinting no longer inflates the number.
+- History's Select bar has Bulk scan: the selected pages open in Bulk scan, ready to start.
+- History says when it is paused, with a Resume button; j/k or the arrow keys move between entries, and the ⋯ menu opens Statistics.
+- Rules → Update: new detectors for Tencent Cloud EdgeOne, Bunny Shield, Signifyd, Azure WAF, Google Cloud Armor and Myra's EU CAPTCHA.
+
+### Changed
+
+- Faster scans on very large pages, with much less data sent from the page while scanning.
+
+### Removed
+
+- Rules editor: the Badge Color field, which never saved anything; badge and category colours are set in Settings.
+
+### Fixed
+
+- A script that only mentions a vendor, or fingerprinting alone, no longer makes a page High difficulty with a red badge.
+- Articles on Next.js, Remix, Nuxt and similar sites no longer show anti-bot and CAPTCHA cards for vendor names mentioned in their text.
+- Fingerprint cards no longer change between reloads on apps that change their own address as they start.
+- Cloudflare, DataDome, HUMAN, AWS WAF, Reblaze, Akamai, reCAPTCHA, hCaptcha, Turnstile and Arkose are recognised from more of the hosts, scripts and cookies their vendors document.
+- Navigator Fingerprint again scores typical fingerprinting scripts sensibly, up to 65%, since CPU and memory reads moved to the Hardware card.
+- Binance CAPTCHA is no longer reported on pages whose scripts merely use a common field name.
+- Rules: saving keeps the list on the rule's page with focus on its Edit button and confirms the save; both exports confirm how many rules they wrote.
+- Rules: the warning that a pattern is also in another rule now fires when only the description differs.
+- Rules editor: dropdown arrows are visible in the light theme, and the helpers' search icon sits on the correct side in Arabic.
+- Switching the extension off now stops a running watchlist check and pauses a Bulk scan at once; Settings and the Bulk page say why.
+- The toolbar icon's hover text no longer names an old result after Clear cache, or says a site is skipped after it is scanned again.
+- Settings → Log collector: Export saves a full log and says so when the file cannot be saved.
+- Backups to keep deletes older backups only after the new one is fully saved; a backup that fails to save is reported and deletes nothing.
+- Backups to keep no longer deletes newer backups after the browser's downloads list was cleared and the browser restarted; its note says pre-3.1.7 backups stay.
+- Resuming a paused site reloads the page, so its scan includes headers and cookies instead of saving an incomplete result.
+- A page left open while its site is turned back on is not scanned until it is reloaded; the popup offers Scan again.
+
+### Security
+
+- Skipped sites no longer have their headers, cookies or request bodies read into memory while you browse them.
+
+
 ## [3.1.7] - 2026-11-11
 
 ### Added
@@ -1124,6 +1169,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.1.8]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.7...v3.1.8
 [3.1.7]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.6...v3.1.7
 [3.1.6]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.5...v3.1.6
 [3.1.5]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.4...v3.1.5

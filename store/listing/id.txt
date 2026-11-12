@@ -3,7 +3,7 @@ Lihat cara situs web mana pun menangkal bot. Scrapfly detektor anti-bot menampil
 Yang Anda lihat
 • Angka pada ikon toolbar: jumlah proteksi yang dipakai halaman.
 • Satu kartu per proteksi, lengkap dengan tingkat kepercayaan, tingkat kesulitan, dan sinyal yang mengungkapnya: URL, cookie, header, kode halaman, elemen halaman, panggilan API browser, dan body permintaan.
-• 88 detektor bawaan: 44 sistem anti-bot, 23 CAPTCHA, dan 21 teknik fingerprinting. Masing-masing berupa file JSON biasa yang dapat Anda baca, edit, atau perluas.
+• 94 detektor bawaan: 49 sistem anti-bot, 24 CAPTCHA, dan 21 teknik fingerprinting. Masing-masing berupa file JSON biasa yang dapat Anda baca, edit, atau perluas.
 
 Di dalam popup
 • Deteksi: apa yang digunakan halaman saat ini, beserta bukti di balik setiap kecocokan.

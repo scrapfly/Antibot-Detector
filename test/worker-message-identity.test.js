@@ -174,7 +174,7 @@ function pageLoadHarness() {
     WorkerMessages: require('../modules/core/worker-messages.js'),
     Promise, Date, Map, Set, PatternCache: class {}, Constants: { DETECTION_SKIP_THRESHOLD: 2000 },
     Logger: new Proxy({}, { get: () => () => {} }),
-    DetectionUtils: { getBadgeColor: () => '#123456' },
+    DetectionUtils: { getBadgeColor: () => '#123456', badgeCount: require('../utils/detection-utils.js').badgeCount, readBadgeCountMode: require('../utils/detection-utils.js').readBadgeCountMode },
     UrlUtils: { getHostnameFromUrl: () => 'example.test', normalizeFaviconForStorage: value => value },
     setPausedIcon: () => {}, setBadgeTextColor: () => {},
     startBadgeSpinner: () => effects.push({ kind: 'spinner' }),
@@ -208,7 +208,7 @@ function pageLoadHarness() {
   context.Engine.getStoredDetection = async () => ({ detectionCount: 1, detectionResults: [{ detector: { name: 'Demo' } }] });
   const dependencies = {
     chrome: context.chrome, categoryManager: {}, recentDetectionRequests: new Map(),
-    CategoryManager: { getBadgeColors: async () => ({}) },
+    CategoryManager: { getBadgeColors: async () => ({}), getBadgeCountMode: async () => 'all' },
     Utils: { isUrlBlacklisted: async () => false, getHistorySettings: async () => ({ historyBypassCache: true }), shouldSkipDetection: () => false },
     HistoryRecorder: { shouldSaveToHistory: async () => true, saveDetectionToHistory: async () => effects.push({ kind: 'history' }) },
     isCurrentDocument: async () => state.current
@@ -377,6 +377,24 @@ test('concurrent hook batches keep finalization blocked until every admitted loo
   assert.equal(state.hooksData.get('detect-demo').matches.length, 1);
 });
 
+// The hook hits name the address the page had when they fired. An app that changes its own address at startup (an Angular
+// redirect from '' to /home, a script stripping ?utm_* with replaceState) sends them from the same document under the new one
+test('hook hits that fired just before the page changed its own address still count, as the window checks do', async () => {
+  const h = harness();
+  const state = h.begin();
+  const hit = (url, target) => ({ url, detection: { detectorId: 'detect-demo', hook: { target, confidence: 50 } } });
+  h.current.url = 'https://example.test/home'; // the same document, now under another address
+  await h.message('JS_HOOK_DETECTION_BATCH', { detections: [hit('https://example.test/', 'Navigator.a'), hit('https://example.test/home', 'Navigator.b')] },
+    h.sender(h.current.url))();
+  await flush();
+  assert.equal(h.ctx.detectionStates.get(7), state, 'the same scan');
+  assert.equal(state.url, 'https://example.test/home');
+  assert.deepEqual(Array.from(state.hooksData.get('detect-demo')?.matches || [], match => match.pattern), ['Navigator.a', 'Navigator.b']);
+  // Another document's hits never join it
+  await h.message('JS_HOOK_DETECTION_BATCH', { detections: [hit(h.current.url, 'Navigator.c')] }, h.sender(h.current.url, 'doc-old'))();
+  await flush();
+  assert.deepEqual(Array.from(state.hooksData.get('detect-demo').matches, match => match.pattern), ['Navigator.a', 'Navigator.b']);
+});
 
 for (const cached of [null, { detectionResults: [] }]) test(`GET_DETECTION_DATA exposes a failed scan as an error (${cached ? 'older clean cache' : 'no cache'})`, async () => {
   const h = harness();

@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Medium",
-  "lastUpdated": "2026-10-26",
-  "version": "2.3.0",
+  "lastUpdated": "2026-11-12",
+  "version": "2.4.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.cloudflare.com/products/bot-management/",
   "icon": "cloudflare_official.png",
@@ -38,6 +38,26 @@
         "valueCaseSensitive": true
       },
       {
+        "id": "cf-clearance-cookie-name",
+        "name": "^cf_clearance$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 85,
+        "description": "Challenge clearance cookie by name; its value is encrypted and its shape may change",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "cf-bm-cookie-name",
+        "name": "^__cf_bm$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 85,
+        "description": "Bot Management cookie by name; its value is encrypted and its shape may change",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
         "id": "cf-chl-rc-cookie",
         "name": "^cf_chl_rc_(?:i|ni|m)$",
         "nameRegex": true,
@@ -46,6 +66,37 @@
         "description": "Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m)",
         "nameScope": "all",
         "valueScope": "all"
+      },
+      {
+        "id": "cfseq-cookie",
+        "name": "^__cfseq(?:-[A-Za-z0-9_-]{1,64})?$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 90,
+        "description": "Sequence cookie of Cloudflare's bot products (__cfseq)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "cfuvid-cookie",
+        "name": "^_cfuvid$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 50,
+        "description": "Rate limiting cookie Cloudflare sets per visitor (_cfuvid); not bot management on its own",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "cfruid-cookie",
+        "name": "^__cfruid$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 40,
+        "description": "Cloudflare cookie that identifies trusted traffic (__cfruid); corroboration only",
+        "nameScope": "all",
+        "valueScope": "all",
+        "standalone": false
       }
     ],
     "header": [
@@ -78,7 +129,7 @@
         "id": "challenge-orchestrator",
         "confidence": 100,
         "description": "Challenge page orchestrator under /cdn-cgi/challenge-platform/",
-        "text": "^https?://(?!challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page|managed|jsch|captcha)/",
+        "text": "^https?://(?!(?:[a-z0-9-]+\\.)?challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page|managed|jsch|captcha)/",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -87,7 +138,7 @@
         "id": "bot-management-script",
         "confidence": 100,
         "description": "Bot Management JavaScript detections script",
-        "text": "^https?://(?!challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?scripts/jsd/(?:[0-9a-f]{6,20}/)?main\\.js(?:[?#]|$)",
+        "text": "^https?://(?!(?:[a-z0-9-]+\\.)?challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?scripts/jsd/(?:[0-9a-f]{6,20}/)?(?:main|api)\\.js(?:[?#]|$)",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -96,7 +147,25 @@
         "id": "jsd-oneshot",
         "confidence": 100,
         "description": "Bot Management JavaScript detections report (/cdn-cgi/challenge-platform/…/jsd/oneshot/)",
-        "text": "^https?://(?!challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?jsd/oneshot/",
+        "text": "^https?://(?!(?:[a-z0-9-]+\\.)?challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?jsd/oneshot/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "challenge-pat",
+        "confidence": 100,
+        "description": "Private Access Token request of a Cloudflare challenge (/cdn-cgi/challenge-platform/…/pat/)",
+        "text": "^https?://(?!(?:[a-z0-9-]+\\.)?challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?pat/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "challenge-platform-path",
+        "confidence": 80,
+        "description": "Any other request under /cdn-cgi/challenge-platform/, the path of Cloudflare's challenges and bot detections",
+        "text": "^https?://(?!(?:[a-z0-9-]+\\.)?challenges\\.(?:cloudflare\\.com|cloudflare-cn\\.com|fed\\.cloudflare\\.com)/)[^/?#]+/cdn-cgi/challenge-platform/",
         "textRegex": true,
         "textCaseSensitive": false,
         "textScope": "all"
@@ -131,6 +200,13 @@
         "condition": "typeof object",
         "confidence": 85,
         "description": "Challenge options object present on a Cloudflare challenge page"
+      },
+      {
+        "id": "jsd-execute-once",
+        "path": "cloudflare.jsd.executeOnce",
+        "condition": "typeof function",
+        "confidence": 70,
+        "description": "JavaScript detections function Cloudflare defines (window.cloudflare.jsd.executeOnce)"
       }
     ]
   },
@@ -255,6 +331,73 @@
               },
               {
                 "pattern": "chl-opt-object"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cloudflare-bot-cookie-zone",
+      "name": "Cloudflare bot cookie with a Cloudflare server header or visitor cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "cf-clearance-cookie-name"
+              },
+              {
+                "pattern": "cf-bm-cookie-name"
+              },
+              {
+                "pattern": "cfseq-cookie"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "cf-server-header"
+              },
+              {
+                "pattern": "cfruid-cookie"
+              },
+              {
+                "pattern": "cfuvid-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "cloudflare-platform-zone",
+      "name": "Challenge platform request or detections runtime on a Cloudflare zone",
+      "confidence": 90,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "challenge-platform-path"
+              },
+              {
+                "pattern": "jsd-execute-once"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "cf-server-header"
+              },
+              {
+                "pattern": "cf-bm-cookie-name"
+              },
+              {
+                "pattern": "cfuvid-cookie"
               }
             ]
           }

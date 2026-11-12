@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "История обнаружений появится здесь по мере просмотра сайтов."
   },
+  "historyPausedNote": {
+    "message": "История приостановлена, поэтому просканированные страницы не записываются."
+  },
   "rulesUpdateTitle": {
     "message": "Установить обновления правил из последнего релиза Scrapfly"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "Автор"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "Цвет значка"
   },
   "ruleSectionDetectionMethods": {
     "message": "Методы обнаружения"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "{0}: экспортировано"
   },
+  "rulesExportedFmt": {
+    "message": "Экспортировано правил: {0}"
+  },
   "failedImportDetectors": {
     "message": "Не удалось импортировать детекторы. Проверьте формат файла."
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "Удалён \"{0}\""
+  },
+  "ruleSavedFmt": {
+    "message": "Сохранено: \"{0}\""
   },
   "failedClearDetectors": {
     "message": "Не удалось удалить детекторы"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "Высокая"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Число на панели инструментов"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Что считает число на значке в панели инструментов. Фингерпринтинг работает на большинстве сайтов; во всплывающем окне и в истории по-прежнему видно всё."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Все обнаружения"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Только анти-бот и CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Включить события JS API"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Это безвозвратно удалит все захваченные данные для этого провайдера."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Отмена"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Область поиска по содержимому"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "Изменить значок детектора"
   },
-  "rulesUiCustomColor": {
-    "message": "Свой цвет"
-  },
   "iconPickerTitle": {
     "message": "Выбор значка"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Повышена из-за {0} защит вместе"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Анти-бот или CAPTCHA с уверенностью от 50% не найдены"
   },
   "tipLastUpdated": {
     "message": "Обновлено"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "Какие страницы повторно используют эти кэшированные результаты и как долго."
+  },
+  "detectionStatHttpStatus": {
+    "message": "HTTP-статус"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Код HTTP-статуса, которым страница ответила при сканировании. Ошибка (4xx или 5xx) часто означает, что запрос заблокировали или отправили на проверку."
   },
   "tipCacheExpires": {
     "message": "Истекает"
@@ -5439,7 +5457,7 @@
     "message": "Сколько копий хранить"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "После каждой копии более старые копии сверх этого числа удаляются из папки «Загрузки» (копия, сохранённая в нескольких частях, считается за одну). Удаляются только файлы копий, сохранённые этим расширением. Если хранить все копии, ничего не удаляется."
+    "message": "После каждой копии более старые копии сверх этого числа удаляются из папки «Загрузки» (копия, сохранённая в нескольких частях, считается за одну). Удаляются только файлы копий, сохранённые этим расширением. Если хранить все копии, ничего не удаляется. Копии, сделанные до версии 3.1.7, остаются, пока вы их не удалите."
   },
   "settingsHistoryBackupNow": {
     "message": "Создать копию сейчас"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "При последней проверке расширение было выключено, поэтому ничего не проверялось."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Последняя проверка остановлена, потому что расширение было выключено."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Последняя проверка остановлена, потому что история была приостановлена."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Слежение должно быть выключено или выполняться ежедневно либо еженедельно"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "Обнаружений: {0} · Уверенность: {1}% · Сложность: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP-статус: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Защита"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "Сканировать заново сейчас"
+  },
+  "detectionFromPageFmt": {
+    "message": "По сканированию {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Изменения с {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Без изменений с {0}"
   },
   "rulesDuplicate": {
     "message": "Дублировать"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "История приостановлена: страницы сканируются, но не записываются."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Страниц из истории: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Идёт массовое сканирование, поэтому страницы из истории не добавлены."
+  },
   "bulkReadingSitemaps": {
     "message": "Чтение карт сайта…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Обнаруженные защиты с уровнем уверенности через запятую"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Код HTTP-статуса страницы (0, если неизвестен)"
   },
   "historyCopyMarkdown": {
     "message": "Копировать как Markdown"

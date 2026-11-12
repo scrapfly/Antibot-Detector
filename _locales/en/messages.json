@@ -409,6 +409,10 @@
   "historyEmptyDescription": {
     "message": "Detection history will appear here as you browse websites."
   },
+  "historyPausedNote": {
+    "message": "History is paused, so scanned pages are not recorded.",
+    "description": "History tab: note above the list and in the empty state while History is paused (Settings → History, or the Privacy preset); next to a Resume button"
+  },
   "rulesUpdateTitle": {
     "message": "Install rule updates from the latest Scrapfly release"
   },
@@ -456,9 +460,6 @@
   },
   "ruleFieldAuthor": {
     "message": "Author"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "Badge Color"
   },
   "ruleSectionDetectionMethods": {
     "message": "Detection Methods"
@@ -1050,6 +1051,10 @@
   "detectorExportedFmt": {
     "message": "Exported {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Rules exported: {0}",
+    "description": "Message after Rules → Export or Export shown rules downloads a file. {0} is the number of rules in it; keep it after a label, for any number"
+  },
   "failedImportDetectors": {
     "message": "Failed to import detectors. Check the file format."
   },
@@ -1061,6 +1066,10 @@
   },
   "detectorDeletedFmt": {
     "message": "Deleted \"{0}\""
+  },
+  "ruleSavedFmt": {
+    "message": "Saved \"{0}\"",
+    "description": "Message after a rule is saved in the rule editor. {0} is the rule's name"
   },
   "failedClearDetectors": {
     "message": "Failed to clear detectors"
@@ -1461,6 +1470,22 @@
   "settingsBadgeColorHigh": {
     "message": "High"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Toolbar number",
+    "description": "Settings → General → title of the dropdown that chooses what the number on the toolbar icon (the badge) counts"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "What the number on the toolbar icon counts. Fingerprinting runs on most sites; the popup and History still list everything.",
+    "description": "Settings → General → Toolbar number: description. Fingerprinting detections fire on most sites, so they inflate the number; the popup and History are not affected"
+  },
+  "settingsBadgeCountAll": {
+    "message": "Every detection",
+    "description": "Settings → General → Toolbar number: option (default) that counts every detection on the page"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Anti-bot and CAPTCHA only",
+    "description": "Settings → General → Toolbar number: option that counts only anti-bot and CAPTCHA detections, not fingerprinting"
+  },
   "settingsEnableJsApi": {
     "message": "Enable JS API Events"
   },
@@ -1683,12 +1708,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "This will permanently delete all captured data for this provider."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Cancel"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Content Search Scope"
@@ -3499,10 +3518,6 @@
     "message": "Change detector icon",
     "description": "Screen-reader label of the detector icon button"
   },
-  "rulesUiCustomColor": {
-    "message": "Custom Color",
-    "description": "Tooltip of the rainbow swatch that opens the custom colour picker"
-  },
   "iconPickerTitle": {
     "message": "Choose Icon"
   },
@@ -4090,6 +4105,10 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Raised by {0} protections together"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "No anti-bot or CAPTCHA found at 50% or more",
+    "description": "Detection tab and History → the Difficulty tip, when the page has no anti-bot or CAPTCHA protection found at 50% confidence or more: only those set the page difficulty (fingerprinting and passing mentions of a vendor do not)"
   },
   "tipLastUpdated": {
     "message": "Updated"
@@ -4770,6 +4789,14 @@
   },
   "detectionTipCache": {
     "message": "Which pages reuse these cached results, and for how long."
+  },
+  "detectionStatHttpStatus": {
+    "message": "HTTP status",
+    "description": "Detection tab: label of the small tile beside Cache with the page's HTTP status code (200, 403, 503…)"
+  },
+  "detectionTipHttpStatus": {
+    "message": "The HTTP status code the page answered with when it was scanned. An error (4xx or 5xx) often means the request was blocked or challenged.",
+    "description": "Detection tab and Bulk scan: hover text of the page's HTTP status code"
   },
   "tipCacheExpires": {
     "message": "Expires"
@@ -5723,7 +5750,7 @@
     "message": "Backups to keep"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "After each backup, older backups beyond this number are deleted from your Downloads folder (a backup saved in several parts counts as one). Only backup files saved by this extension are removed. Keep all and nothing is deleted."
+    "message": "After each backup, older backups beyond this number are deleted from your Downloads folder (a backup saved in several parts counts as one). Only backup files saved by this extension are removed. Keep all and nothing is deleted. Backups made before version 3.1.7 stay until you delete them."
   },
   "settingsHistoryBackupNow": {
     "message": "Back up now",
@@ -6610,6 +6637,14 @@
     "message": "The last check found the extension switched off, so nothing was checked.",
     "description": "The watchlist line in Settings for a check that found the extension switched off with its main toggle (a past event: it may be on again), and the error after Check now"
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "The last check stopped because the extension was switched off.",
+    "description": "The watchlist line in Settings → History, and the error after Check now, for a check that stopped part way because the extension was switched off with its main toggle (a past event: it may be on again)"
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "The last check stopped because History was paused.",
+    "description": "The watchlist line in Settings → History, and the error after Check now, for a check that stopped part way because History was paused (a paused History is not written to)"
+  },
   "settingsUiErrHistoryWatch": {
     "message": "The watchlist must be off, daily or weekly",
     "description": "Error when the watchlist setting is not one of the offered choices"
@@ -6666,6 +6701,10 @@
     "message": "Detections: {0} · Confidence: {1}% · Difficulty: {2}",
     "description": "Summary line of the copied Markdown. {0} = number of protections, {1} = average confidence (a number), {2} = difficulty (Low, Medium, High…)"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP status: {0}",
+    "description": "The page's HTTP status in a tile's hover title and the copied Markdown summary. {0} = the status code (a number such as 403)"
+  },
   "detectionMdColProtection": {
     "message": "Protection",
     "description": "Column heading in the copied Markdown table: the name of the anti-bot, CAPTCHA or fingerprinting system"
@@ -6721,6 +6760,18 @@
   "historyScanAgain": {
     "message": "Scan again now",
     "description": "History entry menu and details window: clears the page's saved result and scans the page again (reloads the tab that shows it, or opens it in a new tab)"
+  },
+  "detectionFromPageFmt": {
+    "message": "From a scan of {0}, {1}",
+    "description": "Detection tab, under the site's name: the results shown were found on another page of the same site (the Domain cache scope). {0} = that page's path, like /login; {1} = how long ago, like 3h ago"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Changed since {0}: {1}",
+    "description": "Detection tab, under the stats: History's scans of this page differ. {0} = the date of the earlier scan; {1} = the protections added and removed, like +DataDome −Kasada"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "No change since {0}",
+    "description": "Detection tab, under the stats: History's latest scan of this page found the same protections as the earlier one. {0} = the date of the earlier scan"
   },
   "rulesDuplicate": {
     "message": "Duplicate",
@@ -7362,6 +7413,14 @@
     "message": "History is paused, so the pages are scanned but not recorded.",
     "description": "Bulk scan: notice when History is paused"
   },
+  "bulkFromHistoryFmt": {
+    "message": "Pages from History: {0}",
+    "description": "Bulk scan: notice when the list was filled from History's Select bar ({0} = count)"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "A bulk scan is in progress, so the pages from History were not added.",
+    "description": "Bulk scan: notice when History's Select bar sent pages while a run is going on, so the list was left as it is"
+  },
   "bulkReadingSitemaps": {
     "message": "Reading sitemaps…",
     "description": "Bulk scan: while the sitemaps of the list are fetched"
@@ -7396,6 +7455,10 @@
   },
   "webhookVarDetectionNames": {
     "message": "Detected protections with their confidence, comma-separated"
+  },
+  "webhookVarHttpStatus": {
+    "message": "HTTP status code of the page (0 when not known)",
+    "description": "Settings → Detection → Webhook: description of the <HTTP_STATUS> template variable"
   },
   "historyCopyMarkdown": {
     "message": "Copy as Markdown",

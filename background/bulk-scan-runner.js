@@ -10,6 +10,11 @@
  * A worker that stops in the middle of a run (Chrome restarts it, the extension is updated) loses the loop: when it
  * starts again, the run it finds in session storage is marked stopped (BulkScan.recover), never left "running" (a paused run stays paused: Resume starts a loop again), and
  * the scan tab it left open is closed (BackgroundTabScan.closeLeftoverTabs).
+ *
+ * Switching the extension off pauses the run (hold('off'), from the switch itself; the switch is also read before every page):
+ * no page is scanned while it is off, so the page being scanned goes back to waiting and its tab closes at once, and nothing
+ * else opens. Switched on again, the run no longer says why it waits (release) and Resume goes on with it; Resume while the
+ * extension is still off leaves it paused.
  */
 const BulkScanRunner = {
     STATE_KEY: 'session_bulk_scan',
@@ -185,8 +190,9 @@ const BulkScanRunner = {
         // Stop may come during any of the awaits below: the token tells the scan not to open (or to close) its tab
         const token = { cancelled: false };
         this._token = token;
+        // Switched off: no page can be scanned. The run waits, with the reason, and Resume goes on once the extension is on
         if (!await this.extensionOn()) {
-            BulkScan.stop(run, 'off');
+            BulkScan.hold(run, 'off');
             await this.save();
             return;
         }
@@ -211,13 +217,19 @@ const BulkScanRunner = {
         await this.save();
         const outcome = await BackgroundTabScan.scan(item.url, { windowId, timeoutMs: run.timeoutSec * 1000, owner: this.OWNER, token });
         this._token = null;
-        // Stopped meanwhile: the page went back to waiting with the rest
+        // Stopped, or held because the extension was switched off, meanwhile: the page went back to waiting with the rest
         if (run.status === 'stopped' || this._run !== run || item.status !== 'scanning') return;
+        // Never scanned because the extension is off (it went off as the tab was about to open, or while the page was open with no
+        // word to the worker): that is no failure of the page. It waits again, and the run with it
+        if (!outcome.ok && (outcome.error === 'off' || !await this.extensionOn())) {
+            if (this._run === run && item.status === 'scanning' && BulkScan.hold(run, 'off')) await this.save();
+            return;
+        }
         if (outcome.ok && outcome.excluded) {
             BulkScan.skip(run, index, 'scope');
         } else if (outcome.ok) {
             const summary = BulkScan.summarize(outcome.results, (results) => DetectionUtils.getDifficultyLevel(results));
-            BulkScan.finish(run, index, { ...summary, finalUrl: outcome.url });
+            BulkScan.finish(run, index, { ...summary, finalUrl: outcome.url, httpStatus: outcome.httpStatus });
         } else {
             BulkScan.fail(run, index, outcome.error === 'timeout' || outcome.error === 'load' ? outcome.error : 'error');
         }
@@ -233,10 +245,37 @@ const BulkScanRunner = {
 
     async resume() {
         await this.ready();
+        if (!this._run || this._run.status !== 'paused') return false;
+        // Switched off, no page can be scanned: the run stays paused, and says why
+        if (!await this.extensionOn()) {
+            await this.hold('off');
+            return false;
+        }
         if (!BulkScan.resume(this._run)) return false;
         await this.save();
         if (this._wake) this._wake();
         else this._startLoop(); // paused by a worker that is gone: nothing waits, so a new loop takes it on
+        return true;
+    },
+
+    /**
+     * The extension was switched off (background/handlers/messages-settings.js): the run pauses now. Its page being scanned goes
+     * back to waiting and the tab closes at once (no page is scanned while the extension is off, so it would only wait out its
+     * time limit and be listed as failed); nothing else opens. The run says why it waits until release() or Resume.
+     */
+    async hold(reason = 'off') {
+        await this.ready();
+        if (!BulkScan.hold(this._run, reason)) return false;
+        await this.save();
+        if (this._token) BackgroundTabScan.cancel(this._token);
+        return true;
+    },
+
+    /** Switched on again: a run held for that no longer says so; it stays paused until the person resumes it. */
+    async release(reason = 'off') {
+        await this.ready();
+        if (!BulkScan.release(this._run, reason)) return false;
+        await this.save();
         return true;
     },
 
@@ -272,7 +311,12 @@ const BulkScanRunner = {
         };
         registry[WorkerMessages.BULK_SCAN_START] = guarded(request => this.start(request));
         registry[WorkerMessages.BULK_SCAN_PAUSE] = guarded(async () => ({ ok: await this.pause(), run: this._run }));
-        registry[WorkerMessages.BULK_SCAN_RESUME] = guarded(async () => ({ ok: await this.resume(), run: this._run }));
+        registry[WorkerMessages.BULK_SCAN_RESUME] = guarded(async () => {
+            const ok = await this.resume();
+            // Not resumed because the extension is off: said, and the run itself says so too (its reason)
+            const off = !ok && !!this._run && this._run.status === 'paused' && this._run.reason === 'off';
+            return { ok, ...(off ? { error: 'off' } : {}), run: this._run };
+        });
         registry[WorkerMessages.BULK_SCAN_STOP] = guarded(async () => ({ ok: await this.stop('user'), run: this._run }));
         registry[WorkerMessages.BULK_SCAN_STATE] = guarded(async () => ({ ok: true, run: await this.state() }));
         registry[WorkerMessages.BULK_SCAN_CLEAR] = guarded(async () => ({ ok: await this.clear(), run: this._run }));

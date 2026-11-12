@@ -2,7 +2,7 @@
 
 # Proteções antibot que o Antibot Detector reconhece
 
-Uma página para cada um dos 44 detectores antibot da extensão [Scrapfly Anti-bot Detector](../../README.pt-BR.md): o que é a proteção, os sinais públicos que a revelam, qual a sua classificação de dificuldade e o que ela costuma significar para o web scraping. As páginas são geradas a partir das regras de detecção em `detectors/antibot/`. Para superar sistemas antibot em escala, veja o [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) da Scrapfly.
+Uma página para cada um dos 49 detectores antibot da extensão [Scrapfly Anti-bot Detector](../../README.pt-BR.md): o que é a proteção, os sinais públicos que a revelam, qual a sua classificação de dificuldade e o que ela costuma significar para o web scraping. As páginas são geradas a partir das regras de detecção em `detectors/antibot/`. Para superar sistemas antibot em escala, veja o [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) da Scrapfly.
 
 | Proteção | Dificuldade | Página |
 | --- | --- | --- |
@@ -12,6 +12,8 @@ Uma página para cada um dos 44 detectores antibot da extensão [Scrapfly Anti-b
 | Anubis | Baixa | [Anubis](anubis.md) |
 | AWS WAF | Média | [AWS WAF](aws-waf.md) |
 | Azure Front Door | Baixa | [Azure Front Door](azurefrontdoor.md) |
+| Azure WAF | Média | [Azure WAF](azure-waf.md) |
+| Bunny Shield | Média | [Bunny Shield](bunny-shield.md) |
 | Castle | Média | [Castle](castle.md) |
 | Cheq | Média | [Cheq](cheq.md) |
 | Cloudflare Bot Management | Média | [Cloudflare Bot Management](cloudflare.md) |
@@ -24,6 +26,7 @@ Uma página para cada um dos 44 detectores antibot da extensão [Scrapfly Anti-b
 | FingerprintJS | Baixa | [FingerprintJS](fingerprintjs.md) |
 | Forter | Média | [Forter](forter.md) |
 | Google BotGuard | Alta | [Google BotGuard](botguard.md) |
+| Google Cloud Armor | Média | [Google Cloud Armor](cloud-armor.md) |
 | Huawei Cloud WAF | Baixa | [Huawei Cloud WAF](huaweicloud-waf.md) |
 | HUMAN (PerimeterX) | Alta | [HUMAN (PerimeterX)](perimeterx.md) |
 | Hunt | Alta | [Hunt](hunt.md) |
@@ -44,8 +47,10 @@ Uma página para cada um dos 44 detectores antibot da extensão [Scrapfly Anti-b
 | SEON | Média | [SEON](seon.md) |
 | Shape Security | Alta | [Shape Security](shapesecurity.md) |
 | Sift | Baixa | [Sift](sift.md) |
+| Signifyd | Baixa | [Signifyd](signifyd.md) |
 | SiteGround SG-CAPTCHA | Baixa | [SiteGround SG-CAPTCHA](siteground-captcha.md) |
 | Sucuri WAF | Baixa | [Sucuri WAF](sucuri.md) |
+| Tencent Cloud EdgeOne | Média | [Tencent Cloud EdgeOne](edgeone.md) |
 | ThreatMetrix | Média | [ThreatMetrix](threatmetrix.md) |
 | Vercel Firewall | Média | [Vercel Firewall](vercel.md) |
 | Wordfence | Baixa | [Wordfence](wordfence.md) |

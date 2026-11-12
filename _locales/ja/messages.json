@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "ウェブサイトを閲覧すると、検出履歴がここに表示されます。"
   },
+  "historyPausedNote": {
+    "message": "履歴が一時停止中のため、スキャンしたページは記録されません。"
+  },
   "rulesUpdateTitle": {
     "message": "Scrapfly の最新リリースからルールの更新をインストール"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "作成者"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "バッジの色"
   },
   "ruleSectionDetectionMethods": {
     "message": "検出方法"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "{0} をエクスポートしました"
   },
+  "rulesExportedFmt": {
+    "message": "{0}件のルールをエクスポートしました"
+  },
   "failedImportDetectors": {
     "message": "ディテクターのインポートに失敗しました。ファイル形式を確認してください。"
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "「{0}」を削除しました"
+  },
+  "ruleSavedFmt": {
+    "message": "「{0}」を保存しました"
   },
   "failedClearDetectors": {
     "message": "ディテクターのクリアに失敗しました"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "高"
   },
+  "settingsBadgeCountTitle": {
+    "message": "ツールバーの数字"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "ツールバーのアイコンに表示される数字が数える対象です。フィンガープリンティングはほとんどのサイトで動いています。ポップアップと履歴には引き続きすべて表示されます。"
+  },
+  "settingsBadgeCountAll": {
+    "message": "すべての検出"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "アンチボットと CAPTCHA のみ"
+  },
   "settingsEnableJsApi": {
     "message": "JS API イベントを有効化"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "このプロバイダーのキャプチャしたすべてのデータが永久に削除されます。"
-  },
-  "rulesColorPickerCancel": {
-    "message": "キャンセル"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "コンテンツ検索スコープ"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "検出器のアイコンを変更"
   },
-  "rulesUiCustomColor": {
-    "message": "カスタムカラー"
-  },
   "iconPickerTitle": {
     "message": "アイコンを選択"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "{0} 件の保護機能が重なり上昇"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "50%以上のアンチボットや CAPTCHA は見つかりませんでした"
   },
   "tipLastUpdated": {
     "message": "更新"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "このキャッシュ結果を再利用するページと、その期間。"
+  },
+  "detectionStatHttpStatus": {
+    "message": "HTTP ステータス"
+  },
+  "detectionTipHttpStatus": {
+    "message": "スキャン時にページが返した HTTP ステータスコードです。エラー（4xx または 5xx）は、リクエストがブロックされたかチャレンジを受けたことを示す場合がよくあります。"
   },
   "tipCacheExpires": {
     "message": "有効期限"
@@ -5439,7 +5457,7 @@
     "message": "保持するバックアップ数"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "バックアップのたびに、この数を超える古いバックアップが「ダウンロード」フォルダから削除されます（複数のファイルに分けて保存したバックアップは1件と数えます）。削除されるのは、この拡張機能が保存したバックアップファイルだけです。すべて保持すれば、何も削除されません。"
+    "message": "バックアップのたびに、この数を超える古いバックアップが「ダウンロード」フォルダから削除されます（複数のファイルに分けて保存したバックアップは1件と数えます）。削除されるのは、この拡張機能が保存したバックアップファイルだけです。すべて保持すれば、何も削除されません。バージョン 3.1.7 より前に作成したバックアップは、自分で削除するまで残ります。"
   },
   "settingsHistoryBackupNow": {
     "message": "今すぐバックアップ"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "前回の確認では拡張機能がオフになっていたため、何も確認されませんでした。"
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "拡張機能がオフにされたため、前回の確認は途中で停止しました。"
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "履歴が一時停止されたため、前回の確認は途中で停止しました。"
+  },
   "settingsUiErrHistoryWatch": {
     "message": "監視リストはオフ、毎日、毎週のいずれかにしてください"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "検出数: {0} · 信頼度: {1}% · 難易度: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP ステータス: {0}"
+  },
   "detectionMdColProtection": {
     "message": "保護機能"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "今すぐ再スキャン"
+  },
+  "detectionFromPageFmt": {
+    "message": "{0} のスキャン結果（{1}）"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "{0} 以降の変化: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "{0} 以降変化なし"
   },
   "rulesDuplicate": {
     "message": "複製"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "履歴が一時停止中のため、ページはスキャンされますが記録されません。"
   },
+  "bulkFromHistoryFmt": {
+    "message": "履歴からのページ: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "一括スキャンの実行中のため、履歴のページは追加されませんでした。"
+  },
   "bulkReadingSitemaps": {
     "message": "サイトマップを読み込んでいます…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "検出された保護と信頼度(カンマ区切り)"
+  },
+  "webhookVarHttpStatus": {
+    "message": "ページの HTTP ステータスコード（不明な場合は 0）"
   },
   "historyCopyMarkdown": {
     "message": "Markdownとしてコピー"

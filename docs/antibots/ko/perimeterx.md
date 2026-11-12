@@ -2,7 +2,7 @@
 
 # HUMAN (PerimeterX) 봇 차단: 감지 방법과 웹 스크래핑에 미치는 영향
 
-HUMAN (PerimeterX)은(는) 일부 웹사이트가 페이지 앞단에 두는 봇 차단 또는 어뷰징 방지 계층입니다. HUMAN (PerimeterX) 우회 방법을 찾고 있거나, 사이트에서 HUMAN (PerimeterX)을(를) 감지하려 하거나, HUMAN (PerimeterX)이(가) 막는 웹 스크래핑을 조사하는 경우에도 첫 단계는 같습니다. 요청에 실제로 응답하는 것이 HUMAN (PerimeterX)인지 확인하는 것입니다. 이 페이지는 Scrapfly Antibot Detector 확장 프로그램이 HUMAN (PerimeterX) 봇 탐지를 식별하는 데 쓰는 공개 신호 12개와 각 신호가 얼마나 강하게 HUMAN (PerimeterX)을(를) 가리키는지, 그리고 자동화 클라이언트에 대체로 어떤 의미인지를 정리합니다.
+HUMAN (PerimeterX)은(는) 일부 웹사이트가 페이지 앞단에 두는 봇 차단 또는 어뷰징 방지 계층입니다. HUMAN (PerimeterX) 우회 방법을 찾고 있거나, 사이트에서 HUMAN (PerimeterX)을(를) 감지하려 하거나, HUMAN (PerimeterX)이(가) 막는 웹 스크래핑을 조사하는 경우에도 첫 단계는 같습니다. 요청에 실제로 응답하는 것이 HUMAN (PerimeterX)인지 확인하는 것입니다. 이 페이지는 Scrapfly Antibot Detector 확장 프로그램이 HUMAN (PerimeterX) 봇 탐지를 식별하는 데 쓰는 공개 신호 22개와 각 신호가 얼마나 강하게 HUMAN (PerimeterX)을(를) 가리키는지, 그리고 자동화 클라이언트에 대체로 어떤 의미인지를 정리합니다.
 
 ## 개요
 
@@ -12,7 +12,7 @@ PerimeterX는 현재 HUMAN Security에 속해 있습니다. 봇 디펜더가 페
 
 ## 사이트가 HUMAN (PerimeterX)을(를) 사용하는지 확인하는 방법
 
-이 신호들은 `detect-perimeterx`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.3.1, 최종 업데이트 2026-10-30)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
+이 신호들은 `detect-perimeterx`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.4.0, 최종 업데이트 2026-11-12)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
 
 ### 쿠키
 
@@ -24,6 +24,8 @@ PerimeterX는 현재 HUMAN Security에 속해 있습니다. 봇 디펜더가 페
 | `^_pxhd$ = ^[A-Za-z0-9+/=_-]{60,120}(?::\|$)` | 100% | PerimeterX first-party server cookie |
 | `^_pxvid$ = ^[0-9a-f]{8}-[0-9a-f]{4}-1[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$` | 100% | PerimeterX visitor ID cookie |
 | `^(?:pxcts\|_pxde\|_pxff_[A-Za-z0-9_]+)$` | 50% (보조 근거로만 사용) | Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*) |
+| `^(?:_pxmvid\|_pxttld\|_pxwvm\|_pxmd\|_pxda\|_pxac)$` | 60% | Other cookies HUMAN documents for its sensor (_pxmvid, _pxttld, _pxwvm, _pxmd, _pxda, _pxac) |
+| `^__pxvid$` | 60% | HUMAN Code Defender visitor cookie (__pxvid) |
 
 ### 스크립트 및 요청 URL
 
@@ -36,6 +38,9 @@ PerimeterX는 현재 HUMAN Security에 속해 있습니다. 봇 디펜더가 페
 | `^https://collector-(?:PX[A-Za-z0-9]{6,10}\|[a-z])\.(?:px-cloud\.net\|perimeterx\.net\|hsprotect\.net)/` | 100% | PerimeterX collector endpoint |
 | `^https://captcha\.px-cdn\.net/PX[A-Za-z0-9]{6,10}/` | 100% | PerimeterX challenge (Press & Hold) script host |
 | `^https?://[^/?#]+/[A-Za-z0-9]{8}/captcha/captcha\.js(?:[?#]\|$)` | 30% (보조 근거로만 사용) | First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js) |
+| `^https://(?:[a-z0-9-]+\.)+(?:px-cloud\.net\|px-cdn\.net\|px-client\.net\|pxchk\.net\|perimeterx\.net\|hsprotect\.net)(?:[/?#:]\|$)` | 100% | Request to a HUMAN (PerimeterX) sensor, collector or challenge host |
+| `^https?://[^/?#]+/(?:PX)?[A-Za-z0-9]{8}/xhr/api/v[0-9]/collector(?:[/?#]\|$)` | 85% | First-party HUMAN collector under the app ID (/<appid>/xhr/api/v1/collector) |
+| `^https?://[^/?#]+/[A-Za-z0-9]{8}/init\.js(?:[?#]\|$)` | 30% (보조 근거로만 사용) | First-party init.js under an app-ID path without the PX prefix; corroboration only |
 
 ### 페이지 및 스크립트 콘텐츠
 
@@ -53,6 +58,18 @@ PerimeterX는 현재 HUMAN Security에 속해 있습니다. 봇 디펜더가 페
 | --- | --- | --- |
 | `_pxAppId (typeof string)` | 70% | PerimeterX application ID |
 | `pxInit (typeof function)` | 30% (보조 근거로만 사용) | Optional PerimeterX init callback defined by the site |
+| `_pxUuid (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+| `_pxVid (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+| `_pxBlockedUrl (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+| `_pxJsClientSrc (typeof string)` | 60% | HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) |
+
+### DOM 요소
+
+CSS 선택자로 매칭되는 요소입니다.
+
+| 신호 | 신뢰도 | 의미 |
+| --- | --- | --- |
+| `div#px-captcha` | 60% | HUMAN challenge container (div#px-captcha) |
 
 ### 조합
 
@@ -64,6 +81,8 @@ PerimeterX는 현재 HUMAN Security에 속해 있습니다. 봇 디펜더가 페
 | Several PerimeterX cookies together | 100% | 다음 중 2개 이상: PerimeterX risk token cookie (_px2 or _px3); PerimeterX first-party server cookie; PerimeterX visitor ID cookie; Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*) |
 | PerimeterX challenge with the app ID | 100% | PerimeterX challenge (Press & Hold) script host 그리고 (PerimeterX application ID 또는 Script assigning the PerimeterX app ID (window._pxAppId) 또는 Optional PerimeterX init callback defined by the site) |
 | First-party PerimeterX challenge with the app ID | 95% | First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js) 그리고 (PerimeterX application ID 또는 Script assigning the PerimeterX app ID (window._pxAppId) 또는 Optional PerimeterX init callback defined by the site) |
+| First-party HUMAN sensor with its app ID or cookies | 95% | (First-party init.js under an app-ID path without the PX prefix; corroboration only 또는 First-party HUMAN collector under the app ID (/<appid>/xhr/api/v1/collector)) 그리고 (PerimeterX application ID 또는 Script assigning the PerimeterX app ID (window._pxAppId) 또는 Optional PerimeterX init callback defined by the site 또는 Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*) 또는 Other cookies HUMAN documents for its sensor (_pxmvid, _pxttld, _pxwvm, _pxmd, _pxda, _pxac)) |
+| HUMAN block page with its challenge | 95% | (HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) 또는 HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) 또는 HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) 또는 HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc) 또는 HUMAN challenge container (div#px-captcha)) 그리고 (PerimeterX challenge (Press & Hold) script host 또는 First-party PerimeterX captcha script on an app-id path without the PX prefix (/HYx10rg3/captcha/captcha.js) 또는 Request to a HUMAN (PerimeterX) sensor, collector or challenge host) |
 
 ## 난이도
 

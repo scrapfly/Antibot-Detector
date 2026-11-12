@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "La cronologia di rilevamento apparirà qui mentre navighi."
   },
+  "historyPausedNote": {
+    "message": "La cronologia è in pausa, quindi le pagine analizzate non vengono registrate."
+  },
   "rulesUpdateTitle": {
     "message": "Installa gli aggiornamenti delle regole dall'ultima release di Scrapfly"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "Autore"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "Colore badge"
   },
   "ruleSectionDetectionMethods": {
     "message": "Metodi di rilevamento"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "{0} esportato"
   },
+  "rulesExportedFmt": {
+    "message": "Regole esportate: {0}"
+  },
   "failedImportDetectors": {
     "message": "Impossibile importare i detector. Controlla il formato del file."
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" eliminato"
+  },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" salvato"
   },
   "failedClearDetectors": {
     "message": "Impossibile eliminare i detector"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "Alto"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Numero nella barra degli strumenti"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Cosa conta il numero sull’icona nella barra degli strumenti. Il fingerprinting è presente sulla maggior parte dei siti; il popup e la Cronologia mostrano comunque tutto."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Ogni rilevamento"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Solo anti-bot e CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Attiva eventi JS API"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Verranno eliminati in modo permanente tutti i dati catturati per questo provider."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Annulla"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Ambito di ricerca dei contenuti"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "Cambia l’icona del rilevatore"
   },
-  "rulesUiCustomColor": {
-    "message": "Colore personalizzato"
-  },
   "iconPickerTitle": {
     "message": "Scegli icona"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Aumentata da {0} protezioni insieme"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Nessun anti-bot o CAPTCHA trovato al 50% o più"
   },
   "tipLastUpdated": {
     "message": "Aggiornato"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "Quali pagine riutilizzano questi risultati in cache e per quanto tempo."
+  },
+  "detectionStatHttpStatus": {
+    "message": "Stato HTTP"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Il codice di stato HTTP con cui la pagina ha risposto durante la scansione. Un errore (4xx o 5xx) spesso indica che la richiesta è stata bloccata o sottoposta a una verifica."
   },
   "tipCacheExpires": {
     "message": "Scade"
@@ -5439,7 +5457,7 @@
     "message": "Backup da conservare"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Dopo ogni backup, quelli più vecchi oltre questo numero vengono eliminati dalla cartella Download (un backup salvato in più parti conta come uno). Vengono eliminati solo i file di backup salvati da questa estensione. Se li conservi tutti, non viene eliminato nulla."
+    "message": "Dopo ogni backup, quelli più vecchi oltre questo numero vengono eliminati dalla cartella Download (un backup salvato in più parti conta come uno). Vengono eliminati solo i file di backup salvati da questa estensione. Se li conservi tutti, non viene eliminato nulla. I backup creati prima della versione 3.1.7 restano finché non li elimini tu."
   },
   "settingsHistoryBackupNow": {
     "message": "Esegui backup ora"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "L’ultimo controllo ha trovato l’estensione disattivata, quindi non è stato controllato nulla."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "L’ultimo controllo si è interrotto perché l’estensione è stata disattivata."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "L’ultimo controllo si è interrotto perché la cronologia è stata messa in pausa."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Il monitoraggio deve essere disattivato, giornaliero o settimanale"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "Rilevamenti: {0} · Affidabilità: {1}% · Difficoltà: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "Stato HTTP: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Protezione"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "Analizza di nuovo ora"
+  },
+  "detectionFromPageFmt": {
+    "message": "Da un’analisi di {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Modificato dal {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Nessuna modifica dal {0}"
   },
   "rulesDuplicate": {
     "message": "Duplica"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "La cronologia è in pausa: le pagine vengono analizzate ma non registrate."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Pagine dalla cronologia: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "È in corso un’analisi in blocco, quindi le pagine della cronologia non sono state aggiunte."
+  },
   "bulkReadingSitemaps": {
     "message": "Lettura delle sitemap…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Protezioni rilevate con la loro affidabilità, separate da virgole"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Codice di stato HTTP della pagina (0 se non noto)"
   },
   "historyCopyMarkdown": {
     "message": "Copia come Markdown"

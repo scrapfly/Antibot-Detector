@@ -28,6 +28,8 @@ function setupTabListeners() {
         if (typeof tabDocuments !== 'undefined') tabDocuments.delete(tabId);
         if (typeof leavingDocuments !== 'undefined') leavingDocuments.delete(tabId);
         if (typeof pendingNavigations !== 'undefined') pendingNavigations.delete(tabId);
+        if (typeof UncapturedPages !== 'undefined') UncapturedPages.forgetTab(tabId);
+        if (typeof committedPages !== 'undefined') committedPages.delete(tabId);
 
         if (tabsUsingCache.has(tabId)) {
             tabsUsingCache.delete(tabId);
@@ -104,6 +106,7 @@ function setupTabListeners() {
             shapeSecurityExtractionState.delete(tabId);
         }
 
+        // The tab is closed: no hover text to set
         chrome.action.setBadgeText({
             text: BADGE.TEXT.EMPTY,
             tabId: tabId

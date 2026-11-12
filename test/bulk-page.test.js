@@ -21,8 +21,9 @@ const sitemapIndex = (...locs) => `<?xml version="1.0"?><sitemapindex xmlns="htt
  *   sitemaps: address -> xml, or { body, url (where a redirect ended), status }; any other address fails like an unreachable host
  *   run: the run the worker answers to BULK_SCAN_STATE
  *   clipboardAccepts: false when the browser refuses a copy (FormatUtils.copyToClipboard answers false)
+ *   session: what chrome.storage.session holds (History's hand-over); left out, the page has no session storage
  */
-function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [], clipboardAccepts = true } = {}) {
+function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [], clipboardAccepts = true, session = null } = {}) {
   const elements = new Map();
   const handlers = {};
   const sent = [];
@@ -33,7 +34,7 @@ function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [], clip
     id, value: '', textContent: '', hidden: false, disabled: false, readOnly: false, className: '', title: '', dir: '', href: '', target: '', rel: '', innerHTML: '',
     dataset: {}, style: {}, children: [],
     classList: { toggle() {}, add() {}, remove() {}, contains: () => false },
-    setAttribute() {}, focus() {},
+    setAttribute() {}, focus() { document.activeElement = this; },
     appendChild(child) { this.children.push(child); return child; },
     append(...nodes) { this.children.push(...nodes); },
     replaceChildren(...nodes) { this.children = nodes; },
@@ -74,11 +75,14 @@ function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [], clip
           else callback({ status: 'ok' });
         }
       },
-      storage: { onChanged: { addListener: (fn) => { onChanged = fn; } } }
+      storage: Object.assign({ onChanged: { addListener: (fn) => { onChanged = fn; } } }, session ? { session: {
+        get: async (key) => (key in session ? { [key]: plain(session[key]) } : {}),
+        remove: async (key) => { delete session[key]; }
+      } } : {})
     }
   });
   ctx.self = ctx;
-  for (const file of ['modules/core/worker-messages.js', 'modules/core/categories.js', 'modules/core/bulk-scan.js', 'modules/core/bulk-filter.js', 'sections/bulk/bulk.js']) {
+  for (const file of ['modules/core/worker-messages.js', 'modules/core/categories.js', 'modules/core/http-status.js', 'modules/core/bulk-scan.js', 'modules/core/bulk-filter.js', 'modules/core/bulk-handoff.js', 'sections/bulk/bulk.js']) {
     vm.runInContext(read(file), ctx, { filename: file });
   }
   const byId = (id) => document.getElementById(id);
@@ -99,7 +103,9 @@ function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [], clip
       return message ? plain(message.entries) : null;
     },
     /** The worker's run state changes (what chrome.storage.session tells the page). */
-    update(nextRun) { onChanged({ session_bulk_scan: { newValue: nextRun } }, 'session'); }
+    update(nextRun) { onChanged({ session_bulk_scan: { newValue: nextRun } }, 'session'); },
+    /** Session storage reports a change of one key (History handing addresses over while the page is open). */
+    changed(key, newValue) { onChanged({ [key]: { newValue } }, 'session'); }
   };
 }
 
@@ -347,4 +353,110 @@ test('the results table has a name for screen readers and the page has the new b
     const messages = JSON.parse(read(`_locales/${code}/messages.json`));
     for (const key of ['bulkCopyLines', 'bulkFilterNone']) assert.ok(messages[key] && messages[key].message, `${code}: ${key}`);
   }
+});
+
+test('a finished row shows its HTTP status beside Done, toned when it is an error; a row without one shows none', async () => {
+  const page = pageWorld({ run: runOf([
+    { ...finished('https://a.example/', []), httpStatus: 403 },
+    { ...finished('https://b.example/', []), httpStatus: 503 },
+    { ...finished('https://c.example/', []), httpStatus: 200 },
+    finished('https://d.example/', []),
+    { url: 'https://e.example/', status: 'failed', reason: 'timeout', httpStatus: 500 }
+  ]) });
+  await page.open();
+  const pills = page.byId('bulkRows').children[0].children.map(row => row.children[2].children[0]);
+  const codes = pills.map(pill => pill.children.filter(child => typeof child === 'object').map(child => [child.textContent, child.className]));
+  assert.deepEqual(codes, [
+    [['403', 'bulk-http bulk-http--warn']],
+    [['503', 'bulk-http bulk-http--error']],
+    [['200', 'bulk-http bulk-http--ok']],
+    [],
+    []
+  ], 'only a finished page with a known status shows one');
+  assert.equal(pills[0].children[0], ' · ', '"Done · 403"');
+  assert.equal(pills[0].children[1].title, en.detectionTipHttpStatus.message);
+});
+
+test('a run paused because the extension was switched off says so under its status; a pause the person chose says nothing more', async () => {
+  const BulkScan = require('../modules/core/bulk-scan.js');
+  const held = BulkScan.createRun({ items: [{ url: 'https://a.example/', status: 'done', detections: [] }, { url: 'https://b.example/', status: 'scanning' }] }, { now: 1 });
+  BulkScan.hold(held, 'off');
+  const page = pageWorld({ run: plain(held) });
+  await page.open();
+  assert.match(page.byId('bulkRunStatus').textContent, /^Paused · 1 of 2 finished$/);
+  assert.equal(page.byId('bulkRunReason').hidden, false);
+  assert.equal(page.byId('bulkRunReason').textContent, en.bulkStoppedOff.message);
+  assert.equal(page.byId('bulkResumeBtn').hidden, false, 'Resume is there, for when the extension is on again');
+  // Switched on again (the worker drops the reason): a plain pause
+  BulkScan.release(held, 'off');
+  page.update(plain(held));
+  assert.equal(page.byId('bulkRunReason').hidden, true);
+  assert.equal(page.byId('bulkRunReason').textContent, '');
+  const paused = BulkScan.createRun({ items: [{ url: 'https://a.example/', status: 'waiting' }] }, { now: 1 });
+  BulkScan.pause(paused);
+  page.update(plain(paused));
+  assert.equal(page.byId('bulkRunReason').hidden, true, 'the person\'s own pause needs no words');
+});
+
+// History → Select entries → Bulk scan hands the selected addresses over through session storage (BulkHandoff)
+
+const HANDOFF_KEY = 'session_bulk_from_history';
+const handoff = (urls, at = Date.now()) => ({ urls, at });
+const settle = () => new Promise(resolve => setTimeout(resolve, 0));
+
+test('the pages History hands over fill the list once: the hand-over is removed, the page says how many came and the keyboard goes to Start', async () => {
+  const session = { [HANDOFF_KEY]: handoff(['https://a.example/', 'https://b.example/x', 'https://a.example/']) };
+  const page = pageWorld({ session });
+  await page.open();
+  assert.equal(page.byId('bulkInput').value, 'https://a.example/\nhttps://b.example/x', 'each address once, in the order History showed them');
+  assert.ok(!(HANDOFF_KEY in session), 'taken once: opening the page again later starts empty');
+  assert.equal(page.byId('bulkNotice').textContent, 'Pages from History: 2');
+  assert.equal(page.byId('bulkNotice').hidden, false);
+  assert.equal(page.document.activeElement, page.byId('bulkStartBtn'));
+  assert.equal(page.byId('bulkInputCount').textContent, 'Addresses: 2');
+  // Start hands them to the worker like a typed list: the cap and Sites to scan are the worker's, at the start of the run
+  const entries = await page.start(page.byId('bulkInput').value);
+  assert.deepEqual(entries, ['https://a.example/', 'https://b.example/x']);
+});
+
+test('a run going on is left alone: the pages from History do not replace its list, and the page says so', async () => {
+  const run = { id: 'r1', status: 'running', items: [], cap: 200 };
+  const session = { [HANDOFF_KEY]: handoff(['https://a.example/']) };
+  const page = pageWorld({ session, run });
+  await page.open();
+  assert.equal(page.byId('bulkInput').value, '', 'the list is not touched');
+  assert.ok(!(HANDOFF_KEY in session), 'the hand-over is still used up, so it never fills a later list by surprise');
+  assert.equal(page.byId('bulkNotice').textContent, 'A bulk scan is in progress, so the pages from History were not added.');
+  assert.ok(!page.sent.some(message => message.type === page.ctx.WorkerMessages.BULK_SCAN_START), 'nothing is started');
+});
+
+test('a hand-over the page never took in time (it did not open) does not fill a list opened later from the menu', async () => {
+  const session = { [HANDOFF_KEY]: handoff(['https://a.example/'], Date.now() - 10 * 60 * 1000) };
+  const page = pageWorld({ session });
+  await page.open();
+  assert.equal(page.byId('bulkInput').value, '');
+  assert.equal(page.byId('bulkNotice').textContent, '', 'and says nothing');
+  assert.ok(!(HANDOFF_KEY in session), 'and it is cleared');
+});
+
+test('the page already open takes pages handed over later, as they arrive; their removal is not a new hand-over', async () => {
+  const session = {};
+  const page = pageWorld({ session });
+  await page.open();
+  assert.equal(page.byId('bulkInput').value, '');
+  session[HANDOFF_KEY] = handoff(['https://c.example/']);
+  page.changed(HANDOFF_KEY, session[HANDOFF_KEY]);
+  await settle(); await settle();
+  assert.equal(page.byId('bulkInput').value, 'https://c.example/');
+  assert.ok(!(HANDOFF_KEY in session));
+  page.byId('bulkInput').value = 'typed';
+  page.changed(HANDOFF_KEY, undefined);
+  await settle();
+  assert.equal(page.byId('bulkInput').value, 'typed', 'a removal reported by storage changes nothing');
+});
+
+test('without session storage the page opens as before, with an empty list', async () => {
+  const page = pageWorld();
+  await page.open();
+  assert.equal(page.byId('bulkInput').value, '');
 });

@@ -420,24 +420,6 @@ class DetectionEngineManager {
         // The page's own icon link; the background prefers Chrome's tab favicon
         const favicon = UrlUtils.findPageIconHref(document);
 
-        // Get JS Hook detections from storage
-        let jsHooks = [];
-        try {
-            const hookData = await new Promise((resolve) => {
-                chrome.storage.local.get(['scrapfly_js_hook_detections'], (result) => {
-                    resolve(result.scrapfly_js_hook_detections || {});
-                });
-            });
-
-            const currentHooks = hookData[window.location.href];
-            if (currentHooks && currentHooks.hooks) {
-                jsHooks = currentHooks.hooks;
-                Logger.debug('DETECTION', `${jsHooks.length} hook hits already recorded`);
-            }
-        } catch (error) {
-            Logger.warn('HOOKS', '[runDetection] Hook detections load failed', error);
-        }
-
         // Smart lazy data collection
         let cachedPageHTML = null;
         let cachedCookies = null;
@@ -452,7 +434,9 @@ class DetectionEngineManager {
             timestamp: new Date().toISOString(),
 
             externalContent: externalContent,
-            jsHooks: jsHooks,
+            // Hook hits reach the worker in their own batches (JS_HOOK_DETECTION_BATCH); the storage key a scan once read
+            // here is written by nothing, so reading it cost every scan a storage round trip for an empty answer
+            jsHooks: [],
             headers: [],
 
             _extractCookies: () => this.extractCookies(),
@@ -835,9 +819,18 @@ class DetectionEngineManager {
         const contentPatterns = detector.detection?.content;
 
         if (contentPatterns && (pageHTML || content.length > 0 || externalContent.length > 0)) {
-            // Lowercase the (potentially large) pageHTML once and reuse it across
-            // every content pattern instead of re-lowercasing per pattern.
-            const pageHTMLLower = pageHTML.toLowerCase();
+            // One lowercased copy of each text (a script, a fetched resource, the page's HTML) for the whole scan: detectOnPage
+            // passes its map, so 7.7 MB of scripts are lowercased once rather than once per case-insensitive rule
+            const lowerTexts = options && options.lowerTexts instanceof Map ? options.lowerTexts : new Map();
+            const preparedFor = (text, matchOptions) => {
+                if (matchOptions.caseSensitive || !text) return undefined;
+                let lower = lowerTexts.get(text);
+                if (lower === undefined) {
+                    lower = text.toLowerCase();
+                    lowerTexts.set(text, lower);
+                }
+                return lower;
+            };
             for (const contentPattern of contentPatterns) {
                 if (contentPattern.enabled === false) continue;
                 const patternText = contentPattern.text || '';
@@ -858,7 +851,7 @@ class DetectionEngineManager {
 
                 if (!checkScripts) {
                     // No restrictions = check entire page HTML + external content (default behavior)
-                    if (this.matchPattern(pageHTML, patternText, matchOptions, pageHTMLLower)) {
+                    if (this.matchPattern(pageHTML, patternText, matchOptions, preparedFor(pageHTML, matchOptions))) {
                         found = true;
                         foundIn = 'page content';
                     }
@@ -866,7 +859,7 @@ class DetectionEngineManager {
                     // Also search external fetched content
                     if (!found && pageData.externalContent && pageData.externalContent.length > 0) {
                         for (const resource of pageData.externalContent) {
-                            if (this.matchPattern(resource.content, patternText, matchOptions)) {
+                            if (this.matchPattern(resource.content, patternText, matchOptions, preparedFor(resource.content, matchOptions))) {
                                 found = true;
                                 foundIn = resource.url;
                                 break;
@@ -879,7 +872,7 @@ class DetectionEngineManager {
                     for (const script of content) {
                         const scriptContent = script.content || '';
                         if (!scriptContent || scriptContent === script.src) continue;
-                        if (this.matchPattern(scriptContent, patternText, matchOptions)) {
+                        if (this.matchPattern(scriptContent, patternText, matchOptions, preparedFor(scriptContent, matchOptions))) {
                             found = true;
                             foundIn = script.src || 'inline script';
                             break;
@@ -890,7 +883,7 @@ class DetectionEngineManager {
                     if (!found) {
                         for (const resource of externalContent) {
                             if (resource.type !== 'javascript') continue;
-                            if (this.matchPattern(resource.content, patternText, matchOptions)) {
+                            if (this.matchPattern(resource.content, patternText, matchOptions, preparedFor(resource.content, matchOptions))) {
                                 found = true;
                                 foundIn = resource.url;
                                 break;
@@ -1498,6 +1491,8 @@ class DetectionEngineManager {
         // loop a turn every ~40 ms of matching. Results are unchanged.
         const canYield = typeof setTimeout === 'function';
         let sliceStart = Date.now();
+        // Each text lowercased once for the whole scan, shared by every detector's case-insensitive content rules
+        const lowerTexts = new Map();
 
         // A confident match says nothing about the remaining vendors. Evaluate
         // every enabled detector, including partial evidence for combinations.
@@ -1507,7 +1502,7 @@ class DetectionEngineManager {
                 sliceStart = Date.now();
             }
             // requestHeaders: request-scope header rules read them (they were dropped here before)
-            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, responses, networkUrls, allCookies, responseCookies }, { groupElements: true });
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, responses, networkUrls, allCookies, responseCookies }, { groupElements: true, lowerTexts });
             if (detection.detected || detection.partial) {
                 const detectionObj = {
                     ...detection,
@@ -1866,7 +1861,9 @@ class DetectionEngineManager {
                     fromStorage: true,
                     processed: true,
                     url: storedData.url,
-                    cacheScope: storedData.cacheScope
+                    cacheScope: storedData.cacheScope,
+                    // The page's HTTP status recorded with this result (none in one saved before 3.1.8)
+                    httpStatus: storedData.httpStatus
                 };
             }
         } catch (error) {
@@ -2033,6 +2030,8 @@ class DetectionEngineManager {
                 detectionCount: detectionResults.length,
                 fromStorage: false,
                 cacheScope: cacheScope,
+                // The page's HTTP status (pageHttpStatus in header-capture.js): a cache hit shows the one saved with the result it reuses
+                ...(Number.isInteger(pageData.httpStatus) ? { httpStatus: pageData.httpStatus } : {}),
                 ...(hooksOff ? { hooksOff: true } : {}),
                 // Absent means revision 0, as in what 3.1.2 saved
                 ...(savedRev > 0 ? { rulesRev: savedRev } : {}),
@@ -2273,11 +2272,14 @@ class DetectionEngineManager {
         if (storedData) {
             Logger.detection(`${Logger.hostOf(pageUrl)}: ${storedData.detectionCount} detections from cache`);
 
-            // Update badge with cached detection count
-            if (storedData.detectionCount > 0) {
+            // Update badge with cached detection count (Settings → General → Toolbar number decides what it counts)
+            const storedResults = Array.isArray(storedData.detectionResults) ? storedData.detectionResults : [];
+            const badgeCount = DetectionUtils.badgeCount(storedResults, await DetectionUtils.readBadgeCountMode(CategoryManager), storedData.detectionCount);
+            if (!await isCurrentDocument()) return ignored;
+            if (badgeCount > 0) {
                 const badgeColors = await CategoryManager.getBadgeColors();
                 if (!await isCurrentDocument()) return ignored;
-                const count = storedData.detectionCount.toString();
+                const count = badgeCount.toString();
                 const color = DetectionUtils.getBadgeColor(storedData.detectionResults || [], badgeColors);
                 chrome.action.setBadgeText({ text: count, tabId: tabId }).catch(() => {});
                 setBadgeTextColor(tabId, false, color);
@@ -2287,7 +2289,7 @@ class DetectionEngineManager {
                 chrome.action.setBadgeText({ text: BADGE.TEXT.CLEAN, tabId: tabId }).catch(() => {});
                 setBadgeTextColor(tabId);
                 chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEAN, tabId: tabId }).catch(() => {});
-                if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'clean');
+                if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, storedResults.length ? 'found' : 'clean', storedResults);
             }
 
             // Notify popup if open
@@ -2300,7 +2302,8 @@ class DetectionEngineManager {
                 expiry: storedData.expiry,
                 timestamp: storedData.timestamp,
                 cacheScope: storedData.cacheScope,
-                favicon: storedData.favicon
+                favicon: storedData.favicon,
+                httpStatus: storedData.httpStatus
             }).catch(() => {});
 
             // Notify content script to disable monitoring (cache hit)
@@ -2332,7 +2335,8 @@ class DetectionEngineManager {
                     url: pageUrl,
                     hostname: UrlUtils.getHostnameFromUrl(pageUrl),
                     title: (tab && tab.title) || 'Untitled',
-                    favicon: UrlUtils.normalizeFaviconForStorage(tab && tab.favIconUrl, pageUrl)
+                    favicon: UrlUtils.normalizeFaviconForStorage(tab && tab.favIconUrl, pageUrl),
+                    httpStatus: storedData.httpStatus
                 }, storedData.detectionResults, { trigger: 'cache' })).catch((error) => {
                     Logger.warn('NETWORK', 'The webhook step failed', error);
                 });
@@ -2373,6 +2377,17 @@ class DetectionEngineManager {
         if (triggerSource === 'bfcache_restore') {
             Logger.debug('SCAN', `Page restored from the back/forward cache with no cached result, tab ${tabId}`);
             return { status: 'not_cached' };
+        }
+
+        // A page that loaded while its site was not scanned (background/uncaptured-pages.js): a route change of a single-page
+        // app, or a load notice that comes after the site was turned back on, would scan it without its headers, cookies,
+        // request bodies, requests and JS hooks, and keep that as its result. It is scanned when it loads again; the hover text
+        // stops saying the site is not scanned
+        if (typeof UncapturedPages !== 'undefined' && await UncapturedPages.has(tabId, sender.documentId)) {
+            if (!await isCurrentDocument()) return ignored;
+            Logger.debug('SCAN', `Tab ${tabId}: the page loaded while its site was not scanned; it is scanned when it loads again`);
+            if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.reset(chrome, tabId);
+            return { status: 'needs_reload', reason: 'not_captured' };
         }
 
         // Coalesce this document's notifications, never a new page or reload
@@ -2442,6 +2457,17 @@ class DetectionEngineManager {
         return true;
     }
 
+    /** A page address a cache clear can work with: a string that parses as a URL. */
+    static isClearableUrl(url) {
+        if (typeof url !== 'string' || !url) return false;
+        try {
+            new URL(url);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+
     /**
      * Handle CLEAR_DETECTION_CACHE message
      * @param {object} request - Message request object
@@ -2449,6 +2475,13 @@ class DetectionEngineManager {
      * @returns {boolean} True (async response)
      */
     static async handleClearDetectionCache(request, sendResponse) {
+        // Which page to clear is the request's address: without one (or with something that is not one) nothing is cleared, and
+        // the caller is told so instead of the address hash throwing
+        if (!DetectionEngineManager.isClearableUrl(request && request.url)) {
+            Logger.debug('DETECTION', '[handleClearDetectionCache] No page address to clear');
+            sendResponse({ status: 'error', error: 'invalid_url' });
+            return true;
+        }
         try {
             const requestedScopeRaw = String(request.cacheScope || '').toLowerCase();
             const requestedScope = requestedScopeRaw === 'url' ? 'full' : requestedScopeRaw;
@@ -2600,6 +2633,16 @@ class DetectionEngineManager {
             };
             const isCurrentRequest = async () => ownsSlot() && await isSameDocument() && ownsSlot();
 
+            // A page that loaded while its site was not scanned (skipped then, or the settings unreadable: background/
+            // uncaptured-pages.js) kept none of its headers, cookies, request bodies or requests, and its JS hooks never ran.
+            // Scanned as it is, it would be saved, recorded and sent as if complete: it is scanned when it loads again (the
+            // popup offers Scan again). Nothing is asked of the page, and the throttle below is not spent on it
+            if (typeof UncapturedPages !== 'undefined' && await UncapturedPages.has(tabId, frame.documentId)) {
+                if (!ownsSlot()) { skipSuperseded(); return true; }
+                sendResponse({ status: 'needs_reload', reason: 'not_captured', message: 'Reload the page to run detection.' });
+                return true;
+            }
+
             const requestKey = `${tabId}:${frame.documentId || tab.url}`;
             if (Utils.shouldSkipDetection(requestKey, Constants.DETECTION_SKIP_THRESHOLD, recentDetectionRequests)) {
                 sendResponse({ status: 'skipped', reason: 'Recent detection exists' });
@@ -2621,6 +2664,7 @@ class DetectionEngineManager {
                     await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId }).catch(error => {
                         Logger.warn('DETECTION', '[requestDetection] Empty badge reset failed', error);
                     });
+                    if (typeof ToolbarTitle !== 'undefined') await ToolbarTitle.reset(chrome, tabId);
                 }
                 sendResponse({ status: 'needs_reload', reason: 'content_script_unavailable', message: 'Reload the page to run detection.' });
                 return true;

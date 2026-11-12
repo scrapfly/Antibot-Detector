@@ -200,7 +200,7 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="detectorCategorySelect" data-i18n="ruleFieldCategory">Category</label>
-                <select id="detectorCategorySelect" class="form-select">
+                <select id="detectorCategorySelect" class="form-select ui-select">
                   <option value="antibot" data-i18n="categoryAntibot">Anti-Bot</option>
                   <option value="captcha" data-i18n="categoryCaptcha">Captcha</option>
                   <option value="fingerprint" data-i18n="categoryFingerprint">Fingerprint</option>
@@ -208,7 +208,7 @@
               </div>
               <div class="form-group">
                 <label class="form-label" for="detectorDifficultySelect" data-i18n="ruleFieldDifficulty">Difficulty</label>
-                <select id="detectorDifficultySelect" class="form-select">
+                <select id="detectorDifficultySelect" class="form-select ui-select">
                   <option value="Low" data-i18n="difficultyLow">Low</option>
                   <option value="Medium" data-i18n="difficultyMedium">Medium</option>
                   <option value="High" data-i18n="difficultyHigh">High</option>
@@ -234,38 +234,6 @@
               </div>
             </div>
             <p id="detectorAuthorError" class="form-field-error" role="alert" hidden></p>
-            <div class="form-group form-group-badge-color">
-              <span class="form-label" id="badgeColorLabel" data-i18n="ruleSectionBadgeColor">Badge Color</span>
-              <div class="color-picker-card">
-                <div class="color-picker-grid" role="group" aria-labelledby="badgeColorLabel">
-                  <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
-                  <div class="color-option" style="background: #10b981;" data-color="#10b981"></div>
-                  <div class="color-option" style="background: #ef4444;" data-color="#ef4444"></div>
-                  <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b"></div>
-                  <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6"></div>
-                  <div class="color-option" style="background: #ec4899;" data-color="#ec4899"></div>
-                  <div class="color-option" style="background: #eab308;" data-color="#eab308"></div>
-                  <div class="color-option rainbow-picker" id="rainbowPicker" title="Custom Color" data-i18n-title="rulesUiCustomColor">
-                    <span class="custom-color-hex"></span>
-                    <svg width="16" height="16" viewBox="0 0 24 24">
-                      <defs>
-                        <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" style="stop-color:#ff0000"/>
-                          <stop offset="16.66%" style="stop-color:#ff8800"/>
-                          <stop offset="33.33%" style="stop-color:#ffff00"/>
-                          <stop offset="50%" style="stop-color:#00ff00"/>
-                          <stop offset="66.66%" style="stop-color:#0088ff"/>
-                          <stop offset="83.33%" style="stop-color:#8800ff"/>
-                          <stop offset="100%" style="stop-color:#ff00ff"/>
-                        </linearGradient>
-                      </defs>
-                      <rect x="2" y="2" width="20" height="20" rx="4" fill="url(#rainbow)"/>
-                      <path d="M12,17.5L8,14L10,9L12,11L14,9L16,14L12,17.5Z" fill="white" opacity="0.8"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -346,51 +314,6 @@
       <div class="rule-modal-footer">
         <button id="saveRuleEdit" class="rule-btn rule-btn-save" data-i18n="btnSaveRule">Save Rule</button>
         <button id="cancelRuleEdit" class="rule-btn rule-btn-cancel" data-i18n="btnCancel">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Advanced Color Picker Modal -->
-  <div id="advancedColorModal" class="rule-modal" style="display: none;">
-    <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content canvas-color-modal">
-      <div class="rule-modal-body">
-        <div class="canvas-color-picker">
-          <div class="color-picker-canvas">
-            <canvas id="colorCanvas" width="180" height="120"></canvas>
-            <div id="colorPickerCursor" class="color-picker-cursor"></div>
-          </div>
-
-          <div class="hue-strip">
-            <canvas id="hueCanvas" width="20" height="120"></canvas>
-            <div id="hueSliderCursor" class="hue-slider-cursor"></div>
-          </div>
-
-          <div class="color-controls">
-            <div class="selected-color-display">
-              <div id="selectedColorPreview" class="selected-color-preview"></div>
-            </div>
-
-            <div class="rgb-controls">
-              <div class="rgb-input-group">
-                <label for="rInput">R</label>
-                <input type="number" id="rInput" min="0" max="255" class="rgb-input">
-              </div>
-              <div class="rgb-input-group">
-                <label for="gInput">G</label>
-                <input type="number" id="gInput" min="0" max="255" class="rgb-input">
-              </div>
-              <div class="rgb-input-group">
-                <label for="bInput">B</label>
-                <input type="number" id="bInput" min="0" max="255" class="rgb-input">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="rule-modal-footer">
-        <button id="selectAdvancedColor" class="rule-btn rule-btn-save" data-i18n="rulesColorPickerOk">OK</button>
-        <button id="cancelAdvancedColor" class="rule-btn rule-btn-cancel" data-i18n="rulesColorPickerCancel">Cancel</button>
       </div>
     </div>
   </div>
@@ -492,7 +415,7 @@
                   <span class="setting-label" id="nameScopeLabel" data-i18n="rulesNameScopeLabel">Name Scope</span>
                   <p class="option-hint" data-i18n="rulesNameScopeHint">Where to check for name/field matches</p>
                 </div>
-                <select id="nameScope" class="scope-select" aria-labelledby="nameScopeLabel">
+                <select id="nameScope" class="scope-select ui-select" aria-labelledby="nameScopeLabel">
                   <button type="button" class="select-button"><selectedcontent></selectedcontent></button>
                   <option value="request" data-i18n="rulesScopeRequest"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg><span class="opt-label">Request</span></option>
                   <option value="response" data-i18n="rulesScopeResponse"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 7L7 17M16 17H7V8"/></svg><span class="opt-label">Response</span></option>
@@ -504,7 +427,7 @@
                   <span id="valueScopeLabel" class="setting-label" data-i18n="rulesValueScopeLabel">Value Scope</span>
                   <p class="option-hint" data-i18n="rulesValueScopeHint">Where to check for value matches</p>
                 </div>
-                <select id="valueScope" class="scope-select" aria-labelledby="valueScopeLabel">
+                <select id="valueScope" class="scope-select ui-select" aria-labelledby="valueScopeLabel">
                   <button type="button" class="select-button"><selectedcontent></selectedcontent></button>
                   <option value="request" data-i18n="rulesScopeRequest"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg><span class="opt-label">Request</span></option>
                   <option value="response" data-i18n="rulesScopeResponse"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 7L7 17M16 17H7V8"/></svg><span class="opt-label">Response</span></option>
@@ -532,7 +455,7 @@
                   <span id="textScopeLabel" class="setting-label" data-i18n="rulesUrlScopeLabel">URL Scope</span>
                   <p class="option-hint" data-i18n="rulesUiUrlScopeHint">Page = current URL | Scripts = page + scripts | All = all requests</p>
                 </div>
-                <select id="textScope" class="scope-select" aria-labelledby="textScopeLabel">
+                <select id="textScope" class="scope-select ui-select" aria-labelledby="textScopeLabel">
                   <button type="button" class="select-button"><selectedcontent></selectedcontent></button>
                   <option value="page_only" data-i18n="rulesUrlScopePageOnly"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg><span class="opt-label">Page</span></option>
                   <option value="page_and_scripts" data-i18n="rulesUrlScopeScripts"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4"/></svg><span class="opt-label">Scripts</span></option>
@@ -883,7 +806,7 @@
       <div id="windowConditionSection" class="rh-dock" hidden>
         <div class="rh-field">
           <label class="rh-field-label" for="windowConditionSelect" data-i18n="rhCondition">Condition</label>
-          <select id="windowConditionSelect" class="rh-select rh-select--plain"></select>
+          <select id="windowConditionSelect" class="rh-select rh-select--plain ui-select"></select>
         </div>
         <p id="windowRuleSentence" class="rh-sentence" role="status"></p>
         <div id="windowConditionStatus" class="rh-status is-invalid" role="alert" hidden></div>

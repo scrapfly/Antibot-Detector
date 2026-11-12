@@ -7,7 +7,8 @@
  *
  *   scan(url, options)     open, wait for the extension's scan of the page (or the time limit, a load error, a cancel),
  *                          close; the cached result of the page is set aside meanwhile (DetectionEngineManager.bypassCache),
- *                          or the cache would answer and nothing would be scanned
+ *                          or the cache would answer and nothing would be scanned. While the extension is switched off no
+ *                          tab is opened ('off'): no page is scanned then, so the tab would only wait out its time limit
  *   isScanTab(), ownerOf(), isQuiet()
  *                          what the scan pipeline asks of a tab: a quiet scan (the watchlist) leaves nothing of its own
  *                          (no History entry, no webhook); the others (Bulk scan) are recorded like any page
@@ -40,10 +41,11 @@ const BackgroundTabScan = {
         return !!(entry && entry.quiet);
     },
 
-    /** Called by the scan pipeline when the page of a scan tab is finished. */
+    /** Called by the scan pipeline when the page of a scan tab is finished (extra.httpStatus: the page's HTTP status, when known). */
     scanFinished(tabId, url, results, extra = {}) {
         const waiter = this._waiters.get(tabId);
-        if (waiter) waiter.resolve({ ok: true, url, results: Array.isArray(results) ? results : [], ...(extra && extra.excluded ? { excluded: true } : {}) });
+        if (waiter) waiter.resolve({ ok: true, url, results: Array.isArray(results) ? results : [], ...(extra && extra.excluded ? { excluded: true } : {}),
+            ...(extra && extra.httpStatus ? { httpStatus: extra.httpStatus } : {}) });
     },
 
     /** Give up the scan that carries this token (its tab closes right away). */
@@ -53,6 +55,12 @@ const BackgroundTabScan = {
         for (const waiter of this._waiters.values()) {
             if (waiter.token === token) waiter.resolve({ ok: false, error: 'cancelled' });
         }
+    },
+
+    /** Is the extension switched on (its own switch, as the scan pipeline reads it)? */
+    async extensionOn() {
+        const flags = await chrome.storage.local.get(['scrapfly_enabled']);
+        return !flags || flags.scrapfly_enabled !== false;
     },
 
     /** A normal (not private) window to open a scan tab in, or null when the browser has none open. */
@@ -67,11 +75,18 @@ const BackgroundTabScan = {
      * Open the address in a background tab and wait for the extension's scan of it.
      * @param {string} url
      * @param {{windowId: number, timeoutMs?: number, owner?: string, quiet?: boolean, token?: {cancelled?: boolean}}} options
-     * @returns {Promise<{ok: boolean, url?: string, results?: Array, excluded?: boolean, error?: 'timeout'|'load'|'cancelled'|string}>}
+     * @returns {Promise<{ok: boolean, url?: string, results?: Array, excluded?: boolean, httpStatus?: number, error?: 'timeout'|'load'|'cancelled'|'off'|string}>}
      */
     async scan(url, options = {}) {
         const { windowId, owner = 'scan', quiet = false, token = null } = options;
         const timeoutMs = Number.isFinite(options.timeoutMs) && options.timeoutMs > 0 ? options.timeoutMs : this.DEFAULT_TIMEOUT_MS;
+        if (token && token.cancelled) return { ok: false, error: 'cancelled' };
+        // Asked right before the tab opens, whoever asks (the watchlist, Bulk scan): switched off, nothing opens
+        try {
+            if (!await this.extensionOn()) return { ok: false, error: 'off' };
+        } catch (error) {
+            return { ok: false, error: String((error && error.message) || error) };
+        }
         if (token && token.cancelled) return { ok: false, error: 'cancelled' };
         DetectionEngineManager.bypassCache(url);
         let tab = null;

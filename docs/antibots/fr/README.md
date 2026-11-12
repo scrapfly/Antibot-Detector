@@ -2,7 +2,7 @@
 
 # Protections anti-bot reconnues par Antibot Detector
 
-Une page pour chacun des 44 détecteurs anti-bot de l'extension [Scrapfly Anti-bot Detector](../../README.fr.md) : ce qu'est la protection, les signaux publics qui la révèlent, son niveau de difficulté et ce qu'elle implique en général pour le web scraping. Les pages sont générées à partir des règles de détection de `detectors/antibot/`. Pour contourner les systèmes anti-bot à grande échelle, consultez [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) de Scrapfly.
+Une page pour chacun des 49 détecteurs anti-bot de l'extension [Scrapfly Anti-bot Detector](../../README.fr.md) : ce qu'est la protection, les signaux publics qui la révèlent, son niveau de difficulté et ce qu'elle implique en général pour le web scraping. Les pages sont générées à partir des règles de détection de `detectors/antibot/`. Pour contourner les systèmes anti-bot à grande échelle, consultez [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) de Scrapfly.
 
 | Protection | Difficulté | Page |
 | --- | --- | --- |
@@ -12,6 +12,8 @@ Une page pour chacun des 44 détecteurs anti-bot de l'extension [Scrapfly Anti-b
 | Anubis | Faible | [Anubis](anubis.md) |
 | AWS WAF | Moyenne | [AWS WAF](aws-waf.md) |
 | Azure Front Door | Faible | [Azure Front Door](azurefrontdoor.md) |
+| Azure WAF | Moyenne | [Azure WAF](azure-waf.md) |
+| Bunny Shield | Moyenne | [Bunny Shield](bunny-shield.md) |
 | Castle | Moyenne | [Castle](castle.md) |
 | Cheq | Moyenne | [Cheq](cheq.md) |
 | Cloudflare Bot Management | Moyenne | [Cloudflare Bot Management](cloudflare.md) |
@@ -24,6 +26,7 @@ Une page pour chacun des 44 détecteurs anti-bot de l'extension [Scrapfly Anti-b
 | FingerprintJS | Faible | [FingerprintJS](fingerprintjs.md) |
 | Forter | Moyenne | [Forter](forter.md) |
 | Google BotGuard | Élevée | [Google BotGuard](botguard.md) |
+| Google Cloud Armor | Moyenne | [Google Cloud Armor](cloud-armor.md) |
 | Huawei Cloud WAF | Faible | [Huawei Cloud WAF](huaweicloud-waf.md) |
 | HUMAN (PerimeterX) | Élevée | [HUMAN (PerimeterX)](perimeterx.md) |
 | Hunt | Élevée | [Hunt](hunt.md) |
@@ -44,8 +47,10 @@ Une page pour chacun des 44 détecteurs anti-bot de l'extension [Scrapfly Anti-b
 | SEON | Moyenne | [SEON](seon.md) |
 | Shape Security | Élevée | [Shape Security](shapesecurity.md) |
 | Sift | Faible | [Sift](sift.md) |
+| Signifyd | Faible | [Signifyd](signifyd.md) |
 | SiteGround SG-CAPTCHA | Faible | [SiteGround SG-CAPTCHA](siteground-captcha.md) |
 | Sucuri WAF | Faible | [Sucuri WAF](sucuri.md) |
+| Tencent Cloud EdgeOne | Moyenne | [Tencent Cloud EdgeOne](edgeone.md) |
 | ThreatMetrix | Moyenne | [ThreatMetrix](threatmetrix.md) |
 | Vercel Firewall | Moyenne | [Vercel Firewall](vercel.md) |
 | Wordfence | Faible | [Wordfence](wordfence.md) |

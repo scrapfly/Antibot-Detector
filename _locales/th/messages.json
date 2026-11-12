@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "ประวัติการตรวจจับจะแสดงที่นี่เมื่อคุณท่องเว็บไซต์"
   },
+  "historyPausedNote": {
+    "message": "ประวัติหยุดชั่วคราวอยู่ หน้าที่สแกนจึงไม่ถูกบันทึก"
+  },
   "rulesUpdateTitle": {
     "message": "ติดตั้งการอัปเดตกฎจากรีลีสล่าสุดของ Scrapfly"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "ผู้เขียน"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "สีป้าย"
   },
   "ruleSectionDetectionMethods": {
     "message": "วิธีการตรวจจับ"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "ส่งออก {0} แล้ว"
   },
+  "rulesExportedFmt": {
+    "message": "ส่งออกกฎ {0} รายการแล้ว"
+  },
   "failedImportDetectors": {
     "message": "นำเข้าตัวตรวจจับไม่สำเร็จ ตรวจสอบรูปแบบไฟล์"
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "ลบ \"{0}\" แล้ว"
+  },
+  "ruleSavedFmt": {
+    "message": "บันทึก \"{0}\" แล้ว"
   },
   "failedClearDetectors": {
     "message": "ล้างตัวตรวจจับไม่สำเร็จ"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "สูง"
   },
+  "settingsBadgeCountTitle": {
+    "message": "ตัวเลขบนแถบเครื่องมือ"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "สิ่งที่ตัวเลขบนไอคอนในแถบเครื่องมือนับ Fingerprinting ทำงานอยู่บนเว็บไซต์ส่วนใหญ่ ป๊อปอัปและประวัติยังคงแสดงทุกอย่าง"
+  },
+  "settingsBadgeCountAll": {
+    "message": "ทุกการตรวจพบ"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "เฉพาะ anti-bot และ CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "เปิดใช้เหตุการณ์ JS API"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "การดำเนินการนี้จะลบข้อมูลที่จับทั้งหมดของผู้ให้บริการรายนี้อย่างถาวร"
-  },
-  "rulesColorPickerCancel": {
-    "message": "ยกเลิก"
-  },
-  "rulesColorPickerOk": {
-    "message": "ตกลง"
   },
   "rulesContentSearchScopeTitle": {
     "message": "ขอบเขตการค้นหาเนื้อหา"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "เปลี่ยนไอคอนตัวตรวจจับ"
   },
-  "rulesUiCustomColor": {
-    "message": "สีที่กำหนดเอง"
-  },
   "iconPickerTitle": {
     "message": "เลือกไอคอน"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "เพิ่มขึ้นจากระบบป้องกัน {0} ระบบรวมกัน"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "ไม่พบ anti-bot หรือ CAPTCHA ที่ 50% ขึ้นไป"
   },
   "tipLastUpdated": {
     "message": "อัปเดตเมื่อ"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "หน้าที่ใช้ผลลัพธ์ที่แคชไว้นี้ซ้ำ และนานเท่าใด"
+  },
+  "detectionStatHttpStatus": {
+    "message": "สถานะ HTTP"
+  },
+  "detectionTipHttpStatus": {
+    "message": "รหัสสถานะ HTTP ที่หน้าเว็บตอบกลับขณะสแกน ข้อผิดพลาด (4xx หรือ 5xx) มักหมายความว่าคำขอถูกบล็อกหรือถูกท้าทาย"
   },
   "tipCacheExpires": {
     "message": "หมดอายุ"
@@ -5439,7 +5457,7 @@
     "message": "จำนวนข้อมูลสำรองที่เก็บไว้"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "หลังการสำรองข้อมูลแต่ละครั้ง ข้อมูลสำรองเก่าที่เกินจำนวนนี้จะถูกลบออกจากโฟลเดอร์ดาวน์โหลดของคุณ (ข้อมูลสำรองที่บันทึกเป็นหลายส่วนนับเป็นหนึ่งชุด) ระบบจะลบเฉพาะไฟล์สำรองที่ส่วนขยายนี้บันทึกไว้เท่านั้น หากเก็บไว้ทั้งหมดจะไม่มีการลบอะไรเลย"
+    "message": "หลังการสำรองข้อมูลแต่ละครั้ง ข้อมูลสำรองเก่าที่เกินจำนวนนี้จะถูกลบออกจากโฟลเดอร์ดาวน์โหลดของคุณ (ข้อมูลสำรองที่บันทึกเป็นหลายส่วนนับเป็นหนึ่งชุด) ระบบจะลบเฉพาะไฟล์สำรองที่ส่วนขยายนี้บันทึกไว้เท่านั้น หากเก็บไว้ทั้งหมดจะไม่มีการลบอะไรเลย ข้อมูลสำรองที่สร้างก่อนเวอร์ชัน 3.1.7 จะยังอยู่จนกว่าคุณจะลบเอง"
   },
   "settingsHistoryBackupNow": {
     "message": "สำรองข้อมูลทันที"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "การตรวจสอบครั้งล่าสุดพบว่าส่วนขยายปิดอยู่ จึงไม่ได้ตรวจสอบอะไร"
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "การตรวจสอบครั้งล่าสุดหยุดลง เพราะส่วนขยายถูกปิด"
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "การตรวจสอบครั้งล่าสุดหยุดลง เพราะประวัติถูกหยุดชั่วคราว"
+  },
   "settingsUiErrHistoryWatch": {
     "message": "การติดตามต้องเป็นปิด รายวัน หรือรายสัปดาห์"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "การตรวจจับ: {0} · ความมั่นใจ: {1}% · ความยาก: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "สถานะ HTTP: {0}"
+  },
   "detectionMdColProtection": {
     "message": "ระบบป้องกัน"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "สแกนอีกครั้งตอนนี้"
+  },
+  "detectionFromPageFmt": {
+    "message": "จากการสแกน {0} เมื่อ {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "เปลี่ยนแปลงตั้งแต่ {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "ไม่มีการเปลี่ยนแปลงตั้งแต่ {0}"
   },
   "rulesDuplicate": {
     "message": "ทำสำเนา"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "ประวัติหยุดชั่วคราวอยู่ หน้าจะถูกสแกนแต่ไม่ถูกบันทึก"
   },
+  "bulkFromHistoryFmt": {
+    "message": "หน้าจากประวัติ: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "กำลังสแกนหลายหน้าอยู่ จึงไม่ได้เพิ่มหน้าจากประวัติ"
+  },
   "bulkReadingSitemaps": {
     "message": "กำลังอ่านแผนผังเว็บไซต์…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "การป้องกันที่ตรวจพบพร้อมระดับความเชื่อมั่น คั่นด้วยจุลภาค"
+  },
+  "webhookVarHttpStatus": {
+    "message": "รหัสสถานะ HTTP ของหน้าเว็บ (0 หากไม่ทราบ)"
   },
   "historyCopyMarkdown": {
     "message": "คัดลอกเป็น Markdown"

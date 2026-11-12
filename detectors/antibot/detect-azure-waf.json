@@ -1,0 +1,80 @@
+{
+  "id": "detect-azure-waf",
+  "name": "Azure WAF",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-11-12",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://learn.microsoft.com/azure/web-application-firewall/",
+  "icon": "custom.png",
+  "description": "Azure Web Application Firewall on Front Door and Application Gateway, with JavaScript challenge and CAPTCHA actions against bots",
+  "detection": {
+    "cookie": [
+      {
+        "id": "azwaf-frontdoor-js-cookie",
+        "name": "^afd_azwaf_jsclearance$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "afd_azwaf_jsclearance cookie Azure WAF on Front Door sets after its JavaScript challenge is passed (Microsoft Learn)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "azwaf-appgw-js-cookie",
+        "name": "^appgw_azwaf_jsclearance$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "appgw_azwaf_jsclearance cookie Azure WAF on Application Gateway sets after its JavaScript challenge is passed (Microsoft Learn)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "azwaf-frontdoor-captcha-cookie",
+        "name": "^afd_azwaf_captcha$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "afd_azwaf_captcha cookie Azure WAF on Front Door sets after its CAPTCHA is solved (Microsoft Learn)",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "azwaf-frontdoor-challenges",
+      "name": "Front Door JavaScript challenge and CAPTCHA cookies",
+      "confidence": 100,
+      "when": {
+        "all": [
+          { "pattern": "azwaf-frontdoor-js-cookie" },
+          { "pattern": "azwaf-frontdoor-captcha-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "azwaf-layered-js",
+      "name": "JavaScript challenge cookies of Front Door and Application Gateway",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "azwaf-frontdoor-js-cookie" },
+          { "pattern": "azwaf-appgw-js-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "azwaf-layered-captcha",
+      "name": "Application Gateway JavaScript challenge cookie with the Front Door CAPTCHA cookie",
+      "confidence": 95,
+      "when": {
+        "all": [
+          { "pattern": "azwaf-appgw-js-cookie" },
+          { "pattern": "azwaf-frontdoor-captcha-cookie" }
+        ]
+      }
+    }
+  ]
+}

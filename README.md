@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector is a free Chrome extension that shows how a website protects itself from automated traffic. Browse as you normally would: the number on the toolbar icon tells you how many protections the page uses, and the popup lists each one with its confidence, its difficulty and the signals that gave it away.
 
-It recognizes 88 technologies out of the box: 44 anti-bot systems, 23 CAPTCHAs and 21 browser fingerprinting techniques. Every detector is a plain JSON file that you can read, change or extend, and new rules ship with each release of this repository, so Rules → Update can install them before Chrome updates the extension itself.
+It recognizes 94 technologies out of the box: 49 anti-bot systems, 24 CAPTCHAs and 21 browser fingerprinting techniques. Every detector is a plain JSON file that you can read, change or extend, and new rules ship with each release of this repository, so Rules → Update can install them before Chrome updates the extension itself.
 
 We built it at [Scrapfly](https://scrapfly.io) because every scraping project starts with the same question: what is protecting this page? It is just as useful for checking how your own site's bot protection looks from the outside, or for security research.
 
@@ -94,7 +94,7 @@ When a page loads, the extension gathers what the page reveals about itself and 
 | JavaScript hooks | Calls to browser APIs commonly used for fingerprinting | `HTMLCanvasElement.prototype.toDataURL` |
 | Payload | Bodies of POST, PUT and PATCH requests, optionally filtered by URL and method, and the responses of the URLs a rule names | `sensor_data` (Akamai), `"proofofwork":{"required":true` (OpenAI Sentinel) |
 
-**Confidence.** Each rule has its own confidence and detectors define combinations of rules that score higher together. A script that only mentions a vendor's name scores 5–10%; a signal only that vendor's product produces (its own script host, its own cookie, its challenge endpoint) is proof and scores 100% on its own, and so does a vendor's complete integration (its script together with its cookie, widget frame or challenge request). Shared or generic signals stay at 15–90%. The score shown for each detector is its strongest single rule or combination. The page also gets a difficulty rating (Low, Medium or High), which sets the color of the toolbar badge.
+**Confidence.** Each rule has its own confidence and detectors define combinations of rules that score higher together. A script that only mentions a vendor's name scores 5–10%; a signal only that vendor's product produces (its own script host, its own cookie, its challenge endpoint) is proof and scores 100% on its own, and so does a vendor's complete integration (its script together with its cookie, widget frame or challenge request). Shared or generic signals stay at 15–90%. The score shown for each detector is its strongest single rule or combination. The page also gets a difficulty rating (Low, Medium or High), which sets the color of the toolbar badge. Only the anti-bot and CAPTCHA protections found at 50% or more set it: fingerprinting and a script that only mentions a vendor do not.
 
 **Fingerprinting.** The API hooks are in place before the page's own scripts run, and they also cover same-origin iframes, where fingerprinting code often hides. By default they watch for at least 4 seconds, then until the page has been quiet for 2 seconds, and for 8 seconds at most.
 
@@ -107,18 +107,18 @@ The lists below are the detectors that ship with the extension. You can switch a
 Every anti-bot system has its own page, with the cookies, headers and scripts that give it away: [anti-bot detection pages](docs/antibots/README.md).
 
 <details>
-<summary><b>Anti-bot systems (44)</b></summary>
+<summary><b>Anti-bot systems (49)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Azure WAF · Bunny Shield · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Google Cloud Armor · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · Signifyd · SiteGround SG-CAPTCHA · Sucuri WAF · Tencent Cloud EdgeOne · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHAs (23)</b></summary>
+<summary><b>CAPTCHAs (24)</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · EU CAPTCHA (Myra) · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 
@@ -177,7 +177,7 @@ Results and captures are kept for 30 minutes in **Advanced → History**, where 
 
 ### Settings
 
-- **General:** interface language (22 languages, following your browser by default), theme (Dark, Light or System), notifications, debug mode, scheduled detector updates, and the colors of the badge, categories and tags.
+- **General:** interface language (22 languages, following your browser by default), theme (Dark, Light or System), notifications, debug mode, scheduled detector updates, what the toolbar number counts (every detection, or anti-bot and CAPTCHA only), and the colors of the badge, categories and tags.
 - **Detection:** cache duration and scope, the order of categories in the results, the Advanced tools confidence limit, which sites are scanned (every site except the ones you skip, or only the sites you choose), JS API events, webhooks and share links.
 - **History:** what to record (pause History, skip private windows, ignored sites, minimum confidence, skip fingerprint-only pages), how many entries to keep (up to 10,000; 0 keeps the newest 1,000), deleting entries after a number of days or when the browser closes, skipping or updating repeated scans, notifications when a page's protections change, the default export format, a storage meter with its warning, and an automatic backup to your Downloads folder.
 
@@ -214,7 +214,7 @@ Because these events reach the page itself, any website you visit can listen for
 
 ### Webhooks
 
-When a scan finds protections, the extension can send the results to your own endpoint. Choose the HTTP method, add headers and write the body as a template with variables such as `<SITEURL>`, `<HOSTNAME>`, `<TITLE>`, `<DETECTIONS>`, `<DETECTION_COUNT>`, `<DETECTION_NAMES>` (the protections with their confidence, on one line), `<CATEGORIES>` and `<TIMESTAMP>`. **Start from a preset** (Slack, Mattermost or Google Chat, Discord, or a plain text line) fills in the Content-Type and a ready-made chat message. Webhooks only go to HTTPS addresses on public hosts, are off by default, and include a **Test** button. Set them up in Settings → Detection → Webhook Integration.
+When a scan finds protections, the extension can send the results to your own endpoint. Choose the HTTP method, add headers and write the body as a template with variables such as `<SITEURL>`, `<HOSTNAME>`, `<TITLE>`, `<DETECTIONS>`, `<DETECTION_COUNT>`, `<DETECTION_NAMES>` (the protections with their confidence, on one line), `<HTTP_STATUS>` (the page's HTTP status code, such as 403 for a block page), `<CATEGORIES>` and `<TIMESTAMP>`. **Start from a preset** (Slack, Mattermost or Google Chat, Discord, or a plain text line) fills in the Content-Type and a ready-made chat message. Webhooks only go to HTTPS addresses on public hosts, are off by default, and include a **Test** button. Set them up in Settings → Detection → Webhook Integration.
 
 **Recent deliveries and retries.** Settings → Detection → Webhook lists the last 20 attempts (the page, the status, how long it took; never an address, header or payload). A delivery that fails can be sent again with **Retry**, and with **Retry failed deliveries** on (the default) the extension also retries by itself after 1, 5 and 15 minutes when there was no answer or the server answered 408, 425, 429 or 5xx; a refusal such as 401, 403 or 404 waits for your Retry. To do that, the page data of a failed delivery is kept in memory for an hour (at most 20), never on disk, and gone when the browser closes; a retry builds the request again from your current webhook settings, so a corrected address or secret is used and no header or secret is stored with it.
 

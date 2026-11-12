@@ -45,30 +45,29 @@ function registerLogCollectorHandlers(registry, context) {
     };
     registry[WorkerMessages.LOG_COLLECTOR_CLEAR] = MessageSender.extensionPagesOnly(handle_log_collector_clear);
 
+    // Export: the worker builds the file and hands it over ({ filename, type, text }); Settings saves it from a Blob and says
+    // whether the download started (a full log is over the size of a data: address, and a worker cannot make a Blob address)
+    const exportAnswer = (build) => {
+        if (typeof logCollector === 'undefined') return { status: 'error', message: 'LogCollector not available' };
+        try {
+            const file = build(logCollector);
+            if (typeof Logger !== 'undefined' && typeof Logger.storage === 'function') Logger.storage('[LogCollector] Built log export:', file.filename);
+            return { status: 'success', filename: file.filename, type: file.type, text: file.text };
+        } catch (error) {
+            return { status: 'error', message: String((error && error.message) || error) };
+        }
+    };
+
     const handle_log_collector_export_json = function({ request, sender, sendResponse, context }) {
         void context;
-
-        if (typeof logCollector !== 'undefined') {
-            const jsonFilename = logCollector.exportAsJSON();
-            Logger.storage('[LogCollector] Exported logs as JSON:', jsonFilename);
-            sendResponse({ status: 'success', filename: jsonFilename });
-        } else {
-            sendResponse({ status: 'error', message: 'LogCollector not available' });
-        }
+        sendResponse(exportAnswer(collector => collector.buildJSON()));
         return true; // Keep message channel open for response
     };
     registry[WorkerMessages.LOG_COLLECTOR_EXPORT_JSON] = MessageSender.extensionPagesOnly(handle_log_collector_export_json);
 
     const handle_log_collector_export_text = function({ request, sender, sendResponse, context }) {
         void context;
-
-        if (typeof logCollector !== 'undefined') {
-            const textFilename = logCollector.exportAsText();
-            Logger.storage('[LogCollector] Exported logs as text:', textFilename);
-            sendResponse({ status: 'success', filename: textFilename });
-        } else {
-            sendResponse({ status: 'error', message: 'LogCollector not available' });
-        }
+        sendResponse(exportAnswer(collector => collector.buildText()));
         return true; // Keep message channel open for response
     };
     registry[WorkerMessages.LOG_COLLECTOR_EXPORT_TEXT] = MessageSender.extensionPagesOnly(handle_log_collector_export_text);

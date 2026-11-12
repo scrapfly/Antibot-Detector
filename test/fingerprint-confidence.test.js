@@ -151,8 +151,9 @@ test('all 21 fingerprint definitions have multiple graded, reachable combination
     // 2026-10-26: Hardware and Navigator 1.4.0 (WebGPU adapter, permission queries), Orientation 1.3.0 (sensor reads)
     // 2026-11-09: Audio, Media and WebRTC 1.2.1 / 1.3.1 / 1.2.1 (dead disabled rules removed)
     // 2026-11-11: Navigator 1.4.1 (CPU count and device memory left to Hardware: one read, one card)
-    assert.match(detector.version, /^1\.(?:2\.[01]|3\.[01]|4\.[01])$/, detector.id);
-    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[378]|16|26)|11-(?:09|11))$/, detector.id);
+    // 2026-11-12: Navigator 1.5.0 (automation and client hints profiles that need no CPU or memory read)
+    assert.match(detector.version, /^1\.(?:2\.[01]|3\.[01]|4\.[01]|5\.0)$/, detector.id);
+    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[378]|16|26)|11-(?:09|1[12]))$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate pattern ids`);
@@ -305,3 +306,23 @@ for (const detector of Object.values(fingerprint)) {
     assert.equal(merged.partial, undefined);
   });
 }
+
+
+// 3.1.7 left the CPU count and device memory to the Hardware card, and with them Navigator's 50-75% profiles: a typical
+// fingerprinting script (user agent, webdriver, client hints, CPU, memory, languages) fell from 75% to 30% on the Navigator card
+test('Navigator scores an automation and client hints profile without any CPU or memory read, and leaves those reads to Hardware', async () => {
+  const navigator = fingerprint['detect-navigator-fingerprint'];
+  const hardware = fingerprint['detect-hardware-fingerprint'];
+  const targets = detector => new Set(patterns(detector).filter(rule => rule.method === 'js_hooks').map(rule => rule.target));
+  for (const target of ['Navigator.prototype.hardwareConcurrency', 'Navigator.prototype.deviceMemory']) {
+    assert.ok(!targets(navigator).has(target), `Navigator hooks ${target}`);
+    assert.ok(targets(hardware).has(target), `Hardware no longer hooks ${target}`);
+  }
+  assert.doesNotMatch(navigator.description, /device capabilit/i);
+  const score = async ids => (await detectFor(navigator, pageFor(navigator, ids)))?.confidence || 0;
+  assert.equal(await score(['navigator-automation', 'navigator-hints']), 50);
+  assert.equal(await score(['navigator-agent', 'navigator-automation', 'navigator-hints', 'navigator-languages']), 65);
+  assert.equal(await score(['navigator-platform', 'navigator-automation', 'navigator-hints', 'navigator-languages']), 65);
+  assert.equal(await score(['navigator-agent', 'navigator-languages']), 30);
+  assert.equal(await score(['navigator-hints']), 30);
+});

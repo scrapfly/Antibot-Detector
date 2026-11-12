@@ -52,7 +52,10 @@
     { token: '<TIMESTAMP>', key: 'timestamp', kind: 'string', descKey: 'webhookVarTimestamp', desc: 'Time of the detection (ISO 8601)', sample: '2026-01-01T12:00:00.000Z' },
     { token: '<DETECTION_COUNT>', key: 'detectionCount', kind: 'number', descKey: 'webhookVarDetectionCount', desc: 'Number of detections', sample: 1 },
     { token: '<CATEGORIES>', key: 'categories', kind: 'string', descKey: 'webhookVarCategories', desc: 'Detected categories, comma-separated', sample: 'antibot' },
-    { token: '<DETECTION_NAMES>', key: 'detectionNames', kind: 'string', descKey: 'webhookVarDetectionNames', desc: 'Detected protections with their confidence, comma-separated', sample: 'Cloudflare Bot Management 85%' }
+    { token: '<DETECTION_NAMES>', key: 'detectionNames', kind: 'string', descKey: 'webhookVarDetectionNames', desc: 'Detected protections with their confidence, comma-separated', sample: 'Cloudflare Bot Management 85%' },
+    // The status code of the response that loaded the page (403, 429 or 503 often mean it was blocked): 0 when it is not known,
+    // so a JSON template stays valid
+    { token: '<HTTP_STATUS>', key: 'httpStatus', kind: 'number', descKey: 'webhookVarHttpStatus', desc: 'HTTP status code of the page (0 when not known)', sample: 200 }
   ]);
 
   /**

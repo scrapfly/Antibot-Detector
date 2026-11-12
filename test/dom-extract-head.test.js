@@ -151,3 +151,47 @@ test('every DOM witness of the confidence fixtures is still found when the page 
   }
   assert.ok(checked >= 45, `${checked} witnesses checked`);
 });
+
+// The walk used to record every <div> (30,000 on a long page: a 4.6 MB message and 0.7 s of DOM matching in the worker).
+// Divs now go through the same prefilter as other elements, so the walk keeps a div only when a configured rule could match it.
+
+/** A minimal element for each branch of a rule's selector: its tag (a div when the selector names none) and attributes. */
+function elementsFor(selector) {
+  const groups = vm.runInContext(`demParseDOMSelector(${JSON.stringify(selector)})`, context);
+  assert.ok(groups, `${selector}: a selector the engine reads`);
+  return Array.from(groups, group => {
+    const attributes = {};
+    for (const token of group.tokens) {
+      const value = { '': '', '=': token.value, '~=': token.value, '|=': token.value, '^=': `${token.value}x`, '$=': `x${token.value}`, '*=': `x${token.value}x` }[token.operator];
+      attributes[token.attribute] = token.attribute === 'class' && attributes.class ? `${attributes.class} ${value}` : value;
+    }
+    return element(group.tag && group.tag !== '*' ? group.tag : 'div', attributes);
+  });
+}
+
+test('every enabled DOM rule of every shipped detector still finds a minimal element it names, among plain divs', () => {
+  let checked = 0;
+  for (const detector of all.filter(detector => detector.enabled !== false)) {
+    for (const rule of (detector.detection.dom || []).filter(rule => rule.enabled !== false)) {
+      for (const target of elementsFor(rule.selector)) {
+        const filler = Array.from({ length: 20 }, (_, index) => element('div', { class: `row row-${index}` }, [element('span', {}, [], 'x')]));
+        const records = extract(documentOf({ body: [element('div', { id: 'app' }, [...filler, element('div', {}, [target])])] }));
+        const found = domMatches(records);
+        assert.ok(found.includes(`${detector.id}/${rule.id}`), `${detector.id}/${rule.id} (${target.tagName.toLowerCase()} for ${rule.selector}): ${JSON.stringify(found)}`);
+        checked += 1;
+      }
+    }
+  }
+  assert.ok(checked >= 70, `${checked} selector branches checked`);
+});
+
+test('a page of plain divs records none of them, and a widget among them still is', () => {
+  const rows = Array.from({ length: 500 }, (_, index) => element('div', { class: `card card-${index}`, id: `item-${index}` }, [element('div', {}, [], 'text')]));
+  const records = extract(documentOf({ body: [element('div', { id: 'app' }, [...rows, element('div', { class: 'h-captcha', 'data-sitekey': 'key' }),
+    element('div', { 'data-callback': 'onDone' })])] }));
+  assert.deepEqual(records.filter(record => record.selector === 'div'), [
+    { selector: 'div', id: '', class: 'h-captcha', attributes: { class: 'h-captcha', 'data-sitekey': 'key' } },
+    { selector: 'div', id: '', class: '', attributes: { 'data-callback': 'onDone' } }
+  ]);
+  assert.deepEqual(domMatches(records), ['detect-hcaptcha/hcaptcha-configured-widget']);
+});

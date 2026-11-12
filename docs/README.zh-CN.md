@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector 是一款免费的 Chrome 扩展程序，用来查看网站如何防范自动化流量。照常浏览即可：工具栏图标上的数字告诉你当前页面用了多少种防护，弹出窗口则逐一列出每项防护的置信度、难度以及暴露它的信号。
 
-它开箱即可识别 88 种技术：44 套反机器人系统、23 种验证码和 21 种浏览器指纹识别技术。每个检测器都是一个普通的 JSON 文件，你可以阅读、修改或扩展它；新规则会随本仓库的每次发布一起推出，因此在 Chrome 更新扩展本身之前，**规则 → 更新**就能把它们装好。
+它开箱即可识别 94 种技术：49 套反机器人系统、24 种验证码和 21 种浏览器指纹识别技术。每个检测器都是一个普通的 JSON 文件，你可以阅读、修改或扩展它；新规则会随本仓库的每次发布一起推出，因此在 Chrome 更新扩展本身之前，**规则 → 更新**就能把它们装好。
 
 我们在 [Scrapfly](https://scrapfly.io) 开发这款工具，是因为每个爬虫项目都从同一个问题开始：这个页面由什么在保护？它同样适合从外部检查你自己网站的机器人防护效果，或用于安全研究。
 
@@ -92,7 +92,7 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 | JavaScript 钩子 | 对常用于指纹识别的浏览器 API 的调用 | `HTMLCanvasElement.prototype.toDataURL` |
 | 负载 | POST、PUT 和 PATCH 请求的请求体（可按 URL 和方法筛选），以及规则指定的 URL 的响应 | `sensor_data` (Akamai), `"proofofwork":{"required":true` (OpenAI Sentinel) |
 
-**置信度。** 每条规则都有自己的置信度，检测器还可以定义规则组合，多条规则同时命中时得分更高。仅提到厂商名称的脚本得分为 5–10%；只有该厂商产品才会产生的信号（它自己的脚本主机、Cookie 或挑战端点）本身就是确证，单独即可得 100%；厂商的完整接入（其脚本加上 Cookie、组件框架或挑战请求）同样如此。通用或多家共用的信号则保持在 15–90%。每个检测器显示的分数取其得分最高的单条规则或组合。页面还会得到一个难度评级（**低**、**中**或**高**），决定工具栏徽章的颜色。
+**置信度。** 每条规则都有自己的置信度，检测器还可以定义规则组合，多条规则同时命中时得分更高。仅提到厂商名称的脚本得分为 5–10%；只有该厂商产品才会产生的信号（它自己的脚本主机、Cookie 或挑战端点）本身就是确证，单独即可得 100%；厂商的完整接入（其脚本加上 Cookie、组件框架或挑战请求）同样如此。通用或多家共用的信号则保持在 15–90%。每个检测器显示的分数取其得分最高的单条规则或组合。页面还会得到一个难度评级（**低**、**中**或**高**），决定工具栏徽章的颜色。难度只由置信度达到 50% 或以上的反机器人和验证码防护决定，指纹识别和仅提到厂商名称的脚本不计入。
 
 **指纹识别。** API 钩子在页面自身脚本运行之前就已就位，同源 iframe 也在覆盖范围内，而指纹识别代码常常藏在那里。默认情况下，钩子至少监视 4 秒，之后持续到页面安静 2 秒为止，最长 8 秒。
 
@@ -105,18 +105,18 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 每个反爬系统都有单独的页面，列出暴露它的 Cookie、请求头和脚本：[反爬系统检测页面](antibots/zh-CN/README.md)。
 
 <details>
-<summary><b>反机器人系统（44）</b></summary>
+<summary><b>反机器人系统（49）</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Azure WAF · Bunny Shield · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Google Cloud Armor · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · Signifyd · SiteGround SG-CAPTCHA · Sucuri WAF · Tencent Cloud EdgeOne · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>验证码（23）</b></summary>
+<summary><b>验证码（24）</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · EU CAPTCHA (Myra) · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 
@@ -175,7 +175,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 ### 设置
 
-- **常规：** 界面语言（22 种，默认跟随浏览器）、主题（**深色**、**浅色**或**跟随系统**）、通知、调试模式、检测器定时更新，以及徽章、类别和标签的颜色。
+- **常规：** 界面语言（22 种，默认跟随浏览器）、主题（**深色**、**浅色**或**跟随系统**）、通知、调试模式、检测器定时更新、工具栏数字统计的内容（全部检测结果，或仅反机器人和验证码），以及徽章、类别和标签的颜色。
 - **检测：** 缓存时长和范围、结果中各类别的顺序、高级工具的置信度阈值、扫描哪些网站（除你跳过的网站外全部扫描，或只扫描你选定的网站）、JS API 事件、Webhook 和分享链接。
 - **历史记录：** 记录哪些内容（暂停历史记录、跳过隐私窗口、忽略的网站、最低置信度、跳过仅含指纹识别的页面）、保留多少条目（最多 10,000 条；设为 0 则保留最新的 1,000 条）、在若干天后或关闭浏览器时删除条目、跳过或更新重复扫描、页面防护措施变化时发出通知、默认导出格式、带警告的存储用量条，以及自动备份到“下载”文件夹。
 
@@ -212,7 +212,7 @@ on('onDetection', (e) => {
 
 ### Webhook
 
-扫描发现防护措施时，扩展可以把结果发送到你自己的端点。你可以选择 HTTP 方法、添加请求头，并用模板编写请求体，模板中可使用 `<SITEURL>`、`<HOSTNAME>`、`<TITLE>`、`<DETECTIONS>`、`<DETECTION_COUNT>`、`<DETECTION_NAMES>`（单行列出各防护措施及其置信度）、`<CATEGORIES>` 和 `<TIMESTAMP>` 等变量。**从预设开始**（Slack、Mattermost 或 Google Chat、Discord，或一行纯文本）会填入 Content-Type 和现成的聊天消息模板。Webhook 只会发往公共主机上的 HTTPS 地址，默认关闭，并带有**测试**按钮。可在**设置 → 检测 → Webhook 集成**中配置。
+扫描发现防护措施时，扩展可以把结果发送到你自己的端点。你可以选择 HTTP 方法、添加请求头，并用模板编写请求体，模板中可使用 `<SITEURL>`、`<HOSTNAME>`、`<TITLE>`、`<DETECTIONS>`、`<DETECTION_COUNT>`、`<DETECTION_NAMES>`（单行列出各防护措施及其置信度）、`<HTTP_STATUS>`（页面的 HTTP 状态码，例如拦截页面的 403）、`<CATEGORIES>` 和 `<TIMESTAMP>` 等变量。**从预设开始**（Slack、Mattermost 或 Google Chat、Discord，或一行纯文本）会填入 Content-Type 和现成的聊天消息模板。Webhook 只会发往公共主机上的 HTTPS 地址，默认关闭，并带有**测试**按钮。可在**设置 → 检测 → Webhook 集成**中配置。
 
 **最近发送记录与重试。** **设置 → 检测 → Webhook** 会列出最近 20 次发送尝试（页面、状态、耗时；绝不包含地址、请求头或负载）。失败的发送可以用**重试**再次发送；开启**自动重试失败的发送**（默认开启）后，如果没有收到响应，或服务器返回 408、425、429 或 5xx，扩展还会在 1、5 和 15 分钟后自动重试；401、403 或 404 这类拒绝则会等你手动**重试**。为此，失败发送的页面数据会在内存中保留一小时（最多 20 条），绝不写入磁盘，浏览器关闭后即清除；重试时会按你当前的 Webhook 设置重新构建请求，因此修正后的地址或密钥会生效，也不会随之存储任何请求头或密钥。
 

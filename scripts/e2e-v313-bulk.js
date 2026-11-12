@@ -187,10 +187,10 @@ const sitemapIndex = (...locs) => `<?xml version="1.0"?><sitemapindex xmlns="htt
     assert.deepEqual(json.run.protectionTotals, [{ name: 'Bulk Probe', category: 'antibot', pages: 2 }]);
     assert.equal(json.run.counts.found, 2);
     const csv = await download('#bulkExportCsvBtn');
-    assert.match(csv.slice(1), /^url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at\r\n/);
+    assert.match(csv.slice(1), /^url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at,http_status\r\n/);
     assert.ok(!/most seen|protectionTotals/i.test(csv), 'the CSV has no totals');
     assert.equal(csv.trimEnd().split('\r\n').length, 1 + finished.items.length, 'a header and one row per page (each protected page has one protection)');
-    console.log('PASS Most seen: the line under the totals, a line in the Markdown export, a field in the JSON export, the CSV as it was');
+    console.log('PASS Most seen: the line under the totals, a line in the Markdown export, a field in the JSON export, the CSV as it was (plus the HTTP status column 3.1.8 added last)');
 
     // A run with nothing found has no line
     await bulk.click('#bulkNewBtn');

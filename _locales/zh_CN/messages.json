@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "浏览网站时,检测历史记录将显示在此处。"
   },
+  "historyPausedNote": {
+    "message": "历史记录已暂停，扫描过的页面不会被记录。"
+  },
   "rulesUpdateTitle": {
     "message": "从 Scrapfly 最新发布版本安装规则更新"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "作者"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "徽章颜色"
   },
   "ruleSectionDetectionMethods": {
     "message": "检测方法"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "已导出 {0}"
   },
+  "rulesExportedFmt": {
+    "message": "已导出 {0} 条规则"
+  },
   "failedImportDetectors": {
     "message": "导入检测器失败。请检查文件格式。"
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "已删除 \"{0}\""
+  },
+  "ruleSavedFmt": {
+    "message": "已保存 \"{0}\""
   },
   "failedClearDetectors": {
     "message": "清除检测器失败"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "高"
   },
+  "settingsBadgeCountTitle": {
+    "message": "工具栏数字"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "工具栏图标上的数字统计哪些内容。大多数网站都有指纹识别；弹出窗口和历史记录仍会列出全部内容。"
+  },
+  "settingsBadgeCountAll": {
+    "message": "全部检测结果"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "仅反机器人和验证码"
+  },
   "settingsEnableJsApi": {
     "message": "启用 JS API 事件"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "此操作将永久删除该提供商的所有已捕获数据。"
-  },
-  "rulesColorPickerCancel": {
-    "message": "取消"
-  },
-  "rulesColorPickerOk": {
-    "message": "确定"
   },
   "rulesContentSearchScopeTitle": {
     "message": "内容搜索范围"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "更改检测器图标"
   },
-  "rulesUiCustomColor": {
-    "message": "自定义颜色"
-  },
   "iconPickerTitle": {
     "message": "选择图标"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "因 {0} 项防护同时存在而提高"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "未发现置信度 50% 及以上的反机器人或验证码"
   },
   "tipLastUpdated": {
     "message": "更新于"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "哪些页面会复用这些缓存结果，以及复用多久。"
+  },
+  "detectionStatHttpStatus": {
+    "message": "HTTP 状态"
+  },
+  "detectionTipHttpStatus": {
+    "message": "扫描时页面返回的 HTTP 状态码。错误（4xx 或 5xx）通常表示请求被拦截或遭遇了验证挑战。"
   },
   "tipCacheExpires": {
     "message": "过期时间"
@@ -5439,7 +5457,7 @@
     "message": "保留的备份数量"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "每次备份后，超出此数量的旧备份会从“下载”文件夹中删除（分成多个文件保存的一次备份只算一份）。只会删除此扩展保存的备份文件。全部保留时不会删除任何内容。"
+    "message": "每次备份后，超出此数量的旧备份会从“下载”文件夹中删除（分成多个文件保存的一次备份只算一份）。只会删除此扩展保存的备份文件。全部保留时不会删除任何内容。在 3.1.7 版之前创建的备份会一直保留，直到你自行删除。"
   },
   "settingsHistoryBackupNow": {
     "message": "立即备份"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "上次检查时扩展已关闭，因此没有检查任何内容。"
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "扩展被关闭，因此上次检查已中途停止。"
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "历史记录被暂停，因此上次检查已中途停止。"
+  },
   "settingsUiErrHistoryWatch": {
     "message": "监视列表必须为关闭、每天或每周"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "检测数：{0} · 置信度：{1}% · 难度：{2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP 状态：{0}"
+  },
   "detectionMdColProtection": {
     "message": "防护措施"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "立即重新扫描"
+  },
+  "detectionFromPageFmt": {
+    "message": "来自 {0} 的扫描，{1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "自 {0} 以来的变化：{1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "自 {0} 以来无变化"
   },
   "rulesDuplicate": {
     "message": "创建副本"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "历史记录已暂停：页面会被扫描，但不会被记录。"
   },
+  "bulkFromHistoryFmt": {
+    "message": "来自历史记录的页面：{0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "批量扫描正在进行，因此未添加历史记录中的页面。"
+  },
   "bulkReadingSitemaps": {
     "message": "正在读取站点地图…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "检测到的防护及其置信度，以逗号分隔"
+  },
+  "webhookVarHttpStatus": {
+    "message": "页面的 HTTP 状态码（未知时为 0）"
   },
   "historyCopyMarkdown": {
     "message": "复制为 Markdown"

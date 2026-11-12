@@ -1,10 +1,11 @@
 /**
- * Bulk scan page (sections/bulk/bulk.html), opened from History's "…" menu.
+ * Bulk scan page (sections/bulk/bulk.html), opened from History's "…" menu, or from its Select bar with the selected entries.
  *
  * The page reads the list (pasted, or a .txt/.csv file), expands the sitemaps it names, and hands the addresses to the
  * service worker, which owns the run (background/bulk-scan-runner.js): de-duplication, the cap, the "Sites to scan"
  * setting and the scans happen there. The page shows the run as the worker keeps it in chrome.storage.session, so it
  * can be closed and opened again while the run goes on. Exports are built here from that state (BulkScan.build).
+ * The addresses History's Select bar hands over (BulkHandoff, also in session storage) fill the list once.
  */
 (function() {
   'use strict';
@@ -237,6 +238,16 @@
     const pill = document.createElement('span');
     pill.className = `bulk-status bulk-status--${item.status}`;
     pill.textContent = label(STATUS_TEXT[item.status], item.status);
+    // A finished page's HTTP status beside its state ("Done · 403"), marked when it is an error: a block page stands out. The code is
+    // a protocol number, written in ASCII digits in every language
+    const code = item.status === 'done' ? HttpStatus.of(item.httpStatus) : null;
+    if (code) {
+      const http = document.createElement('span');
+      http.className = `bulk-http bulk-http--${HttpStatus.tone(code)}`;
+      http.textContent = String(code);
+      http.title = tr('detectionTipHttpStatus', 'The HTTP status code the page answered with when it was scanned. An error (4xx or 5xx) often means the request was blocked or challenged.');
+      pill.append(' · ', http);
+    }
     cell.appendChild(pill);
     if (item.reason) {
       const reason = document.createElement('span');
@@ -373,7 +384,10 @@
       ? fmt('bulkMostSeenFmt', 'Most seen: {0}', seen.map(row => `\u2068${row.name} (${number(row.pages)})\u2069`).join(' · '))
       : '';
     byId('bulkRunMostSeen').hidden = !seen.length;
-    const reason = run.status === 'stopped' && run.reason && run.reason !== 'user' ? label(STOP_TEXT[run.reason], '') : '';
+    // Why the run stopped, or why it waits (paused because the extension was switched off); a stop or a pause the person chose
+    // needs no words
+    const said = run.status === 'stopped' || run.status === 'paused';
+    const reason = said && run.reason && run.reason !== 'user' ? label(STOP_TEXT[run.reason], '') : '';
     byId('bulkRunReason').textContent = reason;
     byId('bulkRunReason').hidden = !reason;
     const notes = [];
@@ -419,6 +433,37 @@
   function restoreFilter() {
     try { state.filter = BulkFilter.normalize(localStorage.getItem(FILTER_KEY)); } catch (_) { /* storage blocked: all pages */ }
     byId('bulkFilter').value = state.filter;
+  }
+
+  /* ---------- From History ---------- */
+
+  /**
+   * The addresses History's Select bar handed over (BulkHandoff): taken once and removed, when the page opens or, when it was open
+   * already, as they arrive. They become the list, the page says how many came from History, and the keyboard goes to Start. A run
+   * going on is left alone: the page says so instead of replacing its list.
+   * @param {*} [arrived] - The hand-over storage.onChanged reported; read from storage when the page opens
+   */
+  async function takeHandoff(arrived) {
+    let stored = arrived;
+    try {
+      const area = chrome.storage.session;
+      if (stored === undefined) stored = (await area.get(BulkHandoff.KEY))[BulkHandoff.KEY];
+      if (stored === undefined) return;
+      await area.remove(BulkHandoff.KEY);
+    } catch (_) {
+      return; // no session storage: nothing was handed over
+    }
+    const urls = BulkHandoff.read(stored);
+    if (!urls) return;
+    if (state.starting || BulkScan.isActive(state.run)) {
+      notice(tr('bulkFromHistoryBusy', 'A bulk scan is in progress, so the pages from History were not added.'), 'warn');
+      return;
+    }
+    byId('bulkInput').value = urls.join('\n');
+    updateCount();
+    render();
+    notice(fmt('bulkFromHistoryFmt', 'Pages from History: {0}', number(urls.length)));
+    byId('bulkStartBtn').focus();
   }
 
   /* ---------- Wiring ---------- */
@@ -480,6 +525,10 @@
     byId('bulkExportJsonBtn').addEventListener('click', () => exportRun('json'));
     byId('bulkExportMarkdownBtn').addEventListener('click', () => exportRun('md'));
     chrome.storage.onChanged.addListener((changes, area) => {
+      // History's Select bar handed addresses to the page while it was open (its removal reports no new value)
+      if (area === 'session' && changes[BulkHandoff.KEY] && changes[BulkHandoff.KEY].newValue !== undefined) {
+        takeHandoff(changes[BulkHandoff.KEY].newValue);
+      }
       if (area === 'session' && changes[STATE_KEY]) {
         state.run = changes[STATE_KEY].newValue || null;
         render();
@@ -512,6 +561,8 @@
     }
     updateCount();
     render();
+    // After the run is known: a hand-over never replaces the list of a run that is going on
+    await takeHandoff();
     document.body.classList.add('is-ready');
   }
 

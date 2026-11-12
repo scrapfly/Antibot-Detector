@@ -5,13 +5,13 @@
 
 /**
  * Escape closes the top-most rule dialog: Method Settings over the editor, else the editor (through the same
- * dirty check as ✕). The helpers, the icon picker, the colour dialog and confirmations above them handle their own.
+ * dirty check as ✕). The helpers, the icon picker and confirmations above them handle their own.
  */
 Rules.prototype.onRuleEditorEscape = function(event) {
   if (!event || event.key !== 'Escape' || event.defaultPrevented) return false;
   const shown = (element) => !!element && !!element.style && element.style.display !== 'none' && element.style.display !== '';
   if (document.querySelector('.notification-confirm[data-open="true"], .icon-picker-modal')) return false;
-  if ([...document.querySelectorAll('.rh-modal, #advancedColorModal')].some(shown)) return false;
+  if ([...document.querySelectorAll('.rh-modal')].some(shown)) return false;
   if (shown(document.querySelector('#methodSettingsModal'))) {
     event.preventDefault();
     this.closeMethodSettingsModal();

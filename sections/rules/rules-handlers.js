@@ -80,22 +80,37 @@ Rules.prototype.handleImport = async function(event) {
 };
 
 /**
+ * Download a rules file (the format Rules → Import reads) and say how many rules went into it, or that it could not be made.
+ * @param {() => {detectors: object}} build - makes the file's data; called inside the try, so a failure there is reported too
+ * @param {string} fileName
+ */
+Rules.prototype.downloadRulesFile = function(build, fileName) {
+  try {
+    const data = build();
+    const count = Object.values((data && data.detectors) || {})
+      .reduce((total, records) => total + Object.keys(records || {}).length, 0);
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    URL.revokeObjectURL(url);
+    NotificationHelper.success(FormatUtils.t('rulesExportedFmt', 'Rules exported: {0}', count));
+    return true;
+  } catch (error) {
+    Logger.error('UI', 'Failed to export rules:', error);
+    NotificationHelper.error(FormatUtils.t('statsExportFailed', 'Could not export the data. Please try again.'));
+    return false;
+  }
+};
+
+/**
  * Handle export of detector rules
  */
 Rules.prototype.handleExport = function() {
-  const data = this.detectorManager.exportDetectors();
-  const json = JSON.stringify(data, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-
-  // Create download link
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const timestamp = FormatUtils.localDay(Date.now());
-  a.href = url;
-  a.download = `scrapfly-detectors-${timestamp}.json`;
-  a.click();
-
-  URL.revokeObjectURL(url);
+  return this.downloadRulesFile(() => this.detectorManager.exportDetectors(),
+    `scrapfly-detectors-${FormatUtils.localDay(Date.now())}.json`);
 };
 
 /**
@@ -701,13 +716,8 @@ Rules.prototype.handleExportShown = function() {
     detectorName: entry.detectorName,
     detector: this.detectorManager.getDetector(entry.category, entry.detectorName) || entry.detector
   }));
-  const blob = new Blob([JSON.stringify(RulesBulk.exportOf(entries), null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `scrapfly-detectors-shown-${FormatUtils.localDay(Date.now())}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
+  return this.downloadRulesFile(() => RulesBulk.exportOf(entries),
+    `scrapfly-detectors-shown-${FormatUtils.localDay(Date.now())}.json`);
 };
 
 /**

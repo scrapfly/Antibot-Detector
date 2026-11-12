@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector ist eine kostenlose Chrome-Erweiterung, die zeigt, wie sich eine Website vor automatisiertem Datenverkehr schützt. Surfen Sie wie gewohnt: Die Zahl auf dem Symbol in der Symbolleiste gibt an, wie viele Schutzmaßnahmen die Seite einsetzt, und das Popup listet sie mit Konfidenz, Schwierigkeit und den verräterischen Signalen auf.
 
-Sie erkennt von Haus aus 88 Technologien: 44 Anti-Bot-Systeme, 23 CAPTCHAs und 21 Browser-Fingerprinting-Techniken. Jeder Detektor ist eine einfache JSON-Datei, die Sie lesen, ändern oder erweitern können, und neue Regeln kommen mit jeder Version dieses Repositorys. **Regeln → Aktualisieren** kann sie also installieren, noch bevor Chrome die Erweiterung selbst aktualisiert.
+Sie erkennt von Haus aus 94 Technologien: 49 Anti-Bot-Systeme, 24 CAPTCHAs und 21 Browser-Fingerprinting-Techniken. Jeder Detektor ist eine einfache JSON-Datei, die Sie lesen, ändern oder erweitern können, und neue Regeln kommen mit jeder Version dieses Repositorys. **Regeln → Aktualisieren** kann sie also installieren, noch bevor Chrome die Erweiterung selbst aktualisiert.
 
 Wir haben sie bei [Scrapfly](https://scrapfly.io) gebaut, weil jedes Scraping-Projekt mit derselben Frage beginnt: Was schützt diese Seite? Genauso nützlich ist sie, um zu sehen, wie der Anti-Bot-Schutz der eigenen Website von außen aussieht, oder für Sicherheitsforschung.
 
@@ -92,7 +92,7 @@ Wenn eine Seite lädt, sammelt die Erweiterung, was die Seite über sich verrät
 | JavaScript-Hooks | Aufrufe von Browser-APIs, die häufig für Fingerprinting genutzt werden | `HTMLCanvasElement.prototype.toDataURL` |
 | Payload | Bodys von POST-, PUT- und PATCH-Anfragen, optional nach URL und Methode gefiltert, sowie die Antworten der URLs, die eine Regel benennt | `sensor_data` (Akamai), `"proofofwork":{"required":true` (OpenAI Sentinel) |
 
-**Konfidenz.** Jede Regel hat ihre eigene Konfidenz, und Detektoren definieren Regelkombinationen, die gemeinsam höher bewertet werden. Ein Skript, das nur den Namen eines Anbieters erwähnt, erreicht 5–10 %; ein Signal, das nur das Produkt dieses Anbieters erzeugt (sein eigener Skript-Host, sein eigenes Cookie, sein Challenge-Endpunkt), ist ein Beweis und erreicht allein 100 %, ebenso wie die vollständige Integration eines Anbieters (sein Skript zusammen mit seinem Cookie, dem Frame seines Widgets oder seiner Challenge-Anfrage). Geteilte oder generische Signale liegen zwischen 15 und 90 %. Der Wert jedes Detektors ist der seiner stärksten Regel oder Kombination. Die Seite erhält außerdem eine Schwierigkeit (Niedrig, Mittel oder Hoch), die die Farbe des Symbols in der Symbolleiste bestimmt.
+**Konfidenz.** Jede Regel hat ihre eigene Konfidenz, und Detektoren definieren Regelkombinationen, die gemeinsam höher bewertet werden. Ein Skript, das nur den Namen eines Anbieters erwähnt, erreicht 5–10 %; ein Signal, das nur das Produkt dieses Anbieters erzeugt (sein eigener Skript-Host, sein eigenes Cookie, sein Challenge-Endpunkt), ist ein Beweis und erreicht allein 100 %, ebenso wie die vollständige Integration eines Anbieters (sein Skript zusammen mit seinem Cookie, dem Frame seines Widgets oder seiner Challenge-Anfrage). Geteilte oder generische Signale liegen zwischen 15 und 90 %. Der Wert jedes Detektors ist der seiner stärksten Regel oder Kombination. Die Seite erhält außerdem eine Schwierigkeit (Niedrig, Mittel oder Hoch), die die Farbe des Symbols in der Symbolleiste bestimmt. Sie richtet sich nur nach den Anti-Bot- und CAPTCHA-Schutzmaßnahmen, die mit 50 % oder mehr gefunden wurden: Fingerprinting und ein Skript, das einen Anbieter nur erwähnt, zählen nicht.
 
 **Fingerprinting.** Die API-Hooks werden installiert, bevor die Skripte der Seite selbst laufen, und decken auch Iframes derselben Herkunft ab, in denen sich Fingerprinting-Code oft versteckt. Standardmäßig beobachten sie mindestens 4 Sekunden, danach so lange, bis die Seite 2 Sekunden ruhig war, höchstens aber 8 Sekunden.
 
@@ -105,18 +105,18 @@ Diese Listen sind die Detektoren, die mit der Erweiterung ausgeliefert werden. S
 Jedes Anti-Bot-System hat eine eigene Seite mit den Cookies, Headern und Skripten, die es verraten: [Seiten zur Anti-Bot-Erkennung](antibots/de/README.md).
 
 <details>
-<summary><b>Anti-Bot-Systeme (44)</b></summary>
+<summary><b>Anti-Bot-Systeme (49)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Azure WAF · Bunny Shield · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Google Cloud Armor · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · Signifyd · SiteGround SG-CAPTCHA · Sucuri WAF · Tencent Cloud EdgeOne · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHAs (23)</b></summary>
+<summary><b>CAPTCHAs (24)</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · EU CAPTCHA (Myra) · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 
@@ -175,7 +175,7 @@ Ergebnisse und Mitschnitte werden 30 Minuten lang unter **Erweitert → Verlauf*
 
 ### Einstellungen
 
-- **Allgemein:** Oberflächensprache (22 Sprachen; standardmäßig die des Browsers), Design (Dunkel, Hell oder System), Benachrichtigungen, Debug-Modus, geplante Detektor-Updates und die Farben für Symbol, Kategorien und Labels.
+- **Allgemein:** Oberflächensprache (22 Sprachen; standardmäßig die des Browsers), Design (Dunkel, Hell oder System), Benachrichtigungen, Debug-Modus, geplante Detektor-Updates, was die Zahl in der Symbolleiste zählt (jede Erkennung oder nur Anti-Bot und CAPTCHA) und die Farben für Symbol, Kategorien und Labels.
 - **Erkennung:** Dauer und Geltungsbereich des Caches, die Reihenfolge der Kategorien in den Ergebnissen, die Konfidenzschwelle für erweiterte Werkzeuge, welche Websites gescannt werden (alle außer den übersprungenen oder nur die gewählten), JS-API-Ereignisse, Webhooks und Links zum Teilen.
 - **Verlauf:** was aufgezeichnet wird (Verlauf pausieren, private Fenster überspringen, ignorierte Websites, Mindestkonfidenz, Seiten nur mit Fingerprinting überspringen), wie viele Einträge behalten werden (bis zu 10.000; 0 behält die letzten 1.000), Einträge nach einer Anzahl von Tagen oder beim Schließen des Browsers löschen, wiederholte Scans überspringen oder aktualisieren, Hinweise bei geänderten Schutzmaßnahmen einer Seite, das Standard-Exportformat, eine Speicheranzeige mit Warnung und ein automatisches Backup in Ihren Downloads-Ordner.
 
@@ -212,7 +212,7 @@ Da diese Ereignisse die Seite selbst erreichen, kann jede Website, die Sie besuc
 
 ### Webhooks
 
-Wenn ein Scan Schutzmaßnahmen findet, kann die Erweiterung die Ergebnisse an Ihren eigenen Endpunkt senden. Wählen Sie die HTTP-Methode, fügen Sie Header hinzu und schreiben Sie den Body als Vorlage mit Variablen wie `<SITEURL>`, `<HOSTNAME>`, `<TITLE>`, `<DETECTIONS>`, `<DETECTION_COUNT>`, `<DETECTION_NAMES>` (die Schutzmaßnahmen mit ihrer Konfidenz in einer Zeile), `<CATEGORIES>` und `<TIMESTAMP>`. **Mit einer Vorlage starten** (Slack, Mattermost oder Google Chat, Discord oder eine Zeile Klartext) füllt den Content-Type und eine fertige Chat-Nachricht aus. Webhooks gehen nur an HTTPS-Adressen auf öffentlichen Hosts, sind standardmäßig deaktiviert und haben eine Schaltfläche **Testen**. Konfigurieren Sie sie unter **Einstellungen → Erkennung → Webhook-Integration**.
+Wenn ein Scan Schutzmaßnahmen findet, kann die Erweiterung die Ergebnisse an Ihren eigenen Endpunkt senden. Wählen Sie die HTTP-Methode, fügen Sie Header hinzu und schreiben Sie den Body als Vorlage mit Variablen wie `<SITEURL>`, `<HOSTNAME>`, `<TITLE>`, `<DETECTIONS>`, `<DETECTION_COUNT>`, `<DETECTION_NAMES>` (die Schutzmaßnahmen mit ihrer Konfidenz in einer Zeile), `<HTTP_STATUS>` (der HTTP-Statuscode der Seite, etwa 403 bei einer Sperrseite), `<CATEGORIES>` und `<TIMESTAMP>`. **Mit einer Vorlage starten** (Slack, Mattermost oder Google Chat, Discord oder eine Zeile Klartext) füllt den Content-Type und eine fertige Chat-Nachricht aus. Webhooks gehen nur an HTTPS-Adressen auf öffentlichen Hosts, sind standardmäßig deaktiviert und haben eine Schaltfläche **Testen**. Konfigurieren Sie sie unter **Einstellungen → Erkennung → Webhook-Integration**.
 
 **Letzte Zustellungen und Wiederholungen.** **Einstellungen → Erkennung → Webhook** listet die letzten 20 Versuche auf (die Seite, den Status und die Dauer; nie eine Adresse, einen Header oder eine Payload). Eine fehlgeschlagene Zustellung lässt sich mit **Wiederholen** erneut senden, und bei aktiviertem **Fehlgeschlagene Zustellungen wiederholen** (Standard) versucht es die Erweiterung auch selbst nach 1, 5 und 15 Minuten, wenn es keine Antwort gab oder der Server mit 408, 425, 429 oder 5xx antwortete; eine Ablehnung wie 401, 403 oder 404 wartet auf Ihr **Wiederholen**. Dafür werden die Seitendaten einer fehlgeschlagenen Zustellung eine Stunde lang im Arbeitsspeicher gehalten (höchstens 20), nie auf der Festplatte, und verschwinden, wenn der Browser geschlossen wird; ein Wiederholungsversuch baut die Anfrage mit Ihren aktuellen Webhook-Einstellungen neu auf, sodass eine korrigierte Adresse oder ein korrigiertes Geheimnis verwendet wird und kein Header und kein Geheimnis mit ihm gespeichert ist.
 

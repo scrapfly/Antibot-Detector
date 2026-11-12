@@ -2,7 +2,7 @@
 
 # Cloudflare Bot Management 봇 차단: 감지 방법과 웹 스크래핑에 미치는 영향
 
-Cloudflare Bot Management은(는) 일부 웹사이트가 페이지 앞단에 두는 봇 차단 또는 어뷰징 방지 계층입니다. Cloudflare Bot Management 우회 방법을 찾고 있거나, 사이트에서 Cloudflare Bot Management을(를) 감지하려 하거나, Cloudflare Bot Management이(가) 막는 웹 스크래핑을 조사하는 경우에도 첫 단계는 같습니다. 요청에 실제로 응답하는 것이 Cloudflare Bot Management인지 확인하는 것입니다. 이 페이지는 Scrapfly Antibot Detector 확장 프로그램이 Cloudflare Bot Management 봇 탐지를 식별하는 데 쓰는 공개 신호 11개와 각 신호가 얼마나 강하게 Cloudflare Bot Management을(를) 가리키는지, 그리고 자동화 클라이언트에 대체로 어떤 의미인지를 정리합니다.
+Cloudflare Bot Management은(는) 일부 웹사이트가 페이지 앞단에 두는 봇 차단 또는 어뷰징 방지 계층입니다. Cloudflare Bot Management 우회 방법을 찾고 있거나, 사이트에서 Cloudflare Bot Management을(를) 감지하려 하거나, Cloudflare Bot Management이(가) 막는 웹 스크래핑을 조사하는 경우에도 첫 단계는 같습니다. 요청에 실제로 응답하는 것이 Cloudflare Bot Management인지 확인하는 것입니다. 이 페이지는 Scrapfly Antibot Detector 확장 프로그램이 Cloudflare Bot Management 봇 탐지를 식별하는 데 쓰는 공개 신호 19개와 각 신호가 얼마나 강하게 Cloudflare Bot Management을(를) 가리키는지, 그리고 자동화 클라이언트에 대체로 어떤 의미인지를 정리합니다.
 
 ## 개요
 
@@ -12,7 +12,7 @@ Cloudflare Bot Management는 전 세계 네트워크에서 제공되는 Cloudfla
 
 ## 사이트가 Cloudflare Bot Management을(를) 사용하는지 확인하는 방법
 
-이 신호들은 `detect-cloudflare`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.3.0, 최종 업데이트 2026-10-26)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
+이 신호들은 `detect-cloudflare`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.4.0, 최종 업데이트 2026-11-12)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
 
 ### 쿠키
 
@@ -22,7 +22,12 @@ Cloudflare Bot Management는 전 세계 네트워크에서 제공되는 Cloudfla
 | --- | --- | --- |
 | `^cf_clearance$ = ^[A-Za-z0-9_.-]{43}-[0-9]{10}-1\.[0-9]\.[0-9]\.[0-9]-[A-Za-z0-9_.-]{20,}` | 100% | Challenge clearance cookie, set after passing a Cloudflare challenge |
 | `^__cf_bm$ = ^[A-Za-z0-9_.-]{43}-[0-9]{10}\.[0-9]{5,8}-1\.[0-9]\.[0-9]\.[0-9]-[A-Za-z0-9_.-]{20,}` | 100% | Bot Management cookie in its <token>-<timestamp.fraction>-1.x.x.x-<signature> shape; Cloudflare sets it on every zone with bot management or Bot Fight Mode |
+| `^cf_clearance$` | 85% | Challenge clearance cookie by name; its value is encrypted and its shape may change |
+| `^__cf_bm$` | 85% | Bot Management cookie by name; its value is encrypted and its shape may change |
 | `^cf_chl_rc_(?:i\|ni\|m)$` | 85% | Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m) |
+| `^__cfseq(?:-[A-Za-z0-9_-]{1,64})?$` | 90% | Sequence cookie of Cloudflare's bot products (__cfseq) |
+| `^_cfuvid$` | 50% | Rate limiting cookie Cloudflare sets per visitor (_cfuvid); not bot management on its own |
+| `^__cfruid$` | 40% (보조 근거로만 사용) | Cloudflare cookie that identifies trusted traffic (__cfruid); corroboration only |
 
 ### 응답 헤더
 
@@ -39,9 +44,11 @@ Cloudflare Bot Management는 전 세계 네트워크에서 제공되는 Cloudfla
 
 | 신호 | 신뢰도 | 의미 |
 | --- | --- | --- |
-| `^https?://(?!challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page\|managed\|jsch\|captcha)/` | 100% | Challenge page orchestrator under /cdn-cgi/challenge-platform/ |
-| `^https?://(?!challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?scripts/jsd/(?:[0-9a-f]{6,20}/)?main\.js(?:[?#]\|$)` | 100% | Bot Management JavaScript detections script |
-| `^https?://(?!challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?jsd/oneshot/` | 100% | Bot Management JavaScript detections report (/cdn-cgi/challenge-platform/…/jsd/oneshot/) |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page\|managed\|jsch\|captcha)/` | 100% | Challenge page orchestrator under /cdn-cgi/challenge-platform/ |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?scripts/jsd/(?:[0-9a-f]{6,20}/)?(?:main\|api)\.js(?:[?#]\|$)` | 100% | Bot Management JavaScript detections script |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?jsd/oneshot/` | 100% | Bot Management JavaScript detections report (/cdn-cgi/challenge-platform/…/jsd/oneshot/) |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?pat/` | 100% | Private Access Token request of a Cloudflare challenge (/cdn-cgi/challenge-platform/…/pat/) |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/` | 80% | Any other request under /cdn-cgi/challenge-platform/, the path of Cloudflare's challenges and bot detections |
 | `^https://challenges\.cloudflare\.com/` | 40% (보조 근거로만 사용) | Request to challenges.cloudflare.com; also used by Turnstile, so corroboration only |
 
 ### 페이지 및 스크립트 콘텐츠
@@ -59,6 +66,7 @@ Cloudflare Bot Management는 전 세계 네트워크에서 제공되는 Cloudfla
 | 신호 | 신뢰도 | 의미 |
 | --- | --- | --- |
 | `_cf_chl_opt (typeof object)` | 85% | Challenge options object present on a Cloudflare challenge page |
+| `cloudflare.jsd.executeOnce (typeof function)` | 70% | JavaScript detections function Cloudflare defines (window.cloudflare.jsd.executeOnce) |
 
 ### 조합
 
@@ -71,6 +79,8 @@ Cloudflare Bot Management는 전 세계 네트워크에서 제공되는 Cloudfla
 | Bot Management script on a Cloudflare zone | 75% | Bot Management JavaScript detections script 그리고 (Bot Management cookie in its <token>-<timestamp.fraction>-1.x.x.x-<signature> shape; Cloudflare sets it on every zone with bot management or Bot Fight Mode 또는 Served through Cloudflare; CDN delivery, not bot management on its own) |
 | Challenge host request on a Cloudflare zone with a challenge signal | 90% | Request to challenges.cloudflare.com; also used by Turnstile, so corroboration only 그리고 (Challenge clearance cookie, set after passing a Cloudflare challenge 또는 Challenge options object present on a Cloudflare challenge page 또는 Challenge page orchestrator under /cdn-cgi/challenge-platform/) |
 | Challenge platform cookie with a Cloudflare clearance, server header or challenge | 95% | Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m) 그리고 (Challenge clearance cookie, set after passing a Cloudflare challenge 또는 Served through Cloudflare; CDN delivery, not bot management on its own 또는 Challenge page orchestrator under /cdn-cgi/challenge-platform/ 또는 Challenge options object present on a Cloudflare challenge page) |
+| Cloudflare bot cookie with a Cloudflare server header or visitor cookie | 95% | (Challenge clearance cookie by name; its value is encrypted and its shape may change 또는 Bot Management cookie by name; its value is encrypted and its shape may change 또는 Sequence cookie of Cloudflare's bot products (__cfseq)) 그리고 (Served through Cloudflare; CDN delivery, not bot management on its own 또는 Cloudflare cookie that identifies trusted traffic (__cfruid); corroboration only 또는 Rate limiting cookie Cloudflare sets per visitor (_cfuvid); not bot management on its own) |
+| Challenge platform request or detections runtime on a Cloudflare zone | 90% | (Any other request under /cdn-cgi/challenge-platform/, the path of Cloudflare's challenges and bot detections 또는 JavaScript detections function Cloudflare defines (window.cloudflare.jsd.executeOnce)) 그리고 (Served through Cloudflare; CDN delivery, not bot management on its own 또는 Bot Management cookie by name; its value is encrypted and its shape may change 또는 Rate limiting cookie Cloudflare sets per visitor (_cfuvid); not bot management on its own) |
 
 ## 난이도
 

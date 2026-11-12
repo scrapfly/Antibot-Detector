@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Upptäcktshistoriken visas här medan du surfar på webbplatser."
   },
+  "historyPausedNote": {
+    "message": "Historiken är pausad, så skannade sidor sparas inte."
+  },
   "rulesUpdateTitle": {
     "message": "Installera regeluppdateringar från den senaste Scrapfly-utgåvan"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "Författare"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "Märkesfärg"
   },
   "ruleSectionDetectionMethods": {
     "message": "Upptäcktsmetoder"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "Exporterade {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Exporterade regler: {0}"
+  },
   "failedImportDetectors": {
     "message": "Det gick inte att importera detektorerna. Kontrollera filformatet."
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" togs bort"
+  },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" sparades"
   },
   "failedClearDetectors": {
     "message": "Det gick inte att rensa detektorerna"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "Hög"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Siffran i verktygsfältet"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Vad siffran på ikonen i verktygsfältet räknar. Fingerprinting körs på de flesta webbplatser; popupen och Historik visar fortfarande allt."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Varje identifiering"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Bara anti-bot och CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Aktivera JS API-händelser"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Detta tar permanent bort alla insamlade data för den här leverantören."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Avbryt"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Sökomfång för innehåll"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "Byt detektorikon"
   },
-  "rulesUiCustomColor": {
-    "message": "Egen färg"
-  },
   "iconPickerTitle": {
     "message": "Välj ikon"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Höjs av {0} skydd tillsammans"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Inget anti-bot- eller CAPTCHA-skydd hittades med 50 % eller mer"
   },
   "tipLastUpdated": {
     "message": "Uppdaterad"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "Vilka sidor som återanvänder de här cachade resultaten och hur länge."
+  },
+  "detectionStatHttpStatus": {
+    "message": "HTTP-status"
+  },
+  "detectionTipHttpStatus": {
+    "message": "HTTP-statuskoden som sidan svarade med när den skannades. Ett fel (4xx eller 5xx) betyder ofta att begäran blockerades eller fick en utmaning."
   },
   "tipCacheExpires": {
     "message": "Går ut"
@@ -5439,7 +5457,7 @@
     "message": "Säkerhetskopior att behålla"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Efter varje säkerhetskopia tas äldre säkerhetskopior utöver detta antal bort från mappen Nedladdningar (en säkerhetskopia som sparats i flera delar räknas som en). Bara säkerhetskopiefiler som det här tillägget har sparat tas bort. Behåller du alla tas ingenting bort."
+    "message": "Efter varje säkerhetskopia tas äldre säkerhetskopior utöver detta antal bort från mappen Nedladdningar (en säkerhetskopia som sparats i flera delar räknas som en). Bara säkerhetskopiefiler som det här tillägget har sparat tas bort. Behåller du alla tas ingenting bort. Säkerhetskopior som gjordes före version 3.1.7 finns kvar tills du själv tar bort dem."
   },
   "settingsHistoryBackupNow": {
     "message": "Säkerhetskopiera nu"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "Vid den senaste kontrollen var tillägget inaktiverat, så inget kontrollerades."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Den senaste kontrollen avbröts eftersom tillägget stängdes av."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Den senaste kontrollen avbröts eftersom historiken pausades."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Bevakningen måste vara av, dagligen eller veckovis"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "Upptäckter: {0} · Säkerhet: {1}% · Svårighet: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP-status: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Skydd"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "Skanna igen nu"
+  },
+  "detectionFromPageFmt": {
+    "message": "Från en skanning av {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Ändrad sedan {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Ingen ändring sedan {0}"
   },
   "rulesDuplicate": {
     "message": "Duplicera"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "Historiken är pausad: sidorna skannas men sparas inte."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Sidor från historiken: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "En massskanning pågår, så sidorna från historiken lades inte till."
+  },
   "bulkReadingSitemaps": {
     "message": "Läser sitemaps…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Identifierade skydd med deras säkerhet, kommaseparerade"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Sidans HTTP-statuskod (0 om den är okänd)"
   },
   "historyCopyMarkdown": {
     "message": "Kopiera som Markdown"

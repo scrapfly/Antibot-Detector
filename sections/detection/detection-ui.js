@@ -346,6 +346,166 @@ DetectionUI.syncHooksOffNote = async function() {
     }
 };
 
+/** The address of the page this popup speaks of: the tab it last looked at, or the active tab. */
+DetectionUI.viewedPageUrl = async function() {
+    if (typeof this.viewedTabUrl === 'string' && this.viewedTabUrl) return this.viewedTabUrl;
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      return (tab && tab.url) || '';
+    } catch (_) {
+      return '';
+    }
+};
+
+/** One quiet line (text, then its buttons): shown with `text`, hidden without it. */
+DetectionUI.setNoteText = function(note, text, title = '') {
+    if (!note) return;
+    const span = note.querySelector('.detection-note-text');
+    if (span) {
+      span.textContent = text || '';
+      if (title) span.title = title; else span.removeAttribute('title');
+    }
+    note.hidden = !text;
+};
+
+/** "From a scan of /login, 3h ago": the result shown was found on another page of the site (the Domain cache scope). */
+DetectionUI.otherPageText = function(other) {
+    return FormatUtils.t('detectionFromPageFmt', 'From a scan of {0}, {1}', other.path, FormatUtils.getTimeAgo(other.at));
+};
+
+/** The hover text of that line: the other page's whole address and the scan's date. */
+DetectionUI.otherPageTitle = function(other) {
+    return other.at ? `${other.url}\n${FormatUtils.formatDateTime(other.at)}` : other.url;
+};
+
+/**
+ * The quiet line under the all-clear card of a completed scan that found nothing: when it ran ("Last checked 3h ago"), or the
+ * other page of the site it ran on, and Scan again now (the result is cached for days, so a reload shows the same card).
+ * @param {object|null} scan - the result's cache metadata ({} when not known); null hides the line (no completed scan)
+ */
+DetectionUI.syncCheckedNote = async function(scan) {
+    const note = document.querySelector('#emptyCheckedNote');
+    if (!note) return;
+    const token = this.checkedNoteToken = (this.checkedNoteToken || 0) + 1;
+    if (!scan || this.scanOutcome !== 'complete') {
+      note.hidden = true;
+      return;
+    }
+    const tabUrl = await DetectionUI.viewedPageUrl.call(this);
+    if (token !== this.checkedNoteToken) return;
+    let other = null;
+    try { other = DetectionHistory.otherPage(scan, tabUrl); } catch (_) { other = null; }
+    const at = Number(scan.timestamp) > 0 ? Number(scan.timestamp) : 0;
+    let text = '';
+    let title = '';
+    if (other) {
+      text = DetectionUI.otherPageText(other);
+      title = DetectionUI.otherPageTitle(other);
+    } else if (at > 0) {
+      text = FormatUtils.t('historyWatchCheckedFmt', 'Last checked {0}', FormatUtils.getTimeAgo(at));
+      title = FormatUtils.formatDateTime(at);
+    }
+    const span = note.querySelector('.detection-note-text');
+    if (span) {
+      span.textContent = text;
+      if (title) span.title = title; else span.removeAttribute('title');
+    }
+    // Without a date the line is only the button
+    const sep = note.querySelector('.detection-note-sep');
+    if (sep) sep.hidden = !text;
+    note.hidden = false;
+};
+
+/**
+ * Under the site's name in the summary card: the results were found on another page of the site (under the Domain cache scope
+ * every page of a site is served the scan of one of them), which one and when, and Scan again now. Hidden for this page's own
+ * scan and under the Path and Full URL scopes.
+ * @param {object|null} meta - the result's cache metadata
+ */
+DetectionUI.syncSourceNote = async function(meta) {
+    const note = document.querySelector('#detectionSourceNote');
+    const token = this.sourceNoteToken = (this.sourceNoteToken || 0) + 1;
+    this.resultsFromOtherPage = null;
+    if (!note) return null;
+    if (!meta) {
+      DetectionUI.setNoteText(note, '');
+      return null;
+    }
+    try {
+      const tabUrl = await DetectionUI.viewedPageUrl.call(this);
+      if (token !== this.sourceNoteToken) return null;
+      const other = DetectionHistory.otherPage(meta, tabUrl);
+      this.resultsFromOtherPage = other;
+      DetectionUI.setNoteText(note, other ? DetectionUI.otherPageText(other) : '', other ? DetectionUI.otherPageTitle(other) : '');
+      return other;
+    } catch (error) {
+      Logger.debug('UI', '[Detection] Could not tell which page the results come from', error);
+      if (token === this.sourceNoteToken) DetectionUI.setNoteText(note, '');
+      return null;
+    }
+};
+
+/**
+ * Under the stats: what History says changed on this page since its earlier scan ("Changed since …: +DataDome −Kasada", or
+ * "No change since …"), with Compare scans and Watch for changes. History is read a moment after the results are drawn, never
+ * before them; nothing shows while History is paused, when the page has no earlier saved scan, or when the results are another
+ * page's (the line under the site's name says so). Stored History changing reads it again (DetectionUI.scheduleChangeNote).
+ */
+DetectionUI.syncChangeNote = async function() {
+    const note = document.querySelector('#detectionChangeNote');
+    if (!note) return;
+    const token = this.changeNoteToken = (this.changeNoteToken || 0) + 1;
+    const stale = () => token !== this.changeNoteToken || !this.isShowingResults;
+    const hide = () => {
+      if (token !== this.changeNoteToken) return;
+      this.changeEntry = null;
+      DetectionUI.setNoteText(note, '');
+    };
+    try {
+      // After the results are on screen
+      await new Promise(resolve => setTimeout(resolve, 0));
+      if (stale()) return;
+      const meta = this.cacheMetadata || null;
+      const tabUrl = await DetectionUI.viewedPageUrl.call(this);
+      if (stale()) return;
+      if (!tabUrl || (meta && DetectionHistory.otherPage(meta, tabUrl))) return hide();
+      const settings = await Utils.getHistorySettings();
+      if (stale()) return;
+      if (!settings || settings.historyEnabled === false) return hide();
+      const items = await HistoryStore.read(chrome.storage.local);
+      if (stale()) return;
+      const info = DetectionHistory.change(items, tabUrl, this.currentResults || []);
+      if (!info) return hide();
+
+      const since = HistoryCompare.shortDateTime(info.since, FormatUtils.uiLocale()) || FormatUtils.formatDateTime(info.since);
+      const list = DetectionHistory.changeText(info.added, info.removed);
+      const text = info.changed && list
+        ? FormatUtils.t('detectionChangedSinceFmt', 'Changed since {0}: {1}', since, list)
+        : FormatUtils.t('detectionNoChangeSinceFmt', 'No change since {0}', since);
+      this.changeEntry = info.entry;
+      const show = (action, on) => {
+        const node = note.querySelector(`[data-change-action="${action}"]`);
+        if (node) node.hidden = !on;
+      };
+      show('compare', info.comparable);
+      show('watch', info.entry.watch !== true);
+      show('watching', info.entry.watch === true);
+      // The line is one line and its text may end in an ellipsis: the hover text has it whole, then the earlier scan's date
+      DetectionUI.setNoteText(note, text, `${text}\n${FormatUtils.formatDateTime(info.since)}`);
+    } catch (error) {
+      Logger.debug('UI', '[Detection] Could not read History for the change line', error);
+      hide();
+    }
+};
+
+/** Stored History or settings changed: read the change line again once they settle (the worker saves a scan just after showing it). */
+DetectionUI.scheduleChangeNote = function() {
+    clearTimeout(this.changeNoteTimer);
+    this.changeNoteTimer = setTimeout(() => {
+      if (this.isShowingResults) DetectionUI.syncChangeNote.call(this);
+    }, 250);
+};
+
 DetectionUI.showEmptyState = function(options = {}) {
     if (DetectionUI.showUnavailableState.call(this)) return;
 
@@ -392,9 +552,12 @@ DetectionUI.showEmptyState = function(options = {}) {
     DetectionUI.announce(cardTitle ? cardTitle.textContent : '');
 
     // A page with no completed scan (none yet, failed, interrupted) can be scanned again in one click; a page that cannot
-    // be scanned, and a scan that found nothing, have nothing to offer
+    // be scanned has nothing to offer
     const rescanBtn = document.querySelector('#emptyRescanBtn');
     if (rescanBtn) rescanBtn.hidden = !(options.noCache && options.outcome !== 'unsupported');
+    // A scan that found nothing keeps the all-clear card, with a quiet line under it: when it ran (or which other page of the site
+    // it ran on) and Scan again now. Its result is cached for days, so a reload shows the same card
+    DetectionUI.syncCheckedNote.call(this, this.scanOutcome === 'complete' ? (options.scan || {}) : null);
 
     if (emptyStateFooter) {
       emptyStateFooter.style.display = options.showBadges === false ? 'none' : 'flex';
@@ -539,7 +702,8 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
 
     if (detections.length === 0) {
       this.closeDetectionModal();
-      this.showEmptyState();
+      // The card says when the scan ran, or which other page of the site it ran on
+      this.showEmptyState({ scan: options.cacheMetadata || null });
       // Badge is managed by background script now
       return;
     }
@@ -553,6 +717,8 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
 
     // Update URL display
     this.updateUrlDisplay(options);
+    // Under the site's name: the results were found on another page of the site (the Domain cache scope)
+    DetectionUI.syncSourceNote.call(this, options.cacheMetadata || null);
     DetectionUI.syncHooksOffNote.call(this);
 
     // Update stats
@@ -587,19 +753,23 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     // Update cache info
     this.updateCacheInfo();
 
+    // Under the stats: what History says changed on this page (read a moment after the results are drawn, never before them).
+    // Another page's line does not stay up meanwhile
+    if (!samePage) DetectionUI.setNoteText(document.querySelector('#detectionChangeNote'), '');
+    DetectionUI.syncChangeNote.call(this);
+
     // Update badge for cached results (background only updates during active detection)
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       if (tabs && tabs[0]) {
-        const detectionCount = detections.length;
-
-        // Get badge colors from CategoryManager
+        // Get badge colors from CategoryManager, and what the number counts (Settings → General → Toolbar number)
         const badgeColors = await CategoryManager.getBadgeColors();
+        const detectionCount = DetectionUtils.badgeCount(detections, await DetectionUtils.readBadgeCountMode(CategoryManager));
         if (!this.isShowingResults || !this.isExtensionEnabled || this.blacklistedDomain) return;
 
-        // Badge color should match the UI difficulty (not raw detection count)
-        const count = detectionCount.toString();
-        const color = DetectionUtils.getBadgeColor(detections, badgeColors);
+        // Badge color should match the UI difficulty (not raw detection count); nothing counted is the clean badge
+        const count = detectionCount > 0 ? detectionCount.toString() : BADGE.TEXT.CLEAN;
+        const color = detectionCount > 0 ? DetectionUtils.getBadgeColor(detections, badgeColors) : BADGE.COLORS.CLEAN;
 
         // Update badge text and color
         await setBadgeTextColor(tabs[0].id, false, color);
@@ -627,8 +797,8 @@ DetectionUI.updateStats = function(detections) {
       ? Math.round(detections.reduce((sum, d) => sum + (d.confidence || 0), 0) / totalDetections)
       : 0;
 
-    // Determine difficulty level based on detections mix + confidence
-    const { difficulty } = this.getDifficultyInfo(detections, avgConfidence);
+    // The page difficulty: the anti-bot and CAPTCHA protections found at 50% or more (DetectionUtils.difficultyOf)
+    const { difficulty } = this.getDifficultyInfo(detections);
 
     // Update UI elements
     // Difficulty is computed as Low/Medium/High; show it in the UI language
@@ -778,6 +948,9 @@ DetectionUI.updateCacheInfo = function() {
       return;
     }
 
+    // The HTTP status tile shares the row
+    DetectionUI.updateHttpStatus.call(this);
+
     // One "Cache" tile: which pages reuse the results, and for how long
     const tile = cacheExpiry.closest('.stat-inline');
     const tr = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
@@ -815,6 +988,33 @@ DetectionUI.updateCacheInfo = function() {
       // An entry saved before the scope was recorded: the scope in Settings is the one it was saved under
       Utils.getCacheScope().then(showScope).catch(() => {});
     }
+};
+
+/**
+ * The page's HTTP status, the small tile beside Cache: the status code saved with the result shown (a cache hit shows the one of
+ * the result it reuses). Hidden when it is not known (a result saved before 3.1.8, a page its service worker answered or one
+ * restored from the back/forward cache). Graphite for 2xx and 3xx; an error is marked, quiet amber for 4xx and red for 5xx,
+ * because a block page (403, 429, a 503 from a challenge) is itself a sign of the protection.
+ */
+DetectionUI.updateHttpStatus = function() {
+    const tile = document.querySelector('#httpStatusTile');
+    const value = document.querySelector('#httpStatusValue');
+    if (!tile || !value) return;
+    const icon = tile.querySelector('.stat-icon-inline');
+    const status = typeof HttpStatus !== 'undefined' ? HttpStatus.of(this.cacheMetadata && this.cacheMetadata.httpStatus) : null;
+    const tones = { warn: 'tone-amber', error: 'tone-red' };
+    for (const element of [value, icon]) if (element) element.classList.remove(...Object.values(tones));
+    tile.hidden = !status;
+    if (!status) {
+      value.textContent = '-';
+      return;
+    }
+    // A protocol number: ASCII digits in every language, as DevTools shows it
+    value.textContent = String(status);
+    const tone = tones[HttpStatus.tone(status)];
+    if (tone) for (const element of [value, icon]) if (element) element.classList.add(tone);
+    FormatUtils.setTip(tile, FormatUtils.t('detectionHttpStatusFmt', 'HTTP status: {0}', status),
+      FormatUtils.t('detectionTipHttpStatus', 'The HTTP status code the page answered with when it was scanned. An error (4xx or 5xx) often means the request was blocked or challenged.'));
 };
 
 DetectionUI.formatExpiryRemaining = function(msRemaining) {
@@ -1769,8 +1969,8 @@ DetectionUI.clearBadgeForEmptyState = async function() {
     }
 };
 
-DetectionUI.getDifficultyInfo = function(detections = [], avgConfidence = 0) {
-    return DetectionUtils.getDifficultyInfo(detections, avgConfidence);
+DetectionUI.getDifficultyInfo = function(detections = []) {
+    return DetectionUtils.getDifficultyInfo(detections);
 };
 
 if (typeof self !== 'undefined') {

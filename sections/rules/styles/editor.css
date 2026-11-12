@@ -265,15 +265,9 @@
   color: var(--text-muted);
 }
 
+/* Its arrow is the shared .ui-select one */
 .form-select {
   cursor: pointer;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 32px;
 }
 
 .form-input-readonly {
@@ -356,18 +350,6 @@
   border-color: var(--border);
   background: var(--bg-secondary);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* ============================================
-   Color Picker Card Styles
-   ============================================ */
-
-.color-picker-card {
-  background: var(--bg-primary);
-  border-radius: 8px;
-  padding: 12px;
-  overflow: hidden;
-  display: inline-block;
 }
 
 /* ============================================
@@ -691,75 +673,6 @@
   width: 24px;
   height: 24px;
   object-fit: contain;
-}
-
-/* Color Picker Grid - Compact Modern Design */
-.color-picker-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 36px);
-  gap: 10px;
-  padding: 4px;
-  justify-content: center;
-}
-
-.color-option {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  cursor: pointer;
-  border: 2px solid transparent;
-  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
-  position: relative;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-  outline: none;
-}
-
-.color-option:focus,
-.color-option:focus-visible {
-  outline: none;
-  border-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.92), 0 0 0 4px rgba(59, 130, 246, 0.42), 0 2px 6px rgba(0, 0, 0, 0.25);
-}
-
-.color-option:hover {
-  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.28), 0 4px 12px rgba(0, 0, 0, 0.35);
-  border-color: rgba(255, 255, 255, 0.8);
-  transform: translateY(-1px);
-}
-
-.color-option.selected {
-  border-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.92), 0 0 0 4px rgba(59, 130, 246, 0.5), 0 6px 14px rgba(0, 0, 0, 0.38);
-  transform: translateY(-1px);
-  z-index: 1;
-}
-
-.color-option.selected::after {
-  content: '';
-  position: absolute;
-  inset: -3px;
-  border: 1px solid rgba(59, 130, 246, 0.4);
-  border-radius: 10px;
-  pointer-events: none;
-}
-
-.rainbow-picker {
-  background: transparent !important;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-
-.rainbow-picker svg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.custom-color-hex {
-  display: none;
 }
 
 .rule-modal-footer {
@@ -1299,15 +1212,10 @@
 
 /* Ensure both modals show their footers */
 #editRuleModal .rule-modal-footer,
-#methodSettingsModal .rule-modal-footer,
-#advancedColorModal .rule-modal-footer {
+#methodSettingsModal .rule-modal-footer {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
-}
-
-#advancedColorModal .rule-modal-footer {
-  justify-content: center !important;
 }
 
 #confidenceValue {
@@ -1500,20 +1408,6 @@
   margin-bottom: 2px;
 }
 
-/* Canvas Color Picker Modal Styles */
-.canvas-color-modal {
-  width: auto;
-  max-width: 340px;
-  min-width: 320px;
-  height: auto;
-}
-
-#advancedColorModal .rule-modal-body {
-  padding: 0;
-  overflow: hidden;
-  max-height: none;
-}
-
 /* Method Settings Modal - match Edit Rule Modal size */
 #methodSettingsModal .rule-modal-content {
   max-height: 85%;
@@ -1552,136 +1446,6 @@
   max-width: 100%;
 }
 
-.canvas-color-picker {
-  display: flex;
-  gap: 10px;
-  padding: 12px;
-  background: var(--bg-tertiary);
-  border-radius: 8px;
-  height: 100%;
-  box-sizing: border-box;
-}
-
-.color-picker-canvas {
-  position: relative;
-  cursor: crosshair;
-}
-
-#colorCanvas {
-  display: block;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--bg-secondary);
-  cursor: crosshair;
-}
-
-.color-picker-cursor {
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  border: 2px solid white;
-  border-radius: 50%;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.8);
-  display: none;
-  z-index: 10;
-}
-
-.hue-strip {
-  position: relative;
-  cursor: crosshair;
-}
-
-#hueCanvas {
-  display: block;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--bg-secondary);
-  cursor: ns-resize;
-}
-
-.hue-slider-cursor {
-  position: absolute;
-  left: -2px;
-  width: 24px;
-  height: 4px;
-  background: white;
-  border: 1px solid black;
-  pointer-events: none;
-  transform: translateY(-50%);
-  display: none;
-  z-index: 10;
-}
-
-.color-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  min-width: 70px;
-  justify-content: flex-start;
-}
-
-.selected-color-display {
-  width: 50px;
-  height: 38px;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-}
-
-.selected-color-preview {
-  width: 100%;
-  height: 100%;
-  background: #ff0000;
-}
-
-.rgb-controls {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.rgb-input-group {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.rgb-input-group label {
-  color: var(--text-secondary);
-  font-size: 10px;
-  font-weight: 600;
-  width: 12px;
-  text-align: center;
-}
-
-.rgb-input {
-  width: 40px;
-  padding: 2px 2px;
-  background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  color: var(--text-primary);
-  font-size: 10px;
-  text-align: center;
-  -moz-appearance: textfield;
-}
-
-.rgb-input::-webkit-outer-spin-button,
-.rgb-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.rgb-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  background: var(--bg-secondary);
-}
-
-/* Remove old color-actions styles as buttons are now in footer */
-
 /* Condition Option (for WINDOW property conditions) */
 .condition-option {
   padding: 10px 12px;
@@ -1714,12 +1478,6 @@
   cursor: pointer;
   transition: color 0.2s, background-color 0.2s, border-color 0.2s, box-shadow 0.2s, opacity 0.2s, transform 0.2s;
   min-width: 120px;
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='%239ca3af'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
 }
 
 .scope-select:hover {

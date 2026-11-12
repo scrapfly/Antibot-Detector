@@ -52,11 +52,15 @@ test('hooks install, fire once per detector, uninstall and complete', async () =
   assert.deepStrictEqual(page.ofType(T.HOOK_FAILURE_REPORT), []);
 });
 
-test('unhookable targets are reported with their reason and nothing is wrapped', async () => {
+// Failure reports are Debug-mode diagnostics (the worker ignores them otherwise): an http page missing an API sent one per
+// hook on every page load
+test('unhookable targets are reported with their reason in Debug mode, and nothing is wrapped', async () => {
   const page = bootstrapped();
-  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [
+  const detail = installDetail(TOKEN, { overrides: FAST, hookDefinitions: [
     detector('bad', ['Nope', 'Missing.prototype.x', 'Navigator.prototype.nothing', 'Navigator.prototype.plainValue', 'Navigator'])
-  ] }));
+  ] });
+  detail.debugMode = true;
+  page.install(detail);
   const reasons = Object.fromEntries(page.ofType(T.HOOK_FAILURE_REPORT).map(m => [m.target, [m.failureType, m.message]]));
   const install = P.HOOK_FAILURE_TYPES.INSTALL_FAILED;
   assert.deepStrictEqual(reasons, {
@@ -70,10 +74,24 @@ test('unhookable targets are reported with their reason and nothing is wrapped',
   assert.strictEqual(page.ofType(T.JS_HOOKS_COMPLETE)[0].completionReason, P.COMPLETION_REASONS.HOOKS.ACTIVITY_TIMEOUT);
 });
 
+test('unhookable targets send no failure report outside Debug mode, and the hooks still complete', async () => {
+  const page = bootstrapped();
+  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [
+    detector('bad', ['Missing.prototype.x', 'Navigator.prototype.nothing']), detector('ok', ['Navigator.prototype.getBattery'])
+  ] }));
+  assert.deepStrictEqual(page.ofType(T.HOOK_FAILURE_REPORT), []);
+  assert.strictEqual(page.run('navigator.getBattery()'), 'battery');
+  assert.strictEqual(page.ofType(T.JS_HOOK_DETECTION).length, 1, 'the hooks that could be installed still report');
+  await sleep(700);
+  assert.strictEqual(page.ofType(T.JS_HOOKS_COMPLETE).length, 1);
+});
+
 test('constructor-like targets are refused', () => {
   const page = bootstrapped();
   page.run('window.Thing = { Ctor: function Ctor() {} }');
-  page.install(installDetail(TOKEN, { overrides: FAST, hookDefinitions: [detector('c', ['Thing.Ctor'])] }));
+  const detail = installDetail(TOKEN, { overrides: FAST, hookDefinitions: [detector('c', ['Thing.Ctor'])] });
+  detail.debugMode = true;
+  page.install(detail);
   const [report] = page.ofType(T.HOOK_FAILURE_REPORT);
   assert.strictEqual(report.message, R.CONSTRUCTOR_TARGET_NOT_HOOKABLE);
 });

@@ -2,7 +2,7 @@
 
 # Reblaze bot protection: how to detect it (and what it means for scraping)
 
-Reblaze is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Reblaze bypass, trying to detect Reblaze on a site, or investigating web scraping blocked by Reblaze, the first step is the same: confirm that Reblaze is really what answers your requests. This page lists the 7 public signals that the Scrapfly Antibot Detector extension uses to recognise Reblaze bot detection, how strongly each one points to it, and what that usually means for an automated client.
+Reblaze is a bot protection or anti-abuse layer that some websites put in front of their pages. If you are looking for a Reblaze bypass, trying to detect Reblaze on a site, or investigating web scraping blocked by Reblaze, the first step is the same: confirm that Reblaze is really what answers your requests. This page lists the 8 public signals that the Scrapfly Antibot Detector extension uses to recognise Reblaze bot detection, how strongly each one points to it, and what that usually means for an automated client.
 
 ## What it is
 
@@ -12,7 +12,7 @@ Official site: [https://www.reblaze.com/](https://www.reblaze.com/)
 
 ## How to tell a site uses Reblaze
 
-These signals are generated from the extension's own detection rules for `detect-reblaze` (rule version 2.1.0, last updated 2026-10-16). A signal is only an indication: confidence is how sure the extension is when that one signal is seen. Signals marked "corroboration only" never count on their own, because other products can produce them too.
+These signals are generated from the extension's own detection rules for `detect-reblaze` (rule version 2.2.0, last updated 2026-11-12). A signal is only an indication: confidence is how sure the extension is when that one signal is seen. Signals marked "corroboration only" never count on their own, because other products can produce them too.
 
 ### Cookies
 
@@ -31,6 +31,7 @@ Addresses of scripts, frames and requests the page loads. These are patterns mat
 | Signal | Confidence | What it indicates |
 | --- | --- | --- |
 | `^https?://[^/?#]+/[A-Za-z0-9_-]{3,40}\.ac_v2\.lib\.js(?:[?#]\|$)` | 100% | Reblaze active-challenge library (<name>.ac_v2.lib.js) |
+| `^https?://[^/?#]+/c3650cdf-216a-4ba2-80b0-9d6c540b105e58d2670b-ea0f-484e-b88c-0e2c1499ec9bd71e4b42-8570-44e3-89b6-845326fa43b6(?:[?#]\|$)` | 100% | Reblaze passive challenge script at its fixed first-party path |
 
 ### Page and script content
 

@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector는 웹사이트가 자동화된 트래픽으로부터 스스로를 어떻게 보호하는지 보여 주는 무료 Chrome 확장 프로그램입니다. 평소처럼 탐색하기만 하면 됩니다. 도구 모음 아이콘의 숫자가 페이지가 사용하는 보호 기술의 수를 알려 주고, 팝업에는 각 보호 기술이 신뢰도, 난이도, 그리고 이를 드러낸 신호와 함께 나열됩니다.
 
-기본으로 88가지 기술을 인식합니다. 안티봇 시스템 44개, CAPTCHA 23개, 브라우저 핑거프린팅 기법 21개입니다. 각 탐지기는 읽고, 바꾸고, 확장할 수 있는 단순한 JSON 파일이며, 새 규칙은 이 저장소의 버전마다 함께 배포됩니다. 따라서 Chrome이 확장 프로그램 자체를 업데이트하기 전에도 **규칙 → 업데이트**로 설치할 수 있습니다.
+기본으로 94가지 기술을 인식합니다. 안티봇 시스템 49개, CAPTCHA 24개, 브라우저 핑거프린팅 기법 21개입니다. 각 탐지기는 읽고, 바꾸고, 확장할 수 있는 단순한 JSON 파일이며, 새 규칙은 이 저장소의 버전마다 함께 배포됩니다. 따라서 Chrome이 확장 프로그램 자체를 업데이트하기 전에도 **규칙 → 업데이트**로 설치할 수 있습니다.
 
 [Scrapfly](https://scrapfly.io)에서 이 도구를 만든 이유는 모든 스크래핑 프로젝트가 같은 질문에서 시작하기 때문입니다. 이 페이지를 무엇이 보호하고 있는가? 내 사이트의 안티봇 보호가 바깥에서 어떻게 보이는지 확인하거나 보안 연구를 할 때도 똑같이 유용합니다.
 
@@ -92,7 +92,7 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 | JavaScript 후크 | 핑거프린팅에 자주 쓰이는 브라우저 API 호출 | `HTMLCanvasElement.prototype.toDataURL` |
 | 페이로드 | URL과 메서드로 필터링할 수 있는 POST, PUT, PATCH 요청 본문, 그리고 규칙이 지정한 URL의 응답 | `sensor_data` (Akamai), `"proofofwork":{"required":true` (OpenAI Sentinel) |
 
-**신뢰도.** 각 규칙에는 고유한 신뢰도가 있으며, 탐지기는 함께 일치할 때 더 높은 점수를 받는 규칙 조합을 정의합니다. 공급업체의 이름만 언급하는 스크립트는 5~10%를 받습니다. 그 공급업체의 제품만 만들어 내는 신호(고유한 스크립트 호스트, 고유한 쿠키, 챌린지 엔드포인트)는 증거로 간주되어 단독으로 100%를 받으며, 공급업체의 전체 연동(스크립트와 쿠키, 위젯 프레임 또는 챌린지 요청의 조합)도 마찬가지입니다. 공유되거나 일반적인 신호는 15~90% 사이에 머뭅니다. 각 탐지기의 점수는 가장 강한 규칙 또는 조합의 점수입니다. 페이지에는 난이도(낮음, 중간, 높음)도 부여되며, 이것이 도구 모음 배지의 색을 결정합니다.
+**신뢰도.** 각 규칙에는 고유한 신뢰도가 있으며, 탐지기는 함께 일치할 때 더 높은 점수를 받는 규칙 조합을 정의합니다. 공급업체의 이름만 언급하는 스크립트는 5~10%를 받습니다. 그 공급업체의 제품만 만들어 내는 신호(고유한 스크립트 호스트, 고유한 쿠키, 챌린지 엔드포인트)는 증거로 간주되어 단독으로 100%를 받으며, 공급업체의 전체 연동(스크립트와 쿠키, 위젯 프레임 또는 챌린지 요청의 조합)도 마찬가지입니다. 공유되거나 일반적인 신호는 15~90% 사이에 머뭅니다. 각 탐지기의 점수는 가장 강한 규칙 또는 조합의 점수입니다. 페이지에는 난이도(낮음, 중간, 높음)도 부여되며, 이것이 도구 모음 배지의 색을 결정합니다. 난이도는 50% 이상으로 발견된 안티봇과 CAPTCHA 보호만으로 정해지며, 핑거프린팅과 벤더 이름만 언급하는 스크립트는 반영되지 않습니다.
 
 **핑거프린팅.** API 후크는 페이지 자체의 스크립트가 실행되기 전에 설치되며, 핑거프린팅 코드가 자주 숨어 있는 동일 출처 iframe도 다룹니다. 기본적으로 최소 4초 동안 관찰하고, 이후 페이지가 2초 동안 조용해질 때까지 관찰하며, 최대 8초까지 지속합니다.
 
@@ -105,18 +105,18 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 각 안티봇 시스템마다 이를 알아볼 수 있는 쿠키, 헤더, 스크립트를 담은 전용 페이지가 있습니다: [안티봇 감지 페이지](antibots/ko/README.md).
 
 <details>
-<summary><b>안티봇 시스템 (44)</b></summary>
+<summary><b>안티봇 시스템 (49)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Azure WAF · Bunny Shield · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Google Cloud Armor · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · Signifyd · SiteGround SG-CAPTCHA · Sucuri WAF · Tencent Cloud EdgeOne · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHA (23)</b></summary>
+<summary><b>CAPTCHA (24)</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · EU CAPTCHA (Myra) · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 
@@ -175,7 +175,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 ### 설정
 
-- **일반:** 인터페이스 언어(22개 언어, 기본값은 브라우저 언어), 테마(다크, 라이트 또는 시스템), 알림, 디버그 모드, 예약된 탐지기 업데이트, 그리고 배지, 카테고리, 라벨의 색상.
+- **일반:** 인터페이스 언어(22개 언어, 기본값은 브라우저 언어), 테마(다크, 라이트 또는 시스템), 알림, 디버그 모드, 예약된 탐지기 업데이트, 도구 모음 숫자가 세는 대상(모든 탐지 또는 안티봇과 CAPTCHA만), 그리고 배지, 카테고리, 라벨의 색상.
 - **탐지:** 캐시 유지 기간과 범위, 결과에서 카테고리가 표시되는 순서, 고급 도구의 신뢰도 기준, 스캔할 사이트(건너뛰도록 한 사이트를 제외한 모든 사이트, 또는 선택한 사이트만), JS API 이벤트, 웹훅, 공유 링크.
 - **기록:** 기록되는 항목(기록 일시정지, 시크릿 창 건너뛰기, 무시할 사이트, 최소 신뢰도, 핑거프린팅만 있는 페이지 건너뛰기), 보관할 항목 수(최대 10,000개, 0은 최근 1,000개 보관), 일정 일수 후 또는 브라우저를 닫을 때 항목 삭제, 반복 스캔 건너뛰기 또는 갱신, 페이지의 보호 기술이 바뀔 때의 알림, 기본 내보내기 형식, 경고가 있는 저장 공간 표시기, 다운로드 폴더에 저장되는 자동 백업.
 
@@ -212,7 +212,7 @@ on('onDetection', (e) => {
 
 ### 웹훅
 
-스캔에서 보호 기술이 발견되면 확장 프로그램이 결과를 사용자의 엔드포인트로 보낼 수 있습니다. HTTP 메서드를 선택하고, 헤더를 추가하고, `<SITEURL>`, `<HOSTNAME>`, `<TITLE>`, `<DETECTIONS>`, `<DETECTION_COUNT>`, `<DETECTION_NAMES>`(신뢰도가 포함된 보호 기술을 한 줄로), `<CATEGORIES>`, `<TIMESTAMP>` 같은 변수를 쓴 템플릿으로 본문을 작성하세요. **템플릿으로 시작**(Slack, Mattermost 또는 Google Chat, Discord, 또는 일반 텍스트 한 줄)을 선택하면 Content-Type과 바로 쓸 수 있는 채팅 메시지가 채워집니다. 웹훅은 공개 호스트의 HTTPS 주소로만 전송되고, 기본적으로 꺼져 있으며, **테스트** 버튼이 있습니다. **설정 → 탐지 → 웹훅 연동**에서 설정하세요.
+스캔에서 보호 기술이 발견되면 확장 프로그램이 결과를 사용자의 엔드포인트로 보낼 수 있습니다. HTTP 메서드를 선택하고, 헤더를 추가하고, `<SITEURL>`, `<HOSTNAME>`, `<TITLE>`, `<DETECTIONS>`, `<DETECTION_COUNT>`, `<DETECTION_NAMES>`(신뢰도가 포함된 보호 기술을 한 줄로), `<HTTP_STATUS>`(페이지의 HTTP 상태 코드, 예: 차단 페이지의 403), `<CATEGORIES>`, `<TIMESTAMP>` 같은 변수를 쓴 템플릿으로 본문을 작성하세요. **템플릿으로 시작**(Slack, Mattermost 또는 Google Chat, Discord, 또는 일반 텍스트 한 줄)을 선택하면 Content-Type과 바로 쓸 수 있는 채팅 메시지가 채워집니다. 웹훅은 공개 호스트의 HTTPS 주소로만 전송되고, 기본적으로 꺼져 있으며, **테스트** 버튼이 있습니다. **설정 → 탐지 → 웹훅 연동**에서 설정하세요.
 
 **최근 전송과 재시도.** **설정 → 탐지 → 웹훅**에는 최근 20번의 시도(페이지, 상태, 소요 시간이며 주소, 헤더, 페이로드는 절대 포함되지 않습니다)가 나열됩니다. 실패한 전송은 **재시도**로 다시 보낼 수 있고, **실패한 전송 재시도**가 켜져 있으면(기본값) 응답이 없거나 서버가 408, 425, 429 또는 5xx로 응답한 경우 확장 프로그램이 1분, 5분, 15분 뒤에 스스로 다시 시도합니다. 401, 403, 404 같은 거부는 사용자의 **재시도**를 기다립니다. 이를 위해 실패한 전송의 페이지 데이터는 한 시간 동안(최대 20개) 메모리에만 보관되고 디스크에는 절대 저장되지 않으며, 브라우저를 닫으면 사라집니다. 재시도는 현재 웹훅 설정으로 요청을 다시 구성하므로 수정한 주소나 비밀 값이 사용되며, 헤더나 비밀 값은 함께 저장되지 않습니다.
 

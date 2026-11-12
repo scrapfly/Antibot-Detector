@@ -4,8 +4,10 @@ const assert = require('node:assert/strict');
 
 // Rules editor: a pattern that more than one rule holds. Saving a rule that repeats a pattern of its own was reported in 3.1.6;
 // this module also finds the OTHER rules that hold one of the saved rule's patterns, with the same idea of "the same pattern":
-// everything but the id, the confidence and the standalone flag. It only finds; the editor warns and never blocks (a host that
-// two rules share on purpose is not a mistake).
+// what it matches, so not the id, the confidence, the standalone and optional flags, the description and its translations, or
+// the on/off switch; a pattern switched off matches nothing and is skipped. Until 3.1.8 the description took part, so a custom
+// rule holding the official Cloudflare cookie got no warning unless its description was word for word the same. It only finds;
+// the editor warns and never blocks (a host that two rules share on purpose is not a mistake).
 
 // Loaded inside each test, so a missing module is one failure per test and not one failure of the whole file
 const D = () => require('../modules/core/rule-duplicates.js');
@@ -32,11 +34,28 @@ test('a pattern that differs in its text, an option or its kind is not the same'
   const differs = [
     entry('text', { url: [{ text: 'cdn.example.com/y.js' }] }),
     entry('option', { url: [{ text: 'cdn.example.com/x.js', textRegex: true }] }),
-    entry('extra', { url: [{ text: 'cdn.example.com/x.js', description: 'Loads the script' }] }),
     entry('kind', { content: [{ text: 'cdn.example.com/x.js' }], header: [cookie('_abc')] }),
     entry('empty', {}), entry('none', undefined)
   ];
   assert.deepEqual(D().findInOthers(saved, differs), []);
+});
+
+test('the same match with another description, translation or on/off flag is the same pattern', () => {
+  const saved = { cookie: [{ id: 'mine', name: '__cf_bm', nameRegex: false, confidence: 40, description: 'My Cloudflare cookie' }] };
+  const official = entry('cloudflare', { cookie: [{ id: 'cf', name: '__cf_bm', nameRegex: false, confidence: 100, standalone: true,
+    description: 'Cloudflare bot management cookie', descriptionI18n: { es: 'Cookie de gestión de bots de Cloudflare' } }] });
+  assert.equal(D().findInOthers(saved, [official]).length, 1, 'a custom rule with the official cookie is warned about');
+  const hook = { js_hooks: [{ id: 'h1', target: 'HTMLCanvasElement.prototype.toDataURL', enabled: true, optional: true, description: 'Canvas' }] };
+  assert.equal(D().findInOthers(hook, [entry('o', { js_hooks: [{ id: 'h2', target: 'HTMLCanvasElement.prototype.toDataURL', description: 'Other' }] })]).length, 1);
+});
+
+test('a pattern switched off matches nothing, so it is neither shared nor repeated', () => {
+  const on = { name: '__cf_bm' };
+  const off = { name: '__cf_bm', enabled: false };
+  assert.deepEqual(D().findInOthers({ cookie: [on] }, [entry('o', { cookie: [off] })]), [], 'switched off in the other rule');
+  assert.deepEqual(D().findInOthers({ cookie: [off] }, [entry('o', { cookie: [on] })]), [], 'switched off in the saved rule');
+  assert.equal(D().countWithin({ cookie: [on, off] }), 0, 'a switched-off copy beside the one in use is not an extra copy');
+  assert.equal(D().countWithin({ cookie: [on, { ...on, description: 'again' }] }), 1, 'a copy with another description is');
 });
 
 test('the order the options are written in does not make a pattern different', () => {
@@ -115,13 +134,13 @@ test('junk in the lists never throws, and the lists passed are not changed', () 
   assert.doesNotThrow(() => D().findInOthers(frozen, Object.freeze([Object.freeze(entry('x', frozen))])));
 });
 
-test('keyOf is what makes two patterns the same: everything but the id, the confidence and the standalone flag', () => {
+test('keyOf is what makes two patterns the same: what they match, not the id, confidence, flags or texts', () => {
   const { keyOf } = D();
   assert.equal(keyOf({ name: 'a', id: 'x', confidence: 1, standalone: true }), keyOf({ name: 'a', id: 'y', confidence: 99 }));
+  assert.equal(keyOf({ name: 'a', description: 'one', descriptionI18n: { es: 'uno' }, enabled: true, optional: true }), keyOf({ name: 'a', description: 'two' }));
   assert.equal(keyOf({ a: 1, b: 2 }), keyOf({ b: 2, a: 1 }), 'whatever order the fields come in');
   assert.notEqual(keyOf({ name: 'a' }), keyOf({ name: 'b' }));
   assert.notEqual(keyOf({ name: 'a' }), keyOf({ name: 'a', textRegex: false }), 'an option that is written is part of the pattern');
-  assert.notEqual(keyOf({ text: 'a', description: 'one' }), keyOf({ text: 'a', description: 'two' }));
   for (const junk of [null, undefined, 'text', 7, true]) assert.equal(keyOf(junk), null, String(junk));
 });
 
@@ -147,7 +166,12 @@ test('the pattern another rule holds is found by the same key the repeat inside 
       assert.equal(shared, repeated, `${JSON.stringify(first)} / ${JSON.stringify(second)}`);
     }
   }
-  const different = [pattern({ name: '_other' }), pattern({ textRegex: true }), pattern({ description: 'x' })];
+  const variants2 = [pattern({ description: 'x' }), pattern({ descriptionI18n: { es: 'x' } }), pattern({ enabled: true })];
+  for (const second of variants2) {
+    assert.equal(D().countWithin({ cookie: [pattern({}), second] }), 1, JSON.stringify(second));
+    assert.equal(D().findInOthers({ cookie: [pattern({})] }, [entry('o', { cookie: [second] })]).length, 1, JSON.stringify(second));
+  }
+  const different = [pattern({ name: '_other' }), pattern({ textRegex: true }), pattern({ enabled: false })];
   for (const second of different) {
     assert.equal(D().countWithin({ cookie: [pattern({}), second] }), 0);
     assert.equal(D().findInOthers({ cookie: [pattern({})] }, [entry('o', { cookie: [second] })]).length, 0);

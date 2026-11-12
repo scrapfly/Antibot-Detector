@@ -2,7 +2,7 @@
 
 # Reblaze Bot-Schutz: so erkennen Sie ihn (und was er für Web Scraping bedeutet)
 
-Reblaze ist ein Bot-Schutz bzw. eine Anti-Abuse-Schicht, die manche Websites vor ihre Seiten schalten. Wenn Sie Reblaze umgehen möchten, Reblaze auf einer Website erkennen wollen oder untersuchen, warum Web Scraping von Reblaze blockiert wird, ist der erste Schritt immer derselbe: Prüfen Sie, ob tatsächlich Reblaze Ihre Anfragen beantwortet. Diese Seite listet die 7 öffentlichen Signale auf, mit denen die Erweiterung Scrapfly Antibot Detector die Bot-Erkennung von Reblaze identifiziert, wie stark jedes einzelne Signal darauf hinweist und was das in der Regel für einen automatisierten Client bedeutet.
+Reblaze ist ein Bot-Schutz bzw. eine Anti-Abuse-Schicht, die manche Websites vor ihre Seiten schalten. Wenn Sie Reblaze umgehen möchten, Reblaze auf einer Website erkennen wollen oder untersuchen, warum Web Scraping von Reblaze blockiert wird, ist der erste Schritt immer derselbe: Prüfen Sie, ob tatsächlich Reblaze Ihre Anfragen beantwortet. Diese Seite listet die 8 öffentlichen Signale auf, mit denen die Erweiterung Scrapfly Antibot Detector die Bot-Erkennung von Reblaze identifiziert, wie stark jedes einzelne Signal darauf hinweist und was das in der Regel für einen automatisierten Client bedeutet.
 
 ## Was es ist
 
@@ -12,7 +12,7 @@ Offizielle Website: [https://www.reblaze.com/](https://www.reblaze.com/)
 
 ## Woran erkenne ich, ob eine Website Reblaze nutzt?
 
-Diese Signale werden aus den eigenen Erkennungsregeln der Erweiterung für `detect-reblaze` erzeugt (Regelversion 2.1.0, zuletzt aktualisiert am 2026-10-16). Ein Signal ist nur ein Hinweis: Die Konfidenz gibt an, wie sicher sich die Erweiterung ist, wenn genau dieses eine Signal auftritt. Signale mit der Kennzeichnung „nur zur Bestätigung“ zählen nie allein, weil auch andere Produkte sie erzeugen können.
+Diese Signale werden aus den eigenen Erkennungsregeln der Erweiterung für `detect-reblaze` erzeugt (Regelversion 2.2.0, zuletzt aktualisiert am 2026-11-12). Ein Signal ist nur ein Hinweis: Die Konfidenz gibt an, wie sicher sich die Erweiterung ist, wenn genau dieses eine Signal auftritt. Signale mit der Kennzeichnung „nur zur Bestätigung“ zählen nie allein, weil auch andere Produkte sie erzeugen können.
 
 ### Cookies
 
@@ -31,6 +31,7 @@ Adressen von Skripten, Frames und Anfragen, die die Seite lädt. Es handelt sich
 | Signal | Konfidenz | Worauf es hinweist |
 | --- | --- | --- |
 | `^https?://[^/?#]+/[A-Za-z0-9_-]{3,40}\.ac_v2\.lib\.js(?:[?#]\|$)` | 100% | Reblaze active-challenge library (<name>.ac_v2.lib.js) |
+| `^https?://[^/?#]+/c3650cdf-216a-4ba2-80b0-9d6c540b105e58d2670b-ea0f-484e-b88c-0e2c1499ec9bd71e4b42-8570-44e3-89b6-845326fa43b6(?:[?#]\|$)` | 100% | Reblaze passive challenge script at its fixed first-party path |
 
 ### Seiten- und Skriptinhalt
 

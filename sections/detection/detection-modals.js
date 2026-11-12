@@ -177,7 +177,7 @@ DetectionModals.renderDetectionModalContent = function(detection) {
 
     const confidence = detection.confidence || 0;
 
-    const difficultyInfo = this.getDifficultyInfo([detection], confidence);
+    const difficultyInfo = this.getDifficultyInfo([detection]);
     const manualDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
       ? DetectionUtils.normalizeDifficulty(detection?.difficulty || detection?.detector?.difficulty)
       : null;

@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "سيظهر سجل الكشف هنا أثناء تصفحك للمواقع."
   },
+  "historyPausedNote": {
+    "message": "السجل متوقف مؤقتًا، لذا لا تُسجَّل الصفحات المفحوصة."
+  },
   "rulesUpdateTitle": {
     "message": "تثبيت تحديثات القواعد من أحدث إصدار من Scrapfly"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "المؤلف"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "لون الشارة"
   },
   "ruleSectionDetectionMethods": {
     "message": "طرق الكشف"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "تم تصدير {0}"
   },
+  "rulesExportedFmt": {
+    "message": "القواعد المُصدَّرة: {0}"
+  },
   "failedImportDetectors": {
     "message": "تعذَّر استيراد الكواشف. تحقق من تنسيق الملف."
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "تم حذف \"{0}\""
+  },
+  "ruleSavedFmt": {
+    "message": "تم حفظ \"{0}\""
   },
   "failedClearDetectors": {
     "message": "تعذَّر مسح الكواشف"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "مرتفع"
   },
+  "settingsBadgeCountTitle": {
+    "message": "رقم شريط الأدوات"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "ما يعدّه الرقم الظاهر على أيقونة شريط الأدوات. تعمل البصمة على معظم المواقع، وتبقى النافذة المنبثقة والسجل تعرضان كل شيء."
+  },
+  "settingsBadgeCountAll": {
+    "message": "كل الاكتشافات"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "مكافحة الروبوتات وCAPTCHA فقط"
+  },
   "settingsEnableJsApi": {
     "message": "تفعيل أحداث JS API"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "سيؤدي هذا إلى حذف جميع البيانات الملتقطة لهذا المزوِّد بشكل دائم."
-  },
-  "rulesColorPickerCancel": {
-    "message": "إلغاء"
-  },
-  "rulesColorPickerOk": {
-    "message": "موافق"
   },
   "rulesContentSearchScopeTitle": {
     "message": "نطاق البحث في المحتوى"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "تغيير أيقونة الكاشف"
   },
-  "rulesUiCustomColor": {
-    "message": "لون مخصص"
-  },
   "iconPickerTitle": {
     "message": "اختيار أيقونة"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "رفعتها {0} أنظمة حماية معًا"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "لم يُعثر على مكافحة روبوتات أو CAPTCHA بنسبة 50% أو أكثر"
   },
   "tipLastUpdated": {
     "message": "حُدّث"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "الصفحات التي تعيد استخدام هذه النتائج المخزنة مؤقتًا، ولأي مدة."
+  },
+  "detectionStatHttpStatus": {
+    "message": "حالة HTTP"
+  },
+  "detectionTipHttpStatus": {
+    "message": "رمز حالة HTTP الذي أجابت به الصفحة عند فحصها. الخطأ (4xx أو 5xx) يعني غالبًا أن الطلب حُظر أو خضع لتحدٍّ."
   },
   "tipCacheExpires": {
     "message": "تنتهي"
@@ -5439,7 +5457,7 @@
     "message": "النسخ الاحتياطية المراد الاحتفاظ بها"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "بعد كل نسخة احتياطية، تحذف النسخ الأقدم التي تتجاوز هذا العدد من مجلد التنزيلات (النسخة المحفوظة على عدة أجزاء تحتسب نسخة واحدة). لا تحذف إلا ملفات النسخ الاحتياطي التي حفظتها هذه الإضافة. وإذا احتفظت بها جميعًا فلن يحذف شيء."
+    "message": "بعد كل نسخة احتياطية، تحذف النسخ الأقدم التي تتجاوز هذا العدد من مجلد التنزيلات (النسخة المحفوظة على عدة أجزاء تحتسب نسخة واحدة). لا تحذف إلا ملفات النسخ الاحتياطي التي حفظتها هذه الإضافة. وإذا احتفظت بها جميعًا فلن يحذف شيء. تبقى النسخ الاحتياطية التي أنشئت قبل الإصدار 3.1.7 حتى تحذفها بنفسك."
   },
   "settingsHistoryBackupNow": {
     "message": "نسخ احتياطي الآن"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "وجد آخر فحص أن الإضافة معطّلة، لذا لم يُفحص شيء."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "توقف آخر فحص لأن الإضافة عُطّلت."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "توقف آخر فحص لأن السجل أُوقف مؤقتًا."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "يجب أن تكون المراقبة متوقفة أو يومية أو أسبوعية"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "الكشوفات: {0} · الثقة: {1}% · الصعوبة: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "حالة HTTP: {0}"
+  },
   "detectionMdColProtection": {
     "message": "الحماية"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "إعادة الفحص الآن"
+  },
+  "detectionFromPageFmt": {
+    "message": "من فحص {0}، {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "تغيّر منذ {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "لا تغيير منذ {0}"
   },
   "rulesDuplicate": {
     "message": "إنشاء نسخة"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "السجل متوقف مؤقتًا: تُفحص الصفحات لكن لا تُسجَّل."
   },
+  "bulkFromHistoryFmt": {
+    "message": "صفحات من السجل: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "يجري فحص جماعي الآن، لذا لم تُضَف الصفحات من السجل."
+  },
   "bulkReadingSitemaps": {
     "message": "جارٍ قراءة خرائط المواقع…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "الحمايات المكتشفة مع نسبة الثقة، مفصولة بفواصل"
+  },
+  "webhookVarHttpStatus": {
+    "message": "رمز حالة HTTP للصفحة (0 إذا لم يكن معروفًا)"
   },
   "historyCopyMarkdown": {
     "message": "نسخ بصيغة Markdown"

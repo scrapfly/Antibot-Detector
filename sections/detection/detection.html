@@ -77,6 +77,12 @@
         <span class="state-card-badge" data-i18n="detectionBadgeNoAntibot">✓ No Anti-Bot</span>
         <span class="state-card-badge" data-badge="fingerprint" data-i18n="detectionBadgeNoFingerprint">✓ No Fingerprinting</span>
       </div>
+      <!-- A scan that found nothing: when it ran (or the other page of the site it ran on, under the Domain cache scope), and one
+           click to scan this page again. The result is cached for days, so reloading the page shows the same card -->
+      <p id="emptyCheckedNote" class="state-card-checked" hidden>
+        <span class="detection-note-text"></span>
+        <span class="detection-note-action"><span class="detection-note-sep" aria-hidden="true">·</span> <button id="checkedRescanBtn" class="detection-link-btn" type="button" data-i18n="historyScanAgain">Scan again now</button></span>
+      </p>
     </div>
   </div>
 
@@ -147,6 +153,12 @@
           <button class="history-menu-item" role="menuitem" data-copy-format="node" data-i18n="detectionCopyMenuNode">Node.js (fetch)</button>
         </div>
       </div>
+      <!-- Under the Domain cache scope every page of a site is served the scan of one of them: when the results were found on
+           another page, which one and when, and a way to scan this one (a CAPTCHA on /login is not taken for missing) -->
+      <div id="detectionSourceNote" class="detection-summary-note" hidden>
+        <span class="detection-note-text"></span>
+        <span class="detection-note-action"><span class="detection-note-sep" aria-hidden="true">·</span> <button id="sourceRescanBtn" class="detection-link-btn" type="button" data-i18n="historyScanAgain">Scan again now</button></span>
+      </div>
       <div class="stats-line">
         <div class="stat-inline detections-count" tabindex="0" title="Number of protections detected on this page." data-i18n-title="detectionTipDetections">
           <div class="stat-icon-inline">
@@ -205,6 +217,30 @@
             <div class="stat-value-inline"><span id="cacheScopeDisplay">Domain</span><span class="cache-stat-sep" aria-hidden="true"> · </span><span id="cacheExpiry">-</span></div>
           </div>
         </div>
+        <!-- The page's HTTP status (DetectionUI.updateHttpStatus): shown when the result has one, marked when it is an error -->
+        <div class="stat-inline http-status-stat" id="httpStatusTile" tabindex="0" hidden title="The HTTP status code the page answered with when it was scanned. An error (4xx or 5xx) often means the request was blocked or challenged." data-i18n-title="detectionTipHttpStatus">
+          <div class="stat-icon-inline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="7" rx="1.5"/>
+              <rect x="3" y="13" width="18" height="7" rx="1.5"/>
+              <path d="M7 7.5h.01M7 16.5h.01"/>
+            </svg>
+          </div>
+          <div class="stat-content-inline">
+            <div class="stat-label-inline" data-i18n="detectionStatHttpStatus">HTTP status</div>
+            <div class="stat-value-inline" id="httpStatusValue">-</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- What History says changed on this page since its earlier scan, with Compare scans and Watch for changes. Read from
+           History once the results are drawn; not shown while History is paused, when the page has no earlier scan, or when the
+           results are another page's (the line above says so) -->
+      <div id="detectionChangeNote" class="detection-summary-note detection-change-note" hidden>
+        <span class="detection-note-text"></span>
+        <span class="detection-note-action" data-change-action="compare" hidden><span class="detection-note-sep" aria-hidden="true">·</span> <button id="changeCompareBtn" class="detection-link-btn" type="button" data-i18n="historyCompareTitle">Compare scans</button></span>
+        <span class="detection-note-action" data-change-action="watch" hidden><span class="detection-note-sep" aria-hidden="true">·</span> <button id="changeWatchBtn" class="detection-link-btn" type="button" data-i18n="historyWatch">Watch for changes</button></span>
+        <span class="detection-note-action" data-change-action="watching" hidden><span class="detection-note-sep" aria-hidden="true">·</span> <span class="detection-note-watching" data-i18n="historyWatchTip">Watching for changes</span></span>
       </div>
 
       <!-- Search sits in the summary card, under the stats -->

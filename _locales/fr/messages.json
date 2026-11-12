@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "L'historique de détection apparaîtra ici au fur et à mesure de votre navigation."
   },
+  "historyPausedNote": {
+    "message": "L’historique est en pause : les pages analysées ne sont pas enregistrées."
+  },
   "rulesUpdateTitle": {
     "message": "Installer les mises à jour des règles depuis la dernière version de Scrapfly"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "Auteur"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "Couleur du badge"
   },
   "ruleSectionDetectionMethods": {
     "message": "Méthodes de détection"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "{0} exporté"
   },
+  "rulesExportedFmt": {
+    "message": "Règles exportées : {0}"
+  },
   "failedImportDetectors": {
     "message": "Échec de l'importation des détecteurs. Vérifiez le format du fichier."
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "« {0} » supprimé"
+  },
+  "ruleSavedFmt": {
+    "message": "« {0} » enregistré"
   },
   "failedClearDetectors": {
     "message": "Échec de la suppression des détecteurs"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "Élevé"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Nombre dans la barre d’outils"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Ce que compte le nombre sur l’icône de la barre d’outils. Le fingerprinting tourne sur la plupart des sites ; la fenêtre et l’Historique affichent toujours tout."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Toutes les détections"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Anti-bot et CAPTCHA uniquement"
+  },
   "settingsEnableJsApi": {
     "message": "Activer les événements JS API"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Cela supprimera définitivement toutes les données capturées pour ce fournisseur."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Annuler"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Portée de la recherche de contenu"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "Changer l’icône du détecteur"
   },
-  "rulesUiCustomColor": {
-    "message": "Couleur personnalisée"
-  },
   "iconPickerTitle": {
     "message": "Choisir une icône"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Augmentée par {0} protections ensemble"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Aucun anti-bot ni CAPTCHA trouvé à 50 % ou plus"
   },
   "tipLastUpdated": {
     "message": "Mis à jour"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "Quelles pages réutilisent ces résultats en cache, et pour combien de temps."
+  },
+  "detectionStatHttpStatus": {
+    "message": "Statut HTTP"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Le code de statut HTTP renvoyé par la page lors de l'analyse. Une erreur (4xx ou 5xx) signifie souvent que la requête a été bloquée ou soumise à un défi."
   },
   "tipCacheExpires": {
     "message": "Expire"
@@ -5439,7 +5457,7 @@
     "message": "Sauvegardes à conserver"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Après chaque sauvegarde, les plus anciennes au-delà de ce nombre sont supprimées de votre dossier Téléchargements (une sauvegarde enregistrée en plusieurs parties compte pour une). Seuls les fichiers de sauvegarde enregistrés par cette extension sont supprimés. Si vous les conservez toutes, rien n’est supprimé."
+    "message": "Après chaque sauvegarde, les plus anciennes au-delà de ce nombre sont supprimées de votre dossier Téléchargements (une sauvegarde enregistrée en plusieurs parties compte pour une). Seuls les fichiers de sauvegarde enregistrés par cette extension sont supprimés. Si vous les conservez toutes, rien n’est supprimé. Les sauvegardes créées avant la version 3.1.7 restent jusqu’à ce que vous les supprimiez."
   },
   "settingsHistoryBackupNow": {
     "message": "Sauvegarder maintenant"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "La dernière vérification a trouvé l’extension désactivée : rien n’a été vérifié."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "La dernière vérification s’est arrêtée car l’extension a été désactivée."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "La dernière vérification s’est arrêtée car l’historique a été mis en pause."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "La liste de surveillance doit être désactivée, quotidienne ou hebdomadaire"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "Détections : {0} · Confiance : {1} % · Difficulté : {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "Statut HTTP : {0}"
+  },
   "detectionMdColProtection": {
     "message": "Protection"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "Analyser à nouveau maintenant"
+  },
+  "detectionFromPageFmt": {
+    "message": "D’après une analyse de {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Modifié depuis le {0} : {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Aucun changement depuis le {0}"
   },
   "rulesDuplicate": {
     "message": "Dupliquer"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "L’historique est en pause : les pages sont analysées mais pas enregistrées."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Pages de l’historique : {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Une analyse groupée est en cours : les pages de l’historique n’ont pas été ajoutées."
+  },
   "bulkReadingSitemaps": {
     "message": "Lecture des sitemaps…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Protections détectées avec leur confiance, séparées par des virgules"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Code de statut HTTP de la page (0 s'il est inconnu)"
   },
   "historyCopyMarkdown": {
     "message": "Copier en Markdown"

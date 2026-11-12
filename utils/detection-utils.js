@@ -204,67 +204,142 @@ class DetectionUtils {
   }
 
   /**
-   * Compute a difficulty level for a set of detections.
-   * This is a UI-facing heuristic (Low/Medium/High), not a security guarantee.
+   * What the number on the toolbar badge counts (Settings → General → "Toolbar number", the root setting `badgeCount`):
+   * every detection (the default), or only the anti-bot and CAPTCHA ones, since fingerprinting runs on most sites.
+   */
+  static BADGE_COUNT_ALL = 'all';
+  static BADGE_COUNT_PROTECTIONS = 'protections';
+
+  /** The badge count mode of a saved value: anything but 'protections' (a missing or unknown value) is every detection. */
+  static badgeCountMode(value) {
+    return value === DetectionUtils.BADGE_COUNT_PROTECTIONS ? DetectionUtils.BADGE_COUNT_PROTECTIONS : DetectionUtils.BADGE_COUNT_ALL;
+  }
+
+  /**
+   * The saved badge count mode, read through the given manager (CategoryManager.getBadgeCountMode), never failing: a manager
+   * without the reader, or a read that throws or rejects, is every detection, so the badge is still painted with its colours.
+   * @param {object} manager
+   * @returns {Promise<string>}
+   */
+  static async readBadgeCountMode(manager) {
+    try {
+      return DetectionUtils.badgeCountMode(await manager.getBadgeCountMode());
+    } catch (_) {
+      return DetectionUtils.BADGE_COUNT_ALL;
+    }
+  }
+
+  /**
+   * The number on the toolbar badge for a page's detections: the one count every badge painter uses (worker and popup).
+   * 0 means the page gets the clean badge; its hover text still names what was found.
+   * @param {Array} detections - the page's results
+   * @param {string} [mode] - the saved `badgeCount` setting (badgeCountMode)
+   * @param {number} [total] - the page's saved detection count: what every detection shows when a cached page has one, as before
+   * @returns {number}
+   */
+  static badgeCount(detections, mode, total) {
+    const list = Array.isArray(detections) ? detections.filter(d => d && typeof d === 'object') : [];
+    if (DetectionUtils.badgeCountMode(mode) === DetectionUtils.BADGE_COUNT_PROTECTIONS) {
+      return list.filter(d => DetectionUtils.isProtection(d)).length;
+    }
+    const saved = Number(total);
+    return total !== undefined && total !== null && Number.isInteger(saved) && saved >= 0 ? saved : list.length;
+  }
+
+  /**
+   * The confidence from which a protection counts as present on a page: History's own line (HistoryPolicy.CHANGE_SURE, under
+   * 25% it is absent). A script that only names a vendor scores 5-10%, so it never sets the page difficulty.
+   */
+  static PRESENT_CONFIDENCE = 50;
+
+  /** A high-tier provider (Shape Security, hCaptcha, Arkose Labs / FunCaptcha) found at this confidence makes a page High. */
+  static HIGH_TIER_CONFIDENCE = 80;
+
+  /** An anti-bot or a CAPTCHA, in any spelling of the category (Categories.keyOf): never fingerprinting or another category. */
+  static isProtection(detection) {
+    const key = Categories.keyOf(detection);
+    return key === 'antibot' || key === 'captcha';
+  }
+
+  /** A detection's confidence; one saved without a score counts as found, as History counts it (HistoryPolicy.diffProtections). */
+  static scoreOf(detection) {
+    const score = Number(detection && detection.confidence);
+    return Number.isFinite(score) ? score : 100;
+  }
+
+  /**
+   * Does this detection count towards the page difficulty? An anti-bot or a CAPTCHA present on the page (PRESENT_CONFIDENCE or
+   * more). A passing mention of a vendor, and fingerprinting, which runs on most sites, never make a page look harder.
+   */
+  static countsForDifficulty(detection) {
+    return !!detection && typeof detection === 'object' && DetectionUtils.isProtection(detection)
+      && DetectionUtils.scoreOf(detection) >= DetectionUtils.PRESENT_CONFIDENCE;
+  }
+
+  /** Shape Security, hCaptcha, Arkose Labs / FunCaptcha, by the detection's name (a detector object, a plain string or its own name) */
+  static isHighTierName(detection) {
+    const nested = detection?.detector && typeof detection.detector === 'object' ? detection.detector.name : detection?.detector;
+    const name = String((typeof nested === 'string' && nested) || detection?.name || '').toLowerCase();
+    return name.includes('shape security') ||
+      name.includes('shapesecurity') ||
+      name.includes('hcaptcha') ||
+      name.includes('arkose') ||
+      name.includes('funcaptcha');
+  }
+
+  /**
+   * The page difficulty and what set it: the one rule behind the popup's Difficulty tile and its tip, the toolbar badge colour,
+   * History, Statistics, Bulk scan and the exports. A UI-facing estimate (Low/Medium/High), not a security guarantee.
+   *
+   *   High    a high-tier provider found at HIGH_TIER_CONFIDENCE or more ('highTier')
+   *   floor   the hardest difficulty of a detector that counts (countsForDifficulty) is a minimum ('detector')
+   *   Medium  at least two that count ('several'), or their average confidence above 60% ('confidence')
+   *   Low     otherwise: 'none' when nothing counts, 'default' when what counts is weak and has no harder difficulty of its own
+   *
    * @param {Array} detections
-   * @param {number} [avgConfidence]
+   * @returns {{difficulty: 'Low'|'Medium'|'High', reason: string, source: (object|null), counted: Array}} source: the
+   *   detection that set the level (highTier, detector); counted: the detections that count, hardest first
+   */
+  static difficultyOf(detections = []) {
+    const list = (Array.isArray(detections) ? detections : []).filter(d => d && typeof d === 'object');
+    const rankOf = (d) => DetectionUtils.getDifficultyRank(DetectionUtils.normalizeDifficulty(d.difficulty || d.detector?.difficulty));
+    const counted = list.filter(DetectionUtils.countsForDifficulty)
+      .map((detection, index) => ({ detection, index }))
+      .sort((a, b) => rankOf(b.detection) - rankOf(a.detection)
+        || DetectionUtils.scoreOf(b.detection) - DetectionUtils.scoreOf(a.detection) || a.index - b.index)
+      .map(entry => entry.detection);
+
+    const highTier = list.find(d => DetectionUtils.isHighTierName(d) && (Number(d.confidence) || 0) >= DetectionUtils.HIGH_TIER_CONFIDENCE);
+    if (highTier) return { difficulty: 'High', reason: 'highTier', source: highTier, counted };
+
+    const average = counted.length ? counted.reduce((sum, d) => sum + DetectionUtils.scoreOf(d), 0) / counted.length : 0;
+    const several = counted.length >= 2;
+    const raised = several || average > 60;
+    // The hardest detector that counts sets a minimum; it names the level when it reaches the one the rules above give
+    const floorRank = counted.length ? rankOf(counted[0]) : 0;
+    if (floorRank > 0 && floorRank >= DetectionUtils.getDifficultyRank(raised ? 'Medium' : 'Low')) {
+      return { difficulty: DetectionUtils.rankToDifficulty(floorRank), reason: 'detector', source: counted[0], counted };
+    }
+    if (raised) return { difficulty: 'Medium', reason: several ? 'several' : 'confidence', source: null, counted };
+    return { difficulty: 'Low', reason: counted.length ? 'default' : 'none', source: null, counted };
+  }
+
+  /**
+   * The page difficulty for a set of detections (difficultyOf).
+   * @param {Array} detections
    * @returns {'Low'|'Medium'|'High'}
    */
-  static getDifficultyLevel(detections = [], avgConfidence = undefined) {
-    const totalDetections = Array.isArray(detections) ? detections.length : 0;
-    const safeDetections = Array.isArray(detections) ? detections : [];
-
-    const safeAvgConfidence = Number.isFinite(avgConfidence)
-      ? avgConfidence
-      : DetectionUtils.computeAverageConfidence(detections);
-
-    const categoryKeys = safeDetections.map((d) => Categories.keyOf(d));
-
-    const antiCaptchaCount = categoryKeys.filter((key) => key === 'antibot' || key === 'captcha').length;
-
-    // Fingerprint-only detections (even many of them) shouldn't imply a "hard" page.
-    const fingerprintOnly = totalDetections > 0 && categoryKeys.every((key) => key === 'fingerprint');
-
-    const isHighTierName = (d) => {
-      // detector may be an object without a name (only an id), or a plain string
-      const nested = d?.detector && typeof d.detector === 'object' ? d.detector.name : d?.detector;
-      const name = String((typeof nested === 'string' && nested) || d?.name || '').toLowerCase();
-      return name.includes('shape security') ||
-        name.includes('shapesecurity') ||
-        name.includes('hcaptcha') ||
-        name.includes('arkose') ||
-        name.includes('funcaptcha');
-    };
-
-    const highTierHighConfidence = safeDetections.some((d) => {
-      return isHighTierName(d) && (d?.confidence || 0) >= 80;
-    });
-
-    let heuristicDifficulty = 'Low';
-    if (highTierHighConfidence) heuristicDifficulty = 'High';
-    else if (fingerprintOnly) heuristicDifficulty = 'Low';
-    else if (antiCaptchaCount >= 2 || totalDetections > 2 || safeAvgConfidence > 60) heuristicDifficulty = 'Medium';
-
-    // Manual detector difficulty acts as a minimum floor for aggregate difficulty.
-    const manualFloorRank = safeDetections.reduce((maxRank, detection) => {
-      const manualDifficulty = DetectionUtils.normalizeDifficulty(
-        detection?.difficulty || detection?.detector?.difficulty
-      );
-      return Math.max(maxRank, DetectionUtils.getDifficultyRank(manualDifficulty));
-    }, 0);
-
-    const heuristicRank = DetectionUtils.getDifficultyRank(heuristicDifficulty);
-    return DetectionUtils.rankToDifficulty(Math.max(heuristicRank, manualFloorRank));
+  static getDifficultyLevel(detections = []) {
+    return DetectionUtils.difficultyOf(detections).difficulty;
   }
 
   /**
    * Compute difficulty + default color.
    * @param {Array} detections
-   * @param {number} [avgConfidence]
    * @returns {{difficulty: 'Low'|'Medium'|'High', difficultyColor: string}}
    */
-  static getDifficultyInfo(detections = [], avgConfidence = undefined) {
-    const difficulty = DetectionUtils.getDifficultyLevel(detections, avgConfidence);
+  static getDifficultyInfo(detections = []) {
+    const difficulty = DetectionUtils.getDifficultyLevel(detections);
     const colors = {
       High: '#ef4444',
       Medium: '#f59e0b',

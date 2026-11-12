@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Web sitelerinde gezindikçe tespit geçmişi burada görünecek."
   },
+  "historyPausedNote": {
+    "message": "Geçmiş duraklatıldı, bu yüzden taranan sayfalar kaydedilmiyor."
+  },
   "rulesUpdateTitle": {
     "message": "En son Scrapfly sürümündeki kural güncellemelerini yükle"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "Yazar"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "Rozet rengi"
   },
   "ruleSectionDetectionMethods": {
     "message": "Tespit yöntemleri"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "{0} dışa aktarıldı"
   },
+  "rulesExportedFmt": {
+    "message": "{0} kural dışa aktarıldı"
+  },
   "failedImportDetectors": {
     "message": "Dedektörler içe aktarılamadı. Dosya biçimini kontrol edin."
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" silindi"
+  },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" kaydedildi"
   },
   "failedClearDetectors": {
     "message": "Dedektörler temizlenemedi"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "Yüksek"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Araç çubuğu sayısı"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Araç çubuğu simgesindeki sayının neyi saydığı. Parmak izi takibi çoğu sitede çalışır; açılır pencere ve Geçmiş yine her şeyi gösterir."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Her tespit"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Yalnızca anti-bot ve CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "JS API olaylarını etkinleştir"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Bu sağlayıcı için yakalanan tüm veriler kalıcı olarak silinecek."
-  },
-  "rulesColorPickerCancel": {
-    "message": "İptal"
-  },
-  "rulesColorPickerOk": {
-    "message": "Tamam"
   },
   "rulesContentSearchScopeTitle": {
     "message": "İçerik arama kapsamı"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "Dedektör simgesini değiştir"
   },
-  "rulesUiCustomColor": {
-    "message": "Özel renk"
-  },
   "iconPickerTitle": {
     "message": "Simge seç"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "{0} korumanın birleşimiyle yükseldi"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "%50 veya üzerinde anti-bot ya da CAPTCHA bulunamadı"
   },
   "tipLastUpdated": {
     "message": "Güncellendi"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "Bu önbelleğe alınmış sonuçları hangi sayfaların ve ne kadar süreyle yeniden kullandığı."
+  },
+  "detectionStatHttpStatus": {
+    "message": "HTTP durumu"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Sayfanın tarandığında yanıt verdiği HTTP durum kodu. Bir hata (4xx veya 5xx) çoğu zaman isteğin engellendiği ya da doğrulamaya takıldığı anlamına gelir."
   },
   "tipCacheExpires": {
     "message": "Sona erer"
@@ -5439,7 +5457,7 @@
     "message": "Saklanacak yedekler"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Her yedeklemeden sonra, bu sayıyı aşan eski yedekler İndirilenler klasörünüzden silinir (birkaç parça halinde kaydedilen bir yedek bir sayılır). Yalnızca bu uzantının kaydettiği yedek dosyaları silinir. Hepsini saklarsanız hiçbir şey silinmez."
+    "message": "Her yedeklemeden sonra, bu sayıyı aşan eski yedekler İndirilenler klasörünüzden silinir (birkaç parça halinde kaydedilen bir yedek bir sayılır). Yalnızca bu uzantının kaydettiği yedek dosyaları silinir. Hepsini saklarsanız hiçbir şey silinmez. 3.1.7 sürümünden önce oluşturulan yedekler, siz silene kadar kalır."
   },
   "settingsHistoryBackupNow": {
     "message": "Şimdi yedekle"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "Son kontrolde uzantı kapalıydı, bu yüzden hiçbir şey kontrol edilmedi."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Son kontrol, uzantı kapatıldığı için durdu."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Son kontrol, geçmiş duraklatıldığı için durdu."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "İzleme listesi kapalı, günlük veya haftalık olmalıdır"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "Tespitler: {0} · Güven: %{1} · Zorluk: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP durumu: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Koruma"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "Şimdi yeniden tara"
+  },
+  "detectionFromPageFmt": {
+    "message": "{0} taramasından, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "{0} tarihinden beri değişti: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "{0} tarihinden beri değişiklik yok"
   },
   "rulesDuplicate": {
     "message": "Çoğalt"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "Geçmiş duraklatıldı: sayfalar taranır ama kaydedilmez."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Geçmişten sayfa: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Bir toplu tarama sürüyor, bu yüzden Geçmişteki sayfalar eklenmedi."
+  },
   "bulkReadingSitemaps": {
     "message": "Site haritaları okunuyor…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Algılanan korumalar ve güven oranları, virgülle ayrılmış"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Sayfanın HTTP durum kodu (bilinmiyorsa 0)"
   },
   "historyCopyMarkdown": {
     "message": "Markdown olarak kopyala"

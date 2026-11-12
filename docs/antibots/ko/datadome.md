@@ -2,7 +2,7 @@
 
 # DataDome 봇 차단: 감지 방법과 웹 스크래핑에 미치는 영향
 
-DataDome은(는) 일부 웹사이트가 페이지 앞단에 두는 봇 차단 또는 어뷰징 방지 계층입니다. DataDome 우회 방법을 찾고 있거나, 사이트에서 DataDome을(를) 감지하려 하거나, DataDome이(가) 막는 웹 스크래핑을 조사하는 경우에도 첫 단계는 같습니다. 요청에 실제로 응답하는 것이 DataDome인지 확인하는 것입니다. 이 페이지는 Scrapfly Antibot Detector 확장 프로그램이 DataDome 봇 탐지를 식별하는 데 쓰는 공개 신호 11개와 각 신호가 얼마나 강하게 DataDome을(를) 가리키는지, 그리고 자동화 클라이언트에 대체로 어떤 의미인지를 정리합니다.
+DataDome은(는) 일부 웹사이트가 페이지 앞단에 두는 봇 차단 또는 어뷰징 방지 계층입니다. DataDome 우회 방법을 찾고 있거나, 사이트에서 DataDome을(를) 감지하려 하거나, DataDome이(가) 막는 웹 스크래핑을 조사하는 경우에도 첫 단계는 같습니다. 요청에 실제로 응답하는 것이 DataDome인지 확인하는 것입니다. 이 페이지는 Scrapfly Antibot Detector 확장 프로그램이 DataDome 봇 탐지를 식별하는 데 쓰는 공개 신호 13개와 각 신호가 얼마나 강하게 DataDome을(를) 가리키는지, 그리고 자동화 클라이언트에 대체로 어떤 의미인지를 정리합니다.
 
 ## 개요
 
@@ -12,7 +12,7 @@ DataDome은 프랑스의 봇 및 온라인 사기 방지 업체입니다. JavaSc
 
 ## 사이트가 DataDome을(를) 사용하는지 확인하는 방법
 
-이 신호들은 `detect-datadome`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.1.0, 최종 업데이트 2026-10-16)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
+이 신호들은 `detect-datadome`에 대한 확장 프로그램의 자체 탐지 규칙(규칙 버전 2.2.0, 최종 업데이트 2026-11-12)에서 생성되었습니다. 신호는 어디까지나 정황일 뿐이며, 신뢰도는 해당 신호 하나가 관찰되었을 때 확장 프로그램이 얼마나 확신하는지를 나타냅니다. "보조 근거로만 사용"으로 표시된 신호는 다른 제품도 만들어 낼 수 있으므로 단독으로는 집계되지 않습니다.
 
 ### 쿠키
 
@@ -39,8 +39,8 @@ DataDome은 프랑스의 봇 및 온라인 사기 방지 업체입니다. JavaSc
 
 | 신호 | 신뢰도 | 의미 |
 | --- | --- | --- |
-| `^https://(?:js\|api-js)\.datadome\.co/(?:tags\.js\|js/)` | 100% | Official DataDome JavaScript tag or its collection endpoint |
-| `^https://(?:geo\|ct\|c\|t)\.captcha-delivery\.com/` | 100% | DataDome challenge or CAPTCHA delivery host |
+| `^https://(?:js\|api-js)\.datadome\.co/` | 100% | Official DataDome JavaScript tag or its collection endpoint |
+| `^https://(?:[a-z0-9-]+\.)+captcha-delivery\.com(?:[/?#:]\|$)` | 100% | DataDome challenge or CAPTCHA delivery host |
 | `^https?://[^/?#]+/(?:tags\.js\|js/)(?:[?#]\|$)` | 30% (보조 근거로만 사용) | First-party tags.js or js/ collection path; the name is generic, corroboration only |
 
 ### 페이지 및 스크립트 콘텐츠
@@ -59,6 +59,8 @@ DataDome은 프랑스의 봇 및 온라인 사기 방지 업체입니다. JavaSc
 | 신호 | 신뢰도 | 의미 |
 | --- | --- | --- |
 | `ddjskey (typeof string)` | 60% | DataDome JS key set by the integration snippet |
+| `ddoptions (typeof object)` | 60% | DataDome tag options object (window.ddoptions) |
+| `displayDataDomeResponsePage (typeof function)` | 85% | DataDome response page function (window.displayDataDomeResponsePage) |
 
 ### 조합
 
@@ -68,8 +70,8 @@ DataDome은 프랑스의 봇 및 온라인 사기 방지 업체입니다. JavaSc
 | --- | --- | --- |
 | DataDome tag with its session cookie | 100% | (Official DataDome JavaScript tag or its collection endpoint 또는 DataDome JS key set by the integration snippet 또는 Integration snippet setting window.ddjskey) 그리고 DataDome session cookie |
 | DataDome response headers with its cookie | 100% | (DataDome client ID response header 또는 DataDome protection response header 또는 Response served by DataDome itself (block or challenge page)) 그리고 DataDome session cookie |
-| First-party DataDome tag with its JS key | 85% | First-party tags.js or js/ collection path; the name is generic, corroboration only 그리고 (DataDome JS key set by the integration snippet 또는 Integration snippet setting window.ddjskey) |
-| DataDome block page | 95% | DataDome block page bootstrap (var dd={'rt':...}) 그리고 (DataDome client ID response header 또는 DataDome block-type header on challenge responses 또는 DataDome challenge or CAPTCHA delivery host 또는 DataDome session cookie) |
+| First-party DataDome tag with its JS key | 85% | First-party tags.js or js/ collection path; the name is generic, corroboration only 그리고 (DataDome JS key set by the integration snippet 또는 Integration snippet setting window.ddjskey 또는 DataDome tag options object (window.ddoptions)) |
+| DataDome block page | 95% | (DataDome block page bootstrap (var dd={'rt':...}) 또는 DataDome response page function (window.displayDataDomeResponsePage)) 그리고 (DataDome client ID response header 또는 DataDome block-type header on challenge responses 또는 DataDome challenge or CAPTCHA delivery host 또는 DataDome session cookie) |
 
 ## 난이도
 

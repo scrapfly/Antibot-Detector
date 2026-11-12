@@ -13,6 +13,8 @@
  *   Controls     Pause lets the current page finish and opens no other; Resume goes on; Stop closes the scan tab at once
  *   Restart      the service worker is stopped during a run: when it starts again the run reads "stopped" (not stuck
  *                "running") and the scan tab it left is closed
+ *   From History History → Select entries → Bulk scan fills the open page once (focus on Start); a run going on keeps its list
+ *   History tab  the paused note and Resume, j/k between cards, Statistics from the "…" menu
  *
  * One local server answers on 127.0.0.1, localhost (the skipped site) and sitemap.test (mapped to 127.0.0.1 by the browser).
  * A probe rule (a marker in the page) makes a page "protected". The sitemap is served at https://sitemap.test/ by
@@ -195,6 +197,10 @@ const PROBE = {
     assert.ok(byUrl[at('/protected?n=1')].difficulty, 'a difficulty is shown');
     assert.deepEqual(outcome(at('/clean?n=1')), ['done', '']);
     assert.deepEqual(byUrl[at('/clean?n=1')].detections, []);
+    // 3.1.8: each finished page keeps the HTTP status it answered with
+    assert.equal(byUrl[at('/protected?n=1')].httpStatus, 200, 'the page\'s HTTP status');
+    assert.equal(byUrl[at('/clean?n=1')].httpStatus, 200);
+    assert.equal(byUrl[at('/hang')].httpStatus, undefined, 'a page that never answered has none');
     assert.deepEqual(outcome('ftp://files.example/x'), ['skipped', 'scheme']);
     assert.deepEqual(outcome(at('/clean?n=2', 'localhost')), ['skipped', 'scope']);
     assert.deepEqual(outcome(at('/redirect')), ['skipped', 'scope'], 'ended on a skipped site');
@@ -212,6 +218,7 @@ const PROBE = {
     assert.equal(rows.length, 9);
     const row = (u) => rows.find(r => r[1].startsWith(u));
     assert.match(row(at('/protected?n=1'))[3], /Bulk Probe\s*90%/);
+    assert.equal(row(at('/protected?n=1'))[2], 'Done · 200', 'the HTTP status beside Done');
     assert.equal(row(at('/clean?n=1'))[3], 'No protection found');
     assert.match(row(at('/clean?n=2', 'localhost'))[2], /Skipped\s*Skipped by Settings → Detection → Sites to scan/);
     assert.match(row(at('/hang'))[2], /Failed\s*No result within the time limit/);
@@ -237,17 +244,18 @@ const PROBE = {
       if (ext === 'csv') {
         // The file starts with the byte-order mark, so Excel reads it as UTF-8
         assert.equal(text.charCodeAt(0), 0xFEFF, 'a CSV starts with the byte-order mark');
-        assert.match(text.slice(1), /^url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at\r\n/);
-        assert.match(text, new RegExp(`${at('/protected?n=1').replace(/[.?]/g, '\\$&')},done,,,\\w+,Bulk Probe,antibot,90,`));
+        assert.match(text.slice(1), /^url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at,http_status\r\n/);
+        assert.match(text, new RegExp(`${at('/protected?n=1').replace(/[.?]/g, '\\$&')},done,,,\\w+,Bulk Probe,antibot,90,[^,\r\n]+,200\r\n`));
       } else if (ext === 'md') {
         assert.match(text, /^# Scrapfly Antibot Detector: Bulk scan\n\n9 pages, .*; \d+ with protections\n\nMost seen: Bulk Probe \(2 pages\)\n\n\| Page \| Status \| Difficulty \| Protections \|\n\| --- \| --- \| --- \| --- \|\n/);
-        assert.match(text, new RegExp(`\\| <${at('/protected').replace(/[.?/]/g, '\\$&')}> \\| done \\| \\w+ \\| Bulk Probe \\(antibot, 90%\\) \\|`));
+        assert.match(text, new RegExp(`\\| <${at('/protected').replace(/[.?/]/g, '\\$&')}> \\| done · 200 \\| \\w+ \\| Bulk Probe \\(antibot, 90%\\) \\|`));
         assert.ok(!text.includes('?n=1'), 'the query, where tokens live, is left out');
         assert.equal(text.charCodeAt(0), 35, 'a Markdown file has no byte-order mark');
       } else {
         const data = JSON.parse(text);
         assert.equal(data.type, 'bulk-scan');
         assert.equal(data.pages.length, 9);
+        assert.equal(data.pages.find(p => p.url === at('/protected?n=1')).httpStatus, 200);
       }
     }
     console.log('PASS Exports: CSV (with the byte-order mark), JSON and Markdown named for the local day');
@@ -319,6 +327,77 @@ const PROBE = {
     await sleep(1000);
     assert.deepEqual(await scanTabs(), [], 'the scan tab the stopped worker left is closed');
     console.log('PASS Restart: a run the stopped worker left reads "stopped", and its tab is closed');
+
+    // 8. From History (3.1.8): Select entries → Bulk scan hands the selected addresses to the open Bulk page; a run going on keeps its list
+    const pop = await context.newPage();
+    pop.on('pageerror', error => errors.push(`popup: ${error.message}`));
+    await pop.goto(`${base}/popup.html`);
+    await pop.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { polling: 250, timeout: 30000 });
+    await pop.$eval('#nav-history', el => el.click());
+    await pop.waitForFunction(() => document.querySelectorAll('#historyList .history-item').length >= 2, null, { polling: 250, timeout: 15000 });
+    const recorded = await pop.evaluate(() => window.popupInstance.history.getFilteredItems().map(item => item.url));
+    const handOver = async () => {
+      await pop.$eval('#historyMenuBtn', el => el.click());
+      await pop.$eval('#selectHistoryBtn', el => el.click());
+      await pop.waitForSelector('#historySelectBar', { state: 'visible' });
+      assert.equal(await pop.$eval('#historySelectBulkScan', el => el.disabled), true, 'off until something is selected');
+      await pop.$eval('#historySelectAll', el => el.click());
+      assert.equal(await pop.$eval('#historySelectBulkScan', el => el.disabled), false);
+      assert.equal(await pop.$eval('#historySelectBulkScan', el => el.textContent.trim()), 'Bulk scan');
+      await pop.$eval('#historySelectBulkScan', el => el.click());
+    };
+    await bulk.fill('#bulkInput', '');
+    await handOver();
+    await bulk.waitForFunction((want) => document.querySelector('#bulkInput').value === want, [...new Set(recorded)].join('\n'), { polling: 250, timeout: 8000 });
+    assert.equal(await bulk.$eval('#bulkNotice', el => el.textContent), `Pages from History: ${new Set(recorded).size}`);
+    await focusIs('bulkStartBtn');
+    assert.equal(await X(async () => 'session_bulk_from_history' in (await chrome.storage.session.get('session_bulk_from_history'))), false, 'the hand-over is taken once');
+    assert.equal((await context.pages()).filter(p => p.url() === `${base}/sections/bulk/bulk.html`).length, 1, 'the open page is reused, not a second one opened');
+    console.log('PASS From History: Select entries → Bulk scan fills the open Bulk page, once, says how many, and focuses Start');
+
+    // A run going on: its list is left alone and the page says so
+    await bulk.fill('#bulkInput', at('/hang?h=1'));
+    await bulk.click('#bulkStartBtn');
+    await waitRun(r => r.status === 'running' && r.items[0].status === 'scanning', 30000);
+    await pop.$eval('#historySelectDone', el => el.click()).catch(() => {});
+    await handOver();
+    await bulk.waitForFunction(() => /in progress/.test(document.querySelector('#bulkNotice').textContent), null, { polling: 250, timeout: 8000 });
+    const busy = await run();
+    assert.deepEqual(busy.items.map(i => i.url), [at('/hang?h=1')], 'the run keeps its own list');
+    await bulk.click('#bulkStopBtn');
+    await waitRun(r => r.status === 'stopped', 5000);
+    console.log('PASS From History: a run going on keeps its list, and the page says the pages were not added');
+
+    // History tab (3.1.8): the paused note with Resume, j/k between cards, Statistics from the "…" menu
+    await pop.$eval('#historySelectDone', el => el.click()).catch(() => {});
+    // Through the popup (the worker handle is stale after the restart above): StorageManager sends SETTINGS_MUTATE to the worker
+    await pop.evaluate(async () => { if (!await StorageManager.patchSettings({ history: { historyEnabled: false } })) throw new Error('fixture failed'); });
+    await pop.waitForSelector('#historyPaused', { state: 'visible', timeout: 8000 });
+    assert.match(await pop.$eval('#historyPaused', el => el.textContent), /History is paused/);
+    await pop.click('#historyPaused .history-paused-resume');
+    await pop.waitForSelector('#historyPaused', { state: 'hidden', timeout: 8000 });
+    await pop.waitForFunction(async () => (await StorageManager.readSettingsStrict()).history.historyEnabled === true, null, { polling: 250, timeout: 5000 });
+    console.log('PASS History paused: the note shows while History is paused, follows the setting, and Resume turns recording back on');
+
+    await pop.focus('#historyList .history-item');
+    await pop.keyboard.press('j');
+    assert.equal(await pop.evaluate(() => [...document.querySelectorAll('#historyList .history-item')].indexOf(document.activeElement)), 1);
+    await pop.keyboard.press('ArrowUp');
+    assert.equal(await pop.evaluate(() => [...document.querySelectorAll('#historyList .history-item')].indexOf(document.activeElement)), 0);
+    await pop.keyboard.press('End');
+    assert.equal(await pop.evaluate(() => { const cards = [...document.querySelectorAll('#historyList .history-item')]; return cards.indexOf(document.activeElement) === cards.length - 1; }), true);
+    assert.equal(await pop.$eval('#historyList .history-item', el => el.getAttribute('aria-keyshortcuts')), 'j k ArrowDown ArrowUp Home End');
+    console.log('PASS History keyboard: j/ArrowUp/End move between cards');
+
+    await pop.$eval('#historyMenuBtn', el => el.click());
+    assert.equal(await pop.$eval('#openStatsBtn', el => el.textContent.trim()), 'Open statistics');
+    const statsOpened = context.waitForEvent('page');
+    await pop.$eval('#openStatsBtn', el => el.click());
+    const stats = await statsOpened;
+    await stats.waitForURL(`${base}/sections/stats/stats.html`);
+    await stats.close();
+    await pop.close();
+    console.log('PASS History menu: Open statistics opens the Statistics page');
 
     assert.deepEqual(errors, [], 'no page errors');
     console.log('RESULT ALL PASS, no page errors');

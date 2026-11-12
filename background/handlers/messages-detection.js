@@ -276,6 +276,7 @@ function registerDetectionHandlers(registry, context) {
                                 Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Clearing stale loading badge for idle tab ${targetTabId}`);
                                 try {
                                     await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: targetTabId });
+                                    if (typeof ToolbarTitle !== 'undefined') await ToolbarTitle.reset(chrome, targetTabId);
                                 } catch (badgeClearError) {
                                     Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Failed to clear stale loading badge for tab ${targetTabId}:`, badgeClearError.message);
                                 }
@@ -292,7 +293,9 @@ function registerDetectionHandlers(registry, context) {
                                 const isNumericBadge = /^\d+\+?$/.test(trimmed);
                                 if (isNumericBadge) {
                                     Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Clearing stale numeric badge '${trimmed}' for idle tab ${targetTabId}`);
-                                    await chrome.action.setBadgeText({ text: '', tabId: targetTabId });
+                                    await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: targetTabId });
+                                    // The number went because the saved result is gone: so does the hover text that named it
+                                    if (typeof ToolbarTitle !== 'undefined') await ToolbarTitle.reset(chrome, targetTabId);
                                 }
                             } catch (e) {
                                 // Silently fail
@@ -374,12 +377,14 @@ function registerDetectionHandlers(registry, context) {
 
                     if (detections.length === 0) return;
 
-                    // Extract URL for cache check
-                    const url = detections[0]?.url;
+                    // The sending document's address, as for the window checks: each hit names the address the page had
+                    // when it fired, and a page that changes its own address at startup (a redirect from '' to /home,
+                    // ?utm_* stripped with replaceState) is still the same document. The document check rejects any other
+                    const url = sender.url || sender.tab.url;
                     if (!url) return;
 
                     const document = await resolveDetectionMessageDocument(sender, url);
-                    if (!document || detections.some(item => normalizeDetectionMessageUrl(item.url) !== normalizeDetectionMessageUrl(url))) return;
+                    if (!document) return;
                     state = detectionStateForDocument(document);
                     // Own the batch across every async lookup so finalization
                     // cannot overtake already-admitted hook evidence.

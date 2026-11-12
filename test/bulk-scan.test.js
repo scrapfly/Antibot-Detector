@@ -191,6 +191,41 @@ test('pause and resume; a paused run starts no page; stop puts the page being sc
   assert.equal(BulkScan.complete(run), false);
 });
 
+test('hold: the extension switched off pauses a run at once, its page being scanned waiting again, with the reason until Resume', () => {
+  const run = sampleRun();
+  BulkScan.begin(run, 0, 2000);
+  assert.equal(BulkScan.hold(run, 'off'), true);
+  assert.deepEqual([run.status, run.reason], ['paused', 'off']);
+  assert.equal(run.items[0].status, 'waiting', 'given up mid-scan: no result, so it waits');
+  assert.equal(run.items[0].startedAt, undefined);
+  assert.equal(BulkScan.finish(run, 0, { detections: [] }), false, 'a scan that comes in late is not taken');
+  assert.equal(BulkScan.begin(run, 1), false, 'held: no new page');
+  assert.equal(BulkScan.isActive(run), true, 'still the run in progress: Resume goes on with it');
+  // A run the person had paused, its page still finishing, takes the reason and gives up that page too
+  const paused = sampleRun();
+  BulkScan.begin(paused, 0);
+  BulkScan.pause(paused);
+  assert.equal(BulkScan.hold(paused, 'off'), true);
+  assert.deepEqual([paused.status, paused.reason, paused.items[0].status], ['paused', 'off', 'waiting']);
+  // On again: the reason goes, the run waits for Resume; Resume clears a reason it still has
+  assert.equal(BulkScan.release(run, 'user'), false, 'only the reason it was held for');
+  assert.equal(BulkScan.release(run, 'off'), true);
+  assert.deepEqual([run.status, run.reason], ['paused', null]);
+  assert.equal(BulkScan.release(run, 'off'), false, 'once');
+  assert.equal(BulkScan.resume(paused), true);
+  assert.deepEqual([paused.status, paused.reason], ['running', null]);
+  // A run that is over is not held
+  const over = sampleRun();
+  BulkScan.stop(over, 'user');
+  assert.equal(BulkScan.hold(over, 'off'), false);
+  assert.deepEqual([over.status, over.reason], ['stopped', 'user']);
+  assert.equal(BulkScan.hold(null, 'off'), false);
+  // A worker that starts again keeps a held run held, with its reason
+  const held = sampleRun();
+  BulkScan.hold(held, 'off');
+  assert.deepEqual([BulkScan.recover(plain(held)).status, BulkScan.recover(plain(held)).reason], ['paused', 'off']);
+});
+
 test('worker restart: a run found running is marked stopped, never left running; a paused one stays paused; a finished one is kept', () => {
   const run = sampleRun();
   BulkScan.begin(run, 0);
@@ -242,11 +277,11 @@ test('CSV export: one row per protection, a row for a page without one, formulas
   assert.equal(out.type, 'text/csv');
   assert.equal(out.extension, 'csv');
   const lines = out.text.trimEnd().split('\r\n');
-  assert.equal(lines[0], 'url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at');
-  assert.equal(lines[1], 'https://a.example/,done,,,Medium,Cloudflare,antibot,95,2026-10-26T10:00:00.000Z');
-  assert.equal(lines[2], 'https://a.example/,done,,,Medium,"\'=HYPERLINK(""x"")",other,50,2026-10-26T10:00:00.000Z');
-  assert.equal(lines[3], 'https://b.example/,failed,load,,,,,,');
-  assert.equal(lines[4], 'ftp://c.example/,skipped,scheme,,,,,,');
+  assert.equal(lines[0], 'url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at,http_status');
+  assert.equal(lines[1], 'https://a.example/,done,,,Medium,Cloudflare,antibot,95,2026-10-26T10:00:00.000Z,');
+  assert.equal(lines[2], 'https://a.example/,done,,,Medium,"\'=HYPERLINK(""x"")",other,50,2026-10-26T10:00:00.000Z,');
+  assert.equal(lines[3], 'https://b.example/,failed,load,,,,,,,');
+  assert.equal(lines[4], 'ftp://c.example/,skipped,scheme,,,,,,,');
   assert.equal(lines.length, 5);
 });
 
@@ -501,10 +536,11 @@ test('the JSON export carries every protection with the number of pages it was f
 test('the CSV export is as before: a header and a row per protection (or per page without one), no totals', () => {
   const run = totalsRun();
   const lines = BulkScan.build(run, { format: 'csv' }).text.trimEnd().split('\r\n');
-  assert.equal(lines[0], 'url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at');
+  // 3.1.8 added http_status as the last column (the page's HTTP status), so the columns before it keep their places
+  assert.equal(lines[0], 'url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at,http_status');
   const rows = run.items.reduce((count, item) => count + Math.max(1, (item.detections || []).length), 0);
   assert.equal(lines.length, 1 + rows, 'nothing else is added');
-  assert.equal(lines[1], 'https://a.example/,done,,,,Cloudflare,antibot,90,2026-11-05T10:00:00.000Z');
+  assert.equal(lines[1], 'https://a.example/,done,,,,Cloudflare,antibot,90,2026-11-05T10:00:00.000Z,');
   assert.ok(!/most seen|protectionTotals/i.test(lines.join('\n')));
   assert.equal(BulkScan.build(run, { format: 'csv' }).text, BulkScan.build(JSON.parse(JSON.stringify(run)), { format: 'csv' }).text, 'a run read back from storage gives the same file');
 });
@@ -516,7 +552,7 @@ test('a sitemap that moved to another site is a reason of its own, and prepare k
   assert.deepEqual(plain(prepared.items.map(item => [item.status, item.reason])), [['skipped', 'moved'], ['skipped', 'sitemap'], ['skipped', 'invalid']]);
   const run = BulkScan.createRun(prepared);
   const csv = BulkScan.build(run, { format: 'csv' }).text.split('\r\n');
-  assert.equal(csv[1], 'https://moved.example/sitemap.xml,skipped,moved,,,,,,', 'the exports say why, in the same words');
+  assert.equal(csv[1], 'https://moved.example/sitemap.xml,skipped,moved,,,,,,,', 'the exports say why, in the same words');
   assert.ok(BulkScan.build(run, { format: 'md' }).text.includes('skipped: moved'));
 });
 
@@ -531,4 +567,42 @@ test('oneLines gives one line per page: address without query, protections with 
     'https://a.example/p: Cloudflare 90%, reCAPTCHA', 'https://b.example/: -', 'https://c.example/: failed (load)', 'https://d.example/: waiting'].join('\n'));
   assert.equal(BulkScan.oneLines({ items: [] }), '');
   assert.equal(BulkScan.oneLines(null), '');
+});
+
+test('a finished page keeps its HTTP status, which every export gives; an unknown or 304 status is left out', () => {
+  const run = sampleRun();
+  BulkScan.begin(run, 0, 2000);
+  BulkScan.finish(run, 0, { detections: [{ name: 'DataDome', category: 'antibot', confidence: 88 }], difficulty: 'High', httpStatus: 403 }, 3000);
+  BulkScan.begin(run, 1, 4000);
+  BulkScan.finish(run, 1, { detections: [], httpStatus: 304 }, 5000);
+  assert.equal(run.items[0].httpStatus, 403);
+  assert.equal('httpStatus' in run.items[1], false, 'a 304 says nothing about the page');
+
+  const csv = BulkScan.build(run, { format: 'csv' }).text.trimEnd().split('\r\n');
+  assert.equal(csv[0].split(',').pop(), 'http_status', 'the last column');
+  assert.equal(csv[1], `https://a.example/,done,,,High,DataDome,antibot,88,${new Date(3000).toISOString()},403`);
+  assert.equal(csv[2], `https://b.example/,done,,,,,,,${new Date(5000).toISOString()},`);
+
+  const json = JSON.parse(BulkScan.build(run, { format: 'json' }).text);
+  assert.deepEqual(json.pages.map(p => p.httpStatus), [403, null, null]);
+
+  const md = BulkScan.build(run, { format: 'md' }).text;
+  assert.ok(md.includes('| done · 403 |'), 'the Markdown status reads as the table does');
+
+  // Scanning a page again forgets the status of the scan before when the new one has none
+  run.items[0].status = 'scanning';
+  BulkScan.finish(run, 0, { detections: [] }, 6000);
+  assert.equal('httpStatus' in run.items[0], false);
+});
+
+test('the runner hands the page\'s HTTP status to finish(), and the table shows it beside Done with the error tone', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const runner = fs.readFileSync(path.join(__dirname, '..', 'background/bulk-scan-runner.js'), 'utf8');
+  assert.match(runner, /BulkScan\.finish\(run, index, \{ \.\.\.summary, finalUrl: outcome\.url, httpStatus: outcome\.httpStatus \}\)/);
+  const page = fs.readFileSync(path.join(__dirname, '..', 'sections/bulk/bulk.js'), 'utf8');
+  assert.match(page, /item\.status === 'done' \? HttpStatus\.of\(item\.httpStatus\) : null/);
+  assert.match(page, /bulk-http--\$\{HttpStatus\.tone\(code\)\}/);
+  const css = fs.readFileSync(path.join(__dirname, '..', 'sections/bulk/bulk.css'), 'utf8');
+  for (const tone of ['ok', 'warn', 'error']) assert.match(css, new RegExp(`\\.bulk-http${tone === 'ok' ? '' : `--${tone}`} \\{`), tone);
 });

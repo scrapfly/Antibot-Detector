@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Detectiegeschiedenis verschijnt hier terwijl je websites bezoekt."
   },
+  "historyPausedNote": {
+    "message": "De geschiedenis is gepauzeerd, dus gescande pagina's worden niet vastgelegd."
+  },
   "rulesUpdateTitle": {
     "message": "Regelupdates installeren uit de nieuwste Scrapfly-release"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "Auteur"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "Badgekleur"
   },
   "ruleSectionDetectionMethods": {
     "message": "Detectiemethoden"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "{0} geëxporteerd"
   },
+  "rulesExportedFmt": {
+    "message": "Regels geëxporteerd: {0}"
+  },
   "failedImportDetectors": {
     "message": "Detectors importeren mislukt. Controleer de bestandsindeling."
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" verwijderd"
+  },
+  "ruleSavedFmt": {
+    "message": "\"{0}\" opgeslagen"
   },
   "failedClearDetectors": {
     "message": "Detectors wissen mislukt"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "Hoog"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Getal in de werkbalk"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Wat het getal op het werkbalkpictogram telt. Fingerprinting draait op de meeste sites; de pop-up en Geschiedenis tonen nog steeds alles."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Elke detectie"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Alleen anti-bot en CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "JS API-gebeurtenissen inschakelen"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Hiermee worden alle opgenomen gegevens van deze aanbieder definitief verwijderd."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Annuleren"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Zoekbereik voor inhoud"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "Detectorpictogram wijzigen"
   },
-  "rulesUiCustomColor": {
-    "message": "Aangepaste kleur"
-  },
   "iconPickerTitle": {
     "message": "Pictogram kiezen"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Verhoogd door {0} beveiligingen samen"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Geen anti-bot of CAPTCHA gevonden met 50% of meer"
   },
   "tipLastUpdated": {
     "message": "Bijgewerkt"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "Welke pagina's deze in de cache opgeslagen resultaten hergebruiken en hoe lang."
+  },
+  "detectionStatHttpStatus": {
+    "message": "HTTP-status"
+  },
+  "detectionTipHttpStatus": {
+    "message": "De HTTP-statuscode waarmee de pagina antwoordde toen ze werd gescand. Een fout (4xx of 5xx) betekent vaak dat het verzoek werd geblokkeerd of een challenge kreeg."
   },
   "tipCacheExpires": {
     "message": "Verloopt"
@@ -5439,7 +5457,7 @@
     "message": "Back-ups om te bewaren"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Na elke back-up worden oudere back-ups boven dit aantal uit je map Downloads verwijderd (een back-up die in meerdere delen is opgeslagen, telt als één). Alleen back-upbestanden die door deze extensie zijn opgeslagen, worden verwijderd. Bewaar je ze allemaal, dan wordt er niets verwijderd."
+    "message": "Na elke back-up worden oudere back-ups boven dit aantal uit je map Downloads verwijderd (een back-up die in meerdere delen is opgeslagen, telt als één). Alleen back-upbestanden die door deze extensie zijn opgeslagen, worden verwijderd. Bewaar je ze allemaal, dan wordt er niets verwijderd. Back-ups van vóór versie 3.1.7 blijven staan tot je ze zelf verwijdert."
   },
   "settingsHistoryBackupNow": {
     "message": "Nu back-up maken"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "Bij de laatste controle stond de extensie uit, dus er is niets gecontroleerd."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "De laatste controle is gestopt omdat de extensie werd uitgezet."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "De laatste controle is gestopt omdat de geschiedenis werd gepauzeerd."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "De volglijst moet uit, dagelijks of wekelijks staan"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "Detecties: {0} · Zekerheid: {1}% · Moeilijkheid: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP-status: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Beveiliging"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "Nu opnieuw scannen"
+  },
+  "detectionFromPageFmt": {
+    "message": "Uit een scan van {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Gewijzigd sinds {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Geen wijziging sinds {0}"
   },
   "rulesDuplicate": {
     "message": "Dupliceren"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "De geschiedenis is gepauzeerd: de pagina's worden gescand maar niet vastgelegd."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Pagina's uit de geschiedenis: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Er loopt een bulkscan, dus de pagina's uit de geschiedenis zijn niet toegevoegd."
+  },
   "bulkReadingSitemaps": {
     "message": "Sitemaps lezen…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Gedetecteerde beveiligingen met hun zekerheid, gescheiden door komma's"
+  },
+  "webhookVarHttpStatus": {
+    "message": "HTTP-statuscode van de pagina (0 als die onbekend is)"
   },
   "historyCopyMarkdown": {
     "message": "Kopiëren als Markdown"

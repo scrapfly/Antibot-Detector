@@ -67,18 +67,25 @@ test('the Difficulty tip says which protection set the level, hardest first', ()
   const tip = FormatUtils.difficultyTip(detections, level, 'Difficulty: High');
   assert.strictEqual(tip.detail, 'Set by hCaptcha');
   assert.deepStrictEqual(tip.rows.slice(0, 2).map(r => [r.label, r.value, r.tone]), [['hCaptcha', 'High', 'red'], ['Cloudflare Bot Management', 'Medium', 'amber']]);
-  assert.deepStrictEqual(tip.rows.at(-1), { label: '+1 more' });
-  // Fingerprint-only pages stay Low and name their own level source
+  // Since 3.1.8 the level weighs only the anti-bot and CAPTCHA protections found at 50% or more, and the tip lists those: the two
+  // fingerprinting detections and the 55% detection of another category are not part of it (they were the "+1 more")
+  assert.strictEqual(tip.rows.length, 2);
+  // A fingerprint-only page is Low because nothing it found counts, and the tip says that instead of naming a fingerprinting detector
   const low = detections.slice(2, 4);
-  assert.strictEqual(FormatUtils.difficultyTip(low, 'Low').detail, 'Set by Audio Fingerprint');
+  assert.strictEqual(FormatUtils.difficultyTip(low, 'Low').detail, 'No anti-bot or CAPTCHA found at 50% or more');
 });
 
 test('Medium raised by several protections together is explained as such', () => {
-  const many = [1, 2, 3].map(i => ({ detector: { name: `Fingerprint ${i}` }, category: 'fingerprint', confidence: 30, difficulty: 'Low' }))
-    .concat([{ detector: { name: 'Generic' }, category: 'Anti-Bot', confidence: 20, difficulty: 'Low' }]);
+  // Several anti-bot or CAPTCHA protections found at 50% or more; the fingerprinting beside them is not counted (before 3.1.8 three
+  // fingerprinting detections and a 20% anti-bot made this page Medium)
+  const many = [1, 2, 3].map(i => ({ detector: { name: `Anti-bot ${i}` }, category: 'Anti-Bot', confidence: 55, difficulty: 'Low' }))
+    .concat([{ detector: { name: 'Fingerprint' }, category: 'fingerprint', confidence: 30, difficulty: 'Low' }]);
   const level = DetectionUtils.getDifficultyLevel(many);
   assert.strictEqual(level, 'Medium');
-  assert.strictEqual(FormatUtils.difficultyTip(many, level).detail, 'Raised by 4 protections together');
+  assert.strictEqual(FormatUtils.difficultyTip(many, level).detail, 'Raised by 3 protections together');
+  const weak = [1, 2, 3].map(i => ({ detector: { name: `Fingerprint ${i}` }, category: 'fingerprint', confidence: 30, difficulty: 'Low' }))
+    .concat([{ detector: { name: 'Generic' }, category: 'Anti-Bot', confidence: 20, difficulty: 'Low' }]);
+  assert.strictEqual(DetectionUtils.getDifficultyLevel(weak), 'Low');
 });
 
 test('tipAttrs escapes every value so names cannot break out of the attribute', () => {

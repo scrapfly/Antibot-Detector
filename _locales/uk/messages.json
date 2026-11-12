@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Історія виявлень з’являтиметься тут під час перегляду веб-сайтів."
   },
+  "historyPausedNote": {
+    "message": "Історію призупинено, тому проскановані сторінки не записуються."
+  },
   "rulesUpdateTitle": {
     "message": "Установити оновлення правил з останнього випуску Scrapfly"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "Автор"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "Колір значка"
   },
   "ruleSectionDetectionMethods": {
     "message": "Методи виявлення"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "Експортовано: {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Експортовано правил: {0}"
+  },
   "failedImportDetectors": {
     "message": "Не вдалося імпортувати детектори. Перевірте формат файлу."
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "Видалено «{0}»"
+  },
+  "ruleSavedFmt": {
+    "message": "Збережено «{0}»"
   },
   "failedClearDetectors": {
     "message": "Не вдалося видалити детектори"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "Висока"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Число на панелі інструментів"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Що рахує число на значку на панелі інструментів. Фінгерпринтинг працює на більшості сайтів; у спливному вікні та в історії й далі видно все."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Усі виявлення"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Лише антибот і CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Увімкнути події JS API"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Це безповоротно видалить усі захоплені дані цього провайдера."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Скасувати"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Область пошуку за вмістом"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "Змінити піктограму детектора"
   },
-  "rulesUiCustomColor": {
-    "message": "Власний колір"
-  },
   "iconPickerTitle": {
     "message": "Вибір піктограми"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Підвищено спільною дією систем захисту: {0}"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Антибот або CAPTCHA з упевненістю від 50% не знайдено"
   },
   "tipLastUpdated": {
     "message": "Оновлено"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "Які сторінки повторно використовують ці кешовані результати та як довго."
+  },
+  "detectionStatHttpStatus": {
+    "message": "HTTP-статус"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Код HTTP-статусу, яким сторінка відповіла під час сканування. Помилка (4xx або 5xx) часто означає, що запит заблокували або надіслали на перевірку."
   },
   "tipCacheExpires": {
     "message": "Спливає"
@@ -5439,7 +5457,7 @@
     "message": "Скільки копій зберігати"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Після кожної копії старіші копії понад це число видаляються з папки «Завантаження» (копія, збережена в кількох частинах, вважається за одну). Видаляються лише файли копій, збережені цим розширенням. Якщо зберігати всі копії, нічого не видаляється."
+    "message": "Після кожної копії старіші копії понад це число видаляються з папки «Завантаження» (копія, збережена в кількох частинах, вважається за одну). Видаляються лише файли копій, збережені цим розширенням. Якщо зберігати всі копії, нічого не видаляється. Копії, створені до версії 3.1.7, залишаються, доки ви їх не видалите."
   },
   "settingsHistoryBackupNow": {
     "message": "Створити копію зараз"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "Під час останньої перевірки розширення було вимкнено, тому нічого не перевірялося."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Останню перевірку зупинено, бо розширення вимкнули."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Останню перевірку зупинено, бо історію призупинили."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Стеження має бути вимкнене або виконуватися щодня чи щотижня"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "Виявлення: {0} · Впевненість: {1}% · Складність: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP-статус: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Захист"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "Сканувати знову зараз"
+  },
+  "detectionFromPageFmt": {
+    "message": "За скануванням {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Зміни з {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Без змін з {0}"
   },
   "rulesDuplicate": {
     "message": "Дублювати"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "Історію призупинено: сторінки скануються, але не записуються."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Сторінок з історії: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Триває масове сканування, тому сторінки з історії не додано."
+  },
   "bulkReadingSitemaps": {
     "message": "Читання карт сайту…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Виявлені захисти з рівнем упевненості через кому"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Код HTTP-статусу сторінки (0, якщо невідомий)"
   },
   "historyCopyMarkdown": {
     "message": "Копіювати як Markdown"

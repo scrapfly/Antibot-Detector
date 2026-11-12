@@ -2,7 +2,7 @@
 
 # Анти-бот защита AWS WAF: как определить, что сайт её использует (и что это значит для парсинга)
 
-AWS WAF - это система защиты от ботов или от злоупотреблений, которую некоторые сайты ставят перед своими страницами. Если вы ищете способ обхода AWS WAF, хотите определить, использует ли сайт AWS WAF, или разбираетесь с блокировкой парсинга со стороны AWS WAF, первый шаг один и тот же: убедиться, что на ваши запросы действительно отвечает AWS WAF. На этой странице перечислены 12 публичных признаков, по которым расширение Scrapfly Antibot Detector распознаёт анти-бот защиту AWS WAF, насколько уверенно каждый из них на неё указывает и что это обычно означает для автоматизированного клиента.
+AWS WAF - это система защиты от ботов или от злоупотреблений, которую некоторые сайты ставят перед своими страницами. Если вы ищете способ обхода AWS WAF, хотите определить, использует ли сайт AWS WAF, или разбираетесь с блокировкой парсинга со стороны AWS WAF, первый шаг один и тот же: убедиться, что на ваши запросы действительно отвечает AWS WAF. На этой странице перечислены 14 публичных признаков, по которым расширение Scrapfly Antibot Detector распознаёт анти-бот защиту AWS WAF, насколько уверенно каждый из них на неё указывает и что это обычно означает для автоматизированного клиента.
 
 ## Что это такое
 
@@ -12,7 +12,7 @@ AWS WAF - это межсетевой экран веб-приложений Ama
 
 ## Как определить, что сайт использует AWS WAF
 
-Эти признаки сформированы из собственных правил обнаружения расширения для `detect-aws-waf` (версия правила 2.2.0, последнее обновление 2026-11-09). Признак - лишь индикатор: уверенность показывает, насколько расширение убеждено в результате при срабатывании именно этого признака. Признаки с пометкой "только для подтверждения" никогда не учитываются сами по себе, потому что их могут создавать и другие продукты.
+Эти признаки сформированы из собственных правил обнаружения расширения для `detect-aws-waf` (версия правила 2.3.0, последнее обновление 2026-11-12). Признак - лишь индикатор: уверенность показывает, насколько расширение убеждено в результате при срабатывании именно этого признака. Признаки с пометкой "только для подтверждения" никогда не учитываются сами по себе, потому что их могут создавать и другие продукты.
 
 ### Cookie
 
@@ -21,6 +21,7 @@ AWS WAF - это межсетевой экран веб-приложений Ama
 | Признак | Уверенность | На что указывает |
 | --- | --- | --- |
 | `^aws-waf-token$ = ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}:[A-Za-z0-9+/=_:-]{20,}` | 100% | AWS WAF token cookie set after a challenge |
+| `^aws-waf-token$` | 85% | AWS WAF token cookie by name; its value format is not documented |
 
 ### Заголовки ответа
 
@@ -37,9 +38,10 @@ HTTP-заголовки ответа, которые возвращают стр
 
 | Признак | Уверенность | На что указывает |
 | --- | --- | --- |
-| `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.token\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge\|captcha\|jsapi)\.js(?:[?#]\|$)` | 100% | Integration SDK from the regional token.awswaf.com host |
-| `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.token\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs\|verify\|telemetry\|voucher\|mp_verify)(?:[?#/]\|$)` | 100% | Any request to the regional token.awswaf.com host (inputs, verify, telemetry) |
+| `^https://(?:[a-z0-9-]+\.)+(?:token\|sdk)\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:challenge\|captcha\|jsapi)\.js(?:[?#]\|$)` | 100% | Integration SDK from the regional token.awswaf.com host |
+| `^https://(?:[a-z0-9-]+\.)+(?:token\|sdk)\.awswaf\.com/(?:[0-9a-f]{8,16}/){2,3}(?:inputs\|verify\|telemetry\|voucher\|mp_verify)(?:[?#/]\|$)` | 100% | Any request to the regional token.awswaf.com host (inputs, verify, telemetry) |
 | `^https://[0-9a-f]{8,16}\.[0-9a-f]{6,12}\.[a-z]{2}-[a-z]+-[0-9]\.captcha\.awswaf\.com/` | 100% | AWS WAF CAPTCHA host |
+| `^https://(?:[a-z0-9-]+\.)+awswaf\.com(?:[/?#:]\|$)` | 100% | Any request to an AWS WAF host (*.awswaf.com) |
 
 ### Содержимое страницы и скриптов
 
@@ -69,7 +71,7 @@ HTTP-заголовки ответа, которые возвращают стр
 | --- | --- | --- |
 | Challenge response with its bootstrap | 100% | (AWS WAF challenge or captcha action header или AWS WAF challenge id header) и (Challenge page bootstrap object (gokuProps) или Challenge page bootstrap variable (window.gokuProps) или Integration SDK from the regional token.awswaf.com host) |
 | Integration SDK with token traffic or cookie | 100% | (Integration SDK from the regional token.awswaf.com host или AWS WAF Integration SDK object) и (AWS WAF token cookie set after a challenge или Any request to the regional token.awswaf.com host (inputs, verify, telemetry) или Token cookie domain list for the Integration SDK) |
-| Token cookie with SDK reference | 90% | AWS WAF token cookie set after a challenge и (Integration SDK namespace reference или Challenge page bootstrap variable (window.gokuProps) или Token cookie domain list for the Integration SDK) |
+| Token cookie with SDK reference | 90% | (AWS WAF token cookie set after a challenge или AWS WAF token cookie by name; its value format is not documented) и (Integration SDK namespace reference или Challenge page bootstrap variable (window.gokuProps) или Token cookie domain list for the Integration SDK) |
 
 ## Сложность
 

@@ -1,13 +1,15 @@
 /**
  * Rules editor: a pattern that more than one rule holds. Pure (no browser APIs), so the editor and the tests share it.
  *
- *   keyOf()         what makes two patterns of one kind the same: everything but the id, the confidence and the standalone flag
+ *   keyOf()         what makes two patterns of one kind the same: what they match. Not the id, the confidence, the standalone and
+ *                   optional flags, the description and its translations, or the on/off switch (NOT_MATCHING)
  *   countWithin()   how many patterns of one rule repeat another of the same kind (the editor's "same pattern more than once")
  *   findInOthers()  the other rules that hold at least one pattern of a rule, most shared first, then in list order
  *   summarize()     the names of up to MAX_NAMED of those rules, and how many more there are
  *
  * A rule is { category, detectorName, detector }, as the Rules tab lists them. Patterns of different kinds (cookie, url ...) are
- * never the same. This only finds: the editor warns and never blocks, since a host two rules share on purpose is not a mistake.
+ * never the same, and a pattern switched off (enabled: false) matches nothing, so both checks skip it. This only finds: the editor
+ * warns and never blocks, since a host two rules share on purpose is not a mistake.
  */
 (function(root) {
   'use strict';
@@ -16,13 +18,17 @@
 
   const isRecord = (value) => !!value && typeof value === 'object';
   const isEntry = (entry) => isRecord(entry) && isRecord(entry.detector);
+  // Fields that do not change what a pattern matches: how it scores, its texts, its switch
+  const NOT_MATCHING = new Set(['id', 'confidence', 'standalone', 'optional', 'description', 'descriptionI18n', 'enabled']);
 
   /** The key of one pattern; null when it is not an object. */
   function keyOf(pattern) {
     if (!isRecord(pattern) || Array.isArray(pattern)) return null;
-    const { id, confidence, standalone, ...rest } = pattern;
-    return JSON.stringify(Object.keys(rest).sort().map(name => [name, rest[name]]));
+    return JSON.stringify(Object.keys(pattern).filter(name => !NOT_MATCHING.has(name)).sort().map(name => [name, pattern[name]]));
   }
+
+  /** The key of a pattern that takes part in matching; null for one switched off or not an object. */
+  const activeKeyOf = (pattern) => (isRecord(pattern) && pattern.enabled === false ? null : keyOf(pattern));
 
   /** The distinct patterns of a detection, as "kind + key" texts. */
   function keysOfDetection(detection) {
@@ -31,7 +37,7 @@
     for (const [kind, patterns] of Object.entries(detection)) {
       if (!Array.isArray(patterns)) continue;
       for (const pattern of patterns) {
-        const key = keyOf(pattern);
+        const key = activeKeyOf(pattern);
         if (key !== null) keys.add(`${kind}\u0000${key}`);
       }
     }
@@ -45,7 +51,7 @@
       if (!Array.isArray(patterns)) continue;
       const seen = new Set();
       for (const pattern of patterns) {
-        const key = keyOf(pattern);
+        const key = activeKeyOf(pattern);
         if (key === null) continue;
         if (seen.has(key)) duplicates++;
         else seen.add(key);

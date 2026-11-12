@@ -67,6 +67,7 @@ function worker(stored) {
     PatternCache: class {}, Logger: new Proxy({}, { get: () => () => {} }),
     setTimeout: () => 1, clearTimeout: () => {}, setPausedIcon: () => {}, startBadgeSpinner: () => {},
     setBadgeTextColor: () => {},
+    DetectionUtils: require(path.join(repo, 'utils/detection-utils.js')),
     BADGE: { TEXT: { CLEAN: 'OK' }, COLORS: { CLEAN: '#0f0' } },
     ScrapflyBridgeProtocol: { MESSAGE_TYPES: { CACHE_HIT_DISABLE_MONITORING: 'CACHE_HIT_DISABLE_MONITORING' } },
     chrome: {

@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector は、ウェブサイトが自動化されたトラフィックからどのように身を守っているかを表示する、無料の Chrome 拡張機能です。普段どおりにブラウズするだけで、ツールバーアイコンの数字がそのページで使われている保護の数を示し、ポップアップには各保護の信頼度、難易度、そして見つかった手がかりが一覧表示されます。
 
-標準で 88 の技術を認識します。44 のアンチボットシステム、23 の CAPTCHA、21 のブラウザフィンガープリント技術です。各検出器は、読んで、変更して、拡張できるシンプルな JSON ファイルです。新しいルールはこのリポジトリのリリースごとに届くため、Chrome が拡張機能自体を更新するより前に、**ルール → 更新** でインストールできます。
+標準で 94 の技術を認識します。49 のアンチボットシステム、24 の CAPTCHA、21 のブラウザフィンガープリント技術です。各検出器は、読んで、変更して、拡張できるシンプルな JSON ファイルです。新しいルールはこのリポジトリのリリースごとに届くため、Chrome が拡張機能自体を更新するより前に、**ルール → 更新** でインストールできます。
 
 [Scrapfly](https://scrapfly.io) がこれを作ったのは、スクレイピングのプロジェクトがどれも同じ疑問から始まるからです。このページは何に守られているのか。自分のサイトのアンチボット保護が外からどう見えるかを確認したいときや、セキュリティ調査にも同じように役立ちます。
 
@@ -92,7 +92,7 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 | JavaScript フック | フィンガープリントによく使われるブラウザ API の呼び出し | `HTMLCanvasElement.prototype.toDataURL` |
 | ペイロード | POST、PUT、PATCH リクエストの本文（URL とメソッドで絞り込み可能）と、ルールが指定する URL のレスポンス | `sensor_data`（Akamai）、`"proofofwork":{"required":true`（OpenAI Sentinel） |
 
-**信頼度。** 各ルールには独自の信頼度があり、検出器は組み合わせるとより高いスコアになるルールの組み合わせを定義します。ベンダー名に触れているだけのスクリプトは 5〜10 % です。そのベンダーの製品だけが生み出すシグナル（専用のスクリプトホスト、専用の Cookie、チャレンジのエンドポイントなど）は証拠となり、それだけで 100 % になります。ベンダーの完全な統合（スクリプトと Cookie、ウィジェットのフレーム、チャレンジのリクエストの組み合わせ）も同様です。共有されている、または汎用的なシグナルは 15〜90 % にとどまります。各検出器のスコアは、最も強いルールまたは組み合わせのスコアです。ページには難易度（低、中、高）も付き、ツールバーバッジの色になります。
+**信頼度。** 各ルールには独自の信頼度があり、検出器は組み合わせるとより高いスコアになるルールの組み合わせを定義します。ベンダー名に触れているだけのスクリプトは 5〜10 % です。そのベンダーの製品だけが生み出すシグナル（専用のスクリプトホスト、専用の Cookie、チャレンジのエンドポイントなど）は証拠となり、それだけで 100 % になります。ベンダーの完全な統合（スクリプトと Cookie、ウィジェットのフレーム、チャレンジのリクエストの組み合わせ）も同様です。共有されている、または汎用的なシグナルは 15〜90 % にとどまります。各検出器のスコアは、最も強いルールまたは組み合わせのスコアです。ページには難易度（低、中、高）も付き、ツールバーバッジの色になります。難易度を決めるのは 50 % 以上で見つかったアンチボットと CAPTCHA の保護だけで、フィンガープリンティングやベンダー名に触れているだけのスクリプトは数えません。
 
 **フィンガープリント。** API フックは、ページ自身のスクリプトが実行される前にインストールされ、同一オリジンの iframe も対象にします。フィンガープリントのコードはそこに隠れていることが多いためです。既定では少なくとも 4 秒間監視し、その後ページが 2 秒間落ち着くまで、最長 8 秒まで監視します。
 
@@ -105,18 +105,18 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 各アンチボットシステムには専用ページがあり、見分けるための Cookie、ヘッダー、スクリプトを載せています：[アンチボット検出ページ](antibots/ja/README.md)。
 
 <details>
-<summary><b>アンチボットシステム（44）</b></summary>
+<summary><b>アンチボットシステム（49）</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Azure WAF · Bunny Shield · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Google Cloud Armor · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · Signifyd · SiteGround SG-CAPTCHA · Sucuri WAF · Tencent Cloud EdgeOne · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHA（23）</b></summary>
+<summary><b>CAPTCHA（24）</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · EU CAPTCHA (Myra) · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 
@@ -175,7 +175,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 ### 設定
 
-- **一般:** 表示言語（22 言語。既定ではブラウザに従います）、テーマ（ダーク、ライト、システム）、通知、デバッグモード、検出器のスケジュール更新、バッジ、カテゴリ、ラベルの色。
+- **一般:** 表示言語（22 言語。既定ではブラウザに従います）、テーマ（ダーク、ライト、システム）、通知、デバッグモード、検出器のスケジュール更新、ツールバーの数字が数える対象（すべての検出、またはアンチボットと CAPTCHA のみ）、バッジ、カテゴリ、ラベルの色。
 - **検出:** キャッシュの保持期間と範囲、結果でのカテゴリの並び順、高度なツールの信頼度しきい値、スキャンするサイト（スキップするサイト以外のすべて、または選んだサイトのみ）、JS API イベント、Webhook、共有リンク。
 - **履歴:** 記録する内容（履歴の一時停止、プライベートウィンドウのスキップ、無視するサイト、最低信頼度、フィンガープリントのみのページのスキップ）、保存するエントリ数（最大 10,000 件。0 にすると最新の 1,000 件を保持）、指定日数後またはブラウザ終了時のエントリ削除、繰り返しスキャンのスキップまたは更新、ページの保護が変わったときの通知、既定のエクスポート形式、警告付きのストレージメーター、ダウンロードフォルダへの自動バックアップ。
 
@@ -212,7 +212,7 @@ on('onDetection', (e) => {
 
 ### Webhook
 
-スキャンで保護が見つかると、拡張機能は結果を自分のエンドポイントに送信できます。HTTP メソッドを選び、ヘッダーを追加し、`<SITEURL>`、`<HOSTNAME>`、`<TITLE>`、`<DETECTIONS>`、`<DETECTION_COUNT>`、`<DETECTION_NAMES>`（信頼度付きの保護を 1 行で）、`<CATEGORIES>`、`<TIMESTAMP>` といった変数を使ったテンプレートとして本文を書きます。**テンプレートから始める**（Slack、Mattermost または Google Chat、Discord、プレーンテキストの 1 行）を選ぶと、Content-Type と用意済みのチャットメッセージが入力されます。Webhook は公開ホストの HTTPS アドレスにのみ送信され、既定ではオフで、**テスト** ボタンがあります。**設定 → 検出 → Webhook連携** で設定します。
+スキャンで保護が見つかると、拡張機能は結果を自分のエンドポイントに送信できます。HTTP メソッドを選び、ヘッダーを追加し、`<SITEURL>`、`<HOSTNAME>`、`<TITLE>`、`<DETECTIONS>`、`<DETECTION_COUNT>`、`<DETECTION_NAMES>`（信頼度付きの保護を 1 行で）、`<HTTP_STATUS>`（ページの HTTP ステータスコード。ブロックページなら 403 など）、`<CATEGORIES>`、`<TIMESTAMP>` といった変数を使ったテンプレートとして本文を書きます。**テンプレートから始める**（Slack、Mattermost または Google Chat、Discord、プレーンテキストの 1 行）を選ぶと、Content-Type と用意済みのチャットメッセージが入力されます。Webhook は公開ホストの HTTPS アドレスにのみ送信され、既定ではオフで、**テスト** ボタンがあります。**設定 → 検出 → Webhook連携** で設定します。
 
 **最近の送信と再試行。** **設定 → 検出 → Webhook** には直近 20 件の送信が一覧表示されます（ページ、ステータス、所要時間。アドレス、ヘッダー、ペイロードは決して含まれません）。失敗した送信は **再試行** でもう一度送れます。**失敗した送信を再試行**（既定でオン）が有効なら、応答がなかった場合やサーバーが 408、425、429、5xx を返した場合に、拡張機能が 1 分後、5 分後、15 分後に自動で再試行します。401、403、404 などの拒否は、あなたの **再試行** を待ちます。そのため、失敗した送信のページデータは 1 時間（最大 20 件）メモリ上にのみ保持され、ディスクには書き込まれず、ブラウザを閉じると消えます。再試行は現在の Webhook 設定でリクエストを作り直すので、修正したアドレスやシークレットが使われ、ヘッダーやシークレットは一緒に保存されません。
 

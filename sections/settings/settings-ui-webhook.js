@@ -717,6 +717,8 @@ SettingsUI.webhookExampleContext = async function() {
           ctx.detectionCount = detections.length;
           ctx.detectionNames = WebhookBody.detectionNames(detections);
           ctx.categories = [...new Set(detections.map(d => d.category).filter(Boolean))].join(',');
+          // The status saved with the result the popup shows; 0 when it is not known, as the webhook sends it
+          ctx.httpStatus = (typeof HttpStatus !== 'undefined' && HttpStatus.of(window.scrapflyDetection?.cacheMetadata?.httpStatus)) || 0;
         }
       }
     } catch { /* keep the sample page */ }

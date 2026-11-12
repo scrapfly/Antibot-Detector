@@ -5,8 +5,8 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "High",
-  "lastUpdated": "2026-10-30",
-  "version": "2.3.1",
+  "lastUpdated": "2026-11-12",
+  "version": "2.4.0",
   "minExtensionVersion": "2.8",
   "website": "https://www.humansecurity.com/",
   "icon": "perimeterx_official.png",
@@ -53,6 +53,26 @@
         "confidence": 50,
         "standalone": false,
         "description": "Auxiliary PerimeterX cookies (pxcts, _pxde, _pxff_*)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "px-documented-cookie",
+        "name": "^(?:_pxmvid|_pxttld|_pxwvm|_pxmd|_pxda|_pxac)$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 60,
+        "description": "Other cookies HUMAN documents for its sensor (_pxmvid, _pxttld, _pxwvm, _pxmd, _pxda, _pxac)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "px-code-defender-cookie",
+        "name": "^__pxvid$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 60,
+        "description": "HUMAN Code Defender visitor cookie (__pxvid)",
         "nameScope": "all",
         "valueScope": "all"
       }
@@ -104,6 +124,34 @@
         "textRegex": true,
         "textCaseSensitive": true,
         "textScope": "all"
+      },
+      {
+        "id": "px-vendor-host",
+        "confidence": 100,
+        "description": "Request to a HUMAN (PerimeterX) sensor, collector or challenge host",
+        "text": "^https://(?:[a-z0-9-]+\\.)+(?:px-cloud\\.net|px-cdn\\.net|px-client\\.net|pxchk\\.net|perimeterx\\.net|hsprotect\\.net)(?:[/?#:]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "px-first-party-collector",
+        "confidence": 85,
+        "description": "First-party HUMAN collector under the app ID (/<appid>/xhr/api/v1/collector)",
+        "text": "^https?://[^/?#]+/(?:PX)?[A-Za-z0-9]{8}/xhr/api/v[0-9]/collector(?:[/?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "px-first-party-init",
+        "confidence": 30,
+        "description": "First-party init.js under an app-ID path without the PX prefix; corroboration only",
+        "text": "^https?://[^/?#]+/[A-Za-z0-9]{8}/init\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": false
       }
     ],
     "content": [
@@ -133,6 +181,42 @@
         "confidence": 30,
         "standalone": false,
         "description": "Optional PerimeterX init callback defined by the site"
+      },
+      {
+        "id": "px-block-uuid",
+        "path": "_pxUuid",
+        "condition": "typeof string",
+        "confidence": 60,
+        "description": "HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc)"
+      },
+      {
+        "id": "px-block-vid",
+        "path": "_pxVid",
+        "condition": "typeof string",
+        "confidence": 60,
+        "description": "HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc)"
+      },
+      {
+        "id": "px-block-blockedurl",
+        "path": "_pxBlockedUrl",
+        "condition": "typeof string",
+        "confidence": 60,
+        "description": "HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc)"
+      },
+      {
+        "id": "px-block-jsclientsrc",
+        "path": "_pxJsClientSrc",
+        "condition": "typeof string",
+        "confidence": 60,
+        "description": "HUMAN block page variable (_pxUuid, _pxVid, _pxBlockedUrl, _pxJsClientSrc)"
+      }
+    ],
+    "dom": [
+      {
+        "id": "px-captcha-container",
+        "selector": "div#px-captcha",
+        "confidence": 60,
+        "description": "HUMAN challenge container (div#px-captcha)"
       }
     ]
   },
@@ -241,6 +325,85 @@
               },
               {
                 "pattern": "px-init-function"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "perimeterx-first-party-sensor",
+      "name": "First-party HUMAN sensor with its app ID or cookies",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "px-first-party-init"
+              },
+              {
+                "pattern": "px-first-party-collector"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "px-appid-variable"
+              },
+              {
+                "pattern": "px-appid-reference"
+              },
+              {
+                "pattern": "px-init-function"
+              },
+              {
+                "pattern": "px-aux-cookie"
+              },
+              {
+                "pattern": "px-documented-cookie"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "perimeterx-block-page",
+      "name": "HUMAN block page with its challenge",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              {
+                "pattern": "px-block-uuid"
+              },
+              {
+                "pattern": "px-block-vid"
+              },
+              {
+                "pattern": "px-block-blockedurl"
+              },
+              {
+                "pattern": "px-block-jsclientsrc"
+              },
+              {
+                "pattern": "px-captcha-container"
+              }
+            ]
+          },
+          {
+            "any": [
+              {
+                "pattern": "px-captcha"
+              },
+              {
+                "pattern": "px-first-party-captcha"
+              },
+              {
+                "pattern": "px-vendor-host"
               }
             ]
           }

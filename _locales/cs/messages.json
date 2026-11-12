@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Historie detekcí se tu bude zobrazovat při procházení webů."
   },
+  "historyPausedNote": {
+    "message": "Historie je pozastavená, takže naskenované stránky se neukládají."
+  },
   "rulesUpdateTitle": {
     "message": "Nainstalovat aktualizace pravidel z nejnovějšího vydání Scrapfly"
   },
@@ -445,9 +448,6 @@
   },
   "ruleFieldAuthor": {
     "message": "Autor"
-  },
-  "ruleSectionBadgeColor": {
-    "message": "Barva odznaku"
   },
   "ruleSectionDetectionMethods": {
     "message": "Metody detekce"
@@ -1033,6 +1033,9 @@
   "detectorExportedFmt": {
     "message": "Exportováno: {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Exportováno pravidel: {0}"
+  },
   "failedImportDetectors": {
     "message": "Detektory se nepodařilo importovat. Zkontrolujte formát souboru."
   },
@@ -1044,6 +1047,9 @@
   },
   "detectorDeletedFmt": {
     "message": "Smazáno: „{0}“"
+  },
+  "ruleSavedFmt": {
+    "message": "Uloženo: „{0}“"
   },
   "failedClearDetectors": {
     "message": "Detektory se nepodařilo vymazat"
@@ -1441,6 +1447,18 @@
   "settingsBadgeColorHigh": {
     "message": "Vysoká"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Číslo na liště"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Co počítá číslo na ikoně v liště nástrojů. Fingerprinting běží na většině webů; vyskakovací okno a Historie dál ukazují vše."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Každá detekce"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Jen anti-bot a CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Zapnout události JS API"
   },
@@ -1662,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Tím se trvale smažou všechna zachycená data tohoto poskytovatele."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Zrušit"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Rozsah hledání v obsahu"
@@ -3303,9 +3315,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "Změnit ikonu detektoru"
   },
-  "rulesUiCustomColor": {
-    "message": "Vlastní barva"
-  },
   "iconPickerTitle": {
     "message": "Zvolit ikonu"
   },
@@ -3824,6 +3833,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Zvýšeno společným působením ochran: {0}"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Nenalezen žádný anti-bot ani CAPTCHA s jistotou 50 % a více"
   },
   "tipLastUpdated": {
     "message": "Aktualizováno"
@@ -4503,6 +4515,12 @@
   },
   "detectionTipCache": {
     "message": "Které stránky znovu používají tyto výsledky z mezipaměti a na jak dlouho."
+  },
+  "detectionStatHttpStatus": {
+    "message": "Stav HTTP"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Stavový kód HTTP, kterým stránka odpověděla při skenování. Chyba (4xx nebo 5xx) často znamená, že požadavek byl zablokován nebo dostal ověřovací výzvu."
   },
   "tipCacheExpires": {
     "message": "Vyprší"
@@ -5439,7 +5457,7 @@
     "message": "Kolik záloh ponechat"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Po každé záloze se starší zálohy nad tento počet odstraní ze složky Stažené soubory (záloha uložená ve více částech se počítá jako jedna). Odstraňují se jen soubory záloh uložené tímto rozšířením. Pokud ponecháte všechny, nic se nesmaže."
+    "message": "Po každé záloze se starší zálohy nad tento počet odstraní ze složky Stažené soubory (záloha uložená ve více částech se počítá jako jedna). Odstraňují se jen soubory záloh uložené tímto rozšířením. Pokud ponecháte všechny, nic se nesmaže. Zálohy vytvořené před verzí 3.1.7 zůstanou, dokud je sami nesmažete."
   },
   "settingsHistoryBackupNow": {
     "message": "Zálohovat nyní"
@@ -6110,6 +6128,12 @@
   "settingsHistoryWatchOff": {
     "message": "Při poslední kontrole bylo rozšíření vypnuté, proto se nic nezkontrolovalo."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "Poslední kontrola se zastavila, protože bylo rozšíření vypnuto."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "Poslední kontrola se zastavila, protože byla historie pozastavena."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Sledování musí být vypnuté, denní nebo týdenní"
   },
@@ -6155,6 +6179,9 @@
   "detectionMdSummaryFmt": {
     "message": "Detekce: {0} · Spolehlivost: {1} % · Obtížnost: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "Stav HTTP: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Ochrana"
   },
@@ -6196,6 +6223,15 @@
   },
   "historyScanAgain": {
     "message": "Znovu skenovat nyní"
+  },
+  "detectionFromPageFmt": {
+    "message": "Ze skenování {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Změněno od {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Beze změny od {0}"
   },
   "rulesDuplicate": {
     "message": "Duplikovat"
@@ -6686,6 +6722,12 @@
   "bulkHistoryPaused": {
     "message": "Historie je pozastavená: stránky se skenují, ale neukládají."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Stránky z historie: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Probíhá hromadné skenování, proto stránky z historie nebyly přidány."
+  },
   "bulkReadingSitemaps": {
     "message": "Načítají se mapy webu…"
   },
@@ -6712,6 +6754,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Zjištěné ochrany s jejich jistotou, oddělené čárkami"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Stavový kód HTTP stránky (0, pokud není znám)"
   },
   "historyCopyMarkdown": {
     "message": "Kopírovat jako Markdown"

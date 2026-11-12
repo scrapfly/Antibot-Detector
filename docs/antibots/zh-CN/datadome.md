@@ -2,7 +2,7 @@
 
 # DataDome 反爬防护：如何检测网站是否使用它（以及它对网页抓取意味着什么）
 
-DataDome 是一些网站放在页面前面的反爬虫（反机器人）或反滥用防护层。无论你是在寻找 DataDome 绕过方法、想检测某个网站是否使用了 DataDome，还是在排查网页抓取被 DataDome 拦截的问题，第一步都是一样的：确认响应你请求的确实是 DataDome。本页列出 Scrapfly Antibot Detector 扩展用来识别 DataDome 机器人检测的 11 个公开特征，说明每个特征指向它的可信程度，以及这通常对自动化客户端意味着什么。
+DataDome 是一些网站放在页面前面的反爬虫（反机器人）或反滥用防护层。无论你是在寻找 DataDome 绕过方法、想检测某个网站是否使用了 DataDome，还是在排查网页抓取被 DataDome 拦截的问题，第一步都是一样的：确认响应你请求的确实是 DataDome。本页列出 Scrapfly Antibot Detector 扩展用来识别 DataDome 机器人检测的 13 个公开特征，说明每个特征指向它的可信程度，以及这通常对自动化客户端意味着什么。
 
 ## 它是什么
 
@@ -12,7 +12,7 @@ DataDome 是一家法国的机器人与在线欺诈防护厂商。它通过 Java
 
 ## 如何判断网站使用了 DataDome
 
-这些特征由扩展自身针对 `detect-datadome` 的检测规则生成（规则版本 2.1.0，最后更新于 2026-10-16）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
+这些特征由扩展自身针对 `detect-datadome` 的检测规则生成（规则版本 2.2.0，最后更新于 2026-11-12）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
 
 ### Cookie
 
@@ -39,8 +39,8 @@ DataDome 是一家法国的机器人与在线欺诈防护厂商。它通过 Java
 
 | 特征 | 置信度 | 含义 |
 | --- | --- | --- |
-| `^https://(?:js\|api-js)\.datadome\.co/(?:tags\.js\|js/)` | 100% | Official DataDome JavaScript tag or its collection endpoint |
-| `^https://(?:geo\|ct\|c\|t)\.captcha-delivery\.com/` | 100% | DataDome challenge or CAPTCHA delivery host |
+| `^https://(?:js\|api-js)\.datadome\.co/` | 100% | Official DataDome JavaScript tag or its collection endpoint |
+| `^https://(?:[a-z0-9-]+\.)+captcha-delivery\.com(?:[/?#:]\|$)` | 100% | DataDome challenge or CAPTCHA delivery host |
 | `^https?://[^/?#]+/(?:tags\.js\|js/)(?:[?#]\|$)` | 30% (仅作佐证) | First-party tags.js or js/ collection path; the name is generic, corroboration only |
 
 ### 页面和脚本内容
@@ -59,6 +59,8 @@ DataDome 是一家法国的机器人与在线欺诈防护厂商。它通过 Java
 | 特征 | 置信度 | 含义 |
 | --- | --- | --- |
 | `ddjskey (typeof string)` | 60% | DataDome JS key set by the integration snippet |
+| `ddoptions (typeof object)` | 60% | DataDome tag options object (window.ddoptions) |
+| `displayDataDomeResponsePage (typeof function)` | 85% | DataDome response page function (window.displayDataDomeResponsePage) |
 
 ### 组合特征
 
@@ -68,8 +70,8 @@ DataDome 是一家法国的机器人与在线欺诈防护厂商。它通过 Java
 | --- | --- | --- |
 | DataDome tag with its session cookie | 100% | (Official DataDome JavaScript tag or its collection endpoint或DataDome JS key set by the integration snippet或Integration snippet setting window.ddjskey)和DataDome session cookie |
 | DataDome response headers with its cookie | 100% | (DataDome client ID response header或DataDome protection response header或Response served by DataDome itself (block or challenge page))和DataDome session cookie |
-| First-party DataDome tag with its JS key | 85% | First-party tags.js or js/ collection path; the name is generic, corroboration only和(DataDome JS key set by the integration snippet或Integration snippet setting window.ddjskey) |
-| DataDome block page | 95% | DataDome block page bootstrap (var dd={'rt':...})和(DataDome client ID response header或DataDome block-type header on challenge responses或DataDome challenge or CAPTCHA delivery host或DataDome session cookie) |
+| First-party DataDome tag with its JS key | 85% | First-party tags.js or js/ collection path; the name is generic, corroboration only和(DataDome JS key set by the integration snippet或Integration snippet setting window.ddjskey或DataDome tag options object (window.ddoptions)) |
+| DataDome block page | 95% | (DataDome block page bootstrap (var dd={'rt':...})或DataDome response page function (window.displayDataDomeResponsePage))和(DataDome client ID response header或DataDome block-type header on challenge responses或DataDome challenge or CAPTCHA delivery host或DataDome session cookie) |
 
 ## 难度
 

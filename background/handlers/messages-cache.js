@@ -4,7 +4,10 @@
  * (background/commands.js) share. `sendResponse` answers the message, if any.
  */
 async function clearTabDetectionCache(request, sendResponse = () => {}) {
-    await DetectionEngineManager.handleClearDetectionCache(request, sendResponse);
+    let answer = null;
+    await DetectionEngineManager.handleClearDetectionCache(request, (response) => { answer = response; sendResponse(response); });
+    // No page address, nothing cleared (the engine answered the error): the tab keeps its scan and its badge
+    if (answer && answer.error === 'invalid_url') return;
 
     if (request.tabId) {
         DetectionSessionStore.cancel(request.tabId, 'cache_cleared');
@@ -26,6 +29,8 @@ async function clearTabDetectionCache(request, sendResponse = () => {}) {
                 color: BADGE.COLORS.CLEARED,
                 tabId: request.tabId
             });
+            // The result the hover text named is gone with it
+            if (typeof ToolbarTitle !== 'undefined') await ToolbarTitle.reset(chrome, request.tabId);
             Logger.debug('BACKGROUND', `[Background] Badge set to CLR for tab ${request.tabId}`);
         } catch (badgeError) {
             Logger.warn('BACKGROUND', `[Background] Could not update badge for tab ${request.tabId}:`, badgeError);
@@ -102,8 +107,8 @@ function registerCacheHandlers(registry, context) {
                 Logger.debug('BACKGROUND', '[Background] [Early Cache] Content script exited early due to cache hit for:', url);
 
                 if (detectionData && tabId) {
-                    const detectionCount = detectionData.detectionCount || 0;
                     const detections = Array.isArray(detectionData.detectionResults) ? detectionData.detectionResults : [];
+                    const detectionCount = DetectionUtils.badgeCount(detections, await DetectionUtils.readBadgeCountMode(CategoryManager), detectionData.detectionCount);
 
                     if (detectionCount > 0) {
                         const badgeColors = await CategoryManager.getBadgeColors();
@@ -131,8 +136,8 @@ function registerCacheHandlers(registry, context) {
                             color: BADGE.COLORS.CLEAN,
                             tabId: tabId
                         });
-                        Logger.debug('BACKGROUND', '[Background] [Early Cache] Badge: clean page (no detections)');
-                        if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, 'clean');
+                        Logger.debug('BACKGROUND', '[Background] [Early Cache] Badge: clean page (nothing the toolbar number counts)');
+                        if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tabId, detections.length ? 'found' : 'clean', detections);
                     }
                 }
 

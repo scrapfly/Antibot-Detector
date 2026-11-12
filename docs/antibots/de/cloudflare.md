@@ -2,7 +2,7 @@
 
 # Cloudflare Bot Management Bot-Schutz: so erkennen Sie ihn (und was er für Web Scraping bedeutet)
 
-Cloudflare Bot Management ist ein Bot-Schutz bzw. eine Anti-Abuse-Schicht, die manche Websites vor ihre Seiten schalten. Wenn Sie Cloudflare Bot Management umgehen möchten, Cloudflare Bot Management auf einer Website erkennen wollen oder untersuchen, warum Web Scraping von Cloudflare Bot Management blockiert wird, ist der erste Schritt immer derselbe: Prüfen Sie, ob tatsächlich Cloudflare Bot Management Ihre Anfragen beantwortet. Diese Seite listet die 11 öffentlichen Signale auf, mit denen die Erweiterung Scrapfly Antibot Detector die Bot-Erkennung von Cloudflare Bot Management identifiziert, wie stark jedes einzelne Signal darauf hinweist und was das in der Regel für einen automatisierten Client bedeutet.
+Cloudflare Bot Management ist ein Bot-Schutz bzw. eine Anti-Abuse-Schicht, die manche Websites vor ihre Seiten schalten. Wenn Sie Cloudflare Bot Management umgehen möchten, Cloudflare Bot Management auf einer Website erkennen wollen oder untersuchen, warum Web Scraping von Cloudflare Bot Management blockiert wird, ist der erste Schritt immer derselbe: Prüfen Sie, ob tatsächlich Cloudflare Bot Management Ihre Anfragen beantwortet. Diese Seite listet die 19 öffentlichen Signale auf, mit denen die Erweiterung Scrapfly Antibot Detector die Bot-Erkennung von Cloudflare Bot Management identifiziert, wie stark jedes einzelne Signal darauf hinweist und was das in der Regel für einen automatisierten Client bedeutet.
 
 ## Was es ist
 
@@ -12,7 +12,7 @@ Offizielle Website: [https://www.cloudflare.com/products/bot-management/](https:
 
 ## Woran erkenne ich, ob eine Website Cloudflare Bot Management nutzt?
 
-Diese Signale werden aus den eigenen Erkennungsregeln der Erweiterung für `detect-cloudflare` erzeugt (Regelversion 2.3.0, zuletzt aktualisiert am 2026-10-26). Ein Signal ist nur ein Hinweis: Die Konfidenz gibt an, wie sicher sich die Erweiterung ist, wenn genau dieses eine Signal auftritt. Signale mit der Kennzeichnung „nur zur Bestätigung“ zählen nie allein, weil auch andere Produkte sie erzeugen können.
+Diese Signale werden aus den eigenen Erkennungsregeln der Erweiterung für `detect-cloudflare` erzeugt (Regelversion 2.4.0, zuletzt aktualisiert am 2026-11-12). Ein Signal ist nur ein Hinweis: Die Konfidenz gibt an, wie sicher sich die Erweiterung ist, wenn genau dieses eine Signal auftritt. Signale mit der Kennzeichnung „nur zur Bestätigung“ zählen nie allein, weil auch andere Produkte sie erzeugen können.
 
 ### Cookies
 
@@ -22,7 +22,12 @@ Cookie-Namen (und Werte, sofern einer geprüft wird), die auf der Seite gesetzt 
 | --- | --- | --- |
 | `^cf_clearance$ = ^[A-Za-z0-9_.-]{43}-[0-9]{10}-1\.[0-9]\.[0-9]\.[0-9]-[A-Za-z0-9_.-]{20,}` | 100% | Challenge clearance cookie, set after passing a Cloudflare challenge |
 | `^__cf_bm$ = ^[A-Za-z0-9_.-]{43}-[0-9]{10}\.[0-9]{5,8}-1\.[0-9]\.[0-9]\.[0-9]-[A-Za-z0-9_.-]{20,}` | 100% | Bot Management cookie in its <token>-<timestamp.fraction>-1.x.x.x-<signature> shape; Cloudflare sets it on every zone with bot management or Bot Fight Mode |
+| `^cf_clearance$` | 85% | Challenge clearance cookie by name; its value is encrypted and its shape may change |
+| `^__cf_bm$` | 85% | Bot Management cookie by name; its value is encrypted and its shape may change |
 | `^cf_chl_rc_(?:i\|ni\|m)$` | 85% | Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m) |
+| `^__cfseq(?:-[A-Za-z0-9_-]{1,64})?$` | 90% | Sequence cookie of Cloudflare's bot products (__cfseq) |
+| `^_cfuvid$` | 50% | Rate limiting cookie Cloudflare sets per visitor (_cfuvid); not bot management on its own |
+| `^__cfruid$` | 40% (nur zur Bestätigung) | Cloudflare cookie that identifies trusted traffic (__cfruid); corroboration only |
 
 ### Antwort-Header
 
@@ -39,9 +44,11 @@ Adressen von Skripten, Frames und Anfragen, die die Seite lädt. Es handelt sich
 
 | Signal | Konfidenz | Worauf es hinweist |
 | --- | --- | --- |
-| `^https?://(?!challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page\|managed\|jsch\|captcha)/` | 100% | Challenge page orchestrator under /cdn-cgi/challenge-platform/ |
-| `^https?://(?!challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?scripts/jsd/(?:[0-9a-f]{6,20}/)?main\.js(?:[?#]\|$)` | 100% | Bot Management JavaScript detections script |
-| `^https?://(?!challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?jsd/oneshot/` | 100% | Bot Management JavaScript detections report (/cdn-cgi/challenge-platform/…/jsd/oneshot/) |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?orchestrate/(?:chl_page\|managed\|jsch\|captcha)/` | 100% | Challenge page orchestrator under /cdn-cgi/challenge-platform/ |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?scripts/jsd/(?:[0-9a-f]{6,20}/)?(?:main\|api)\.js(?:[?#]\|$)` | 100% | Bot Management JavaScript detections script |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?jsd/oneshot/` | 100% | Bot Management JavaScript detections report (/cdn-cgi/challenge-platform/…/jsd/oneshot/) |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/(?:h/[a-z0-9]+/)?pat/` | 100% | Private Access Token request of a Cloudflare challenge (/cdn-cgi/challenge-platform/…/pat/) |
+| `^https?://(?!(?:[a-z0-9-]+\.)?challenges\.(?:cloudflare\.com\|cloudflare-cn\.com\|fed\.cloudflare\.com)/)[^/?#]+/cdn-cgi/challenge-platform/` | 80% | Any other request under /cdn-cgi/challenge-platform/, the path of Cloudflare's challenges and bot detections |
 | `^https://challenges\.cloudflare\.com/` | 40% (nur zur Bestätigung) | Request to challenges.cloudflare.com; also used by Turnstile, so corroboration only |
 
 ### Seiten- und Skriptinhalt
@@ -59,6 +66,7 @@ Eigenschaften, die der JavaScript-Kontext der Seite selbst auf `window` bereitst
 | Signal | Konfidenz | Worauf es hinweist |
 | --- | --- | --- |
 | `_cf_chl_opt (typeof object)` | 85% | Challenge options object present on a Cloudflare challenge page |
+| `cloudflare.jsd.executeOnce (typeof function)` | 70% | JavaScript detections function Cloudflare defines (window.cloudflare.jsd.executeOnce) |
 
 ### Kombinationen
 
@@ -71,6 +79,8 @@ Manche Signale erreichen zusammen eine höhere Bewertung als einzeln. Diese Komb
 | Bot Management script on a Cloudflare zone | 75% | Bot Management JavaScript detections script und (Bot Management cookie in its <token>-<timestamp.fraction>-1.x.x.x-<signature> shape; Cloudflare sets it on every zone with bot management or Bot Fight Mode oder Served through Cloudflare; CDN delivery, not bot management on its own) |
 | Challenge host request on a Cloudflare zone with a challenge signal | 90% | Request to challenges.cloudflare.com; also used by Turnstile, so corroboration only und (Challenge clearance cookie, set after passing a Cloudflare challenge oder Challenge options object present on a Cloudflare challenge page oder Challenge page orchestrator under /cdn-cgi/challenge-platform/) |
 | Challenge platform cookie with a Cloudflare clearance, server header or challenge | 95% | Cloudflare challenge platform cookie (cf_chl_rc_i, cf_chl_rc_ni, cf_chl_rc_m) und (Challenge clearance cookie, set after passing a Cloudflare challenge oder Served through Cloudflare; CDN delivery, not bot management on its own oder Challenge page orchestrator under /cdn-cgi/challenge-platform/ oder Challenge options object present on a Cloudflare challenge page) |
+| Cloudflare bot cookie with a Cloudflare server header or visitor cookie | 95% | (Challenge clearance cookie by name; its value is encrypted and its shape may change oder Bot Management cookie by name; its value is encrypted and its shape may change oder Sequence cookie of Cloudflare's bot products (__cfseq)) und (Served through Cloudflare; CDN delivery, not bot management on its own oder Cloudflare cookie that identifies trusted traffic (__cfruid); corroboration only oder Rate limiting cookie Cloudflare sets per visitor (_cfuvid); not bot management on its own) |
+| Challenge platform request or detections runtime on a Cloudflare zone | 90% | (Any other request under /cdn-cgi/challenge-platform/, the path of Cloudflare's challenges and bot detections oder JavaScript detections function Cloudflare defines (window.cloudflare.jsd.executeOnce)) und (Served through Cloudflare; CDN delivery, not bot management on its own oder Bot Management cookie by name; its value is encrypted and its shape may change oder Rate limiting cookie Cloudflare sets per visitor (_cfuvid); not bot management on its own) |
 
 ## Schwierigkeit
 

@@ -51,6 +51,7 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
         // Without this guard, popup sets all badges to EMPTY which races with background's restore.
         if (hasBackgroundContext) {
           const badgeColors = await context.CategoryManager.getBadgeColors();
+          const countMode = await DetectionUtils.readBadgeCountMode(context.CategoryManager);
           const tabs = await chrome.tabs.query({});
 
           for (const tab of tabs) {
@@ -71,18 +72,19 @@ SettingsRuntime.handleEnableToggle = async function(enabled, context = null) {
               }
               await setPausedIcon(tab.id, false);
               const storedData = await context.DetectionEngineManager.getStoredDetection(tab.url, { privateWindow: tab.incognito === true });
-              if (storedData && storedData.detectionCount > 0) {
-                const detections = Array.isArray(storedData.detectionResults) ? storedData.detectionResults : [];
+              const detections = storedData && Array.isArray(storedData.detectionResults) ? storedData.detectionResults : [];
+              const count = storedData ? DetectionUtils.badgeCount(detections, countMode, storedData.detectionCount) : 0;
+              if (count > 0) {
                 const color = DetectionUtils.getBadgeColor(detections, badgeColors);
                 await setBadgeTextColor(tab.id, false, color);
-                chrome.action.setBadgeText({ text: storedData.detectionCount.toString(), tabId: tab.id }).catch(() => {});
+                chrome.action.setBadgeText({ text: count.toString(), tabId: tab.id }).catch(() => {});
                 chrome.action.setBadgeBackgroundColor({ color, tabId: tab.id }).catch(() => {});
                 if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tab.id, 'found', detections);
               } else {
                 chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tab.id }).catch(() => {});
                 // A saved scan that found nothing reads 'No protections found'; a page with no saved scan keeps the default text
                 if (typeof ToolbarTitle !== 'undefined') {
-                  if (storedData) ToolbarTitle.apply(chrome, tab.id, 'clean');
+                  if (storedData) ToolbarTitle.apply(chrome, tab.id, detections.length ? 'found' : 'clean', detections);
                   else ToolbarTitle.reset(chrome, tab.id);
                 }
               }
@@ -123,6 +125,8 @@ SettingsRuntime.handleSettingsUpdated = async function(context, sendResponse) {
       // unblocked tab drops the pause tile right away (and a newly blocked one gets
       // it). Badge text follows on the next detection or page load.
       await SettingsRuntime.syncPausedIcons();
+      // What the toolbar number counts and the badge colours may have changed: the open tabs show them at once
+      await SettingsRuntime.repaintBadges();
 
       sendResponse({ status: 'success' });
     } catch (error) {
@@ -146,10 +150,36 @@ SettingsRuntime.syncPausedIcons = async function() {
             chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tab.id })
           ]).catch(() => {});
           if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tab.id, 'skipped');
+        } else if (enabled !== false && typeof ToolbarTitle !== 'undefined') {
+          // No longer skipped: "This site is not scanned" goes from the hover text too, until the next scan names its result
+          await ToolbarTitle.resetIf(chrome, tab.id, 'skipped');
         }
       }
     } catch (error) {
       Logger.warn('UI', '[Settings] Paused icon sync failed:', error);
+    }
+};
+
+/**
+ * Paints the badge of every open tab that has a saved scan again from it (worker only), through the painter of a finished page
+ * (setBadgeForDetections): Settings → General → Toolbar number and the badge colours apply at once, not on the next page load.
+ * A tab still being scanned, a tab with no saved scan and a switched-off extension are left as they are.
+ */
+SettingsRuntime.repaintBadges = async function() {
+    if (typeof setBadgeForDetections !== 'function' || typeof DetectionEngineManager === 'undefined') return;
+    try {
+      const { scrapfly_enabled: enabled } = await chrome.storage.local.get('scrapfly_enabled');
+      if (enabled === false) return;
+      const tabs = await chrome.tabs.query({});
+      for (const tab of tabs) {
+        if (!tab.url || !/^https?:/i.test(tab.url)) continue;
+        if (typeof activeDetections !== 'undefined' && activeDetections.has(tab.id)) continue;
+        const stored = await DetectionEngineManager.getStoredDetection(tab.url, { privateWindow: tab.incognito === true });
+        if (!stored) continue;
+        await setBadgeForDetections(tab.id, tab.url, Array.isArray(stored.detectionResults) ? stored.detectionResults : []);
+      }
+    } catch (error) {
+      Logger.warn('UI', '[Settings] Badge repaint failed:', error);
     }
 };
 
@@ -211,6 +241,8 @@ SettingsRuntime._buildWebhookContext = function(pageData, detectionResults) {
         detectionCount: detectionResults.length,
         categories: [...new Set(detectionResults.map(d => d.category))].join(','),
         detectionNames: WebhookBody.detectionNames(detectionResults),
+        // <HTTP_STATUS>: the page's HTTP status as the scan saved it, 0 when it is not known
+        httpStatus: Number.isInteger(pageData.httpStatus) ? pageData.httpStatus : 0,
         detections: detectionResults
     };
 };

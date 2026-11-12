@@ -112,7 +112,66 @@ DetectionActions.RESCAN_NOTICES = Object.freeze({
 
 /** Both Scan again buttons off while the worker answers (the toolbar one and the one on the dead-end card). */
 DetectionActions.setRescanBusy = function(busy) {
-    document.querySelectorAll('#rescanBtn, #emptyRescanBtn').forEach((button) => { button.disabled = busy; });
+    document.querySelectorAll(DetectionActions.RESCAN_BUTTONS).forEach((button) => { button.disabled = busy; });
+};
+
+/**
+ * Every Scan again button of the tab: next to Clear cache, on the card of a page with no completed scan, under the all-clear card,
+ * and on the line that says the results were found on another page of the site.
+ */
+DetectionActions.RESCAN_BUTTONS = '#rescanBtn, #emptyRescanBtn, #checkedRescanBtn, #sourceRescanBtn';
+
+/**
+ * Compare scans on the change line: the History tab, with its compare dialog open on the page's newest saved scan (the dialog
+ * picks the earlier scan, as from the entry's menu).
+ */
+DetectionActions.compareChange = async function() {
+    const entry = this.changeEntry;
+    const popup = typeof window !== 'undefined' ? window.popupInstance : null;
+    if (!entry || !popup || !popup.history || typeof popup.switchTab !== 'function') return;
+    try {
+      await popup.switchTab('history');
+      const history = popup.history;
+      await history.loadHistoryFromStorage();
+      const item = (history.historyItems || []).find(candidate => candidate && candidate.id === entry.id) || entry;
+      await history.compareHistoryItem(item);
+    } catch (error) {
+      Logger.warn('UI', '[Detection] Could not open Compare scans', error);
+    }
+};
+
+/**
+ * Watch for changes on the change line: the page's newest saved scan joins the watchlist (watching also pins it), as from the
+ * History entry's menu. The line turns to "Watching for changes" when the stored History says so.
+ */
+DetectionActions.watchChange = async function() {
+    const entry = this.changeEntry;
+    if (!entry || typeof entry.id !== 'string' || entry.watch === true) return;
+    const t = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+    const button = document.querySelector('#changeWatchBtn');
+    if (button) button.disabled = true;
+    try {
+      const response = await chrome.runtime.sendMessage({ type: HistoryStore.Messages.UPDATE_ITEM, id: entry.id, patch: { watch: true } });
+      if (response && response.status === 'unknown') {
+        NotificationHelper.error(t('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."));
+        return;
+      }
+      if (!response || response.status !== 'ok') throw new Error((response && response.error) || 'History update failed');
+      if (response.updated === 0 && response.limit) {
+        NotificationHelper.error(t('historyWatchLimitFmt', 'You can watch up to {0} pages. Stop watching one first.', response.limit));
+        return;
+      }
+      const settings = await Utils.getHistorySettings();
+      NotificationHelper.success(HistoryPolicy.watchModeOf(settings) === 'off'
+        ? t('historyWatchStartedOffNotice', 'Watching this page. Turn on Watch pinned pages in Settings → History for it to be checked.')
+        : t('historyWatchStartedNotice', 'Watching this page'));
+    } catch (error) {
+      Logger.warn('UI', '[Detection] Watch failed', error);
+      NotificationHelper.error(error.message);
+    } finally {
+      if (button) button.disabled = false;
+      DetectionUI.syncChangeNote.call(this);
+    }
 };
 
 /** The page is reloading to be scanned from the start: no result of the old scan stays, and the scanning screen shows until the new one arrives. */
@@ -325,43 +384,23 @@ DetectionActions.removeFromBlacklist = async function(domain) {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
         if (tab) {
           setPausedIcon(tab.id, false);
-          this.showAnalyzingState();
-
-          chrome.runtime.sendMessage(
-            { type: WorkerMessages.GET_DETECTION_DATA, tabId: tab.id },
-            async (response) => {
-              if (chrome.runtime.lastError) {
-                Logger.error('UI', 'Detection: Error getting cached data:', chrome.runtime.lastError);
-                this.refreshAnalysis();
-                return;
-              }
-
-              if (response && response.data) {
-                if (this.debugMode) Logger.debug('UI', 'Detection: Using cached data after blacklist removal');
-                await Detection.processDetectionData({
-                  detection: this,
-                  detectionEngine: this.detectionEngine,
-                  detectorManager: this.detectorManager
-                }, response.data);
-                const detections = this.currentResults;
-
-                if (detections.length > 0) {
-                  chrome.action.setBadgeText({ text: detections.length.toString(), tabId: tab.id }).catch((error) => {
-                    if (this.debugMode) Logger.debug('UI', 'Failed to update badge after blacklist removal:', error.message);
-                  });
-                  const badgeColors = await CategoryManager.getBadgeColors();
-                  const color = DetectionUtils.getBadgeColor(detections, badgeColors);
-                  await setBadgeTextColor(tab.id, false, color);
-                  chrome.action.setBadgeBackgroundColor({ color: color, tabId: tab.id }).catch((error) => {
-                    if (this.debugMode) Logger.debug('UI', 'Failed to set badge color:', error.message);
-                  });
-                }
-              } else {
-                if (this.debugMode) Logger.debug('UI', 'Detection: No cached data, requesting fresh detection');
-                this.refreshAnalysis();
-              }
-            }
-          );
+          // Switched off, nothing is scanned: the page is left as it is, and the card of the switched-off extension stays
+          if (!this.isExtensionEnabled) {
+            this.showDisabledState(false);
+            return;
+          }
+          // The page on screen loaded while its site was paused: none of its headers, cookies, request bodies or requests were
+          // kept, and its JS hooks never ran. A scan of it as it is would miss all of that and still be saved, recorded and sent
+          // as if complete, so it loads again, as Scan again does (a result saved for the site before it was paused can still
+          // answer), and the scanning screen shows until the new result arrives
+          DetectionActions.showRescanning.call(this, tab);
+          try {
+            await chrome.tabs.reload(tab.id);
+          } catch (error) {
+            // The tab went away or cannot be reloaded: the page is not scanned, and the card says how to scan it
+            Logger.warn('UI', 'Detection: could not reload the page after resuming its site:', error && error.message);
+            this.showEmptyState({ outcome: 'unscanned' });
+          }
         }
       }
     } catch (error) {
@@ -397,6 +436,13 @@ DetectionActions.refreshAnalysis = async function() {
 
           if (!response || response.status === 'error') {
             this.showEmptyState({ outcome: 'failed' });
+            return;
+          }
+          // The page has to load again to be scanned (it loaded while its site was paused, or before the extension could watch
+          // it): no scan starts, so the card says so at once and offers Scan again, instead of a wait that ends in "Scan failed"
+          if (response.status === 'needs_reload') {
+            this.hideLoadingState();
+            this.showEmptyState({ outcome: 'unscanned' });
             return;
           }
           if (this.debugMode) Logger.debug('UI', 'Detection: Fresh detection requested:', response);
@@ -516,7 +562,7 @@ DetectionActions.buildDetectionsPasteContent = function(pageUrl) {
     }
 
     const avgConfidence = DetectionUtils.computeAverageConfidence(detections);
-    const { difficulty } = this.getDifficultyInfo(detections, avgConfidence);
+    const { difficulty } = this.getDifficultyInfo(detections);
 
     // Per detection, emit method counts (cookie/header/url/...) — NOT the
     // matched values, which carry live secrets like __cf_bm / datadome tokens.
@@ -535,6 +581,8 @@ DetectionActions.buildDetectionsPasteContent = function(pageUrl) {
       };
     });
 
+    // The page's HTTP status, as the tile beside Cache shows it (the one saved with the result), when it is known
+    const httpStatus = typeof HttpStatus !== 'undefined' ? HttpStatus.of(this.cacheMetadata?.httpStatus) : null;
     const payload = {
       source: 'Scrapfly.io',
       url: safeUrl || host || null,
@@ -543,7 +591,8 @@ DetectionActions.buildDetectionsPasteContent = function(pageUrl) {
       summary: {
         detections: detections.length,
         confidence: avgConfidence,
-        difficulty
+        difficulty,
+        ...(httpStatus ? { httpStatus } : {})
       },
       detections: cleanedDetections
     };
@@ -570,8 +619,11 @@ DetectionActions.buildDetectionsMarkdown = function(payload, format = detectionA
     lines.push(`## ${cell(format('detectionMdHeadingFmt', 'Protections on {0}', p.host || p.url || '?'))}`);
     lines.push('');
     if (p.url) lines.push(cell(p.url));
-    lines.push(cell(format('detectionMdSummaryFmt', 'Detections: {0} · Confidence: {1}% · Difficulty: {2}',
-      Number(summary.detections) || list.length, Math.round(Number(summary.confidence) || 0), summary.difficulty || '-')));
+    const counts = format('detectionMdSummaryFmt', 'Detections: {0} · Confidence: {1}% · Difficulty: {2}',
+      Number(summary.detections) || list.length, Math.round(Number(summary.confidence) || 0), summary.difficulty || '-');
+    // The page's HTTP status ends the line, when the summary has one
+    const status = Number.isInteger(summary.httpStatus) ? format('detectionHttpStatusFmt', 'HTTP status: {0}', summary.httpStatus) : '';
+    lines.push(cell(status ? `${counts} · ${status}` : counts));
     lines.push('');
     if (list.length) {
       lines.push(`| ${[

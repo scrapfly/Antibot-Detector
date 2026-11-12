@@ -5,6 +5,7 @@ const test = require('node:test');
 const assert = require('node:assert');
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 
 const root = path.join(__dirname, '..');
 globalThis.FormatUtils = require('../utils/format-utils.js');
@@ -111,4 +112,96 @@ test('after a reset the hover text is the extension name in the interface langua
     globalThis.I18n = saved;
   }
   assert.deepStrictEqual(titles, ['Scrapfly: Anti-Bot-Detektor', ToolbarTitle.DEFAULT, ToolbarTitle.DEFAULT, ToolbarTitle.DEFAULT]);
+});
+
+// The cleared and empty badges say nothing about the page any more: the hover text goes back to the extension name with them,
+// or it keeps naming a result that is gone ("Scrapfly: Cloudflare 95%" over the cleared mark)
+const BADGE_CALL = /setBadgeText\(\{\s*text:\s*(BADGE\.TEXT\.(BLACKLISTED|CLEAN|DISABLED|CLEARED|EMPTY)|''|"")/g;
+const TITLE_CALL = /ToolbarTitle\.(apply|reset|resetIf)\(|setToolbarTitle\(tabId/;
+
+test('every badge the worker paints, cleared and empty included, sets the hover text beside it', () => {
+  const files = ['background/utilities.js', 'background/init.js', 'background/tab-events.js', 'background/handlers/messages-cache.js',
+    'background/handlers/messages-settings.js', 'background/handlers/messages-detection.js', 'background/detection-session-store.js',
+    'modules/detection/engine/detection-engine-manager.js', 'modules/settings/settings-runtime.js'];
+  const missing = [];
+  for (const file of files) {
+    const source = fs.readFileSync(path.join(root, file), 'utf8');
+    const lines = source.split(/\r?\n/);
+    const at = (index) => source.slice(0, index).split(/\r?\n/).length - 1;
+    {
+      for (const match of source.matchAll(BADGE_CALL)) {
+        const line = at(match.index);
+        const near = lines.slice(Math.max(0, line - 12), line + 13).join('\n');
+        // A tab that is gone has no hover text to fix; the place says so
+        if (TITLE_CALL.test(near) || /no hover text/i.test(near)) continue;
+        missing.push(`${file}:${line + 1} ${match[1]}`);
+      }
+    }
+  }
+  assert.deepStrictEqual(missing, []);
+});
+
+function clearCacheWorld() {
+  const titles = [];
+  const context = vm.createContext({
+    WorkerMessages: require('../modules/core/worker-messages.js'),
+    Logger: new Proxy({}, { get: () => () => {} }),
+    Constants: { RECENTLY_CLEARED_TAB_TIMEOUT: 1000 },
+    BADGE: { TEXT: { CLEARED: 'CLR' }, COLORS: { CLEARED: '#999' } },
+    setBadgeTextColor: async () => {},
+    chrome: { action: { setBadgeText: async () => {}, setBadgeBackgroundColor: async () => {}, setTitle: async (opts) => { titles.push(opts); } } },
+    DetectionEngineManager: { handleClearDetectionCache: async (request, sendResponse) => sendResponse({ status: 'cleared' }) },
+    DetectionSessionStore: { cancel() {} },
+    tabsUsingCache: new Set(), recentlyClearedTabs: new Set(),
+    setTimeout: () => 0,
+    ToolbarTitle
+  });
+  vm.runInContext(fs.readFileSync(path.join(root, 'background/handlers/messages-cache.js'), 'utf8'), context, { filename: 'messages-cache.js' });
+  return { context, titles };
+}
+
+test('Detection → Clear cache puts the hover text back to the extension name with the cleared mark', async () => {
+  const { context, titles } = clearCacheWorld();
+  await ToolbarTitle.apply(context.chrome, 9, 'found', [d('Cloudflare', 95)]);
+  await context.clearTabDetectionCache({ tabId: 9, url: 'https://shop.example/' });
+  assert.deepStrictEqual(titles.at(-1), { tabId: 9, title: ToolbarTitle.DEFAULT });
+});
+
+test('resetIf() resets a tab whose hover text is that state, and leaves any other text alone', async () => {
+  const titles = new Map([[1, 'Scrapfly: This site is not scanned'], [2, 'Scrapfly: Cloudflare 95%']]);
+  const chrome = { action: { async setTitle({ tabId, title }) { titles.set(tabId, title); }, async getTitle({ tabId }) { return titles.get(tabId); } } };
+  assert.strictEqual(await ToolbarTitle.resetIf(chrome, 1, 'skipped'), true);
+  assert.strictEqual(titles.get(1), ToolbarTitle.DEFAULT);
+  assert.strictEqual(await ToolbarTitle.resetIf(chrome, 2, 'skipped'), false);
+  assert.strictEqual(titles.get(2), 'Scrapfly: Cloudflare 95%');
+  // A closed tab or a browser without getTitle: nothing happens, nothing throws
+  assert.strictEqual(await ToolbarTitle.resetIf({ action: { async setTitle() {}, async getTitle() { throw new Error('No tab with id'); } } }, 3, 'skipped'), false);
+  assert.strictEqual(await ToolbarTitle.resetIf({ action: { async setTitle() {} } }, 3, 'skipped'), false);
+});
+
+test('a site that stops being skipped in Settings no longer says "This site is not scanned" on hover', async () => {
+  const titles = new Map([[7, 'Scrapfly: This site is not scanned'], [8, 'Scrapfly: Cloudflare 95%']]);
+  let blocked = new Set(['https://a.example/', 'https://b.example/']);
+  const action = {
+    async setTitle({ tabId, title }) { titles.set(tabId, title); }, async getTitle({ tabId }) { return titles.get(tabId); },
+    async setIcon() {}, async setBadgeText() {}, async setBadgeBackgroundColor() {}, async setBadgeTextColor() {}
+  };
+  const context = vm.createContext({
+    WorkerMessages: require('../modules/core/worker-messages.js'),
+    chrome: {
+      action, runtime: { sendMessage: async () => {} },
+      storage: { local: { get: async () => ({ scrapfly_enabled: true }), set: async () => {} } },
+      tabs: { query: async () => [{ id: 7, url: 'https://a.example/' }, { id: 8, url: 'https://b.example/' }] }
+    },
+    Utils: { isUrlBlacklisted: async (url) => blocked.has(url) },
+    Logger: new Proxy({}, { get: () => () => {} }),
+    ToolbarTitle
+  });
+  for (const file of ['modules/core/badge-constants.js', 'modules/settings/settings-runtime.js']) {
+    vm.runInContext(fs.readFileSync(path.join(root, file), 'utf8'), context, { filename: file });
+  }
+  blocked = new Set();
+  await vm.runInContext('SettingsRuntime', context).syncPausedIcons();
+  assert.strictEqual(titles.get(7), ToolbarTitle.DEFAULT, 'no longer skipped: the extension name until the next scan');
+  assert.strictEqual(titles.get(8), 'Scrapfly: Cloudflare 95%', 'a tab that shows a result keeps it');
 });

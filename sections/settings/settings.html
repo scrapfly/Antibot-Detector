@@ -264,6 +264,22 @@
         <div class="settings-card-group">
           <div class="settings-card-group-title" data-i18n="settingsGroupBadgeColors">Badge Colors</div>
 
+          <div class="settings-card">
+            <!-- Toolbar number: what the number on the toolbar icon counts -->
+            <div class="settings-row settings-row--badge-count">
+              <div class="settings-row-text">
+                <div class="settings-row-title">
+                  <span id="badgeCountLabel" data-i18n="settingsBadgeCountTitle">Toolbar number</span>
+                </div>
+                <p class="settings-row-desc" data-i18n="settingsBadgeCountDesc">What the number on the toolbar icon counts. Fingerprinting runs on most sites; the popup and History still list everything.</p>
+              </div>
+              <select id="badgeCount" class="select-field" aria-labelledby="badgeCountLabel">
+                <option value="all" data-i18n="settingsBadgeCountAll">Every detection</option>
+                <option value="protections" data-i18n="settingsBadgeCountProtections">Anti-bot and CAPTCHA only</option>
+              </select>
+            </div>
+          </div>
+
           <div class="settings-card settings-card--colors">
             <div class="color-row">
               <span id="colorBadgeLowLabel" class="color-row-label" data-i18n="settingsBadgeColorLow">Low</span>
@@ -1355,7 +1371,7 @@
                   <option value="30">30</option>
                 </select>
               </div>
-              <p class="setting-row-hint" id="historyBackupKeepHint" data-i18n="settingsHistoryBackupKeepDesc">After each backup, older backups beyond this number are deleted from your Downloads folder (a backup saved in several parts counts as one). Only backup files saved by this extension are removed. Keep all and nothing is deleted.</p>
+              <p class="setting-row-hint" id="historyBackupKeepHint" data-i18n="settingsHistoryBackupKeepDesc">After each backup, older backups beyond this number are deleted from your Downloads folder (a backup saved in several parts counts as one). Only backup files saved by this extension are removed. Keep all and nothing is deleted. Backups made before version 3.1.7 stay until you delete them.</p>
               <div class="setting-row setting-row--inline">
                 <span class="setting-row-hint history-backup-last" id="historyBackupLast"></span>
                 <button type="button" id="historyBackupNowBtn" class="action-btn action-btn-outline" data-i18n="settingsHistoryBackupNow">Back up now</button>

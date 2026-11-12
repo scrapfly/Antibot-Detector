@@ -233,6 +233,12 @@ class Detection {
   async rescan(...args) {
     return await DetectionActions.rescan.apply(this, args);
   }
+  async compareChange(...args) {
+    return await DetectionActions.compareChange.apply(this, args);
+  }
+  async watchChange(...args) {
+    return await DetectionActions.watchChange.apply(this, args);
+  }
   async uploadDetectionsToPaste(...args) {
     return await DetectionActions.uploadDetectionsToPaste.apply(this, args);
   }
@@ -345,7 +351,13 @@ class Detection {
 
       // A new order saved in Settings re-sorts the open list
       chrome.storage.onChanged.addListener(async (changes, area) => {
-        if (area !== 'local' || !changes.scrapfly_settings) return;
+        if (area !== 'local') return;
+        // The change line under the stats follows the stored History (the worker saves a scan just after showing it, the
+        // watchlist updates entries in place) and History's own settings (paused or not)
+        if (changes.scrapfly_settings || (typeof HistoryStore !== 'undefined' && changes[HistoryStore.STORAGE_KEY])) {
+          DetectionUI.scheduleChangeNote.call(this);
+        }
+        if (!changes.scrapfly_settings) return;
         try {
           const settings = await Utils.getSettings();
           // New Tag Colors redraw the card icons
@@ -486,11 +498,17 @@ class Detection {
       });
     }
 
-    // Scan again: next to Clear cache, and on the states that say the page has no completed scan
-    for (const selector of ['#rescanBtn', '#emptyRescanBtn']) {
+    // Scan again: next to Clear cache, on the states that say the page has no completed scan, under the all-clear card, and on
+    // the line that says the results were found on another page of the site
+    for (const selector of ['#rescanBtn', '#emptyRescanBtn', '#checkedRescanBtn', '#sourceRescanBtn']) {
       const rescanBtn = document.querySelector(selector);
       if (rescanBtn) rescanBtn.addEventListener('click', () => { this.rescan(); });
     }
+    // The change line under the stats: Compare scans (in the History tab) and Watch for changes
+    const changeCompareBtn = document.querySelector('#changeCompareBtn');
+    if (changeCompareBtn) changeCompareBtn.addEventListener('click', () => { this.compareChange(); });
+    const changeWatchBtn = document.querySelector('#changeWatchBtn');
+    if (changeWatchBtn) changeWatchBtn.addEventListener('click', () => { this.watchChange(); });
 
     // Setup copy overview button
     // Copy opens a small menu: the uploaded summary, a Markdown table or JSON

@@ -2,7 +2,7 @@
 
 # Анти-бот защита DataDome: как определить, что сайт её использует (и что это значит для парсинга)
 
-DataDome - это система защиты от ботов или от злоупотреблений, которую некоторые сайты ставят перед своими страницами. Если вы ищете способ обхода DataDome, хотите определить, использует ли сайт DataDome, или разбираетесь с блокировкой парсинга со стороны DataDome, первый шаг один и тот же: убедиться, что на ваши запросы действительно отвечает DataDome. На этой странице перечислены 11 публичных признаков, по которым расширение Scrapfly Antibot Detector распознаёт анти-бот защиту DataDome, насколько уверенно каждый из них на неё указывает и что это обычно означает для автоматизированного клиента.
+DataDome - это система защиты от ботов или от злоупотреблений, которую некоторые сайты ставят перед своими страницами. Если вы ищете способ обхода DataDome, хотите определить, использует ли сайт DataDome, или разбираетесь с блокировкой парсинга со стороны DataDome, первый шаг один и тот же: убедиться, что на ваши запросы действительно отвечает DataDome. На этой странице перечислены 13 публичных признаков, по которым расширение Scrapfly Antibot Detector распознаёт анти-бот защиту DataDome, насколько уверенно каждый из них на неё указывает и что это обычно означает для автоматизированного клиента.
 
 ## Что это такое
 
@@ -12,7 +12,7 @@ DataDome - французский поставщик защиты от бото�
 
 ## Как определить, что сайт использует DataDome
 
-Эти признаки сформированы из собственных правил обнаружения расширения для `detect-datadome` (версия правила 2.1.0, последнее обновление 2026-10-16). Признак - лишь индикатор: уверенность показывает, насколько расширение убеждено в результате при срабатывании именно этого признака. Признаки с пометкой "только для подтверждения" никогда не учитываются сами по себе, потому что их могут создавать и другие продукты.
+Эти признаки сформированы из собственных правил обнаружения расширения для `detect-datadome` (версия правила 2.2.0, последнее обновление 2026-11-12). Признак - лишь индикатор: уверенность показывает, насколько расширение убеждено в результате при срабатывании именно этого признака. Признаки с пометкой "только для подтверждения" никогда не учитываются сами по себе, потому что их могут создавать и другие продукты.
 
 ### Cookie
 
@@ -39,8 +39,8 @@ HTTP-заголовки ответа, которые возвращают стр
 
 | Признак | Уверенность | На что указывает |
 | --- | --- | --- |
-| `^https://(?:js\|api-js)\.datadome\.co/(?:tags\.js\|js/)` | 100% | Official DataDome JavaScript tag or its collection endpoint |
-| `^https://(?:geo\|ct\|c\|t)\.captcha-delivery\.com/` | 100% | DataDome challenge or CAPTCHA delivery host |
+| `^https://(?:js\|api-js)\.datadome\.co/` | 100% | Official DataDome JavaScript tag or its collection endpoint |
+| `^https://(?:[a-z0-9-]+\.)+captcha-delivery\.com(?:[/?#:]\|$)` | 100% | DataDome challenge or CAPTCHA delivery host |
 | `^https?://[^/?#]+/(?:tags\.js\|js/)(?:[?#]\|$)` | 30% (только для подтверждения) | First-party tags.js or js/ collection path; the name is generic, corroboration only |
 
 ### Содержимое страницы и скриптов
@@ -59,6 +59,8 @@ HTTP-заголовки ответа, которые возвращают стр
 | Признак | Уверенность | На что указывает |
 | --- | --- | --- |
 | `ddjskey (typeof string)` | 60% | DataDome JS key set by the integration snippet |
+| `ddoptions (typeof object)` | 60% | DataDome tag options object (window.ddoptions) |
+| `displayDataDomeResponsePage (typeof function)` | 85% | DataDome response page function (window.displayDataDomeResponsePage) |
 
 ### Комбинации
 
@@ -68,8 +70,8 @@ HTTP-заголовки ответа, которые возвращают стр
 | --- | --- | --- |
 | DataDome tag with its session cookie | 100% | (Official DataDome JavaScript tag or its collection endpoint или DataDome JS key set by the integration snippet или Integration snippet setting window.ddjskey) и DataDome session cookie |
 | DataDome response headers with its cookie | 100% | (DataDome client ID response header или DataDome protection response header или Response served by DataDome itself (block or challenge page)) и DataDome session cookie |
-| First-party DataDome tag with its JS key | 85% | First-party tags.js or js/ collection path; the name is generic, corroboration only и (DataDome JS key set by the integration snippet или Integration snippet setting window.ddjskey) |
-| DataDome block page | 95% | DataDome block page bootstrap (var dd={'rt':...}) и (DataDome client ID response header или DataDome block-type header on challenge responses или DataDome challenge or CAPTCHA delivery host или DataDome session cookie) |
+| First-party DataDome tag with its JS key | 85% | First-party tags.js or js/ collection path; the name is generic, corroboration only и (DataDome JS key set by the integration snippet или Integration snippet setting window.ddjskey или DataDome tag options object (window.ddoptions)) |
+| DataDome block page | 95% | (DataDome block page bootstrap (var dd={'rt':...}) или DataDome response page function (window.displayDataDomeResponsePage)) и (DataDome client ID response header или DataDome block-type header on challenge responses или DataDome challenge or CAPTCHA delivery host или DataDome session cookie) |
 
 ## Сложность
 
