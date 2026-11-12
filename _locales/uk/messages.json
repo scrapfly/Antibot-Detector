@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "Експортовано: {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Експортовано правил: {0}"
+  },
   "failedImportDetectors": {
     "message": "Не вдалося імпортувати детектори. Перевірте формат файлу."
   },

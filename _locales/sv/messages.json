@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "Exporterade {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Exporterade regler: {0}"
+  },
   "failedImportDetectors": {
     "message": "Det gick inte att importera detektorerna. Kontrollera filformatet."
   },

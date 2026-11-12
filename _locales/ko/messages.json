@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} 내보냄"
   },
+  "rulesExportedFmt": {
+    "message": "규칙 {0}개를 내보냈습니다"
+  },
   "failedImportDetectors": {
     "message": "감지기를 가져오지 못했습니다. 파일 형식을 확인하세요."
   },

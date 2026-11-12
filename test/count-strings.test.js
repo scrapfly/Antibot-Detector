@@ -21,7 +21,7 @@ const labelled = (message, index) => new RegExp(`[:：]\\s*\\{${index}\\}|[(（]
 
 // Used for any count, one included (no singular twin): the key and the number of its count placeholder
 const ANY_COUNT = { settingsHistoryStorageUsedFmt: 2, settingsHistoryStorageTrimmedFmt: 0, settingsHistoryBackupLastFmt: 1,
-  settingsHistoryBackupDoneFmt: 0, restorePartHistoryFmt: 0, capturesExportedFmt: 0, statsKpiProtectionsRulesFmt: 0, historyExportShownFmt: 0 };
+  settingsHistoryBackupDoneFmt: 0, restorePartHistoryFmt: 0, capturesExportedFmt: 0, statsKpiProtectionsRulesFmt: 0, historyExportShownFmt: 0, rulesExportedFmt: 0 };
 // The Arabic "N of the captures" says it for any number (one of the captures, two of them, fifteen of them)
 const READS_RIGHT = { capturesExportedFmt: ['ar'] };
 

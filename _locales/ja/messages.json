@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} をエクスポートしました"
   },
+  "rulesExportedFmt": {
+    "message": "{0}件のルールをエクスポートしました"
+  },
   "failedImportDetectors": {
     "message": "ディテクターのインポートに失敗しました。ファイル形式を確認してください。"
   },

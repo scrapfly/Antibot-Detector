@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "تم تصدير {0}"
   },
+  "rulesExportedFmt": {
+    "message": "القواعد المُصدَّرة: {0}"
+  },
   "failedImportDetectors": {
     "message": "تعذَّر استيراد الكواشف. تحقق من تنسيق الملف."
   },

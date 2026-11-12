@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "ส่งออก {0} แล้ว"
   },
+  "rulesExportedFmt": {
+    "message": "ส่งออกกฎ {0} รายการแล้ว"
+  },
   "failedImportDetectors": {
     "message": "นำเข้าตัวตรวจจับไม่สำเร็จ ตรวจสอบรูปแบบไฟล์"
   },

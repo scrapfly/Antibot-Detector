@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} dışa aktarıldı"
   },
+  "rulesExportedFmt": {
+    "message": "{0} kural dışa aktarıldı"
+  },
   "failedImportDetectors": {
     "message": "Dedektörler içe aktarılamadı. Dosya biçimini kontrol edin."
   },

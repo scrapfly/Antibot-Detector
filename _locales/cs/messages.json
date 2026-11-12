@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "Exportováno: {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Exportováno pravidel: {0}"
+  },
   "failedImportDetectors": {
     "message": "Detektory se nepodařilo importovat. Zkontrolujte formát souboru."
   },

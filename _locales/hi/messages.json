@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} निर्यात किया गया"
   },
+  "rulesExportedFmt": {
+    "message": "एक्सपोर्ट किए गए नियम: {0}"
+  },
   "failedImportDetectors": {
     "message": "डिटेक्टर इम्पोर्ट करने में विफल। फ़ाइल फ़ॉर्मेट जाँचें।"
   },

@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "已匯出 {0}"
   },
+  "rulesExportedFmt": {
+    "message": "已匯出 {0} 條規則"
+  },
   "failedImportDetectors": {
     "message": "無法匯入偵測器。請檢查檔案格式。"
   },

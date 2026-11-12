@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} geëxporteerd"
   },
+  "rulesExportedFmt": {
+    "message": "Regels geëxporteerd: {0}"
+  },
   "failedImportDetectors": {
     "message": "Detectors importeren mislukt. Controleer de bestandsindeling."
   },

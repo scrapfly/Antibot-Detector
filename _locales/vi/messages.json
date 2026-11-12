@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "Đã xuất {0}"
   },
+  "rulesExportedFmt": {
+    "message": "Đã xuất {0} quy tắc"
+  },
   "failedImportDetectors": {
     "message": "Không thể nhập trình phát hiện. Hãy kiểm tra định dạng tệp."
   },

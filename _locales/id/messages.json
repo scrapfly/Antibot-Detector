@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} diekspor"
   },
+  "rulesExportedFmt": {
+    "message": "{0} aturan diekspor"
+  },
   "failedImportDetectors": {
     "message": "Gagal mengimpor detektor. Periksa format file."
   },

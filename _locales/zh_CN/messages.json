@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "已导出 {0}"
   },
+  "rulesExportedFmt": {
+    "message": "已导出 {0} 条规则"
+  },
   "failedImportDetectors": {
     "message": "导入检测器失败。请检查文件格式。"
   },

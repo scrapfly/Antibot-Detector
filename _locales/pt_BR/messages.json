@@ -1030,6 +1030,9 @@
   "detectorExportedFmt": {
     "message": "{0} exportado"
   },
+  "rulesExportedFmt": {
+    "message": "Regras exportadas: {0}"
+  },
   "failedImportDetectors": {
     "message": "Falha ao importar detectores. Verifique o formato do arquivo."
   },
