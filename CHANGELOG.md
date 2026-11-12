@@ -11,6 +11,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - Detection shows the page's HTTP status beside Cache, amber or red for an error, which often means a block page.
 - Bulk scan shows each page's HTTP status ("Done · 403") and adds it to the CSV, JSON and Markdown exports; webhooks get an `<HTTP_STATUS>` variable.
+- Settings → General → Toolbar number: count every detection, or only anti-bot and CAPTCHA, so fingerprinting no longer inflates the number.
+- History's Select bar has Bulk scan: the selected pages open in Bulk scan, ready to start.
+- History says when it is paused, with a Resume button; j/k or the arrow keys move between entries, and the ⋯ menu opens Statistics.
 - Rules → Update: new detectors for Tencent Cloud EdgeOne, Bunny Shield, Signifyd, Azure WAF, Google Cloud Armor and Myra's EU CAPTCHA.
 
 ### Changed
@@ -23,8 +26,11 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Fixed
 
+- A script that only mentions a vendor, or fingerprinting alone, no longer makes a page High difficulty with a red badge.
 - Articles on Next.js, Remix, Nuxt and similar sites no longer show anti-bot and CAPTCHA cards for vendor names mentioned in their text.
 - Fingerprint cards no longer change between reloads on apps that change their own address as they start.
+- Cloudflare, DataDome, HUMAN, AWS WAF, Reblaze, Akamai, reCAPTCHA, hCaptcha, Turnstile and Arkose are recognised from more of the hosts, scripts and cookies their vendors document.
+- Navigator Fingerprint again scores typical fingerprinting scripts sensibly, up to 65%, since CPU and memory reads moved to the Hardware card.
 - Binance CAPTCHA is no longer reported on pages whose scripts merely use a common field name.
 - Rules: saving keeps the list on the rule's page with focus on its Edit button and confirms the save; both exports confirm how many rules they wrote.
 - Rules: the warning that a pattern is also in another rule now fires when only the description differs.
