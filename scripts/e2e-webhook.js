@@ -544,8 +544,16 @@ const CATCH = `(() => {
     const [presetCall] = await calls();
     assert.equal(presetCall.headers['content-type'], 'text/plain');
     assert.equal(presetCall.body, `127.0.0.1: Webhook Antibot Probe 92%, Webhook Captcha Probe 85% (${at('127.0.0.1', '/both', '?preset=1')})`, 'the page, its protections with their confidence and the address');
+    // 3.1.8: <HTTP_STATUS> is the status the page answered with
+    await patch(admin, { webhook: webhook({ enableWebhook: true, webhookContentType: 'text/plain', webhookPayload: '<HOSTNAME> answered <HTTP_STATUS>' }) });
+    await sleep(800);
+    await resetCalls();
+    await clearRecord();
+    await scan(at('127.0.0.1', '/both', '?status=1'), 1);
+    const [statusCall] = await calls();
+    assert.equal(statusCall.body, '127.0.0.1 answered 200', 'the page\'s HTTP status');
     await patch(admin, { webhook: webhook({ enableWebhook: false }) });
-    console.log('PASS Presets: the list, Discord and plain text fill the Content-Type and the template, Save keeps them, and a real scan sends the message with <DETECTION_NAMES>');
+    console.log('PASS Presets: the list, Discord and plain text fill the Content-Type and the template, Save keeps them, and a real scan sends the message with <DETECTION_NAMES>; <HTTP_STATUS> sends the page\'s status');
 
     assert.deepEqual(errors, [], 'no popup runtime exceptions');
     console.log('RESULT ALL PASS, no page errors');
