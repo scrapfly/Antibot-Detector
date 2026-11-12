@@ -319,3 +319,16 @@ test('Shape export code: two analyses with the same shape but different script a
   const again = shape.generateParsingCode([{ url: 'https://two.example/other/static/vendor2.js?seed=BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB', hasSeed: true, categories: [] }], options);
   assert.strictEqual(again, second);
 });
+
+test('in a right-to-left language the arrow keys follow the tabs as drawn: Left is the next tab, Right the previous', () => {
+  const { api, owner, document, context } = fixture();
+  context.getComputedStyle = () => ({ direction: 'rtl' });
+  const dialog = api.open(owner, { title: 'Code', getCodes: () => ({ javascript: 'js', python: 'py', php: 'php' }) });
+  const tabs = dialog.modal.querySelectorAll('.advanced-code-dialog__language');
+  tabs[0].dispatch('keydown', { key: 'ArrowLeft' });
+  assert.equal(tabs[1].getAttribute('aria-selected'), 'true', 'Left goes on to the next tab');
+  assert.equal(document.activeElement, tabs[1]);
+  tabs[1].dispatch('keydown', { key: 'ArrowRight' });
+  assert.equal(tabs[0].getAttribute('aria-selected'), 'true', 'Right goes back');
+  assert.equal(document.activeElement, tabs[0]);
+});

@@ -76,6 +76,8 @@ SettingsUI.renderWebhookHeadersUI = function() {
         const index = parseInt(btn.getAttribute('data-index'));
         this.settings.webhook.webhookHeaders.splice(index, 1);
         this.renderWebhookHeadersUI();
+        // The keyboard stays in the list: the next header, the one before, or Add header when none is left
+        SettingsUI.focusAfterRemove(container.querySelectorAll('.remove-webhook-header-btn'), index, document.querySelector('#addWebhookHeaderBtn'));
       });
     });
 
@@ -798,12 +800,8 @@ SettingsUI.openWebhookVariablesHelp = async function() {
       if (e.target === overlay || e.target.closest('.webhook-vars-close')) { close(); return; }
       const copy = e.target.closest('.webhook-vars-copy');
       if (!copy) return;
-      try {
-        await navigator.clipboard.writeText(copy.dataset.token);
-        NotificationHelper.micro(SettingsUI._whTr('copiedNotification', 'Copied'));
-      } catch (error) {
-        Logger.warn('UI', 'Copy webhook variable failed', { error: error.message });
-      }
+      // Says Copied, or that the browser refused the copy (a silent failure looked like a copy that worked)
+      await FormatUtils.copyToClipboard(copy.dataset.token);
     });
     SettingsUI._closeWebhookVariablesHelp = close;
     if (typeof ModalFocus !== 'undefined' && card) {

@@ -90,11 +90,16 @@ SettingsUI.renderBlacklistUI = function() {
 
     container.innerHTML = html;
 
-    container.querySelectorAll('.remove-blacklist-btn').forEach(btn => {
+    const removeButtons = Array.from(container.querySelectorAll('.remove-blacklist-btn'));
+    removeButtons.forEach((btn, position) => {
       btn.addEventListener('click', async () => {
         const domain = btn.getAttribute('data-domain');
         this.settings.detection[listKey] = SettingsUI.scanList.call(this).filter(d => d !== domain);
         this.renderBlacklistUI();
+        // The keyboard stays in the list: the next site, the one before, or (nothing left) the search that matches
+        // nothing now, or Add current page
+        const fallback = (this.blacklistSearch || '').trim() ? searchInput : document.querySelector('#addCurrentDomainBtn');
+        SettingsUI.focusAfterRemove(container.querySelectorAll('.remove-blacklist-btn'), position, fallback);
         NotificationHelper.info(FormatUtils.t('settingsDraftPendingToast', 'Change staged. Save settings to apply it.'));
       });
     });

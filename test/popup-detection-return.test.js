@@ -19,7 +19,7 @@ function harness({ results }) {
     window: { addEventListener() {} },
     document: { addEventListener() {}, querySelector: () => element(), querySelectorAll: () => [] },
     // what draws the list as the search and the chips leave it (its own tests); here is who calls it
-    DetectionUI: { applyFilters() { log.push(['applyFilters', this]); } }
+    DetectionUI: { applyFilters(options) { log.push(['applyFilters', this, options]); } }
   });
   vm.runInContext(fs.readFileSync(path.join(root, 'popup.js'), 'utf8') + '\nthis.ScrapflyPopup = ScrapflyPopup;', context, { filename: 'popup.js' });
   const popup = Object.create(context.ScrapflyPopup.prototype);
@@ -27,7 +27,7 @@ function harness({ results }) {
     currentTab: 'history',
     detectionViewRequestId: 0,
     history: { cleanup() {} },
-    rules: {},
+    rules: { initialized: true, setupEventListeners() {}, displayRules(options) { log.push(['displayRules', options]); } },
     advanced: null,
     settings: {},
     // the check for a saved result: it may draw, or (a second check within a second of the last) do nothing
@@ -59,4 +59,19 @@ test('a Detection tab with nothing to show is left as the check left it', async 
   const { popup, log } = harness({ results: [] });
   await popup.switchTab('detection');
   assert.deepEqual(log.map(entry => entry[0]), ['checked']);
+});
+
+test('coming back to Detection stays on the page of results that was shown', async () => {
+  const { popup, log } = harness({ results: all });
+  await popup.switchTab('detection');
+  const call = log.find(entry => entry[0] === 'applyFilters');
+  assert.equal(call[2] && call[2].keepPage, true, 'the list drawn again keeps its page');
+});
+
+test('coming back to Rules stays on the page of rules that was shown', async () => {
+  const { popup, log } = harness({ results: all });
+  await popup.switchTab('rules');
+  const call = log.find(entry => entry[0] === 'displayRules');
+  assert.ok(call, 'the rules are drawn again');
+  assert.equal(call[1] && call[1].keepPage, true, 'the list drawn again keeps its page');
 });

@@ -1849,8 +1849,10 @@ DetectionUI.handleSearch = function(query) {
  * The search or a chip changed: lay the list out again with what they leave, or the whole list when they leave nothing out
  * (both in the Settings order: clearing showed the results unsorted, fingerprints first), and show the chips' state and,
  * when nothing is left, the way back.
+ * @param {{keepPage?: boolean}} [options] - keepPage: the same list drawn again (back on the tab, the same page checked again)
+ *   stays on the page that was shown; a search or a chip starts at page 1
  */
-DetectionUI.applyFilters = function() {
+DetectionUI.applyFilters = function({ keepPage = false } = {}) {
     const itemsToShow = DetectionUI.isFiltering.call(this)
       ? this.getFilteredResults()
       : this.sortDetectionsByCategory(this.currentResults || []);
@@ -1860,7 +1862,7 @@ DetectionUI.applyFilters = function() {
 
     // Update pagination with filtered results
     if (this.paginationManager) {
-      this.paginationManager.setItems(itemsToShow);
+      this.paginationManager.setItems(itemsToShow, { keepPage });
     }
     DetectionUI.syncFilterUi.call(this, itemsToShow.length);
 };

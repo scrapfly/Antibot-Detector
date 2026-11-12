@@ -68,7 +68,9 @@
             button.setAttribute('role', 'tab'); button.setAttribute('aria-controls', `${id}-panel`);
             button.addEventListener('click', () => selectLanguage(item.id));
             button.addEventListener('keydown', event => {
-                const directions = { ArrowRight: 1, ArrowLeft: -1, Home: -index, End: languages.length - 1 - index };
+                // Arabic draws the tabs right to left: there the left arrow goes on to the next tab
+                const step = typeof getComputedStyle === 'function' && getComputedStyle(button).direction === 'rtl' ? -1 : 1;
+                const directions = { ArrowRight: step, ArrowLeft: -step, Home: -index, End: languages.length - 1 - index };
                 if (!Object.prototype.hasOwnProperty.call(directions, event.key)) return;
                 event.preventDefault();
                 const next = (index + directions[event.key] + languages.length) % languages.length;
