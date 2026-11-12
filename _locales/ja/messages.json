@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "ウェブサイトを閲覧すると、検出履歴がここに表示されます。"
   },
+  "historyPausedNote": {
+    "message": "履歴が一時停止中のため、スキャンしたページは記録されません。"
+  },
   "rulesUpdateTitle": {
     "message": "Scrapfly の最新リリースからルールの更新をインストール"
   },

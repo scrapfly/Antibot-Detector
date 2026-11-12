@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Historie detekcí se tu bude zobrazovat při procházení webů."
   },
+  "historyPausedNote": {
+    "message": "Historie je pozastavená, takže naskenované stránky se neukládají."
+  },
   "rulesUpdateTitle": {
     "message": "Nainstalovat aktualizace pravidel z nejnovějšího vydání Scrapfly"
   },

@@ -409,6 +409,10 @@
   "historyEmptyDescription": {
     "message": "Detection history will appear here as you browse websites."
   },
+  "historyPausedNote": {
+    "message": "History is paused, so scanned pages are not recorded.",
+    "description": "History tab: note above the list and in the empty state while History is paused (Settings → History, or the Privacy preset); next to a Resume button"
+  },
   "rulesUpdateTitle": {
     "message": "Install rule updates from the latest Scrapfly release"
   },

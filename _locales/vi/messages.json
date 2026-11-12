@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Lịch sử phát hiện sẽ xuất hiện tại đây khi bạn duyệt các trang web."
   },
+  "historyPausedNote": {
+    "message": "Lịch sử đang tạm dừng nên các trang đã quét không được ghi lại."
+  },
   "rulesUpdateTitle": {
     "message": "Cài đặt bản cập nhật quy tắc từ bản phát hành Scrapfly mới nhất"
   },

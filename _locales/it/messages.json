@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "La cronologia di rilevamento apparirà qui mentre navighi."
   },
+  "historyPausedNote": {
+    "message": "La cronologia è in pausa, quindi le pagine analizzate non vengono registrate."
+  },
   "rulesUpdateTitle": {
     "message": "Installa gli aggiornamenti delle regole dall'ultima release di Scrapfly"
   },

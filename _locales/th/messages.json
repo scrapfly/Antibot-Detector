@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "ประวัติการตรวจจับจะแสดงที่นี่เมื่อคุณท่องเว็บไซต์"
   },
+  "historyPausedNote": {
+    "message": "ประวัติหยุดชั่วคราวอยู่ หน้าที่สแกนจึงไม่ถูกบันทึก"
+  },
   "rulesUpdateTitle": {
     "message": "ติดตั้งการอัปเดตกฎจากรีลีสล่าสุดของ Scrapfly"
   },

@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "浏览网站时,检测历史记录将显示在此处。"
   },
+  "historyPausedNote": {
+    "message": "历史记录已暂停，扫描过的页面不会被记录。"
+  },
   "rulesUpdateTitle": {
     "message": "从 Scrapfly 最新发布版本安装规则更新"
   },

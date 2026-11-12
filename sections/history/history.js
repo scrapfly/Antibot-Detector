@@ -14,6 +14,8 @@ class History {
     this.listenersAttached = false;
     this.paginationManager = null;
     this.historyLimit = 0; // 0 = unlimited (matches settings default)
+    // Settings → History → Record history off (or the Privacy preset): the tab says so, with Resume
+    this.historyPaused = false;
   }
 
   /** The sort key and the filter chips the person left on, from the browser's own storage (a per-person convenience: nothing there is fine). */
@@ -136,6 +138,7 @@ class History {
 
     const historyEmpty = document.querySelector('#historyEmpty');
     if (historyEmpty) historyEmpty.style.display = 'none';
+    this.syncPausedNote();
 
     const itemsToShow = this.getFilteredItems();
     this.syncFilterChips();
@@ -446,7 +449,7 @@ class History {
       const selectLabel = FormatUtils.escapeAttr(FormatUtils.t('historySelectCheckboxFmt', 'Select {0}', rawTitle));
 
       return `
-        <div class="history-item${selected ? ' is-selected' : ''}" data-history-id="${FormatUtils.escapeAttr(item.id)}" role="group" tabindex="0" aria-label="${attrTitle}">
+        <div class="history-item${selected ? ' is-selected' : ''}" data-history-id="${FormatUtils.escapeAttr(item.id)}" role="group" tabindex="0" aria-keyshortcuts="${History.CARD_KEYS}" aria-label="${attrTitle}">
           <div class="history-item-top">
             ${selecting ? `<input type="checkbox" class="history-select-input ui-checkbox" aria-label="${selectLabel}"${selected ? ' checked' : ''}>` : ''}
             <span class="history-favicon-tile">
@@ -847,6 +850,7 @@ class History {
 
     if (historyList) historyList.style.display = 'none';
     if (historyEmpty) historyEmpty.style.display = 'flex';
+    this.syncPausedNote();
     if (historyPagination) historyPagination.style.display = 'none';
     if (historyFilters) historyFilters.hidden = true;
     if (historyNoResults) historyNoResults.hidden = true;
@@ -969,13 +973,82 @@ class History {
           this.showHistoryItemDetails(historyItem);
         }
       });
-      // Keyboard: Enter or Space on the card itself (not on its buttons) does what a click does
+      // Keyboard: Enter or Space on the card itself (not on its buttons) does what a click does; j/k, the arrows, Home and End move
       item.addEventListener('keydown', (e) => {
-        if (e.target !== e.currentTarget || (e.key !== 'Enter' && e.key !== ' ')) return;
-        e.preventDefault();
-        e.currentTarget.click();
+        if (e.target !== e.currentTarget) return;
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          e.currentTarget.click();
+          return;
+        }
+        if (this.moveCardFocus(e)) e.preventDefault();
       });
     });
+  }
+
+  /**
+   * Where a key pressed on a card takes the keyboard: j or ArrowDown the next card, k or ArrowUp the one before, Home and End the
+   * first and last of the page. At the edge of a page the page turns, to its first card going down and its last going up. Pure.
+   * Up and down are the same in a right-to-left language: the list runs top to bottom either way.
+   * @param {string} key - KeyboardEvent.key
+   * @param {number} index - The card's place on the page
+   * @param {number} count - Cards on the page
+   * @param {number} page - The page shown (1-based)
+   * @param {number} pages - How many pages there are
+   * @returns {?{page: number, index: (number|'first'|'last')}} null for a key that moves nothing, or nowhere to go
+   */
+  static cardMove(key, index, count, page, pages) {
+    if (!(count > 0) || index < 0) return null;
+    const next = key === 'j' || key === 'ArrowDown';
+    const prev = key === 'k' || key === 'ArrowUp';
+    if (key === 'Home') return index === 0 ? null : { page, index: 0 };
+    if (key === 'End') return index === count - 1 ? null : { page, index: count - 1 };
+    if (next) {
+      if (index < count - 1) return { page, index: index + 1 };
+      return page < pages ? { page: page + 1, index: 'first' } : null;
+    }
+    if (prev) {
+      if (index > 0) return { page, index: index - 1 };
+      return page > 1 ? { page: page - 1, index: 'last' } : null;
+    }
+    return null;
+  }
+
+  /** The keys cardMove understands, for the cards' aria-keyshortcuts. */
+  static get CARD_KEYS() {
+    return 'j k ArrowDown ArrowUp Home End';
+  }
+
+  /**
+   * A key on a focused card (only the card itself, never while a modifier is held or a dialog is open): move the keyboard to the
+   * card cardMove names, turning the page when it says so. Says nothing new to a screen reader: the card it lands on is read.
+   * @param {KeyboardEvent} e
+   * @returns {boolean} true when the key was used
+   */
+  moveCardFocus(e) {
+    if (!e || e.ctrlKey || e.metaKey || e.altKey || e.shiftKey || e.defaultPrevented) return false;
+    if (document.querySelector('.modal.show, .modal-overlay.show')) return false;
+    const list = document.querySelector('#historyList');
+    const card = e.currentTarget;
+    if (!list || !card) return false;
+    const cards = Array.from(list.querySelectorAll('.history-item'));
+    const pm = this.paginationManager;
+    const page = pm ? pm.currentPage : 1;
+    const pages = pm ? Math.max(pm.getTotalPages(), 1) : 1;
+    const move = History.cardMove(e.key, cards.indexOf(card), cards.length, page, pages);
+    if (!move) return ['j', 'k', 'ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key);
+    let targets = cards;
+    if (move.page !== page && pm) {
+      this.closeMenus();
+      pm.goToPage(move.page);
+      targets = Array.from(list.querySelectorAll('.history-item'));
+    }
+    const at = move.index === 'first' ? 0 : (move.index === 'last' ? targets.length - 1 : move.index);
+    const target = targets[at];
+    if (!target) return true;
+    target.focus({ preventScroll: true });
+    if (typeof target.scrollIntoView === 'function') target.scrollIntoView({ block: 'nearest' });
+    return true;
   }
 
   /**
@@ -2415,6 +2488,7 @@ class History {
         this.setupPagination();
         this.setupEventListeners();
         this.registerSettingsListener();
+        await this.refreshPaused();
         this.initialized = true;
       })().finally(() => { this._initializing = null; });
     }
@@ -2448,6 +2522,74 @@ class History {
     this.syncScanModeMenu();
   }
 
+  /** Settings → History → Record history: whether History is paused now, and the tab's note to match. */
+  async refreshPaused() {
+    try {
+      const settings = await Utils.getSettings();
+      this.historyPaused = !!(settings && settings.history && settings.history.historyEnabled === false);
+    } catch (error) {
+      Logger.warn('UI', '[History] Could not read whether History is paused', error);
+    }
+    this.syncPausedNote();
+  }
+
+  /**
+   * While History is paused nothing new is recorded: a quiet note above the list says so, and the empty state says it instead of
+   * promising entries that will not come. Both have Resume.
+   */
+  syncPausedNote() {
+    const paused = this.historyPaused === true;
+    const note = document.querySelector('#historyPaused');
+    if (note) note.hidden = !(paused && this.historyItems.length > 0);
+    const emptyNote = document.querySelector('#historyEmptyPaused');
+    if (emptyNote) emptyNote.hidden = !paused;
+    const emptyText = document.querySelector('#historyEmptyDescription');
+    if (emptyText) emptyText.hidden = paused;
+  }
+
+  /**
+   * Resume: record history again, through the worker (the only settings writer). The note goes as the setting changes; the keyboard,
+   * which was on the button that goes with it, moves to the search.
+   * @param {HTMLButtonElement} [button]
+   */
+  async resumeHistory(button) {
+    const buttons = Array.from(document.querySelectorAll('#historyTab .history-paused-resume'));
+    for (const b of buttons) b.disabled = true;
+    const hadFocus = !!button && document.activeElement === button;
+    let saved = false;
+    try {
+      saved = await StorageManager.patchSettings({ history: { historyEnabled: true } });
+    } finally {
+      for (const b of buttons) b.disabled = false;
+    }
+    if (!saved) {
+      NotificationHelper.error(FormatUtils.t('settingsWriteFailedToast', 'Could not save settings. Your changes have been kept; try again.'));
+      return false;
+    }
+    this.historyPaused = false;
+    this.syncPausedNote();
+    if (hadFocus) {
+      const search = document.querySelector('#historySearch');
+      if (search) search.focus();
+    }
+    return true;
+  }
+
+  /** Statistics, from History's "…" menu: the same page Settings → Data → Open statistics opens, in a new tab. */
+  openStatistics() {
+    if (typeof SettingsUI !== 'undefined' && typeof SettingsUI.openHistoryStats === 'function') {
+      SettingsUI.openHistoryStats();
+      return;
+    }
+    const url = chrome.runtime.getURL('sections/stats/stats.html');
+    try {
+      chrome.tabs.create({ url });
+    } catch (error) {
+      Logger.error('UI', 'Failed to open history statistics:', error);
+      window.open(url, '_blank', 'noopener');
+    }
+  }
+
   /** The stored History changed (a scan, the watchlist, a Bulk run): redraw once, a moment after the last write. */
   scheduleStoredRefresh() {
     if (!this.initialized) return;
@@ -2471,6 +2613,8 @@ class History {
       // the list follows what is stored, so it is never behind what the worker did
       if (changes[HistoryStore.STORAGE_KEY]) this.scheduleStoredRefresh();
       if (!changes.scrapfly_settings) return;
+      // Paused or resumed here, in Settings, by a preset or in another window: the note follows
+      this.refreshPaused();
       const before = JSON.stringify(this.detectionSort || null);
       const limitBefore = this.historyLimit;
       this.refreshDetectionSort()
@@ -2679,6 +2823,17 @@ class History {
     if (bulkBtn) {
       bulkBtn.addEventListener('click', () => this.openBulkScan());
     }
+
+    // Statistics: the page Settings → Data opens
+    const statsBtn = document.querySelector('#historyTab #openStatsBtn');
+    if (statsBtn) {
+      statsBtn.addEventListener('click', () => this.openStatistics());
+    }
+
+    // History is paused: Resume, in the note above the list and in the empty state
+    document.querySelectorAll('#historyTab .history-paused-resume').forEach((button) => {
+      button.addEventListener('click', () => this.resumeHistory(button));
+    });
 
     // Setup export button
     const exportBtn = document.querySelector('#historyTab #exportHistoryBtn');

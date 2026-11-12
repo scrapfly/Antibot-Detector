@@ -52,7 +52,7 @@
     </select>
   </div>
 
-  <!-- Toolbar "…" menu: whole-history actions (import / export / clear) -->
+  <!-- Toolbar "…" menu: whole-history actions (select, bulk scan, statistics, import / export / clear) -->
   <div id="historyMenu" class="history-menu" role="menu" hidden>
     <button id="selectHistoryBtn" class="history-menu-item" role="menuitem">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -65,6 +65,12 @@
         <path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>
       </svg>
       <span data-i18n="historyBulkScan">Bulk scan</span>
+    </button>
+    <button id="openStatsBtn" class="history-menu-item" role="menuitem">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 3v18h18"/><path d="M8 17v-5"/><path d="M13 17V8"/><path d="M18 17v-8"/>
+      </svg>
+      <span data-i18n="settingsOpenStats">Open statistics</span>
     </button>
     <div class="history-menu-separator" role="separator"></div>
     <button id="importHistoryBtn" class="history-menu-item" role="menuitem" title="Import history" data-i18n-title="historyImportTitle">
@@ -215,6 +221,13 @@
     </div>
   </div>
 
+  <!-- History is paused (Settings → History, or the Privacy preset): a quiet note above the list, with the way back -->
+  <div id="historyPaused" class="history-paused" hidden>
+    <svg class="history-paused-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M10 9v6M14 9v6"/></svg>
+    <span id="historyPausedText" class="history-paused-text" data-i18n="historyPausedNote">History is paused, so scanned pages are not recorded.</span>
+    <button type="button" class="history-paused-resume" aria-describedby="historyPausedText" data-i18n="bulkResume">Resume</button>
+  </div>
+
   <div id="historyList" class="history-list"></div>
 
   <div id="historyPagination" class="pagination">
@@ -250,7 +263,12 @@
       <path d="M13,3A9,9 0 0,0 4,12H1L4.89,15.89L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z" stroke="currentColor" stroke-width="2" fill="none"/>
     </svg>
     <h3 data-i18n="historyEmptyTitle">No history yet</h3>
-    <p data-i18n="historyEmptyDescription">Detection history will appear here as you browse websites.</p>
+    <p id="historyEmptyDescription" data-i18n="historyEmptyDescription">Detection history will appear here as you browse websites.</p>
+    <!-- Paused: no page will appear here, so the empty state says so instead, with the way back -->
+    <div id="historyEmptyPaused" class="history-empty-paused" hidden>
+      <p id="historyEmptyPausedText" data-i18n="historyPausedNote">History is paused, so scanned pages are not recorded.</p>
+      <button type="button" class="history-paused-resume" aria-describedby="historyEmptyPausedText" data-i18n="bulkResume">Resume</button>
+    </div>
   </div>
 
   <!-- History Detail Modal -->

@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Upptäcktshistoriken visas här medan du surfar på webbplatser."
   },
+  "historyPausedNote": {
+    "message": "Historiken är pausad, så skannade sidor sparas inte."
+  },
   "rulesUpdateTitle": {
     "message": "Installera regeluppdateringar från den senaste Scrapfly-utgåvan"
   },

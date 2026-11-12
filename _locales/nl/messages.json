@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Detectiegeschiedenis verschijnt hier terwijl je websites bezoekt."
   },
+  "historyPausedNote": {
+    "message": "De geschiedenis is gepauzeerd, dus gescande pagina's worden niet vastgelegd."
+  },
   "rulesUpdateTitle": {
     "message": "Regelupdates installeren uit de nieuwste Scrapfly-release"
   },

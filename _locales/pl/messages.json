@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Historia wykryć pojawi się tutaj podczas przeglądania stron internetowych."
   },
+  "historyPausedNote": {
+    "message": "Historia jest wstrzymana, więc zeskanowane strony nie są zapisywane."
+  },
   "rulesUpdateTitle": {
     "message": "Zainstaluj aktualizacje reguł z najnowszego wydania Scrapfly"
   },

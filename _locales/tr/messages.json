@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Web sitelerinde gezindikçe tespit geçmişi burada görünecek."
   },
+  "historyPausedNote": {
+    "message": "Geçmiş duraklatıldı, bu yüzden taranan sayfalar kaydedilmiyor."
+  },
   "rulesUpdateTitle": {
     "message": "En son Scrapfly sürümündeki kural güncellemelerini yükle"
   },

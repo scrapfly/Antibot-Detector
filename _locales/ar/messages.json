@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "سيظهر سجل الكشف هنا أثناء تصفحك للمواقع."
   },
+  "historyPausedNote": {
+    "message": "السجل متوقف مؤقتًا، لذا لا تُسجَّل الصفحات المفحوصة."
+  },
   "rulesUpdateTitle": {
     "message": "تثبيت تحديثات القواعد من أحدث إصدار من Scrapfly"
   },

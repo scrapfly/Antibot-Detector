@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "O histórico de detecção aparecerá aqui conforme você navegar."
   },
+  "historyPausedNote": {
+    "message": "O Histórico está pausado: as páginas analisadas não são registradas."
+  },
   "rulesUpdateTitle": {
     "message": "Instalar atualizações de regras da versão mais recente da Scrapfly"
   },

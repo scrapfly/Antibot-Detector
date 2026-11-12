@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "जैसे ही आप वेबसाइटों को ब्राउज़ करेंगे, जांच इतिहास यहां दिखाई देगा।"
   },
+  "historyPausedNote": {
+    "message": "इतिहास रुका हुआ है, इसलिए स्कैन किए गए पेज दर्ज नहीं होते।"
+  },
   "rulesUpdateTitle": {
     "message": "Scrapfly की नवीनतम रिलीज़ से नियम अपडेट इंस्टॉल करें"
   },
