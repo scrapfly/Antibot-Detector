@@ -9,6 +9,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
+- Rules editor: content rules can be limited to block and challenge pages ("Only block and challenge pages").
 - Detection: a "Strong (≥80%)" toggle inside the search box shows only detections with strong evidence.
 - Detection details: explains what the difficulty level means and links the vendor's website and its detection guide in your language.
 - Detection details: Open tools goes straight to the Advanced tools for that protection.
@@ -21,6 +22,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Fixed
 
+- F5 BIG-IP, Sucuri and Radware block pages are recognised from the page's own text, not only from cookies and headers.
 - Counts read correctly for one and for many in every language, including the Russian, Polish, Czech, Ukrainian and Arabic forms.
 - Labels and values are joined the way each language writes them, such as the full-width colon in Chinese and Japanese.
 - Advanced → Captures sizes use your language's decimal separator.
