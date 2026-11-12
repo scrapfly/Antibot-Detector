@@ -6224,6 +6224,15 @@
   "historyScanAgain": {
     "message": "立即重新掃描"
   },
+  "detectionFromPageFmt": {
+    "message": "來自 {0} 的掃描，{1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "自 {0} 以來的變更：{1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "自 {0} 以來無變更"
+  },
   "rulesDuplicate": {
     "message": "建立副本"
   },

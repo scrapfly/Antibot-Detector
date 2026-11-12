@@ -6224,6 +6224,15 @@
   "historyScanAgain": {
     "message": "Quét lại ngay"
   },
+  "detectionFromPageFmt": {
+    "message": "Từ lần quét {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Đã thay đổi từ {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Không thay đổi từ {0}"
+  },
   "rulesDuplicate": {
     "message": "Nhân bản"
   },

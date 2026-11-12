@@ -2134,3 +2134,77 @@
   border-color: var(--warning-border, rgba(251, 191, 36, 0.34));
   color: var(--warning-light);
 }
+
+/* Quiet lines of the summary card (the results came from another page of the site; what changed since the earlier scan) and
+   under the all-clear card (when it was checked): secondary text, small, link-style buttons; they wrap in long languages */
+.detection-summary-note {
+  margin: 0;
+  padding: 5px 12px 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-bottom: none;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+}
+
+.detection-summary-note[hidden],
+.state-card-checked[hidden],
+.detection-note-action[hidden],
+.detection-note-sep[hidden] {
+  display: none;
+}
+
+.state-card-checked {
+  margin: 2px 0 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+  line-height: 16px;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.detection-note-text {
+  unicode-bidi: plaintext;
+}
+
+.detection-note-action {
+  white-space: nowrap;
+}
+
+.detection-note-sep {
+  margin-inline: 2px;
+  color: var(--text-muted);
+}
+
+.detection-link-btn {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: var(--text-muted);
+  text-underline-offset: 2px;
+  cursor: pointer;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+
+.detection-link-btn:hover {
+  color: var(--text-primary);
+  text-decoration-color: currentColor;
+}
+
+.detection-link-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.detection-link-btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}

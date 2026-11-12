@@ -6224,6 +6224,15 @@
   "historyScanAgain": {
     "message": "अभी फिर से स्कैन करें"
   },
+  "detectionFromPageFmt": {
+    "message": "{0} के स्कैन से, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "{0} से बदलाव: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "{0} से कोई बदलाव नहीं"
+  },
   "rulesDuplicate": {
     "message": "डुप्लिकेट करें"
   },

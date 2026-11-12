@@ -6224,6 +6224,15 @@
   "historyScanAgain": {
     "message": "Сканувати знову зараз"
   },
+  "detectionFromPageFmt": {
+    "message": "За скануванням {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Зміни з {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Без змін з {0}"
+  },
   "rulesDuplicate": {
     "message": "Дублювати"
   },

@@ -6224,6 +6224,15 @@
   "historyScanAgain": {
     "message": "สแกนอีกครั้งตอนนี้"
   },
+  "detectionFromPageFmt": {
+    "message": "จากการสแกน {0} เมื่อ {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "เปลี่ยนแปลงตั้งแต่ {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "ไม่มีการเปลี่ยนแปลงตั้งแต่ {0}"
+  },
   "rulesDuplicate": {
     "message": "ทำสำเนา"
   },

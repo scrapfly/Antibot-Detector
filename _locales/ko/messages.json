@@ -6224,6 +6224,15 @@
   "historyScanAgain": {
     "message": "지금 다시 스캔"
   },
+  "detectionFromPageFmt": {
+    "message": "{0} 스캔 결과, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "{0} 이후 변경: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "{0} 이후 변경 없음"
+  },
   "rulesDuplicate": {
     "message": "복제"
   },

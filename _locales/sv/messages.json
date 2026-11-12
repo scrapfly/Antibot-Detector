@@ -6224,6 +6224,15 @@
   "historyScanAgain": {
     "message": "Skanna igen nu"
   },
+  "detectionFromPageFmt": {
+    "message": "Från en skanning av {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Ändrad sedan {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Ingen ändring sedan {0}"
+  },
   "rulesDuplicate": {
     "message": "Duplicera"
   },
