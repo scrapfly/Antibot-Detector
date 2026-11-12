@@ -304,6 +304,13 @@ test('Backups to keep has its label and hint in every language, and the page sho
   // It says what is deleted and, as important, what is not
   assert.match(english.settingsHistoryBackupKeepDesc.message, /Only backup files saved by this extension are removed\./);
   assert.match(english.settingsHistoryBackupKeepDesc.message, /Keep all and nothing is deleted\./);
+  // Only backups recorded since 3.1.7 are known, so the older ones stay: every language says so, in its own words
+  assert.match(english.settingsHistoryBackupKeepDesc.message, /Backups made before version 3\.1\.7 stay until you delete them\./);
+  for (const locale of fs.readdirSync(path.join(root, '_locales')).filter(code => code !== 'en')) {
+    const text = messagesOf(locale).settingsHistoryBackupKeepDesc.message;
+    assert.ok(text.includes('3.1.7'), `${locale}: names version 3.1.7`);
+    assert.notEqual(text, english.settingsHistoryBackupKeepDesc.message, `${locale}: translated`);
+  }
   // The first option is the message "All" of the statistics range: it exists in every language
   for (const locale of fs.readdirSync(path.join(root, '_locales'))) assert.ok(messagesOf(locale).statsRangeAll.message.trim(), `${locale}: All`);
 });

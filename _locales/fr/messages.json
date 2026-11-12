@@ -5439,7 +5439,7 @@
     "message": "Sauvegardes à conserver"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Après chaque sauvegarde, les plus anciennes au-delà de ce nombre sont supprimées de votre dossier Téléchargements (une sauvegarde enregistrée en plusieurs parties compte pour une). Seuls les fichiers de sauvegarde enregistrés par cette extension sont supprimés. Si vous les conservez toutes, rien n’est supprimé."
+    "message": "Après chaque sauvegarde, les plus anciennes au-delà de ce nombre sont supprimées de votre dossier Téléchargements (une sauvegarde enregistrée en plusieurs parties compte pour une). Seuls les fichiers de sauvegarde enregistrés par cette extension sont supprimés. Si vous les conservez toutes, rien n’est supprimé. Les sauvegardes créées avant la version 3.1.7 restent jusqu’à ce que vous les supprimiez."
   },
   "settingsHistoryBackupNow": {
     "message": "Sauvegarder maintenant"

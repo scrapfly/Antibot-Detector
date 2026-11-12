@@ -5439,7 +5439,7 @@
     "message": "Số bản sao lưu cần giữ"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Sau mỗi lần sao lưu, các bản sao lưu cũ vượt quá số này sẽ bị xóa khỏi thư mục Tải xuống của bạn (một bản sao lưu được lưu thành nhiều phần chỉ tính là một). Chỉ các tệp sao lưu do tiện ích này lưu mới bị xóa. Nếu giữ lại tất cả, sẽ không có gì bị xóa."
+    "message": "Sau mỗi lần sao lưu, các bản sao lưu cũ vượt quá số này sẽ bị xóa khỏi thư mục Tải xuống của bạn (một bản sao lưu được lưu thành nhiều phần chỉ tính là một). Chỉ các tệp sao lưu do tiện ích này lưu mới bị xóa. Nếu giữ lại tất cả, sẽ không có gì bị xóa. Các bản sao lưu tạo trước phiên bản 3.1.7 sẽ được giữ lại cho đến khi bạn tự xóa."
   },
   "settingsHistoryBackupNow": {
     "message": "Sao lưu ngay"

@@ -5439,7 +5439,7 @@
     "message": "Säkerhetskopior att behålla"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Efter varje säkerhetskopia tas äldre säkerhetskopior utöver detta antal bort från mappen Nedladdningar (en säkerhetskopia som sparats i flera delar räknas som en). Bara säkerhetskopiefiler som det här tillägget har sparat tas bort. Behåller du alla tas ingenting bort."
+    "message": "Efter varje säkerhetskopia tas äldre säkerhetskopior utöver detta antal bort från mappen Nedladdningar (en säkerhetskopia som sparats i flera delar räknas som en). Bara säkerhetskopiefiler som det här tillägget har sparat tas bort. Behåller du alla tas ingenting bort. Säkerhetskopior som gjordes före version 3.1.7 finns kvar tills du själv tar bort dem."
   },
   "settingsHistoryBackupNow": {
     "message": "Säkerhetskopiera nu"

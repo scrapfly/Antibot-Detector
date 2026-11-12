@@ -5439,7 +5439,7 @@
     "message": "Jumlah cadangan yang disimpan"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Setelah setiap pencadangan, cadangan lama di atas jumlah ini dihapus dari folder Unduhan Anda (cadangan yang disimpan dalam beberapa bagian dihitung satu). Hanya file cadangan yang disimpan oleh ekstensi ini yang dihapus. Jika semuanya disimpan, tidak ada yang dihapus."
+    "message": "Setelah setiap pencadangan, cadangan lama di atas jumlah ini dihapus dari folder Unduhan Anda (cadangan yang disimpan dalam beberapa bagian dihitung satu). Hanya file cadangan yang disimpan oleh ekstensi ini yang dihapus. Jika semuanya disimpan, tidak ada yang dihapus. Cadangan yang dibuat sebelum versi 3.1.7 tetap ada sampai Anda menghapusnya sendiri."
   },
   "settingsHistoryBackupNow": {
     "message": "Cadangkan sekarang"
