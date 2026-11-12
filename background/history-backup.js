@@ -388,8 +388,8 @@ const HistoryBackup = {
                     await chrome.downloads.removeFile(id);
                     outcome = 'removed';
                 } catch (error) {
-                    // Deleted already (or not in the list any more) is done; any other reason may pass
-                    if (!/already deleted|invalid download id/i.test(String((error && error.message) || error))) return 'retry';
+                    // Deleted already (or not in the list any more: Chrome says "Invalid downloadId") is done; any other reason may pass
+                    if (!/already deleted|invalid download ?id/i.test(String((error && error.message) || error))) return 'retry';
                 }
             }
             await chrome.downloads.erase({ id });

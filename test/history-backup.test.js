@@ -1037,3 +1037,29 @@ test('Backups to keep: a damaged description of a file is left out and the run\'
     assert.ok(w.list.has(902) && w.disk.has(second));
   } finally { cleanup(); }
 });
+
+test('Backups to keep: a download the browser forgets between the look and the delete ("Invalid downloadId") is done with, not tried again at every backup', async () => {
+  for (const spelling of ['Invalid downloadId', 'Invalid download id']) {
+    const w = world({ settings: { historyBackupKeep: 3 } });
+    try {
+      await backUp(3);
+      const [first] = w.made;
+      if (spelling === 'Invalid downloadId') {
+        // What Chrome says: the person clears the downloads list just as the oldest backup is about to be deleted
+        const search = chrome.downloads.search;
+        chrome.downloads.search = async (query) => {
+          const found = await search(query);
+          if (query.id === first) w.list.delete(first);
+          return found;
+        };
+      } else {
+        w.fail.remove = spelling;                              // the same, as some builds spell it
+      }
+      const [fourth] = await backUp(1, { from: 3 });
+      assert.strictEqual(fourth.ok, true, spelling);
+      assert.deepStrictEqual(callsTo(w, 'removeFile'), [`removeFile:${first}`], `${spelling}: it tried`);
+      assert.deepStrictEqual(recordOf(w).map(run => run.ids), [[w.made[1]], [w.made[2]], [w.made[3]]], `${spelling}: the forgotten id left the record`);
+      assert.strictEqual(onDisk(w).length, 4, `${spelling}: and its file stays where it is`);
+    } finally { cleanup(); }
+  }
+});
