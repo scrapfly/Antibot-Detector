@@ -1444,6 +1444,18 @@
   "settingsBadgeColorHigh": {
     "message": "高"
   },
+  "settingsBadgeCountTitle": {
+    "message": "工具栏数字"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "工具栏图标上的数字统计哪些内容。大多数网站都有指纹识别；弹出窗口和历史记录仍会列出全部内容。"
+  },
+  "settingsBadgeCountAll": {
+    "message": "全部检测结果"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "仅反机器人和验证码"
+  },
   "settingsEnableJsApi": {
     "message": "启用 JS API 事件"
   },
@@ -3818,6 +3830,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "因 {0} 项防护同时存在而提高"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "未发现置信度 50% 及以上的反机器人或验证码"
   },
   "tipLastUpdated": {
     "message": "更新于"

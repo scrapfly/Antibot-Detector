@@ -603,33 +603,36 @@ class FormatUtils {
   }
 
   /**
-   * Tip for a "Difficulty" tile: the level and why. Mirrors
-   * DetectionUtils.getDifficultyLevel: high-tier providers, the strongest
-   * rule-set level, and the count/confidence escalation.
+   * Tip for a "Difficulty" tile: the level and why, from DetectionUtils.difficultyOf (the rule that sets the level): the
+   * protection that set it, or how many raised it together, and the anti-bot and CAPTCHA protections it weighed (found at
+   * 50% or more), hardest first with their own levels. A page where none counts says so.
    */
   static difficultyTip(detections, difficulty, title) {
     const list = (Array.isArray(detections) ? detections : []).filter(d => d && typeof d === 'object');
     const levelName = level => FormatUtils.t(`difficulty${level}`, level);
     const tone = { High: 'red', Medium: 'amber', Low: 'green' };
     const rank = { Low: 1, Medium: 2, High: 3 };
-    const reasons = [];
-    const normalize = value => (typeof DetectionUtils !== 'undefined' && DetectionUtils.normalizeDifficulty)
-      ? DetectionUtils.normalizeDifficulty(value) : (['Low', 'Medium', 'High'].includes(value) ? value : null);
-    // Hardest detections first: each one's own level
-    const ranked = list.map(d => ({
-      name: FormatUtils.detectionName(d) || FormatUtils.t('timeUnknown', 'Unknown'),
+    const utils = typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.difficultyOf === 'function' ? DetectionUtils : null;
+    const why = utils ? utils.difficultyOf(list) : null;
+    const normalize = value => (utils ? utils.normalizeDifficulty(value) : (['Low', 'Medium', 'High'].includes(value) ? value : null));
+    const nameOf = d => FormatUtils.detectionName(d) || FormatUtils.t('timeUnknown', 'Unknown');
+    // The detections the level is worked out from, hardest first: each one's own level
+    const ranked = (why ? why.counted : list).map(d => ({
+      name: nameOf(d),
       level: normalize(d.difficulty || d.detector?.difficulty)
-        || ((typeof DetectionUtils !== 'undefined' && DetectionUtils.defaultDifficultyForCategory)
-          ? DetectionUtils.defaultDifficultyForCategory(d.category || d.detector?.category) : 'Medium'),
+        || (utils ? utils.defaultDifficultyForCategory(d.category || d.detector?.category) : 'Medium'),
       category: FormatUtils.categoryKey(d)
     })).sort((a, b) => (rank[b.level] || 0) - (rank[a.level] || 0) || a.name.localeCompare(b.name));
     const rows = ranked.slice(0, 4).map(r => ({ label: r.name, dot: `cat-${r.category}`, value: levelName(r.level), tone: tone[r.level] }));
     if (ranked.length > 4) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', ranked.length - 4) });
-    const highTier = ranked.find(r => /shape ?security|hcaptcha|arkose|funcaptcha/i.test(r.name));
-    if (difficulty === 'High' && highTier) reasons.push(FormatUtils.t('tipDifficultyHardestFmt', 'Set by {0}', highTier.name));
-    else if (ranked.length && ranked[0].level === difficulty) reasons.push(FormatUtils.t('tipDifficultyHardestFmt', 'Set by {0}', ranked[0].name));
-    else if (difficulty !== 'Low' && list.length > 2) reasons.push(FormatUtils.t('tipDifficultyManyFmt', 'Raised by {0} protections together', list.length));
-    const detail = reasons[0] || FormatUtils.t('detectionTipDifficulty', 'Estimated difficulty of bypassing the detected protections.');
+    // Why, when the tip explains the level the rule gives (a caller showing another level gets the plain explanation)
+    let reason = null;
+    if (why && why.difficulty === difficulty) {
+      if (why.source) reason = FormatUtils.t('tipDifficultyHardestFmt', 'Set by {0}', nameOf(why.source));
+      else if (why.reason === 'several') reason = FormatUtils.t('tipDifficultyManyFmt', 'Raised by {0} protections together', why.counted.length);
+      else if (why.reason === 'none') reason = FormatUtils.t('tipDifficultyNoneCounted', 'No anti-bot or CAPTCHA found at 50% or more');
+    }
+    const detail = reason || FormatUtils.t('detectionTipDifficulty', 'Estimated difficulty of bypassing the detected protections.');
     // "Difficulty: High" is the language's own text, not a label and an English colon: French spaces it, Chinese has its own
     return { title: title || FormatUtils.t('clipboardDifficultyFmt', 'Difficulty: {0}', levelName(difficulty)), detail, rows };
   }

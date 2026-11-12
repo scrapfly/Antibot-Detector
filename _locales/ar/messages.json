@@ -1444,6 +1444,18 @@
   "settingsBadgeColorHigh": {
     "message": "مرتفع"
   },
+  "settingsBadgeCountTitle": {
+    "message": "رقم شريط الأدوات"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "ما يعدّه الرقم الظاهر على أيقونة شريط الأدوات. تعمل البصمة على معظم المواقع، وتبقى النافذة المنبثقة والسجل تعرضان كل شيء."
+  },
+  "settingsBadgeCountAll": {
+    "message": "كل الاكتشافات"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "مكافحة الروبوتات وCAPTCHA فقط"
+  },
   "settingsEnableJsApi": {
     "message": "تفعيل أحداث JS API"
   },
@@ -3818,6 +3830,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "رفعتها {0} أنظمة حماية معًا"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "لم يُعثر على مكافحة روبوتات أو CAPTCHA بنسبة 50% أو أكثر"
   },
   "tipLastUpdated": {
     "message": "حُدّث"

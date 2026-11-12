@@ -128,11 +128,11 @@ function pageLoadWorld({ stored = null } = {}) {
     chrome, WorkerMessages, AbortController,
     setTimeout: () => 1, clearTimeout() {},
     setPausedIcon() {}, startBadgeSpinner() {}, setBadgeTextColor() {},
-    DetectionUtils: { getBadgeColor: () => '#000000' }
+    DetectionUtils: { getBadgeColor: () => '#000000', badgeCount: require('../utils/detection-utils.js').badgeCount, readBadgeCountMode: require('../utils/detection-utils.js').readBadgeCountMode }
   }, { files: [...ENGINE_FILES, 'modules/core/storage-manager.js', 'modules/core/badge-constants.js', 'background/uncaptured-pages.js'] });
   Engine.getStoredDetection = async () => stored;
   const dependencies = {
-    chrome, CategoryManager: { getBadgeColors: async () => ({}) }, HistoryRecorder: {}, categoryManager: {}, recentDetectionRequests: new Map(),
+    chrome, CategoryManager: { getBadgeColors: async () => ({}), getBadgeCountMode: async () => 'all' }, HistoryRecorder: {}, categoryManager: {}, recentDetectionRequests: new Map(),
     Utils: { isUrlBlacklisted: async () => false, getHistorySettings: async () => ({}), shouldSkipDetection: () => false },
     Settings: { sendWebhookIfEnabled: (page, results, options) => { webhooks.push(options.trigger); return Promise.resolve(); } }
   };
@@ -182,8 +182,8 @@ function finalizeWorld() {
     UrlUtils: { normalizeFaviconForStorage: () => null, getHostnameFromUrl: () => 'shop.example' },
     Utils: { getHistorySettings: async () => ({}), isUrlBlacklisted: async () => false },
     HistoryRecorder: { shouldSaveToHistory: async () => true, saveDetectionToHistory: async () => { calls.history++; } },
-    CategoryManager: { getBadgeColors: async () => ({}) },
-    DetectionUtils: { getBadgeColor: () => '#112233' },
+    CategoryManager: { getBadgeColors: async () => ({}), getBadgeCountMode: async () => 'all' },
+    DetectionUtils: { getBadgeColor: () => '#112233', badgeCount: require('../utils/detection-utils.js').badgeCount, readBadgeCountMode: require('../utils/detection-utils.js').readBadgeCountMode },
     Settings: { sendWebhookIfEnabled: async () => { calls.webhook++; } },
     sendProgressUpdate: () => {},
     isExtensionEnabled: async () => true,

@@ -1444,6 +1444,18 @@
   "settingsBadgeColorHigh": {
     "message": "Высокая"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Число на панели инструментов"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Что считает число на значке в панели инструментов. Фингерпринтинг работает на большинстве сайтов; во всплывающем окне и в истории по-прежнему видно всё."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Все обнаружения"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Только анти-бот и CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Включить события JS API"
   },
@@ -3818,6 +3830,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Повышена из-за {0} защит вместе"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Анти-бот или CAPTCHA с уверенностью от 50% не найдены"
   },
   "tipLastUpdated": {
     "message": "Обновлено"

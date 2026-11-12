@@ -174,7 +174,7 @@ function pageLoadHarness() {
     WorkerMessages: require('../modules/core/worker-messages.js'),
     Promise, Date, Map, Set, PatternCache: class {}, Constants: { DETECTION_SKIP_THRESHOLD: 2000 },
     Logger: new Proxy({}, { get: () => () => {} }),
-    DetectionUtils: { getBadgeColor: () => '#123456' },
+    DetectionUtils: { getBadgeColor: () => '#123456', badgeCount: require('../utils/detection-utils.js').badgeCount, readBadgeCountMode: require('../utils/detection-utils.js').readBadgeCountMode },
     UrlUtils: { getHostnameFromUrl: () => 'example.test', normalizeFaviconForStorage: value => value },
     setPausedIcon: () => {}, setBadgeTextColor: () => {},
     startBadgeSpinner: () => effects.push({ kind: 'spinner' }),
@@ -208,7 +208,7 @@ function pageLoadHarness() {
   context.Engine.getStoredDetection = async () => ({ detectionCount: 1, detectionResults: [{ detector: { name: 'Demo' } }] });
   const dependencies = {
     chrome: context.chrome, categoryManager: {}, recentDetectionRequests: new Map(),
-    CategoryManager: { getBadgeColors: async () => ({}) },
+    CategoryManager: { getBadgeColors: async () => ({}), getBadgeCountMode: async () => 'all' },
     Utils: { isUrlBlacklisted: async () => false, getHistorySettings: async () => ({ historyBypassCache: true }), shouldSkipDetection: () => false },
     HistoryRecorder: { shouldSaveToHistory: async () => true, saveDetectionToHistory: async () => effects.push({ kind: 'history' }) },
     isCurrentDocument: async () => state.current

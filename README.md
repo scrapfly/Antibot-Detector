@@ -94,7 +94,7 @@ When a page loads, the extension gathers what the page reveals about itself and 
 | JavaScript hooks | Calls to browser APIs commonly used for fingerprinting | `HTMLCanvasElement.prototype.toDataURL` |
 | Payload | Bodies of POST, PUT and PATCH requests, optionally filtered by URL and method, and the responses of the URLs a rule names | `sensor_data` (Akamai), `"proofofwork":{"required":true` (OpenAI Sentinel) |
 
-**Confidence.** Each rule has its own confidence and detectors define combinations of rules that score higher together. A script that only mentions a vendor's name scores 5–10%; a signal only that vendor's product produces (its own script host, its own cookie, its challenge endpoint) is proof and scores 100% on its own, and so does a vendor's complete integration (its script together with its cookie, widget frame or challenge request). Shared or generic signals stay at 15–90%. The score shown for each detector is its strongest single rule or combination. The page also gets a difficulty rating (Low, Medium or High), which sets the color of the toolbar badge.
+**Confidence.** Each rule has its own confidence and detectors define combinations of rules that score higher together. A script that only mentions a vendor's name scores 5–10%; a signal only that vendor's product produces (its own script host, its own cookie, its challenge endpoint) is proof and scores 100% on its own, and so does a vendor's complete integration (its script together with its cookie, widget frame or challenge request). Shared or generic signals stay at 15–90%. The score shown for each detector is its strongest single rule or combination. The page also gets a difficulty rating (Low, Medium or High), which sets the color of the toolbar badge. Only the anti-bot and CAPTCHA protections found at 50% or more set it: fingerprinting and a script that only mentions a vendor do not.
 
 **Fingerprinting.** The API hooks are in place before the page's own scripts run, and they also cover same-origin iframes, where fingerprinting code often hides. By default they watch for at least 4 seconds, then until the page has been quiet for 2 seconds, and for 8 seconds at most.
 
@@ -177,7 +177,7 @@ Results and captures are kept for 30 minutes in **Advanced → History**, where 
 
 ### Settings
 
-- **General:** interface language (22 languages, following your browser by default), theme (Dark, Light or System), notifications, debug mode, scheduled detector updates, and the colors of the badge, categories and tags.
+- **General:** interface language (22 languages, following your browser by default), theme (Dark, Light or System), notifications, debug mode, scheduled detector updates, what the toolbar number counts (every detection, or anti-bot and CAPTCHA only), and the colors of the badge, categories and tags.
 - **Detection:** cache duration and scope, the order of categories in the results, the Advanced tools confidence limit, which sites are scanned (every site except the ones you skip, or only the sites you choose), JS API events, webhooks and share links.
 - **History:** what to record (pause History, skip private windows, ignored sites, minimum confidence, skip fingerprint-only pages), how many entries to keep (up to 10,000; 0 keeps the newest 1,000), deleting entries after a number of days or when the browser closes, skipping or updating repeated scans, notifications when a page's protections change, the default export format, a storage meter with its warning, and an automatic backup to your Downloads folder.
 

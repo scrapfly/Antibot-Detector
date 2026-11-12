@@ -1444,6 +1444,18 @@
   "settingsBadgeColorHigh": {
     "message": "Alto"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Número de la barra de herramientas"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Qué cuenta el número del icono de la barra de herramientas. El fingerprinting está en casi todos los sitios; el popup y el Historial siguen mostrándolo todo."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Todas las detecciones"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Solo anti-bot y CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Activar eventos JS API"
   },
@@ -3818,6 +3830,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Elevada por {0} protecciones juntas"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Ningún anti-bot ni CAPTCHA encontrado con un 50 % o más"
   },
   "tipLastUpdated": {
     "message": "Actualizado"

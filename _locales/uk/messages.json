@@ -1444,6 +1444,18 @@
   "settingsBadgeColorHigh": {
     "message": "Висока"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Число на панелі інструментів"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Що рахує число на значку на панелі інструментів. Фінгерпринтинг працює на більшості сайтів; у спливному вікні та в історії й далі видно все."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Усі виявлення"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Лише антибот і CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Увімкнути події JS API"
   },
@@ -3818,6 +3830,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Підвищено спільною дією систем захисту: {0}"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Антибот або CAPTCHA з упевненістю від 50% не знайдено"
   },
   "tipLastUpdated": {
     "message": "Оновлено"

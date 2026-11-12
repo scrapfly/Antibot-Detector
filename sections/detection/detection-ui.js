@@ -591,15 +591,14 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     try {
       const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
       if (tabs && tabs[0]) {
-        const detectionCount = detections.length;
-
-        // Get badge colors from CategoryManager
+        // Get badge colors from CategoryManager, and what the number counts (Settings → General → Toolbar number)
         const badgeColors = await CategoryManager.getBadgeColors();
+        const detectionCount = DetectionUtils.badgeCount(detections, await DetectionUtils.readBadgeCountMode(CategoryManager));
         if (!this.isShowingResults || !this.isExtensionEnabled || this.blacklistedDomain) return;
 
-        // Badge color should match the UI difficulty (not raw detection count)
-        const count = detectionCount.toString();
-        const color = DetectionUtils.getBadgeColor(detections, badgeColors);
+        // Badge color should match the UI difficulty (not raw detection count); nothing counted is the clean badge
+        const count = detectionCount > 0 ? detectionCount.toString() : BADGE.TEXT.CLEAN;
+        const color = detectionCount > 0 ? DetectionUtils.getBadgeColor(detections, badgeColors) : BADGE.COLORS.CLEAN;
 
         // Update badge text and color
         await setBadgeTextColor(tabs[0].id, false, color);
@@ -627,8 +626,8 @@ DetectionUI.updateStats = function(detections) {
       ? Math.round(detections.reduce((sum, d) => sum + (d.confidence || 0), 0) / totalDetections)
       : 0;
 
-    // Determine difficulty level based on detections mix + confidence
-    const { difficulty } = this.getDifficultyInfo(detections, avgConfidence);
+    // The page difficulty: the anti-bot and CAPTCHA protections found at 50% or more (DetectionUtils.difficultyOf)
+    const { difficulty } = this.getDifficultyInfo(detections);
 
     // Update UI elements
     // Difficulty is computed as Low/Medium/High; show it in the UI language
@@ -1799,8 +1798,8 @@ DetectionUI.clearBadgeForEmptyState = async function() {
     }
 };
 
-DetectionUI.getDifficultyInfo = function(detections = [], avgConfidence = 0) {
-    return DetectionUtils.getDifficultyInfo(detections, avgConfidence);
+DetectionUI.getDifficultyInfo = function(detections = []) {
+    return DetectionUtils.getDifficultyInfo(detections);
 };
 
 if (typeof self !== 'undefined') {

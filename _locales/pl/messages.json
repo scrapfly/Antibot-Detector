@@ -1444,6 +1444,18 @@
   "settingsBadgeColorHigh": {
     "message": "Wysoka"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Liczba na pasku narzędzi"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Co liczy liczba na ikonie na pasku narzędzi. Fingerprinting działa na większości stron; okienko i Historia nadal pokazują wszystko."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Każde wykrycie"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Tylko anti-bot i CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Włącz zdarzenia JS API"
   },
@@ -3818,6 +3830,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Podniesiona przez wspólne działanie ochron: {0}"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Nie znaleziono anti-bota ani CAPTCHA z pewnością 50% lub więcej"
   },
   "tipLastUpdated": {
     "message": "Zaktualizowano"

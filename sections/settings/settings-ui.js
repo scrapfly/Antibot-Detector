@@ -321,6 +321,9 @@ SettingsUI.updateSettingsUI = function() {
       debugModeToggle.checked = this.settings.debugMode ?? false;
     }
 
+    const badgeCountSelect = document.querySelector('#badgeCount');
+    if (badgeCountSelect) badgeCountSelect.value = DetectionUtils.badgeCountMode(this.settings.badgeCount);
+
     const logCollectorSection = document.querySelector('#logCollectorSection');
     if (logCollectorSection) {
       logCollectorSection.style.display = (this.settings.debugMode ?? false) ? 'block' : 'none';
@@ -634,6 +637,9 @@ SettingsUI.getSettingsFromUI = function() {
     // An emptied field (NaN) keeps the saved value instead of saving NaN
     const maxLogs = Number.isFinite(rawMaxLogs) ? rawMaxLogs : (parseInt(this.settings.logCollectorMaxLogs, 10) || 5000);
     settings.logCollectorMaxLogs = Math.min(Math.max(maxLogs, 100), 5000);
+
+    // What the toolbar number counts (an unknown saved value is shown and kept as every detection)
+    settings.badgeCount = DetectionUtils.badgeCountMode(document.querySelector('#badgeCount')?.value ?? this.settings.badgeCount);
 
     // Badge, category and tag colours
     for (const { group, inputs, defaults } of SettingsUI.colorGroups()) {

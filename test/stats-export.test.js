@@ -108,8 +108,9 @@ test('production DetectionUtils custom difficulty matches dashboard in entries, 
   for (const file of ['../modules/core/categories.js', '../utils/detection-utils.js', '../sections/stats/history-stats.js', '../sections/stats/stats-export.js']) {
     vm.runInContext(fs.readFileSync(require.resolve(file), 'utf8'), context);
   }
-  const input = [visit({ hostname: 'high.example', detections: [{ detector: { name: 'Custom fingerprint', category: 'fingerprint',
-    difficulty: 'High', rules: { token: 'SECRET' } }, confidence: 40, matches: 'SECRET' }] }),
+  // The rule's own High difficulty counts once the anti-bot is present (50% or more); the exported rows, which drop it, would say Low
+  const input = [visit({ hostname: 'high.example', detections: [{ detector: { name: 'Custom anti-bot', category: 'antibot',
+    difficulty: 'High', rules: { token: 'SECRET' } }, confidence: 60, matches: 'SECRET' }] }),
     visit({ hostname: 'low.example', detections: [{ detector: { name: 'Custom captcha', category: 'captcha', difficulty: 'Low' }, confidence: 40 }] })];
   const before = JSON.stringify(input);
   const payload = context.StatsExport.build(input, options);
@@ -118,7 +119,7 @@ test('production DetectionUtils custom difficulty matches dashboard in entries, 
   assert.equal(payload.entries[1].difficulty, 'Low');
   assert.deepEqual(JSON.parse(JSON.stringify(payload.summary.difficulty)), JSON.parse(JSON.stringify(dashboard.difficulty)));
   const csv = context.StatsExport.toCSV(payload);
-  assert.ok(csv.includes('high.example,High,Custom fingerprint,fingerprint,40'));
+  assert.ok(csv.includes('high.example,High,Custom anti-bot,antibot,60'));
   assert.ok(csv.includes('low.example,Low,Custom captcha,captcha,40'));
   const json = context.StatsExport.toJSON(payload);
   assert.ok(!json.includes('SECRET'));

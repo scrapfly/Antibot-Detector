@@ -1444,6 +1444,18 @@
   "settingsBadgeColorHigh": {
     "message": "Hoog"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Getal in de werkbalk"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Wat het getal op het werkbalkpictogram telt. Fingerprinting draait op de meeste sites; de pop-up en Geschiedenis tonen nog steeds alles."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Elke detectie"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Alleen anti-bot en CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "JS API-gebeurtenissen inschakelen"
   },
@@ -3818,6 +3830,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Verhoogd door {0} beveiligingen samen"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Geen anti-bot of CAPTCHA gevonden met 50% of meer"
   },
   "tipLastUpdated": {
     "message": "Bijgewerkt"

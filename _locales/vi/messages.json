@@ -1444,6 +1444,18 @@
   "settingsBadgeColorHigh": {
     "message": "Cao"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Số trên thanh công cụ"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Con số trên biểu tượng thanh công cụ đếm những gì. Fingerprinting chạy trên hầu hết các trang; cửa sổ bật lên và Lịch sử vẫn hiển thị mọi thứ."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Mọi phát hiện"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Chỉ anti-bot và CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "Bật sự kiện JS API"
   },
@@ -3818,6 +3830,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Được nâng lên bởi {0} biện pháp bảo vệ cùng lúc"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Không tìm thấy anti-bot hoặc CAPTCHA ở mức 50% trở lên"
   },
   "tipLastUpdated": {
     "message": "Đã cập nhật"

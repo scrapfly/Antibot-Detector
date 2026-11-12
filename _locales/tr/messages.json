@@ -1444,6 +1444,18 @@
   "settingsBadgeColorHigh": {
     "message": "Yüksek"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Araç çubuğu sayısı"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Araç çubuğu simgesindeki sayının neyi saydığı. Parmak izi takibi çoğu sitede çalışır; açılır pencere ve Geçmiş yine her şeyi gösterir."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Her tespit"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Yalnızca anti-bot ve CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "JS API olaylarını etkinleştir"
   },
@@ -3818,6 +3830,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "{0} korumanın birleşimiyle yükseldi"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "%50 veya üzerinde anti-bot ya da CAPTCHA bulunamadı"
   },
   "tipLastUpdated": {
     "message": "Güncellendi"

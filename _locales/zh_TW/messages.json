@@ -1444,6 +1444,18 @@
   "settingsBadgeColorHigh": {
     "message": "高"
   },
+  "settingsBadgeCountTitle": {
+    "message": "工具列數字"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "工具列圖示上的數字計算哪些項目。大多數網站都有指紋辨識；彈出視窗和歷史記錄仍會列出全部項目。"
+  },
+  "settingsBadgeCountAll": {
+    "message": "全部偵測結果"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "僅反機器人和 CAPTCHA"
+  },
   "settingsEnableJsApi": {
     "message": "啟用 JS API 事件"
   },
@@ -3818,6 +3830,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "因 {0} 項防護同時存在而提高"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "未找到信賴度 50% 以上的反機器人或 CAPTCHA"
   },
   "tipLastUpdated": {
     "message": "更新時間"

@@ -2,7 +2,7 @@
 (function(root) {
     'use strict';
     const allowed = {
-        root: ['notificationsEnabled', 'debugMode', 'debugVerbose', 'logCollectorEnabled', 'logCollectorMaxLogs', 'defaultTab'],
+        root: ['notificationsEnabled', 'debugMode', 'debugVerbose', 'logCollectorEnabled', 'logCollectorMaxLogs', 'defaultTab', 'badgeCount'],
         badgeColors: ['low', 'medium', 'high'],
         categoryColors: [...root.Categories.KEYS],
         tagColors: ['dom', 'headers', 'cookies', 'content', 'urls', 'js_hooks', 'window', 'payload'],

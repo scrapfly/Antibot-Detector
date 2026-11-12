@@ -25,8 +25,8 @@ function harness({ scanMode = 'blocklist', enabled = true } = {}) {
         },
         Utils: { getSettings: async () => settings },
         StorageManager: { setDomainExcluded: async (domain, excluded) => { settings.detection.blacklistedDomains = excluded ? [...settings.detection.blacklistedDomains, domain] : settings.detection.blacklistedDomains.filter(d => d !== domain); return true; }, setDomainAllowed: async (domain) => { settings.detection.allowedDomains = [...settings.detection.allowedDomains, domain]; return true; }, saveSettings: async () => true, updateSettings: async (mutate) => { mutate(settings); return true; } },
-        CategoryManager: { getBadgeColors: async () => ({}) },
-        DetectionUtils: { getBadgeColor: () => '#4caf50' },
+        CategoryManager: { getBadgeColors: async () => ({}), getBadgeCountMode: async () => 'all' },
+        DetectionUtils: { getBadgeColor: () => '#4caf50', badgeCount: require('../utils/detection-utils.js').badgeCount, readBadgeCountMode: require('../utils/detection-utils.js').readBadgeCountMode },
         NotificationHelper: { success(text) { toasts.push(['success', text]); }, error(text) { toasts.push(['error', text]); } },
         document: { querySelector: () => ({ style: {} }) },
         setTimeout(callback) { timers.push(callback); }

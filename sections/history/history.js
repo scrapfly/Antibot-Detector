@@ -653,20 +653,18 @@ class History {
       avgConfidence = Math.round(totalConfidence / totalDetections);
     }
 
-    const difficultyInfo = this.getDifficultyInfo(detections || [], avgConfidence);
+    const difficultyInfo = this.getDifficultyInfo(detections || []);
     return { totalDetections, avgConfidence, difficulty: difficultyInfo.difficulty, difficultyColor: difficultyInfo.difficultyColor };
   }
 
   /**
-   * Compute difficulty for a set of detections.
-   * Escalates difficulty when multiple Anti-Bot/CAPTCHA detections appear,
-   * or when high-tier providers are present (Shape Security, hCaptcha, Arkose Labs).
+   * The page difficulty of a set of detections, as the Detection tab and the toolbar badge work it out
+   * (DetectionUtils.difficultyOf: the anti-bot and CAPTCHA protections found at 50% or more).
    * @param {Array} detections
-   * @param {number} avgConfidence
    * @returns {{difficulty: string, difficultyColor: string}}
    */
-  getDifficultyInfo(detections = [], avgConfidence = 0) {
-    return DetectionUtils.getDifficultyInfo(detections, avgConfidence);
+  getDifficultyInfo(detections = []) {
+    return DetectionUtils.getDifficultyInfo(detections);
   }
 
   /**

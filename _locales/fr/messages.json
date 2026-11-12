@@ -1444,6 +1444,18 @@
   "settingsBadgeColorHigh": {
     "message": "Élevé"
   },
+  "settingsBadgeCountTitle": {
+    "message": "Nombre dans la barre d’outils"
+  },
+  "settingsBadgeCountDesc": {
+    "message": "Ce que compte le nombre sur l’icône de la barre d’outils. Le fingerprinting tourne sur la plupart des sites ; la fenêtre et l’Historique affichent toujours tout."
+  },
+  "settingsBadgeCountAll": {
+    "message": "Toutes les détections"
+  },
+  "settingsBadgeCountProtections": {
+    "message": "Anti-bot et CAPTCHA uniquement"
+  },
   "settingsEnableJsApi": {
     "message": "Activer les événements JS API"
   },
@@ -3818,6 +3830,9 @@
   },
   "tipDifficultyManyFmt": {
     "message": "Augmentée par {0} protections ensemble"
+  },
+  "tipDifficultyNoneCounted": {
+    "message": "Aucun anti-bot ni CAPTCHA trouvé à 50 % ou plus"
   },
   "tipLastUpdated": {
     "message": "Mis à jour"

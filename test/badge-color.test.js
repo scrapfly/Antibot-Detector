@@ -21,6 +21,14 @@ test('badge colour follows the popup difficulty, not the detection count', () =>
   const hard = [{ name: 'hCaptcha', category: 'CAPTCHA', confidence: 95 }];
   const expected = { Low: '#low', Medium: '#medium', High: '#high' }[DetectionUtils.getDifficultyLevel(hard)];
   assert.strictEqual(DetectionUtils.getBadgeColor(hard, colors), expected);
+  assert.strictEqual(expected, '#high');
+});
+
+test('a passing mention or fingerprinting no longer paints the badge red (3.1.8)', () => {
+  // The whole word "hcaptcha" in a script scores 10% and hCaptcha is a High detector; Canvas fingerprinting is one too
+  assert.strictEqual(DetectionUtils.getBadgeColor([{ name: 'hCaptcha', category: 'CAPTCHA', confidence: 10, difficulty: 'High' }], colors), '#low');
+  assert.strictEqual(DetectionUtils.getBadgeColor([fingerprint('Canvas Fingerprint'), { ...fingerprint('Canvas'), difficulty: 'High' }], colors), '#low');
+  assert.strictEqual(DetectionUtils.getBadgeColor([{ name: 'hCaptcha', category: 'CAPTCHA', confidence: 60, difficulty: 'High' }], colors), '#high', 'present, it still does');
 });
 
 test('no badge setter derives its colour from the detection count', () => {
