@@ -21,6 +21,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Fixed
 
+- Counts read correctly for one and for many in every language, including the Russian, Polish, Czech, Ukrainian and Arabic forms.
+- Labels and values are joined the way each language writes them, such as the full-width colon in Chinese and Japanese.
+- Advanced → Captures sizes use your language's decimal separator.
 - The Clear cache confirmation no longer promises a new scan that never starts, or says "this domain" when the cache covers a path or exact address.
 - The History limit error no longer says 0 means unlimited; 0 keeps up to 1,000 entries.
 - Detection and Rules stay on the page you were viewing when you come back to their tab.
