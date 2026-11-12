@@ -219,7 +219,11 @@
     ALLOWED_ISOLATED_MESSAGE_TYPES = new Set(PROTOCOL.TO_MAIN_TYPES);
     if (hookResilienceManager) {
       hookResilienceManager.setProtocol(PROTOCOL);
-      hookResilienceManager.setFailureReporter(postBridgeMessage);
+      // Failure reports are Debug-mode diagnostics the worker ignores otherwise; an http page missing an API sent one per
+      // hook on every load. debugMode is this closure's own (from the install event), never a page-visible global
+      hookResilienceManager.setFailureReporter(message => {
+        if (debugMode) postBridgeMessage(message);
+      });
     }
     // Still before any page script: the bootstrap is fired synchronously by
     // content.js at document_start. Malformed shim data only costs the shims.
