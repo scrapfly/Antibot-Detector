@@ -40,10 +40,11 @@ const BackgroundTabScan = {
         return !!(entry && entry.quiet);
     },
 
-    /** Called by the scan pipeline when the page of a scan tab is finished. */
+    /** Called by the scan pipeline when the page of a scan tab is finished (extra.httpStatus: the page's HTTP status, when known). */
     scanFinished(tabId, url, results, extra = {}) {
         const waiter = this._waiters.get(tabId);
-        if (waiter) waiter.resolve({ ok: true, url, results: Array.isArray(results) ? results : [], ...(extra && extra.excluded ? { excluded: true } : {}) });
+        if (waiter) waiter.resolve({ ok: true, url, results: Array.isArray(results) ? results : [], ...(extra && extra.excluded ? { excluded: true } : {}),
+            ...(extra && extra.httpStatus ? { httpStatus: extra.httpStatus } : {}) });
     },
 
     /** Give up the scan that carries this token (its tab closes right away). */
@@ -67,7 +68,7 @@ const BackgroundTabScan = {
      * Open the address in a background tab and wait for the extension's scan of it.
      * @param {string} url
      * @param {{windowId: number, timeoutMs?: number, owner?: string, quiet?: boolean, token?: {cancelled?: boolean}}} options
-     * @returns {Promise<{ok: boolean, url?: string, results?: Array, excluded?: boolean, error?: 'timeout'|'load'|'cancelled'|string}>}
+     * @returns {Promise<{ok: boolean, url?: string, results?: Array, excluded?: boolean, httpStatus?: number, error?: 'timeout'|'load'|'cancelled'|string}>}
      */
     async scan(url, options = {}) {
         const { windowId, owner = 'scan', quiet = false, token = null } = options;

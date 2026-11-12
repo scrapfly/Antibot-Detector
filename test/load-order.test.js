@@ -70,7 +70,7 @@ test('every script that reads a shared global module loads after it, in the popu
     StorageOverview: 'modules/settings/storage-overview.js', BackupBundle: 'modules/settings/backup-bundle.js', DiagnosticsReport: 'modules/settings/diagnostics-report.js',
     SettingsPresets: 'modules/settings/settings-presets.js', SettingsTransfer: 'modules/settings/settings-transfer.js',
     RuleSuggest: 'modules/core/rule-suggest.js',
-    BulkScan: 'modules/core/bulk-scan.js', BulkFilter: 'modules/core/bulk-filter.js'
+    BulkScan: 'modules/core/bulk-scan.js', BulkFilter: 'modules/core/bulk-filter.js', HttpStatus: 'modules/core/http-status.js'
   };
   const readers = Object.fromEntries(Object.keys(MODULES).map(name => [name, 0]));
   for (const [global, module] of Object.entries(MODULES)) {

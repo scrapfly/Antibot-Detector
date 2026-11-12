@@ -1866,7 +1866,9 @@ class DetectionEngineManager {
                     fromStorage: true,
                     processed: true,
                     url: storedData.url,
-                    cacheScope: storedData.cacheScope
+                    cacheScope: storedData.cacheScope,
+                    // The page's HTTP status recorded with this result (none in one saved before 3.1.8)
+                    httpStatus: storedData.httpStatus
                 };
             }
         } catch (error) {
@@ -2033,6 +2035,8 @@ class DetectionEngineManager {
                 detectionCount: detectionResults.length,
                 fromStorage: false,
                 cacheScope: cacheScope,
+                // The page's HTTP status (pageHttpStatus in header-capture.js): a cache hit shows the one saved with the result it reuses
+                ...(Number.isInteger(pageData.httpStatus) ? { httpStatus: pageData.httpStatus } : {}),
                 ...(hooksOff ? { hooksOff: true } : {}),
                 // Absent means revision 0, as in what 3.1.2 saved
                 ...(savedRev > 0 ? { rulesRev: savedRev } : {}),
@@ -2300,7 +2304,8 @@ class DetectionEngineManager {
                 expiry: storedData.expiry,
                 timestamp: storedData.timestamp,
                 cacheScope: storedData.cacheScope,
-                favicon: storedData.favicon
+                favicon: storedData.favicon,
+                httpStatus: storedData.httpStatus
             }).catch(() => {});
 
             // Notify content script to disable monitoring (cache hit)
@@ -2332,7 +2337,8 @@ class DetectionEngineManager {
                     url: pageUrl,
                     hostname: UrlUtils.getHostnameFromUrl(pageUrl),
                     title: (tab && tab.title) || 'Untitled',
-                    favicon: UrlUtils.normalizeFaviconForStorage(tab && tab.favIconUrl, pageUrl)
+                    favicon: UrlUtils.normalizeFaviconForStorage(tab && tab.favIconUrl, pageUrl),
+                    httpStatus: storedData.httpStatus
                 }, storedData.detectionResults, { trigger: 'cache' })).catch((error) => {
                     Logger.warn('NETWORK', 'The webhook step failed', error);
                 });

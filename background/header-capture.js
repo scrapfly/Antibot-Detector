@@ -113,6 +113,27 @@ function noteTabLeaving(tabId, shownDocumentId) {
 // "cancelled" event must not end the mark that protects the second
 const pendingNavigations = new Map();
 
+// The document each tab shows and the main-frame request that loaded it ({ documentId, requestId, url }): what ties a page
+// to its own HTTP status (pageHttpStatus)
+const committedPages = new Map();
+
+/**
+ * The HTTP status of the page a document shows: the status code of the main-frame response that loaded that very document
+ * (the last hop of its redirects, the one recorded last), or null. The tab's last response is not always the document's: a
+ * page its service worker answered, or one restored from the back/forward cache, made no request of its own (Chrome reports
+ * none), a prerendered page's request is not recorded, and a load that failed, was cancelled or answered 204 committed no
+ * document. Those show no status rather than another page's.
+ */
+function pageHttpStatus(tabId, documentId) {
+    const committed = committedPages.get(tabId);
+    if (!committed || !documentId || committed.documentId !== documentId) return null;
+    const response = headersStore.get(tabId);
+    if (!response || response.requestId === undefined || response.requestId !== committed.requestId) return null;
+    const withoutFragment = (url) => String(url || '').split('#')[0];
+    if (withoutFragment(response.url) !== withoutFragment(committed.url)) return null;
+    return HttpStatus.of(response.statusCode);
+}
+
 /** A main-frame navigation starts (not a redirect of one). */
 function navigationStarted(tabId) {
     noteTabLeaving(tabId);
@@ -143,6 +164,10 @@ function navigationCommitted(details) {
     if (!details || typeof details.tabId !== 'number' || details.documentLifecycle === 'prerender') return;
     const left = leavingDocuments.get(details.tabId);
     if (left && details.documentId === left) return;
+    // A load was pending: its main-frame request made this document. With none (a page the site's service worker answered,
+    // one restored from the back/forward cache) the document has no response of its own here
+    if (pendingNavigations.has(details.tabId)) committedPages.set(details.tabId, { documentId: details.documentId, requestId: tabPageRequests.get(details.tabId), url: details.url });
+    else committedPages.delete(details.tabId);
     pendingNavigations.delete(details.tabId);
     leavingDocuments.delete(details.tabId);
     if (details.documentId) tabDocuments.set(details.tabId, details.documentId);
@@ -257,6 +282,7 @@ function setupHeaderCapture() {
                 headersStore.set(details.tabId, {
                     url: details.url,
                     headers: headers,
+                    statusCode: details.statusCode, requestId: details.requestId, // the page's HTTP status: pageHttpStatus
                     timestamp: Date.now()
                 });
 

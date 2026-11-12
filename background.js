@@ -14,6 +14,7 @@ importScripts(
     './modules/core/message-types.js',
     './modules/core/ttl-map.js',
     './modules/core/categories.js',
+    './modules/core/http-status.js',
     './modules/core/capture-retention.js',
     './modules/core/domain-list.js',
     './modules/core/scan-scope.js',
