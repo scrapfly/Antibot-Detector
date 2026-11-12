@@ -829,7 +829,6 @@
   "Binance antibot API the captcha reports to": "واجهة antibot API من Binance التي يُبلغ إليها CAPTCHA",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "إشارة في السكربت إلى المُنشئ BCaptcha؛ التكامل غير مؤكد",
   "Script reference to the captcha's validation id field": "إشارة في السكربت إلى حقل معرّف التحقق في CAPTCHA",
-  "Script reference to validateId; a common name, weak on its own": "إشارة في السكربت إلى validateId؛ اسم شائع وضعيف بمفرده",
   "BCaptcha constructor on the page": "المُنشئ BCaptcha في الصفحة",
   "Captcha script calling the antibot API": "سكربت CAPTCHA يستدعي واجهة antibot API",
   "Captcha script with the BCaptcha constructor": "سكربت CAPTCHA مع المُنشئ BCaptcha",

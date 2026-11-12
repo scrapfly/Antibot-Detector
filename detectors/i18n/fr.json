@@ -829,7 +829,6 @@
   "Binance antibot API the captcha reports to": "API antibot de Binance à laquelle le CAPTCHA rend compte",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "Référence de script au constructeur BCaptcha ; intégration non confirmée",
   "Script reference to the captcha's validation id field": "Référence de script au champ d’ID de validation du CAPTCHA",
-  "Script reference to validateId; a common name, weak on its own": "Référence de script à validateId ; nom courant, faible à lui seul",
   "BCaptcha constructor on the page": "Constructeur BCaptcha sur la page",
   "Captcha script calling the antibot API": "Script du CAPTCHA appelant l’API antibot",
   "Captcha script with the BCaptcha constructor": "Script du CAPTCHA avec le constructeur BCaptcha",

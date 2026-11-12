@@ -829,7 +829,6 @@
   "Binance antibot API the captcha reports to": "CAPTCHA가 보고하는 Binance antibot API",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "BCaptcha 생성자에 대한 스크립트 참조. 통합 미확인",
   "Script reference to the captcha's validation id field": "CAPTCHA 검증 ID 필드에 대한 스크립트 참조",
-  "Script reference to validateId; a common name, weak on its own": "validateId에 대한 스크립트 참조. 흔한 이름이라 단독으로는 약함",
   "BCaptcha constructor on the page": "페이지의 BCaptcha 생성자",
   "Captcha script calling the antibot API": "antibot API를 호출하는 CAPTCHA 스크립트",
   "Captcha script with the BCaptcha constructor": "CAPTCHA 스크립트와 BCaptcha 생성자",

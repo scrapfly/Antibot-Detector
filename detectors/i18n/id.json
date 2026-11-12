@@ -588,7 +588,6 @@
   "Binance antibot API the captcha reports to": "API antibot Binance tempat captcha melapor",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "Referensi script ke constructor BCaptcha; integrasi belum terkonfirmasi",
   "Script reference to the captcha's validation id field": "Referensi script ke kolom ID validasi captcha",
-  "Script reference to validateId; a common name, weak on its own": "Referensi script ke validateId; nama yang umum, lemah jika berdiri sendiri",
   "BCaptcha constructor on the page": "Constructor BCaptcha pada halaman",
   "Captcha script calling the antibot API": "Script captcha yang memanggil API antibot",
   "Captcha script with the BCaptcha constructor": "Script captcha dengan constructor BCaptcha",

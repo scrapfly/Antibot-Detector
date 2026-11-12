@@ -588,7 +588,6 @@
   "Binance antibot API the captcha reports to": "antibot API ของ Binance ที่ captcha รายงานไปยัง",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "การอ้างอิงในสคริปต์ถึง constructor ของ BCaptcha ยังไม่ยืนยันการผสานรวม",
   "Script reference to the captcha's validation id field": "การอ้างอิงในสคริปต์ถึงฟิลด์ validation id ของ captcha",
-  "Script reference to validateId; a common name, weak on its own": "การอ้างอิงในสคริปต์ถึง validateId เป็นชื่อทั่วไป จึงอ่อนเมื่อใช้เดี่ยวๆ",
   "BCaptcha constructor on the page": "constructor ของ BCaptcha บนหน้า",
   "Captcha script calling the antibot API": "สคริปต์ captcha ที่เรียก antibot API",
   "Captcha script with the BCaptcha constructor": "สคริปต์ captcha ร่วมกับ constructor ของ BCaptcha",

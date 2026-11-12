@@ -588,7 +588,6 @@
   "Binance antibot API the captcha reports to": "CAPTCHA 回報的 Binance antibot API",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "對 BCaptcha 建構函式的指令碼參照；未確認是否整合",
   "Script reference to the captcha's validation id field": "對 CAPTCHA 驗證 ID 欄位的指令碼參照",
-  "Script reference to validateId; a common name, weak on its own": "對 validateId 的指令碼參照；名稱很常見，單獨出現時證據較弱",
   "BCaptcha constructor on the page": "網頁上的 BCaptcha 建構函式",
   "Captcha script calling the antibot API": "呼叫 antibot API 的 CAPTCHA 指令碼",
   "Captcha script with the BCaptcha constructor": "CAPTCHA 指令碼與 BCaptcha 建構函式",

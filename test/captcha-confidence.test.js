@@ -221,8 +221,9 @@ test('all twenty-three definitions have explicit IDs, conservative standalone ev
   for (const detector of Object.values(captcha)) {
     // Semver: bump the minor version whenever rules change, so Rules → Update offers it
     assert.match(detector.version, /^1\.\d+\.\d+$/, detector.id);
-    // 2026-11-04: Turnstile 1.2.1 (response-body rules need the 2.8.8 engine); 2026-11-11: CaptchaFox 1.0.0
-    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[3-9]|1[0-7]|26)|11-(?:04|11))$/, detector.id);
+    // 2026-11-04: Turnstile 1.2.1 (response-body rules need the 2.8.8 engine); 2026-11-11: CaptchaFox 1.0.0;
+    // 2026-11-12: Binance 1.2.0 (the standalone validateId rule removed)
+    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[3-9]|1[0-7]|26)|11-(?:04|1[12]))$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate IDs`);
@@ -462,6 +463,15 @@ test('generic sitekeys, routes, query URL copies and lookalike authorities produ
         { tagName: 'iframe', attributes: { src: url }, src: url }] });
     assert.deepEqual(Array.from(result, item => item.detector.id), [], url);
   }
+});
+
+// validateId is a common field name (form validators, payment SDKs): a page whose scripts use it is not Binance's captcha
+test('a script that merely uses a field called validateId identifies no CAPTCHA', async () => {
+  const engine = new Engine();
+  engine.setDetectors({ captcha });
+  const result = await engine.detectOnPage({ url: 'https://shop.example/checkout', networkUrls: [], dom: [], externalContent: [],
+    content: [{ type: 'inline', content: 'form.submit({ validateId: field.id, onValidate: check });' }] });
+  assert.deepEqual(Array.from(result, item => item.detector.id), []);
 });
 
 test('requests made after the page snapshot still count when the scan finishes', async () => {

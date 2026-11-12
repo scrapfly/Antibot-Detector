@@ -588,7 +588,6 @@
   "Binance antibot API the captcha reports to": "Antibot API Binance, kterému CAPTCHA hlásí výsledky",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "Odkaz ve skriptu na konstruktor BCaptcha; integrace nepotvrzena",
   "Script reference to the captcha's validation id field": "Odkaz ve skriptu na pole ID validace CAPTCHA",
-  "Script reference to validateId; a common name, weak on its own": "Odkaz ve skriptu na validateId; běžný název, sám o sobě slabý",
   "BCaptcha constructor on the page": "Konstruktor BCaptcha na stránce",
   "Captcha script calling the antibot API": "Skript CAPTCHA volající antibot API",
   "Captcha script with the BCaptcha constructor": "Skript CAPTCHA s konstruktorem BCaptcha",

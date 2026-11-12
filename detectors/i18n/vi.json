@@ -588,7 +588,6 @@
   "Binance antibot API the captcha reports to": "API antibot của Binance mà captcha báo cáo tới",
   "Script reference to the BCaptcha constructor; integration unconfirmed": "Script tham chiếu tới hàm tạo BCaptcha; chưa xác nhận tích hợp",
   "Script reference to the captcha's validation id field": "Script tham chiếu tới trường ID xác thực của captcha",
-  "Script reference to validateId; a common name, weak on its own": "Script tham chiếu tới validateId; tên phổ biến, đứng một mình thì yếu",
   "BCaptcha constructor on the page": "Hàm tạo BCaptcha trên trang",
   "Captcha script calling the antibot API": "Script captcha gọi API antibot",
   "Captcha script with the BCaptcha constructor": "Script captcha cùng hàm tạo BCaptcha",
