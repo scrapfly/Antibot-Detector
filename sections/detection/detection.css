@@ -384,6 +384,26 @@
   flex: 1;
 }
 
+/* The page's HTTP status beside Cache: as wide as its value, graphite until it is an error (then its icon and value take the
+   quiet amber of 4xx or the red of 5xx: the tone-* classes, as on Difficulty) */
+.cache-expiry-line .stat-inline.http-status-stat {
+  flex: 0 0 auto;
+  --tone: var(--text-secondary);
+  --tone-bg: var(--g-424242);
+  --tone-border: var(--g-525252);
+}
+
+.cache-expiry-line .stat-inline[hidden] {
+  display: none;
+}
+
+#httpStatusValue {
+  font-variant-numeric: tabular-nums;
+}
+
+#httpStatusTile .tone-amber { --tone: var(--warning); }
+#httpStatusTile .tone-red { --tone: var(--danger); }
+
 .cache-stat-sep {
   opacity: 0.55;
 }

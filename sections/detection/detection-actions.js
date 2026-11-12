@@ -522,6 +522,8 @@ DetectionActions.buildDetectionsPasteContent = function(pageUrl) {
       };
     });
 
+    // The page's HTTP status, as the tile beside Cache shows it (the one saved with the result), when it is known
+    const httpStatus = typeof HttpStatus !== 'undefined' ? HttpStatus.of(this.cacheMetadata?.httpStatus) : null;
     const payload = {
       source: 'Scrapfly.io',
       url: safeUrl || host || null,
@@ -530,7 +532,8 @@ DetectionActions.buildDetectionsPasteContent = function(pageUrl) {
       summary: {
         detections: detections.length,
         confidence: avgConfidence,
-        difficulty
+        difficulty,
+        ...(httpStatus ? { httpStatus } : {})
       },
       detections: cleanedDetections
     };
@@ -557,8 +560,11 @@ DetectionActions.buildDetectionsMarkdown = function(payload, format = detectionA
     lines.push(`## ${cell(format('detectionMdHeadingFmt', 'Protections on {0}', p.host || p.url || '?'))}`);
     lines.push('');
     if (p.url) lines.push(cell(p.url));
-    lines.push(cell(format('detectionMdSummaryFmt', 'Detections: {0} · Confidence: {1}% · Difficulty: {2}',
-      Number(summary.detections) || list.length, Math.round(Number(summary.confidence) || 0), summary.difficulty || '-')));
+    const counts = format('detectionMdSummaryFmt', 'Detections: {0} · Confidence: {1}% · Difficulty: {2}',
+      Number(summary.detections) || list.length, Math.round(Number(summary.confidence) || 0), summary.difficulty || '-');
+    // The page's HTTP status ends the line, when the summary has one
+    const status = Number.isInteger(summary.httpStatus) ? format('detectionHttpStatusFmt', 'HTTP status: {0}', summary.httpStatus) : '';
+    lines.push(cell(status ? `${counts} · ${status}` : counts));
     lines.push('');
     if (list.length) {
       lines.push(`| ${[

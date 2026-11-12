@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "Welche Seiten diese zwischengespeicherten Ergebnisse wiederverwenden und wie lange."
   },
+  "detectionStatHttpStatus": {
+    "message": "HTTP-Status"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Der HTTP-Statuscode, mit dem die Seite beim Scan geantwortet hat. Ein Fehler (4xx oder 5xx) bedeutet oft, dass die Anfrage blockiert oder mit einer Challenge beantwortet wurde."
+  },
   "tipCacheExpires": {
     "message": "Läuft ab"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "Erkennungen: {0} · Konfidenz: {1}% · Schwierigkeit: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP-Status: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Schutzmaßnahme"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Erkannte Schutzmaßnahmen mit ihrer Konfidenz, durch Kommas getrennt"
+  },
+  "webhookVarHttpStatus": {
+    "message": "HTTP-Statuscode der Seite (0, wenn unbekannt)"
   },
   "historyCopyMarkdown": {
     "message": "Als Markdown kopieren"

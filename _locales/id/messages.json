@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "Halaman mana yang menggunakan ulang hasil cache ini, dan untuk berapa lama."
   },
+  "detectionStatHttpStatus": {
+    "message": "Status HTTP"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Kode status HTTP yang dikembalikan halaman saat dipindai. Galat (4xx atau 5xx) sering berarti permintaan diblokir atau diberi tantangan."
+  },
   "tipCacheExpires": {
     "message": "Kedaluwarsa"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "Deteksi: {0} · Kepercayaan: {1}% · Kesulitan: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "Status HTTP: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Proteksi"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Perlindungan yang terdeteksi beserta tingkat keyakinannya, dipisahkan koma"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Kode status HTTP halaman (0 jika tidak diketahui)"
   },
   "historyCopyMarkdown": {
     "message": "Salin sebagai Markdown"

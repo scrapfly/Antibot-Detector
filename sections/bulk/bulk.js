@@ -237,6 +237,16 @@
     const pill = document.createElement('span');
     pill.className = `bulk-status bulk-status--${item.status}`;
     pill.textContent = label(STATUS_TEXT[item.status], item.status);
+    // A finished page's HTTP status beside its state ("Done · 403"), marked when it is an error: a block page stands out. The code is
+    // a protocol number, written in ASCII digits in every language
+    const code = item.status === 'done' ? HttpStatus.of(item.httpStatus) : null;
+    if (code) {
+      const http = document.createElement('span');
+      http.className = `bulk-http bulk-http--${HttpStatus.tone(code)}`;
+      http.textContent = String(code);
+      http.title = tr('detectionTipHttpStatus', 'The HTTP status code the page answered with when it was scanned. An error (4xx or 5xx) often means the request was blocked or challenged.');
+      pill.append(' · ', http);
+    }
     cell.appendChild(pill);
     if (item.reason) {
       const reason = document.createElement('span');

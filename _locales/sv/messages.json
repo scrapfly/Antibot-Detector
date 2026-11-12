@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "Vilka sidor som återanvänder de här cachade resultaten och hur länge."
   },
+  "detectionStatHttpStatus": {
+    "message": "HTTP-status"
+  },
+  "detectionTipHttpStatus": {
+    "message": "HTTP-statuskoden som sidan svarade med när den skannades. Ett fel (4xx eller 5xx) betyder ofta att begäran blockerades eller fick en utmaning."
+  },
   "tipCacheExpires": {
     "message": "Går ut"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "Upptäckter: {0} · Säkerhet: {1}% · Svårighet: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP-status: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Skydd"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Identifierade skydd med deras säkerhet, kommaseparerade"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Sidans HTTP-statuskod (0 om den är okänd)"
   },
   "historyCopyMarkdown": {
     "message": "Kopiera som Markdown"

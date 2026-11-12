@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "Какие страницы повторно используют эти кэшированные результаты и как долго."
   },
+  "detectionStatHttpStatus": {
+    "message": "HTTP-статус"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Код HTTP-статуса, которым страница ответила при сканировании. Ошибка (4xx или 5xx) часто означает, что запрос заблокировали или отправили на проверку."
+  },
   "tipCacheExpires": {
     "message": "Истекает"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "Обнаружений: {0} · Уверенность: {1}% · Сложность: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP-статус: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Защита"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Обнаруженные защиты с уровнем уверенности через запятую"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Код HTTP-статуса страницы (0, если неизвестен)"
   },
   "historyCopyMarkdown": {
     "message": "Копировать как Markdown"

@@ -13,6 +13,8 @@
  *   History         a scan result alone reads nothing of History; an open History still follows what the worker saves
  *   Labels          the "Confidence: value" tips of the summary tiles and the cards use the translated forms (French, Traditional
  *                   Chinese)
+ *   HTTP status     (3.1.8) the tile beside Cache shows the page's status: 403 amber, 503 red, 200 after a 301; a cache hit keeps
+ *                   the saved one; a result without one hides the tile
  *
  * A local site shows one marker per protection and probe detectors recognize them, so the scans are real.
  * The popup is opened as a page; its active tab is the local site's (chrome.tabs.query is told so), as in the other suites.
@@ -50,8 +52,14 @@ const server = http.createServer((req, res) => {
     const name = url.searchParams.get('n') || 'page';
     loads[name] = (loads[name] || 0) + 1;
     const shown = Object.entries(MARKERS).filter(([flag]) => url.searchParams.get(flag) === '1').map(([, text]) => `<p>${text}</p>`).join('');
-    res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store' });
+    // s=403: the page answers with that HTTP status (a block page), still with its markers (3.1.8)
+    res.writeHead(Number(url.searchParams.get('s')) || 200, { 'content-type': 'text/html', 'cache-control': 'no-store' });
     return res.end(`<!doctype html><html><head><title>V314 ${name}</title></head><body>${shown}<p>probe page</p></body></html>`);
+  }
+  // /r?...: a 301 to /p with the same query (the page's status is the last hop's)
+  if (url.pathname === '/r') {
+    res.writeHead(301, { location: `/p${url.search}`, 'cache-control': 'no-store' });
+    return res.end();
   }
   res.writeHead(404); res.end();
 });
@@ -569,6 +577,105 @@ async function scenario(name, fn) {
     } finally {
       await W(() => chrome.storage.local.set({ scrapfly_language_override: 'en' }));
       await site.close();
+    }
+  });
+
+  // ===============================================================================================
+  await scenario('HTTP status: the tile beside Cache shows the page\'s status (403 amber, 503 red, 200 after a 301), keeps it on a cache hit and hides without one', async () => {
+    const tileOf = (popup) => popup.evaluate(() => {
+      const tile = document.querySelector('#httpStatusTile');
+      const value = document.querySelector('#httpStatusValue');
+      return { hidden: tile.hidden, shown: tile.getBoundingClientRect().width > 0, value: value.textContent.trim(), tones: [...value.classList].filter(c => c.startsWith('tone-')),
+        color: getComputedStyle(value).color, tip: tile.getAttribute('data-tip'), label: tile.querySelector('.stat-label-inline').textContent.trim() };
+    });
+    const open = [];
+    try {
+      const blocked = await scanned(`http403-${uniq()}`, `${ALL}&s=403`);
+      open.push(blocked.page);
+      let popup = await popupFor(blocked.tab);
+      let tile;
+      try {
+        await resultsShown(popup, 3);
+        tile = await until(async () => { const t = await tileOf(popup); return t.value === '403' ? t : null; }, 10000, 'the 403 tile');
+        assert.equal(tile.hidden, false);
+        assert.ok(tile.shown, 'drawn beside Cache');
+        assert.deepEqual(tile.tones, ['tone-amber']);
+        assert.equal(tile.label, say('detectionStatHttpStatus'));
+        assert.equal(tile.tip, say('detectionHttpStatusFmt').replace('{0}', '403'));
+        const amber = tile.color;
+        console.log(`      403: "${tile.tip}" (${amber})`);
+
+        // The copies read it from here (detection-actions.js)
+        const copied = await popup.evaluate(() => window.popupInstance.detection.cacheMetadata.httpStatus);
+        assert.equal(copied, 403, 'the popup holds the saved status');
+      } finally {
+        await popup.close();
+      }
+
+      const failing = await scanned(`http503-${uniq()}`, `${ALL}&s=503`);
+      open.push(failing.page);
+      popup = await popupFor(failing.tab);
+      try {
+        await resultsShown(popup, 3);
+        tile = await until(async () => { const t = await tileOf(popup); return t.value === '503' ? t : null; }, 10000, 'the 503 tile');
+        assert.deepEqual(tile.tones, ['tone-red']);
+      } finally {
+        await popup.close();
+      }
+
+      // A 301 then a 200: the last hop's status
+      const name = `http301-${uniq()}`;
+      const final = `${origin}/p?n=${name}${ALL}`;
+      const moved = await ctx.newPage();
+      open.push(moved);
+      await moved.goto(`${origin}/r?n=${name}${ALL}`, { waitUntil: 'commit' }).catch(() => {});
+      await until(() => cacheStamp(final), 25000, 'the saved result of the redirected page');
+      const movedTab = await until(() => tabOf(final), 5000, 'the redirected tab');
+      popup = await popupFor(movedTab);
+      try {
+        await resultsShown(popup, 3);
+        tile = await until(async () => { const t = await tileOf(popup); return t.value === '200' ? t : null; }, 10000, 'the 200 tile');
+        assert.deepEqual(tile.tones, [], 'graphite: a success is not flagged');
+      } finally {
+        await popup.close();
+      }
+
+      // A cache hit: the same 403 page in a new tab reuses the saved result and its status
+      const stamp = await cacheStamp(blocked.url);
+      const again = await ctx.newPage();
+      open.push(again);
+      await again.goto(blocked.url, { waitUntil: 'commit' }).catch(() => {});
+      await sleep(2500);
+      assert.equal(await cacheStamp(blocked.url), stamp, 'served from the saved result, not scanned again');
+      const againTab = await until(() => W(async (u) => { const tabs = (await chrome.tabs.query({})).filter(x => x.url === u); const t = tabs[tabs.length - 1]; return t ? { id: t.id, url: t.url, windowId: t.windowId } : null; }, blocked.url), 5000, 'the second tab');
+      popup = await popupFor(againTab);
+      try {
+        await resultsShown(popup, 3);
+        tile = await until(async () => { const t = await tileOf(popup); return t.value === '403' ? t : null; }, 10000, 'the 403 tile on a cache hit');
+      } finally {
+        await popup.close();
+      }
+
+      // A result saved before 3.1.8 has no status: the tile hides
+      await W(async (u) => {
+        const key = DetectionEngineManager.STORAGE_KEY;
+        const raw = (await chrome.storage.local.get(key))[key] || {};
+        const storage = typeof raw === 'string' ? JSON.parse(raw) : raw;
+        for (const scope of ['domain', 'path', 'full']) if (storage[UrlUtils.hashUrl(u, scope)]) delete storage[UrlUtils.hashUrl(u, scope)].httpStatus;
+        await chrome.storage.local.set({ [key]: typeof raw === 'string' ? JSON.stringify(storage) : storage });
+      }, blocked.url);
+      popup = await popupFor(againTab);
+      try {
+        await resultsShown(popup, 3);
+        await sleep(800);
+        tile = await tileOf(popup);
+        assert.equal(tile.hidden, true, `hidden without a status (${JSON.stringify(tile)})`);
+        assert.equal(tile.shown, false);
+      } finally {
+        await popup.close();
+      }
+    } finally {
+      for (const page of open) await page.close().catch(() => {});
     }
   });
 

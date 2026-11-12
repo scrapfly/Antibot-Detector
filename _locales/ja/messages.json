@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "このキャッシュ結果を再利用するページと、その期間。"
   },
+  "detectionStatHttpStatus": {
+    "message": "HTTP ステータス"
+  },
+  "detectionTipHttpStatus": {
+    "message": "スキャン時にページが返した HTTP ステータスコードです。エラー（4xx または 5xx）は、リクエストがブロックされたかチャレンジを受けたことを示す場合がよくあります。"
+  },
   "tipCacheExpires": {
     "message": "有効期限"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "検出数: {0} · 信頼度: {1}% · 難易度: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP ステータス: {0}"
+  },
   "detectionMdColProtection": {
     "message": "保護機能"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "検出された保護と信頼度(カンマ区切り)"
+  },
+  "webhookVarHttpStatus": {
+    "message": "ページの HTTP ステータスコード（不明な場合は 0）"
   },
   "historyCopyMarkdown": {
     "message": "Markdownとしてコピー"

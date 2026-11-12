@@ -260,10 +260,15 @@ async function addLateEvidenceNow(tabId, pageUrl, tabFavicon, evidence, stillVal
     if (signature() === before) return null; // already known
 
     const finalResults = Array.from(byId.values()).filter(rescoreCombinations);
+    // The page's HTTP status stays the one saved with the result; with none saved, the one the page's scan recorded
+    const finished = finishedPages.get(tabId);
+    const httpStatus = stored ? stored.httpStatus
+        : (finished && finished.state && urlWithoutHash(finished.url) === urlWithoutHash(pageUrl) ? finished.state.httpStatus : null);
     const storedData = await DetectionEngineManager.storeDetection(pageUrl, {
         url: pageUrl,
         hostname: UrlUtils.getHostnameFromUrl(pageUrl),
         favicon: stored?.favicon || tabFavicon,
+        ...(httpStatus ? { httpStatus } : {}),
         // When the scan the base results came from began (a result found before the rules changed is not served: see storeDetection).
         // A saved result is of the current rules, and what is added to it is found with them: nothing to date
         ...(!stored && Number.isFinite(scanStartedAt) ? { scanStartedAt } : {}),
@@ -280,7 +285,8 @@ async function addLateEvidenceNow(tabId, pageUrl, tabFavicon, evidence, stillVal
         expiry: storedData?.expiry,
         timestamp: storedData?.timestamp,
         cacheScope: storedData?.cacheScope,
-        favicon: storedData?.favicon
+        favicon: storedData?.favicon,
+        httpStatus: storedData?.httpStatus
     }).catch(() => {
         // Expected: Popup may not be open
     });
@@ -473,6 +479,8 @@ async function finalizeDetection(tabId, state) {
         favicon: normalizedFavicon,
         // When the scan began: one that began before the rules last changed is not kept as the page's saved result
         scanStartedAt: state.startTime,
+        // The page's HTTP status (processDetectionData), shown with the result for as long as it is reused
+        ...(state.httpStatus ? { httpStatus: state.httpStatus } : {}),
         ...(privateWindow ? { privateWindow: true } : {}),
         // A Bulk scan reports what the page shows now: a clean scan never takes an older result's place
         ...(scanTab && !quietTab ? { fresh: true } : {})
@@ -517,7 +525,9 @@ async function finalizeDetection(tabId, state) {
         expiry: storedDataWithExpiry?.expiry,
         timestamp: storedDataWithExpiry?.timestamp,
         cacheScope: storedDataWithExpiry?.cacheScope,
-        favicon: storedDataWithExpiry?.favicon
+        favicon: storedDataWithExpiry?.favicon,
+        // The status saved with the result shown (a result kept from an earlier scan keeps its own)
+        httpStatus: storedDataWithExpiry?.httpStatus
     }).catch(() => {
         // Expected: Popup may not be open
     });
@@ -575,7 +585,8 @@ async function finalizeDetection(tabId, state) {
                 url: state.url,
                 hostname: UrlUtils.getHostnameFromUrl(state.url),
                 title: state.tabTitle,
-                favicon: UrlUtils.normalizeFaviconForStorage(state.favicon, state.url)
+                favicon: UrlUtils.normalizeFaviconForStorage(state.favicon, state.url),
+                httpStatus: state.httpStatus
             }, finalResults, { trigger: 'scan' })).catch((error) => {
                 Logger.warn('NETWORK', 'The webhook step failed', error);
             });
@@ -584,8 +595,9 @@ async function finalizeDetection(tabId, state) {
         }
     }
 
-    // A Bulk scan is waiting for this page: it gets the results once History has them (its tab closes right after)
-    if (scanTab && !watching) BackgroundTabScan.scanFinished(tabId, state.url, finalResults);
+    // A Bulk scan is waiting for this page: it gets the results (and the page's HTTP status) once History has them (its tab
+    // closes right after)
+    if (scanTab && !watching) BackgroundTabScan.scanFinished(tabId, state.url, finalResults, { httpStatus: state.httpStatus });
 
     // Requests the page makes from now on still add URL evidence to this result (applyLateNetworkUrls)
     if (!watching && DetectionSessionStore.isCurrent(tabId, state)) rememberFinishedPage(tabId, state, finalResults);
@@ -662,6 +674,9 @@ async function processDetectionData(message, sender) {
             pageData.responseHeaders = headerData.headers; // Also store explicitly as responseHeaders
         }
     }
+    // The HTTP status of the response that loaded this very document, saved with the result: none for a page its service
+    // worker answered, one restored from the back/forward cache or a prerendered one (header-capture.js pageHttpStatus)
+    state.httpStatus = typeof pageHttpStatus === 'function' ? pageHttpStatus(tabId, sender.documentId) : null;
 
     // Add request headers if available
     if (requestHeadersStore.has(tabId)) {

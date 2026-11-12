@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "Які сторінки повторно використовують ці кешовані результати та як довго."
   },
+  "detectionStatHttpStatus": {
+    "message": "HTTP-статус"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Код HTTP-статусу, яким сторінка відповіла під час сканування. Помилка (4xx або 5xx) часто означає, що запит заблокували або надіслали на перевірку."
+  },
   "tipCacheExpires": {
     "message": "Спливає"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "Виявлення: {0} · Впевненість: {1}% · Складність: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP-статус: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Захист"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Виявлені захисти з рівнем упевненості через кому"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Код HTTP-статусу сторінки (0, якщо невідомий)"
   },
   "historyCopyMarkdown": {
     "message": "Копіювати як Markdown"

@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "कौन से पेज इन कैश किए गए परिणामों का दोबारा उपयोग करते हैं, और कितने समय तक।"
   },
+  "detectionStatHttpStatus": {
+    "message": "HTTP स्थिति"
+  },
+  "detectionTipHttpStatus": {
+    "message": "स्कैन के समय पेज ने जिस HTTP स्थिति कोड के साथ जवाब दिया। कोई त्रुटि (4xx या 5xx) अक्सर बताती है कि अनुरोध ब्लॉक किया गया या उसे चुनौती दी गई।"
+  },
   "tipCacheExpires": {
     "message": "समाप्ति"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "जांच: {0} · विश्वसनीयता: {1}% · कठिनाई: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP स्थिति: {0}"
+  },
   "detectionMdColProtection": {
     "message": "सुरक्षा उपाय"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "पता लगाई गई सुरक्षाएँ उनके भरोसे के स्तर सहित, अल्पविराम से अलग"
+  },
+  "webhookVarHttpStatus": {
+    "message": "पेज का HTTP स्थिति कोड (पता न हो तो 0)"
   },
   "historyCopyMarkdown": {
     "message": "Markdown के रूप में कॉपी करें"

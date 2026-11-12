@@ -84,7 +84,7 @@ test('every variable is substituted, and the list is the single definition', () 
   const out = WB.substitute(all, ctx, 'text');
   for (const v of WB.VARIABLES) assert.ok(!out.includes(v.token), v.token);
   assert.deepStrictEqual(WB.VARIABLES.map(v => v.token),
-    ['<SITEURL>', '<HOSTNAME>', '<TITLE>', '<FAVICON>', '<DETECTIONS>', '<TIMESTAMP>', '<DETECTION_COUNT>', '<CATEGORIES>', '<DETECTION_NAMES>']);
+    ['<SITEURL>', '<HOSTNAME>', '<TITLE>', '<FAVICON>', '<DETECTIONS>', '<TIMESTAMP>', '<DETECTION_COUNT>', '<CATEGORIES>', '<DETECTION_NAMES>', '<HTTP_STATUS>']);
 });
 
 test('template validation reports the line of a JSON error after substitution', () => {
@@ -510,4 +510,19 @@ test('every preset is a usable start: known variables, a listed Content-Type, va
   assert.ok(!('labelKey' in WB.PRESETS.find(p => p.id === 'slack')));
   const en = JSON.parse(require('node:fs').readFileSync(path.join(__dirname, '..', '_locales/en/messages.json'), 'utf8'));
   for (const key of ['webhookPresetPlaceholder', 'webhookPresetPlain', 'webhookVarDetectionNames']) assert.ok(en[key], key);
+});
+
+test('<HTTP_STATUS> is the page\'s HTTP status as a number, 0 when it is not known, so a JSON template stays valid', () => {
+  const v = WB.VARIABLES.find(x => x.token === '<HTTP_STATUS>');
+  assert.strictEqual(v.kind, 'number');
+  assert.strictEqual(v.descKey, 'webhookVarHttpStatus', 'Settings → Webhook lists it with its description');
+  const template = '{"site": "<HOSTNAME>", "status": <HTTP_STATUS>}';
+  assert.deepStrictEqual(JSON.parse(WB.substitute(template, ctxWith(DETS, { httpStatus: 403 }), 'json')), { site: 'shop.example', status: 403 });
+  assert.strictEqual(WB.substitute('<HOSTNAME> answered <HTTP_STATUS>', ctxWith(DETS, { httpStatus: 503 }), 'text'), 'shop.example answered 503');
+
+  const runtime = loadRuntime({}, []);
+  assert.strictEqual(runtime._buildWebhookContext({ url: 'https://shop.example/', httpStatus: 429 }, DETS).httpStatus, 429);
+  assert.strictEqual(runtime._buildWebhookContext({ url: 'https://shop.example/' }, DETS).httpStatus, 0, 'a result saved before 3.1.8');
+  assert.deepStrictEqual(JSON.parse(WB.substitute(template, runtime._buildWebhookContext({ url: 'https://shop.example/' }, DETS), 'json')),
+    { site: 'shop.example', status: 0 });
 });

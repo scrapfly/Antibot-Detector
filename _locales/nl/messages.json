@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "Welke pagina's deze in de cache opgeslagen resultaten hergebruiken en hoe lang."
   },
+  "detectionStatHttpStatus": {
+    "message": "HTTP-status"
+  },
+  "detectionTipHttpStatus": {
+    "message": "De HTTP-statuscode waarmee de pagina antwoordde toen ze werd gescand. Een fout (4xx of 5xx) betekent vaak dat het verzoek werd geblokkeerd of een challenge kreeg."
+  },
   "tipCacheExpires": {
     "message": "Verloopt"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "Detecties: {0} · Zekerheid: {1}% · Moeilijkheid: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP-status: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Beveiliging"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Gedetecteerde beveiligingen met hun zekerheid, gescheiden door komma's"
+  },
+  "webhookVarHttpStatus": {
+    "message": "HTTP-statuscode van de pagina (0 als die onbekend is)"
   },
   "historyCopyMarkdown": {
     "message": "Kopiëren als Markdown"

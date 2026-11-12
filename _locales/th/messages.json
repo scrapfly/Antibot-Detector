@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "หน้าที่ใช้ผลลัพธ์ที่แคชไว้นี้ซ้ำ และนานเท่าใด"
   },
+  "detectionStatHttpStatus": {
+    "message": "สถานะ HTTP"
+  },
+  "detectionTipHttpStatus": {
+    "message": "รหัสสถานะ HTTP ที่หน้าเว็บตอบกลับขณะสแกน ข้อผิดพลาด (4xx หรือ 5xx) มักหมายความว่าคำขอถูกบล็อกหรือถูกท้าทาย"
+  },
   "tipCacheExpires": {
     "message": "หมดอายุ"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "การตรวจจับ: {0} · ความมั่นใจ: {1}% · ความยาก: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "สถานะ HTTP: {0}"
+  },
   "detectionMdColProtection": {
     "message": "ระบบป้องกัน"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "การป้องกันที่ตรวจพบพร้อมระดับความเชื่อมั่น คั่นด้วยจุลภาค"
+  },
+  "webhookVarHttpStatus": {
+    "message": "รหัสสถานะ HTTP ของหน้าเว็บ (0 หากไม่ทราบ)"
   },
   "historyCopyMarkdown": {
     "message": "คัดลอกเป็น Markdown"

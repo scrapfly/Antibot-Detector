@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "Bu önbelleğe alınmış sonuçları hangi sayfaların ve ne kadar süreyle yeniden kullandığı."
   },
+  "detectionStatHttpStatus": {
+    "message": "HTTP durumu"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Sayfanın tarandığında yanıt verdiği HTTP durum kodu. Bir hata (4xx veya 5xx) çoğu zaman isteğin engellendiği ya da doğrulamaya takıldığı anlamına gelir."
+  },
   "tipCacheExpires": {
     "message": "Sona erer"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "Tespitler: {0} · Güven: %{1} · Zorluk: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP durumu: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Koruma"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Algılanan korumalar ve güven oranları, virgülle ayrılmış"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Sayfanın HTTP durum kodu (bilinmiyorsa 0)"
   },
   "historyCopyMarkdown": {
     "message": "Markdown olarak kopyala"

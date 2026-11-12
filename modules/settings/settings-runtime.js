@@ -211,6 +211,8 @@ SettingsRuntime._buildWebhookContext = function(pageData, detectionResults) {
         detectionCount: detectionResults.length,
         categories: [...new Set(detectionResults.map(d => d.category))].join(','),
         detectionNames: WebhookBody.detectionNames(detectionResults),
+        // <HTTP_STATUS>: the page's HTTP status as the scan saved it, 0 when it is not known
+        httpStatus: Number.isInteger(pageData.httpStatus) ? pageData.httpStatus : 0,
         detections: detectionResults
     };
 };

@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "哪些页面会复用这些缓存结果，以及复用多久。"
   },
+  "detectionStatHttpStatus": {
+    "message": "HTTP 状态"
+  },
+  "detectionTipHttpStatus": {
+    "message": "扫描时页面返回的 HTTP 状态码。错误（4xx 或 5xx）通常表示请求被拦截或遭遇了验证挑战。"
+  },
   "tipCacheExpires": {
     "message": "过期时间"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "检测数：{0} · 置信度：{1}% · 难度：{2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "HTTP 状态：{0}"
+  },
   "detectionMdColProtection": {
     "message": "防护措施"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "检测到的防护及其置信度，以逗号分隔"
+  },
+  "webhookVarHttpStatus": {
+    "message": "页面的 HTTP 状态码（未知时为 0）"
   },
   "historyCopyMarkdown": {
     "message": "复制为 Markdown"

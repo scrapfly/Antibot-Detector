@@ -195,6 +195,10 @@ const PROBE = {
     assert.ok(byUrl[at('/protected?n=1')].difficulty, 'a difficulty is shown');
     assert.deepEqual(outcome(at('/clean?n=1')), ['done', '']);
     assert.deepEqual(byUrl[at('/clean?n=1')].detections, []);
+    // 3.1.8: each finished page keeps the HTTP status it answered with
+    assert.equal(byUrl[at('/protected?n=1')].httpStatus, 200, 'the page\'s HTTP status');
+    assert.equal(byUrl[at('/clean?n=1')].httpStatus, 200);
+    assert.equal(byUrl[at('/hang')].httpStatus, undefined, 'a page that never answered has none');
     assert.deepEqual(outcome('ftp://files.example/x'), ['skipped', 'scheme']);
     assert.deepEqual(outcome(at('/clean?n=2', 'localhost')), ['skipped', 'scope']);
     assert.deepEqual(outcome(at('/redirect')), ['skipped', 'scope'], 'ended on a skipped site');
@@ -212,6 +216,7 @@ const PROBE = {
     assert.equal(rows.length, 9);
     const row = (u) => rows.find(r => r[1].startsWith(u));
     assert.match(row(at('/protected?n=1'))[3], /Bulk Probe\s*90%/);
+    assert.equal(row(at('/protected?n=1'))[2], 'Done · 200', 'the HTTP status beside Done');
     assert.equal(row(at('/clean?n=1'))[3], 'No protection found');
     assert.match(row(at('/clean?n=2', 'localhost'))[2], /Skipped\s*Skipped by Settings → Detection → Sites to scan/);
     assert.match(row(at('/hang'))[2], /Failed\s*No result within the time limit/);
@@ -237,17 +242,18 @@ const PROBE = {
       if (ext === 'csv') {
         // The file starts with the byte-order mark, so Excel reads it as UTF-8
         assert.equal(text.charCodeAt(0), 0xFEFF, 'a CSV starts with the byte-order mark');
-        assert.match(text.slice(1), /^url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at\r\n/);
-        assert.match(text, new RegExp(`${at('/protected?n=1').replace(/[.?]/g, '\\$&')},done,,,\\w+,Bulk Probe,antibot,90,`));
+        assert.match(text.slice(1), /^url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at,http_status\r\n/);
+        assert.match(text, new RegExp(`${at('/protected?n=1').replace(/[.?]/g, '\\$&')},done,,,\\w+,Bulk Probe,antibot,90,[^,\r\n]+,200\r\n`));
       } else if (ext === 'md') {
         assert.match(text, /^# Scrapfly Antibot Detector: Bulk scan\n\n9 pages, .*; \d+ with protections\n\nMost seen: Bulk Probe \(2 pages\)\n\n\| Page \| Status \| Difficulty \| Protections \|\n\| --- \| --- \| --- \| --- \|\n/);
-        assert.match(text, new RegExp(`\\| <${at('/protected').replace(/[.?/]/g, '\\$&')}> \\| done \\| \\w+ \\| Bulk Probe \\(antibot, 90%\\) \\|`));
+        assert.match(text, new RegExp(`\\| <${at('/protected').replace(/[.?/]/g, '\\$&')}> \\| done · 200 \\| \\w+ \\| Bulk Probe \\(antibot, 90%\\) \\|`));
         assert.ok(!text.includes('?n=1'), 'the query, where tokens live, is left out');
         assert.equal(text.charCodeAt(0), 35, 'a Markdown file has no byte-order mark');
       } else {
         const data = JSON.parse(text);
         assert.equal(data.type, 'bulk-scan');
         assert.equal(data.pages.length, 9);
+        assert.equal(data.pages.find(p => p.url === at('/protected?n=1')).httpStatus, 200);
       }
     }
     console.log('PASS Exports: CSV (with the byte-order mark), JSON and Markdown named for the local day');

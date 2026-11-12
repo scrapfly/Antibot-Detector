@@ -4504,6 +4504,12 @@
   "detectionTipCache": {
     "message": "Quali pagine riutilizzano questi risultati in cache e per quanto tempo."
   },
+  "detectionStatHttpStatus": {
+    "message": "Stato HTTP"
+  },
+  "detectionTipHttpStatus": {
+    "message": "Il codice di stato HTTP con cui la pagina ha risposto durante la scansione. Un errore (4xx o 5xx) spesso indica che la richiesta è stata bloccata o sottoposta a una verifica."
+  },
   "tipCacheExpires": {
     "message": "Scade"
   },
@@ -6155,6 +6161,9 @@
   "detectionMdSummaryFmt": {
     "message": "Rilevamenti: {0} · Affidabilità: {1}% · Difficoltà: {2}"
   },
+  "detectionHttpStatusFmt": {
+    "message": "Stato HTTP: {0}"
+  },
   "detectionMdColProtection": {
     "message": "Protezione"
   },
@@ -6712,6 +6721,9 @@
   },
   "webhookVarDetectionNames": {
     "message": "Protezioni rilevate con la loro affidabilità, separate da virgole"
+  },
+  "webhookVarHttpStatus": {
+    "message": "Codice di stato HTTP della pagina (0 se non noto)"
   },
   "historyCopyMarkdown": {
     "message": "Copia come Markdown"
