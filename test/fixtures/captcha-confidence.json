@@ -204,5 +204,13 @@
     "cfox-configured-widget": {"dom": {"tagName": "div", "class": "captchafox", "attributes": {"class": "captchafox", "data-sitekey": "sk_YOUR_SITEKEY"}}},
     "cfox-response-field": {"dom": {"tagName": "input", "attributes": {"type": "hidden", "name": "cf-captcha-response"}}},
     "cfox-runtime-render": {"runtimeType": "function"}
+  },
+  "detect-myra-eucaptcha": {
+    "myra-eucaptcha-script": {"url": "https://cdn.eu-captcha.eu/verify.js"},
+    "myra-eucaptcha-check-frame": {"url": "https://cdn.eu-captcha.eu/check.html"},
+    "myra-eucaptcha-container": {"dom": {"tagName": "div", "class": "eu-captcha", "attributes": {"class": "eu-captcha"}}},
+    "myra-eucaptcha-configured-widget": {"dom": {"tagName": "div", "class": "eu-captcha", "attributes": {"class": "eu-captcha", "data-sitekey": "a1b2c3d4-0000-0000-0000-000000000000"}}},
+    "myra-eucaptcha-response-field": {"dom": {"tagName": "input", "attributes": {"type": "hidden", "name": "eu-captcha-response"}}},
+    "myra-eucaptcha-execute": {"runtimeType": "function"}
   }
 }

@@ -1,0 +1,85 @@
+{
+  "id": "detect-myra-eucaptcha",
+  "name": "EU CAPTCHA (Myra)",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "CAPTCHA",
+  "difficulty": "Low",
+  "lastUpdated": "2026-11-12",
+  "version": "1.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://www.eu-captcha.eu/",
+  "icon": "custom.png",
+  "description": "Myra Security's EU CAPTCHA, an invisible verification widget that checks the browser in a hidden frame and adds a response token to the form",
+  "detection": {
+    "url": [
+      {
+        "id": "myra-eucaptcha-script",
+        "confidence": 100,
+        "description": "Official EU CAPTCHA widget script verify.js on cdn.eu-captcha.eu",
+        "text": "^https://cdn\\.eu-captcha\\.eu/verify\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "myra-eucaptcha-check-frame",
+        "confidence": 100,
+        "description": "Hidden check.html frame on cdn.eu-captcha.eu in which EU CAPTCHA verifies the browser",
+        "text": "^https://cdn\\.eu-captcha\\.eu/check\\.html(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "dom": [
+      {
+        "id": "myra-eucaptcha-container",
+        "selector": ".eu-captcha",
+        "confidence": 20,
+        "description": "Widget element with the class eu-captcha, possibly unconfigured"
+      },
+      {
+        "id": "myra-eucaptcha-configured-widget",
+        "selector": ".eu-captcha[data-sitekey]",
+        "confidence": 45,
+        "description": "Widget element with the class eu-captcha and a sitekey attribute, not key validity"
+      },
+      {
+        "id": "myra-eucaptcha-response-field",
+        "selector": "input[type='hidden'][name='eu-captcha-response']",
+        "confidence": 50,
+        "description": "Hidden response token field named eu-captcha-response that the widget adds to the form"
+      }
+    ],
+    "window": [
+      {
+        "id": "myra-eucaptcha-execute",
+        "path": "euCaptcha.execute",
+        "condition": "typeof function",
+        "confidence": 50,
+        "description": "euCaptcha window object with its execute method, defined by verify.js, not execution"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "myra-eucaptcha-widget-runtime",
+      "name": "Configured widget and the euCaptcha window object",
+      "when": { "all": [{ "pattern": "myra-eucaptcha-configured-widget" }, { "pattern": "myra-eucaptcha-execute" }] },
+      "confidence": 70
+    },
+    {
+      "id": "myra-eucaptcha-widget-response",
+      "name": "Configured widget and the response token field",
+      "when": { "all": [{ "pattern": "myra-eucaptcha-configured-widget" }, { "pattern": "myra-eucaptcha-response-field" }] },
+      "confidence": 85
+    },
+    {
+      "id": "myra-eucaptcha-complete-integration",
+      "name": "Configured widget, window object and response token field",
+      "when": { "all": [{ "pattern": "myra-eucaptcha-configured-widget" }, { "pattern": "myra-eucaptcha-execute" }, { "pattern": "myra-eucaptcha-response-field" }] },
+      "confidence": 100
+    }
+  ]
+}

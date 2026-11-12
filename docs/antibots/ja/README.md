@@ -2,7 +2,7 @@
 
 # Antibot Detector が認識するアンチボット対策
 
-[Scrapfly Anti-bot Detector](../../README.ja.md) 拡張機能の 44 件のアンチボット検出ごとに 1 ページずつ用意しています。対策の概要、それを見分ける公開シグナル、評価された難易度、そしてウェブスクレイピングにとって通常何を意味するかを説明します。ページは `detectors/antibot/` の検出ルールから生成されています。アンチボットシステムを大規模に突破するには、Scrapfly の [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) をご覧ください。
+[Scrapfly Anti-bot Detector](../../README.ja.md) 拡張機能の 49 件のアンチボット検出ごとに 1 ページずつ用意しています。対策の概要、それを見分ける公開シグナル、評価された難易度、そしてウェブスクレイピングにとって通常何を意味するかを説明します。ページは `detectors/antibot/` の検出ルールから生成されています。アンチボットシステムを大規模に突破するには、Scrapfly の [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) をご覧ください。
 
 | 対策 | 難易度 | ページ |
 | --- | --- | --- |
@@ -12,6 +12,8 @@
 | Anubis | 低 | [Anubis](anubis.md) |
 | AWS WAF | 中 | [AWS WAF](aws-waf.md) |
 | Azure Front Door | 低 | [Azure Front Door](azurefrontdoor.md) |
+| Azure WAF | 中 | [Azure WAF](azure-waf.md) |
+| Bunny Shield | 中 | [Bunny Shield](bunny-shield.md) |
 | Castle | 中 | [Castle](castle.md) |
 | Cheq | 中 | [Cheq](cheq.md) |
 | Cloudflare Bot Management | 中 | [Cloudflare Bot Management](cloudflare.md) |
@@ -24,6 +26,7 @@
 | FingerprintJS | 低 | [FingerprintJS](fingerprintjs.md) |
 | Forter | 中 | [Forter](forter.md) |
 | Google BotGuard | 高 | [Google BotGuard](botguard.md) |
+| Google Cloud Armor | 中 | [Google Cloud Armor](cloud-armor.md) |
 | Huawei Cloud WAF | 低 | [Huawei Cloud WAF](huaweicloud-waf.md) |
 | HUMAN (PerimeterX) | 高 | [HUMAN (PerimeterX)](perimeterx.md) |
 | Hunt | 高 | [Hunt](hunt.md) |
@@ -44,8 +47,10 @@
 | SEON | 中 | [SEON](seon.md) |
 | Shape Security | 高 | [Shape Security](shapesecurity.md) |
 | Sift | 低 | [Sift](sift.md) |
+| Signifyd | 低 | [Signifyd](signifyd.md) |
 | SiteGround SG-CAPTCHA | 低 | [SiteGround SG-CAPTCHA](siteground-captcha.md) |
 | Sucuri WAF | 低 | [Sucuri WAF](sucuri.md) |
+| Tencent Cloud EdgeOne | 中 | [Tencent Cloud EdgeOne](edgeone.md) |
 | ThreatMetrix | 中 | [ThreatMetrix](threatmetrix.md) |
 | Vercel Firewall | 中 | [Vercel Firewall](vercel.md) |
 | Wordfence | 低 | [Wordfence](wordfence.md) |

@@ -1,0 +1,167 @@
+{
+  "id": "detect-edgeone",
+  "name": "Tencent Cloud EdgeOne",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-11-12",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://edgeone.ai/",
+  "icon": "qcloud_official.png",
+  "description": "Tencent Cloud EdgeOne edge security platform with bot management, JavaScript challenges and a client attestation SDK",
+  "detection": {
+    "url": [
+      {
+        "id": "edgeone-attestation-sdk",
+        "confidence": 100,
+        "description": "EdgeOne client attestation SDK eoclientsecuritykit.min.js on Tencent's CDN (EdgeOne docs)",
+        "text": "^https://cdnstatic\\.tencentcs\\.com/edgeone/security/client-attestation/eoclientsecuritykit(?:\\.min)?\\.js(?:[?#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      },
+      {
+        "id": "edgeone-sec-bot-path",
+        "confidence": 100,
+        "description": "Request to /.eo-sec-bot/ on the site, which the EdgeOne attestation SDK calls to start (EdgeOne docs)",
+        "text": "^https?://[^/?#]+/\\.eo-sec-bot/",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all"
+      }
+    ],
+    "cookie": [
+      {
+        "id": "edgeone-bot-session-cookie",
+        "name": "^EO-Bot-SessionId$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "EO-Bot-SessionId bot management session cookie that EdgeOne counts requests by (EdgeOne docs)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "edgeone-bot-token-cookie",
+        "name": "^EO-Bot-Token$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "EO-Bot-Token client verification cookie of EdgeOne bot management (EdgeOne docs)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "edgeone-challenge-cookie",
+        "name": "^EO_Bot_Ssid$",
+        "nameRegex": true,
+        "nameCaseSensitive": true,
+        "confidence": 60,
+        "description": "EO_Bot_Ssid cookie that the EdgeOne JavaScript challenge sets, seen on EdgeOne sites but not named in its docs",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "header": [
+      {
+        "id": "edgeone-log-uuid-header",
+        "name": "^eo-log-uuid$",
+        "nameRegex": true,
+        "value": "^[0-9]{10,24}$",
+        "valueRegex": true,
+        "confidence": 40,
+        "description": "EO-LOG-UUID request ID header that EdgeOne adds to every response; proves the CDN, not protection",
+        "standalone": false,
+        "nameScope": "response",
+        "valueScope": "response"
+      },
+      {
+        "id": "edgeone-server-header",
+        "name": "^server$",
+        "nameRegex": true,
+        "value": "^TencentEdgeOne$",
+        "valueRegex": true,
+        "confidence": 40,
+        "description": "Server header TencentEdgeOne that EdgeOne adds when the origin sends none; proves the CDN, not protection",
+        "standalone": false,
+        "nameScope": "response",
+        "valueScope": "response"
+      }
+    ],
+    "window": [
+      {
+        "id": "edgeone-security-kit",
+        "path": "EOClientSecurityKit",
+        "condition": "typeof object",
+        "confidence": 75,
+        "description": "EOClientSecurityKit object of the EdgeOne client attestation SDK"
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "edgeone-bot-session",
+      "name": "Bot session cookie and client verification token",
+      "confidence": 100,
+      "when": {
+        "all": [
+          { "pattern": "edgeone-bot-session-cookie" },
+          { "pattern": "edgeone-bot-token-cookie" }
+        ]
+      }
+    },
+    {
+      "id": "edgeone-session-edge",
+      "name": "Bot management cookie on an EdgeOne response",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "any": [
+              { "pattern": "edgeone-bot-session-cookie" },
+              { "pattern": "edgeone-bot-token-cookie" }
+            ]
+          },
+          {
+            "any": [
+              { "pattern": "edgeone-log-uuid-header" },
+              { "pattern": "edgeone-server-header" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "edgeone-challenge-edge",
+      "name": "JavaScript challenge cookie on an EdgeOne response",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "edgeone-challenge-cookie" },
+          {
+            "any": [
+              { "pattern": "edgeone-log-uuid-header" },
+              { "pattern": "edgeone-server-header" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "edgeone-attestation-edge",
+      "name": "Attestation SDK object on an EdgeOne response",
+      "confidence": 90,
+      "when": {
+        "all": [
+          { "pattern": "edgeone-security-kit" },
+          {
+            "any": [
+              { "pattern": "edgeone-log-uuid-header" },
+              { "pattern": "edgeone-server-header" }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

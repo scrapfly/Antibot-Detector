@@ -1529,5 +1529,151 @@
     "HuaweiCloudWAF"
    ]
   }
+ },
+ "detect-edgeone": {
+  "edgeone-attestation-sdk": {
+   "url": "https://cdnstatic.tencentcs.com/edgeone/security/client-attestation/eoclientsecuritykit.min.js"
+  },
+  "edgeone-sec-bot-path": {
+   "url": "https://www.example.com/.eo-sec-bot/"
+  },
+  "edgeone-bot-session-cookie": {
+   "cookie": [
+    "EO-Bot-SessionId",
+    "synthetic"
+   ]
+  },
+  "edgeone-bot-token-cookie": {
+   "cookie": [
+    "EO-Bot-Token",
+    "synthetic"
+   ]
+  },
+  "edgeone-challenge-cookie": {
+   "cookie": [
+    "EO_Bot_Ssid",
+    "3150643200"
+   ]
+  },
+  "edgeone-log-uuid-header": {
+   "header": [
+    "eo-log-uuid",
+    "14611427580346780187"
+   ]
+  },
+  "edgeone-server-header": {
+   "header": [
+    "server",
+    "TencentEdgeOne"
+   ]
+  },
+  "edgeone-security-kit": {
+   "runtimeType": "object"
+  }
+ },
+ "detect-bunny-shield": {
+  "bunny-shield-pow-cookie": {
+   "cookie": [
+    "bunny_shield",
+    "synthetic"
+   ]
+  },
+  "bunny-shield-checksum-cookie": {
+   "cookie": [
+    "bunny_shield_chk",
+    "synthetic"
+   ]
+  },
+  "bunny-shield-id-cookie": {
+   "cookie": [
+    "bunny_shield_id",
+    "synthetic"
+   ]
+  },
+  "bunny-shield-fingerprint-cookie": {
+   "cookie": [
+    "bunny_shield_bd",
+    "synthetic"
+   ]
+  },
+  "bunnycdn-server-header": {
+   "header": [
+    "server",
+    "BunnyCDN-ES1-895"
+   ]
+  }
+ },
+ "detect-signifyd": {
+  "signifyd-script-tag": {
+   "url": "https://cdn-scripts.signifyd.com/api/script-tag.js"
+  },
+  "signifyd-profiling-modules": {
+   "url": "https://cdn-scripts.signifyd.com/o/lite.js"
+  },
+  "signifyd-profiling-endpoint": {
+   "url": "https://dp.signifyd.com/fp-web"
+  },
+  "signifyd-proxied-script-tag": {
+   "url": "https://assets.example.com/api/script-tag.js"
+  },
+  "signifyd-proxied-lite": {
+   "url": "https://assets.example.com/o/lite.js"
+  },
+  "signifyd-proxied-fp-web": {
+   "url": "https://assets.example.com/fp-web"
+  },
+  "signifyd-script-element": {
+   "dom": {
+    "tagName": "script",
+    "attributes": {
+     "id": "script-tag-api",
+     "data-order-session-id": "82ce5fca-c2b2-429b-b487-6c3053469f85",
+     "src": "https://assets.example.com/api/script-tag.js"
+    }
+   }
+  },
+  "signifyd-page-view": {
+   "runtimeType": "function"
+  },
+  "signifyd-script-loader": {
+   "runtimeType": "object"
+  }
+ },
+ "detect-azure-waf": {
+  "azwaf-frontdoor-js-cookie": {
+   "cookie": [
+    "afd_azwaf_jsclearance",
+    "synthetic"
+   ]
+  },
+  "azwaf-appgw-js-cookie": {
+   "cookie": [
+    "appgw_azwaf_jsclearance",
+    "synthetic"
+   ]
+  },
+  "azwaf-frontdoor-captcha-cookie": {
+   "cookie": [
+    "afd_azwaf_captcha",
+    "synthetic"
+   ]
+  }
+ },
+ "detect-cloud-armor": {
+  "cloud-armor-exemption-cookie": {
+   "cookie": [
+    "recaptcha-ca-e",
+    "synthetic"
+   ]
+  },
+  "cloud-armor-session-token-cookie": {
+   "cookie": [
+    "recaptcha-ca-t",
+    "synthetic"
+   ]
+  },
+  "recaptcha-waf-session-script": {
+   "url": "https://www.google.com/recaptcha/enterprise.js?render=SESSION_TOKEN_KEY&waf=session"
+  }
  }
 }

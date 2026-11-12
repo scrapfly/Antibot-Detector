@@ -1,0 +1,95 @@
+{
+  "id": "detect-cloud-armor",
+  "name": "Google Cloud Armor",
+  "author": "Scrapfly",
+  "enabled": true,
+  "category": "Anti-Bot",
+  "difficulty": "Medium",
+  "lastUpdated": "2026-11-12",
+  "version": "2.0.0",
+  "minExtensionVersion": "2.8",
+  "website": "https://cloud.google.com/security/products/armor",
+  "icon": "botguard_official.png",
+  "description": "Google Cloud Armor bot management, which challenges visitors with reCAPTCHA and checks its exemption and session-token cookies",
+  "detection": {
+    "cookie": [
+      {
+        "id": "cloud-armor-exemption-cookie",
+        "name": "^recaptcha-ca-e$",
+        "nameRegex": true,
+        "confidence": 90,
+        "description": "recaptcha-ca-e exemption cookie issued after a visitor passes the Cloud Armor reCAPTCHA challenge (Google Cloud docs)",
+        "nameScope": "all",
+        "valueScope": "all"
+      },
+      {
+        "id": "cloud-armor-session-token-cookie",
+        "name": "^recaptcha-ca-t$",
+        "nameRegex": true,
+        "confidence": 70,
+        "description": "recaptcha-ca-t session-token cookie that reCAPTCHA for WAF sets for Cloud Armor rules to check (Google Cloud docs)",
+        "nameScope": "all",
+        "valueScope": "all"
+      }
+    ],
+    "url": [
+      {
+        "id": "recaptcha-waf-session-script",
+        "confidence": 50,
+        "description": "reCAPTCHA script loaded with waf=session, the session-token setup of reCAPTCHA for WAF; supporting signal only",
+        "text": "^https://www\\.(?:google\\.com|recaptcha\\.net)/recaptcha/(?:api|enterprise)\\.js\\?(?:[^#]*&)?waf=session(?:[&#]|$)",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "textScope": "all",
+        "standalone": false
+      }
+    ]
+  },
+  "combinations": [
+    {
+      "id": "cloud-armor-both-cookies",
+      "name": "Exemption cookie and session-token cookie",
+      "confidence": 100,
+      "when": {
+        "all": [
+          {
+            "pattern": "cloud-armor-exemption-cookie"
+          },
+          {
+            "pattern": "cloud-armor-session-token-cookie"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cloud-armor-session-token",
+      "name": "Session-token cookie with the reCAPTCHA script that sets it",
+      "confidence": 85,
+      "when": {
+        "all": [
+          {
+            "pattern": "cloud-armor-session-token-cookie"
+          },
+          {
+            "pattern": "recaptcha-waf-session-script"
+          }
+        ]
+      }
+    },
+    {
+      "id": "cloud-armor-exemption-session-script",
+      "name": "Exemption cookie with a reCAPTCHA for WAF session-token script",
+      "confidence": 95,
+      "when": {
+        "all": [
+          {
+            "pattern": "cloud-armor-exemption-cookie"
+          },
+          {
+            "pattern": "recaptcha-waf-session-script"
+          }
+        ]
+      }
+    }
+  ]
+}

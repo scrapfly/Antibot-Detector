@@ -22,7 +22,7 @@
 
 Scrapfly Anti-bot Detector — бесплатное расширение для Chrome, которое показывает, как сайт защищается от автоматизированного трафика. Просто пользуйтесь браузером как обычно: число на значке расширения показывает, сколько защит использует страница, а во всплывающем окне каждая из них указана с уровнем уверенности, сложностью и сигналами, которые её выдали.
 
-Сразу после установки расширение распознаёт 88 технологий: 44 системы анти-бот, 23 CAPTCHA и 21 технику снятия отпечатков браузера. Каждый детектор — это обычный JSON-файл, который можно прочитать, изменить или дополнить. Новые правила выходят с каждым релизом этого репозитория, поэтому **Правила → Обновить** может установить их ещё до того, как Chrome обновит само расширение.
+Сразу после установки расширение распознаёт 94 технологии: 49 систем анти-бот, 24 CAPTCHA и 21 технику снятия отпечатков браузера. Каждый детектор — это обычный JSON-файл, который можно прочитать, изменить или дополнить. Новые правила выходят с каждым релизом этого репозитория, поэтому **Правила → Обновить** может установить их ещё до того, как Chrome обновит само расширение.
 
 Мы сделали его в [Scrapfly](https://scrapfly.io), потому что любой проект по сбору данных начинается с одного вопроса: что защищает эту страницу? Расширение так же полезно, чтобы посмотреть, как защита от ботов на вашем собственном сайте выглядит снаружи, и для исследований в области безопасности.
 
@@ -105,18 +105,18 @@ git clone https://github.com/scrapfly/Antibot-Detector.git
 У каждой анти-бот системы есть своя страница с cookie, заголовками и скриптами, по которым её видно: [страницы об анти-бот системах](antibots/ru/README.md).
 
 <details>
-<summary><b>Системы анти-бот (44)</b></summary>
+<summary><b>Системы анти-бот (49)</b></summary>
 <br>
 
-Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · SiteGround SG-CAPTCHA · Sucuri WAF · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
+Akamai Bot Manager · Alibaba Cloud WAF · Amazon Bot Protection · Anubis · AWS WAF · Azure Front Door · Azure WAF · Bunny Shield · Castle · Cheq · Cloudflare Bot Management · Cloudflare Waiting Room · DataDome · DDoS-Guard · DeepSeek PoW · F5 BIG-IP ASM · Fastly Bot Management · FingerprintJS · Forter · Google BotGuard · Google Cloud Armor · Huawei Cloud WAF · HUMAN (PerimeterX) · Hunt · Incapsula (Imperva) · iovation (TransUnion TruValidate) · Jiasule (Chuangyu Shield) · Kasada · Kount · Meetrics Check · Netacea · Ocule · OpenAI Sentinel · Queue-it · Radware Bot Manager · Reblaze · Riskified · Ruishu · SEON · Shape Security · Sift · Signifyd · SiteGround SG-CAPTCHA · Sucuri WAF · Tencent Cloud EdgeOne · ThreatMetrix · Vercel Firewall · Wordfence · Yundun Cloud WAF
 
 </details>
 
 <details>
-<summary><b>CAPTCHA (23)</b></summary>
+<summary><b>CAPTCHA (24)</b></summary>
 <br>
 
-AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
+AliExpress CAPTCHA · Aliyun Captcha 2.0 · ALTCHA · Basilisk Captcha · Binance Captcha · Cap · Captcha.eu · CaptchaFox · Capy Puzzle Captcha · Cloudflare Turnstile · Dingxiang Captcha · EU CAPTCHA (Myra) · Friendly Captcha · FunCaptcha (Arkose Labs) · GeeTest · Google reCAPTCHA · hCaptcha · Lemin Cropped Captcha · MTCaptcha · NetEase Yidun · Prosopo Procaptcha · QCloud Captcha · Shumei Captcha · Yandex SmartCaptcha
 
 </details>
 

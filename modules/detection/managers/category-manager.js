@@ -71,7 +71,12 @@ class CategoryManager {
                     'detect-kount',
                     'detect-riskified',
                     'detect-siteground-captcha',
-                    'detect-huaweicloud-waf'
+                    'detect-huaweicloud-waf',
+                    'detect-edgeone',
+                    'detect-bunny-shield',
+                    'detect-signifyd',
+                    'detect-azure-waf',
+                    'detect-cloud-armor'
                 ]
             },
             captcha: {
@@ -99,7 +104,8 @@ class CategoryManager {
                     'detect-altcha',
                     'detect-capjs',
                     'detect-lemin',
-                    'detect-captchafox'
+                    'detect-captchafox',
+                    'detect-myra-eucaptcha'
                 ]
             },
             fingerprint: {

@@ -3,7 +3,7 @@ Voyez comment n’importe quel site se protège des bots. Le détecteur anti-bot
 Ce que vous voyez
 • Un nombre sur l’icône de la barre d’outils : combien de protections la page utilise.
 • Une carte par protection, avec son niveau de confiance, sa difficulté et les signaux qui l’ont trahie : URL, cookies, en-têtes, code de la page, éléments de la page, appels d’API du navigateur et corps des requêtes.
-• 88 détecteurs inclus : 44 systèmes anti-bot, 23 CAPTCHAs et 21 techniques de fingerprinting. Chacun est un simple fichier JSON que vous pouvez lire, modifier ou étendre.
+• 94 détecteurs inclus : 49 systèmes anti-bot, 24 CAPTCHAs et 21 techniques de fingerprinting. Chacun est un simple fichier JSON que vous pouvez lire, modifier ou étendre.
 
 Dans le popup
 • Détection : ce que la page actuelle utilise, avec les preuves à l’origine de chaque détection.

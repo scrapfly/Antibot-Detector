@@ -34,7 +34,8 @@ const PROOF = new Set([
   'detect-recaptcha/google-frame-request', 'detect-recaptcha/google-runtime', 'detect-recaptcha/google-sdk',
   'detect-shumei/shumei-captcha-api', 'detect-shumei/shumei-core-resource', 'detect-shumei/shumei-sdk-resource',
   'detect-smartcaptcha/smartcaptcha-check-endpoint', 'detect-smartcaptcha/smartcaptcha-sdk-resource', 'detect-yidun/yidun-captcha-api',
-  'detect-yidun/yidun-core-resource', 'detect-yidun/yidun-sdk-resource'
+  'detect-yidun/yidun-core-resource', 'detect-yidun/yidun-sdk-resource',
+  'detect-myra-eucaptcha/myra-eucaptcha-script', 'detect-myra-eucaptcha/myra-eucaptcha-check-frame'
 ]);
 const isProof = (detector, rule) => PROOF.has(`${detector.id}/${rule.id}`);
 // Capped top tiers: AliExpress (a punish route is a block page, not necessarily a
@@ -208,16 +209,16 @@ test('combination AST rejects malformed and unreachable alternatives', () => {
     assert.throws(() => validate(node, new Set(['a']), 'invalid'));
   }
 });
-test('all twenty-three definitions have explicit IDs, conservative standalone evidence and three graded combinations', () => {
+test('all twenty-four definitions have explicit IDs, conservative standalone evidence and three graded combinations', () => {
   assert.deepEqual(Object.keys(captcha).sort(), ['detect-aliexpress', 'detect-aliyun', 'detect-altcha', 'detect-basilisk', 'detect-binance-captcha',
     'detect-capjs', 'detect-captchaeu', 'detect-captchafox', 'detect-capy', 'detect-dingxiang', 'detect-friendlycaptcha', 'detect-funcaptcha', 'detect-geetest',
-    'detect-hcaptcha', 'detect-lemin', 'detect-mtcaptcha', 'detect-prosopo', 'detect-qcloud', 'detect-recaptcha', 'detect-shumei',
+    'detect-hcaptcha', 'detect-lemin', 'detect-mtcaptcha', 'detect-myra-eucaptcha', 'detect-prosopo', 'detect-qcloud', 'detect-recaptcha', 'detect-shumei',
     'detect-smartcaptcha', 'detect-turnstile', 'detect-yidun']);
   for (const detector of Object.values(captcha)) {
     // Semver: bump the minor version whenever rules change, so Rules → Update offers it
     assert.match(detector.version, /^1\.\d+\.\d+$/, detector.id);
-    // 2026-11-04: Turnstile 1.2.1 (response-body rules need the 2.8.8 engine); 2026-11-11: CaptchaFox 1.0.0
-    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[3-9]|1[0-7]|26)|11-(?:04|11))$/, detector.id);
+    // 2026-11-04: Turnstile 1.2.1 (response-body rules need the 2.8.8 engine); 2026-11-11: CaptchaFox 1.0.0; 2026-11-12: EU CAPTCHA (Myra) 1.0.0
+    assert.match(detector.lastUpdated, /^2026-(?:10-(?:0[3-9]|1[0-7]|26)|11-(?:04|1[12]))$/, detector.id);
     const rules = patterns(detector);
     const ids = new Set(rules.map(rule => rule.id));
     assert.equal(ids.size, rules.length, `${detector.id}: duplicate IDs`);
