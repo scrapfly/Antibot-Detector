@@ -9,12 +9,14 @@
  * (activation: the worker sets aside what the tab captured for the page before and takes what it kept of this page's own
  * load). A page that is never shown is thrown away by Chrome, and what it held with it.
  *
- *   create({ document, send, shownMessage, max })
+ *   create({ document, send, shownMessage, sparable, max })
  *     document       the page's document (prerendering, prerenderingchange)
  *     send           (message) => Promise of the worker's answer (chrome.runtime.sendMessage)
  *     shownMessage   () => the message that tells the worker the page is shown, sent first; null sends none
- *     max            how many messages are held at most (default 300). Past that the oldest report that can be spared
- *                    goes (a hook batch, a response body, a hook failure); completions are never dropped
+ *     sparable       the message types a full outbox may drop, oldest first: reports another one or the scan repeats (the
+ *                    content script names hook batches, response bodies and hook failures, ScrapflyBridgeProtocol);
+ *                    any other type, a completion above all, is never dropped while one of these can go
+ *     max            how many messages are held at most (default 300)
  *   returns { send(message), whenShown(callback), holding() }
  *     send           sends now, or holds it while the page is prerendered; a Promise of the worker's answer either way
  *                    (undefined for one dropped past `max`)
@@ -26,10 +28,9 @@
   'use strict';
 
   const DEFAULT_MAX = 300;
-  // Reports a full outbox can spare: another of them, or the scan, says the same. Completions finish the scan: never dropped
-  const SPARABLE = new Set(['JS_HOOK_DETECTION_BATCH', 'RESPONSE_BODY', 'HOOK_FAILURE_REPORT']);
 
-  function create({ document, send, shownMessage = null, max = DEFAULT_MAX } = {}) {
+  function create({ document, send, shownMessage = null, sparable = [], max = DEFAULT_MAX } = {}) {
+    const spareTypes = new Set(sparable);
     const held = [];
     const waiting = [];
     let shown = !(document && document.prerendering === true);
@@ -66,7 +67,7 @@
         return new Promise((resolve, reject) => {
           held.push({ message, resolve, reject });
           if (held.length <= max) return;
-          const spare = held.findIndex(entry => entry.message && SPARABLE.has(entry.message.type));
+          const spare = held.findIndex(entry => entry.message && spareTypes.has(entry.message.type));
           const [dropped] = held.splice(spare === -1 ? held.length - 1 : spare, 1);
           dropped.resolve(undefined);
         });

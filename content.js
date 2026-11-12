@@ -34,7 +34,9 @@ var scrapflyBridgeToken = scrapflyBridgeToken || createScrapflyBridgeToken();
 var workerOutbox = workerOutbox || PrerenderOutbox.create({
     document,
     send: (message) => chrome.runtime.sendMessage(message),
-    shownMessage: () => ({ type: WorkerMessages.PRERENDER_SHOWN, url: window.location.href })
+    shownMessage: () => ({ type: WorkerMessages.PRERENDER_SHOWN, url: window.location.href }),
+    // What a page reporting a great deal while hidden may lose first; its completions are kept
+    sparable: [BRIDGE_TYPES.JS_HOOK_DETECTION_BATCH, BRIDGE_TYPES.RESPONSE_BODY, BRIDGE_TYPES.HOOK_FAILURE_REPORT]
 });
 // What the hook batcher and the completion relays send through: the outbox, with the extension's own context check
 var workerChrome = workerChrome || {

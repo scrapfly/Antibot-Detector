@@ -41,6 +41,7 @@ function outbox({ prerendering = true, max } = {}) {
     document,
     send: async (message) => { sent.push(message); return { answer: message.type }; },
     shownMessage: () => ({ type: WorkerMessages.PRERENDER_SHOWN, url: 'https://next.example/' }),
+    sparable: ['JS_HOOK_DETECTION_BATCH', 'RESPONSE_BODY', 'HOOK_FAILURE_REPORT'],
     max
   });
   return { document, sent, box };
@@ -112,6 +113,8 @@ test('a page that reports a lot while hidden is held within bounds; its completi
 test('the content script sends its hook, window and response reports through the outbox, and starts its scan after it', () => {
   const content = read('content.js');
   assert.match(content, /PrerenderOutbox\.create\(\{[\s\S]*?shownMessage: \(\) => \(\{ type: WorkerMessages\.PRERENDER_SHOWN/);
+  assert.match(content, /sparable: \[BRIDGE_TYPES\.JS_HOOK_DETECTION_BATCH, BRIDGE_TYPES\.RESPONSE_BODY, BRIDGE_TYPES\.HOOK_FAILURE_REPORT\]/,
+    'a full outbox drops reports, never completions');
   assert.match(content, /createHookBatcher\(workerChrome\)/, 'hook batches');
   assert.match(content, /handleHookMessage\(\{ source: window, data \}, workerChrome,/, 'the hooks and window completions');
   for (const type of ['WINDOW_DETECTIONS', 'RESPONSE_BODY', 'HOOK_FAILURE_REPORT']) {
