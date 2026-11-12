@@ -1100,7 +1100,7 @@
     "message": "Nahradit"
   },
   "importHistoryModeMessageFmt": {
-    "message": "Importovat položky historie ({0})? Vaše současná historie jich má {1}.<br>Sloučit k ní přidá nové položky. Nahradit ji nejprve smaže."
+    "message": "Položek k importu: {0}. Položek v současné historii: {1}.<br>Sloučit k ní přidá nové položky. Nahradit ji nejprve smaže."
   },
   "clearLogsTitle": {
     "message": "Vymazat protokoly"
@@ -3637,13 +3637,13 @@
     "message": "Spustí se, když je tato podmínka splněna."
   },
   "combinationSentenceAllFmt": {
-    "message": "Spustí se, když jsou splněny všechny podmínky (celkem {0})."
+    "message": "Spustí se, když jsou splněny všechny podmínky (celkem: {0})."
   },
   "combinationSentenceAnyFmt": {
-    "message": "Spustí se, když je splněna kterákoli z těchto podmínek (celkem {0})."
+    "message": "Spustí se, když je splněna kterákoli z těchto podmínek (celkem: {0})."
   },
   "combinationSentenceAtLeastFmt": {
-    "message": "Spustí se, když je splněno alespoň {0} z těchto podmínek (celkem {1})."
+    "message": "Spustí se, když je splněn minimální počet těchto podmínek: {0} z {1}."
   },
   "combinationSentenceConfidenceFmt": {
     "message": "Spolehlivost: {0} %."
@@ -4535,7 +4535,7 @@
     "message": "Ověřit"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Toto pravidlo se shoduje na stránkách: {1} z {0} uložených"
+    "message": "Uložené stránky, na kterých se pravidlo shoduje: {1} z {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "Stránky: {0} z {1}"
@@ -6626,7 +6626,7 @@
     "message": "Tomuto filtru neodpovídá žádná stránka."
   },
   "bulkShowingFmt": {
-    "message": "Zobrazeno {0} z {1} stránek. Exporty obsahují jen tyto.",
+    "message": "Zobrazené stránky: {0} z {1}. Exporty obsahují jen tyto.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {

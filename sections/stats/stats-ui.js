@@ -288,7 +288,7 @@
   }
   /** "50 of 120 rows" under a table, and its Show more button; the whole footer goes when there is nothing to count. */
   function tableCount(prefix, visible, total) {
-    setText(prefix + 'Count', fmt('statsTableCountFmt', '{0} of {1} rows', num(visible), num(total)));
+    setText(prefix + 'Count', fmt('statsTableCountFmt', 'Rows: {0} of {1}', num(visible), num(total)));
     byId(prefix + 'More').hidden = visible >= total;
     byId(prefix + 'Footer').hidden = total === 0;
   }

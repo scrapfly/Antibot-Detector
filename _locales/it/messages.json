@@ -1043,7 +1043,7 @@
     "message": "Errore nella lettura del file: {0}"
   },
   "detectorsUpdatedFmt": {
-    "message": "{0} detector aggiornati"
+    "message": "Detector aggiornati: {0}"
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" eliminato"
@@ -1100,7 +1100,7 @@
     "message": "Sostituisci"
   },
   "importHistoryModeMessageFmt": {
-    "message": "Importare {0} voci della cronologia? La tua cronologia attuale ne contiene {1}.<br>«Unisci» aggiunge le nuove voci. «Sostituisci» prima la elimina."
+    "message": "Voci da importare: {0}. Voci nella cronologia attuale: {1}.<br>«Unisci» aggiunge le nuove voci. «Sostituisci» prima la elimina."
   },
   "clearLogsTitle": {
     "message": "Elimina log"
@@ -1978,7 +1978,7 @@
     "message": "Pagine: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} di {1} rilevamenti · {2}%"
+    "message": "Rilevamenti: {0} di {1} · {2}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Rilevamenti: {0} · Giorni: {1}"
@@ -2011,7 +2011,7 @@
     "message": "Cancellazione dei rilevatori personalizzati..."
   },
   "customDetectorsClearedFmt": {
-    "message": "{0} rilevatori personalizzati rimossi"
+    "message": "Rilevatori personalizzati rimossi: {0}"
   },
   "noCustomDetectorsToClear": {
     "message": "Non ci sono rilevatori personalizzati da cancellare"
@@ -4153,7 +4153,7 @@
     "message": "Valore"
   },
   "advCommonCharsFmt": {
-    "message": "{0} caratteri"
+    "message": "caratteri: {0}"
   },
   "advCookiePath": {
     "message": "Percorso"
@@ -4535,13 +4535,13 @@
     "message": "Verifica"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Questa regola corrisponde a {1} pagine salvate su {0}"
+    "message": "Pagine salvate a cui corrisponde questa regola: {1} su {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{0} di {1} pagine"
+    "message": "Pagine: {0} di {1}"
   },
   "ruleHistoryCheckOtherFmt": {
-    "message": "+{0} altre pagine"
+    "message": "Altre pagine: +{0}"
   },
   "ruleHistoryCheckNoHistory": {
     "message": "La Cronologia è vuota: visita prima alcune pagine."
@@ -4550,7 +4550,7 @@
     "message": "Una stima: la Cronologia conserva i valori trovati, non le pagine intere."
   },
   "ruleHistoryCheckCombinationFmt": {
-    "message": "si attiva su {0} pagine"
+    "message": "si attiva su pagine: {0}"
   },
   "ruleHistoryCheckEmpty": {
     "message": "Aggiungi pattern per verificarli."
@@ -5006,7 +5006,7 @@
     "message": "Protezioni viste"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "{0} nuove in questo periodo"
+    "message": "Nuove in questo periodo: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "Regole totali: {0}"
@@ -5180,7 +5180,7 @@
     "message": "Prove solide"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{0} rilevamenti su {1} ottengono l'80% o più."
+    "message": "Rilevamenti con l'80% o più: {0} su {1}."
   },
   "statsUnconfirmed": {
     "message": "Citate, non confermate"
@@ -5249,7 +5249,7 @@
     "message": "Copertura"
   },
   "statsRulesCoverageFmt": {
-    "message": "{0} regole attive su {1} hanno trovato corrispondenze in questo periodo"
+    "message": "Regole attive con corrispondenze in questo periodo: {0} su {1}"
   },
   "statsRulesAttention": {
     "message": "Richiedono attenzione"
@@ -6483,7 +6483,7 @@
     "message": "non si attiva"
   },
   "ruleLiveTestPageFmt": {
-    "message": "Letti: {0} script, {1} elementi, {2} cookie e {3} richieste."
+    "message": "Letto dalla pagina. Script: {0} · elementi: {1} · cookie: {2} · richieste: {3}."
   },
   "ruleLiveTestNoRequests": {
     "message": "Le richieste fatte dalla pagina non sono più disponibili, quindi i pattern URL sono stati verificati solo sul suo indirizzo e sui suoi script."
@@ -6626,7 +6626,7 @@
     "message": "Nessuna pagina corrisponde a questo filtro."
   },
   "bulkShowingFmt": {
-    "message": "Mostrate {0} pagine su {1}. Le esportazioni includono solo queste.",
+    "message": "Pagine mostrate: {0} su {1}. Le esportazioni includono solo queste.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {

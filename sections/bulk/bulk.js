@@ -399,7 +399,7 @@
     renderRows(run);
     const shown = run.items.filter(item => BulkFilter.matches(item, state.filter)).length;
     byId('bulkFilterNote').textContent = state.filter === 'all' ? ''
-      : fmt('bulkShowingFmt', 'Showing {0} of {1} pages. Exports include only these.', number(shown), number(run.items.length));
+      : fmt('bulkShowingFmt', 'Pages shown: {0} of {1}. Exports include only these.', number(shown), number(run.items.length));
   }
 
   /* ---------- Exports ---------- */

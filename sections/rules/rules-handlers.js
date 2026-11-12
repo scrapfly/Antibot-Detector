@@ -317,7 +317,7 @@ Rules.prototype.resolveEditedRuleUpdates = async function(updates) {
   if (replace.length > 0) {
     const result = await UpdateManager.applyUpdates({ ids: replace, overwriteModified: true });
     if (result.success && result.count > 0) {
-      NotificationHelper.success(_fmt('detectorsUpdatedFmt', `${result.count} detectors updated`, result.count));
+      NotificationHelper.success(_fmt('detectorsUpdatedFmt', `Detectors updated: ${result.count}`, result.count));
     } else if (!result.success || result.failed > 0) {
       NotificationHelper.warning(_tr('couldNotFetchUpdates', 'Could not fetch updates from server'));
     }
@@ -415,7 +415,7 @@ Rules.prototype.handleClear = async function() {
       chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, (response) => {
         Logger.ui('Detectors reloaded in background after clear:', response);
       });
-      NotificationHelper.success(_fmt('customDetectorsClearedFmt', `${removed} custom detectors removed`, removed));
+      NotificationHelper.success(_fmt('customDetectorsClearedFmt', `Custom detectors removed: ${removed}`, removed));
     } else {
       NotificationHelper.info(_tr('noCustomDetectorsToClear', 'There are no custom detectors to clear'));
     }

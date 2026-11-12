@@ -746,7 +746,7 @@ class History {
           ${segments.map(seg => {
             const count = s.categoryCounts[seg.key];
             const pct = Math.round((count / s.totalDetections) * 100);
-            const detail = FormatUtils.t('historyCategoryShareFmt', '{0} of {1} detections · {2}%', count, s.totalDetections, pct);
+            const detail = FormatUtils.t('historyCategoryShareFmt', 'Detections: {0} of {1} · {2}%', count, s.totalDetections, pct);
             return `<span class="hm-bar-seg cat-${seg.key}" style="flex: ${count}" role="img" aria-label="${FormatUtils.escapeAttr(`${seg.label}: ${detail}`)}" data-tip="${FormatUtils.escapeAttr(seg.label)}" data-tip-detail="${FormatUtils.escapeAttr(detail)}" data-tip-dot="cat-${seg.key}"></span>`;
           }).join('')}
         </div>
@@ -754,7 +754,7 @@ class History {
           ${segments.map(seg => {
             const count = s.categoryCounts[seg.key];
             const pct = Math.round((count / s.totalDetections) * 100);
-            const detail = FormatUtils.t('historyCategoryShareFmt', '{0} of {1} detections · {2}%', count, s.totalDetections, pct);
+            const detail = FormatUtils.t('historyCategoryShareFmt', 'Detections: {0} of {1} · {2}%', count, s.totalDetections, pct);
             return `<span class="hm-legend-item" ${FormatUtils.tipAttrs(seg.label, detail, [], `cat-${seg.key}`)}><i class="hm-dot cat-${seg.key}"></i>${esc(seg.label)}<b>${count}</b></span>`;
           }).join('')}
           <span class="hm-legend-scope" ${FormatUtils.tipAttrs(`${s.labels.scope}: ${s.scopeDisplay}`, this.getScopeHint(item.cacheScope))}>
@@ -2351,7 +2351,7 @@ class History {
       shown.text.textContent = FormatUtils.t('historyExportShownFmt', 'Only the entries shown ({0})', listed.length);
       const n = matching(listed).length;
       count.textContent = n
-        ? FormatUtils.t('historyExportCountFmt', '{0} of {1} entries will be exported', n, this.historyItems.length)
+        ? FormatUtils.t('historyExportCountFmt', 'Entries to export: {0} of {1}', n, this.historyItems.length)
         : FormatUtils.t('historyExportNone', 'No entries match these filters');
       count.classList.toggle('is-empty', n === 0);
     };
@@ -2426,7 +2426,7 @@ class History {
 
       const mode = await NotificationHelper.chooseImportMode({
         title: _tr('importHistoryTitle', 'Import History'),
-        message: _fmt('importHistoryModeMessageFmt', `Import ${usable} history items? Your current history has ${this.historyItems.length}.<br>Merge adds the new items to it. Replace deletes it first.`, usable, this.historyItems.length),
+        message: _fmt('importHistoryModeMessageFmt', `Entries to import: ${usable}. Entries in your current history: ${this.historyItems.length}.<br>Merge adds the new entries to it. Replace deletes it first.`, usable, this.historyItems.length),
         replaceText: _tr('replaceOption', 'Replace')
       });
 

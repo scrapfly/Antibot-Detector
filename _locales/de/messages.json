@@ -1043,7 +1043,7 @@
     "message": "Fehler beim Lesen der Datei: {0}"
   },
   "detectorsUpdatedFmt": {
-    "message": "{0} Detektoren aktualisiert"
+    "message": "Aktualisierte Detektoren: {0}"
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" gelöscht"
@@ -1100,7 +1100,7 @@
     "message": "Ersetzen"
   },
   "importHistoryModeMessageFmt": {
-    "message": "{0} Verlaufseinträge importieren? Ihr aktueller Verlauf enthält {1}.<br>„Zusammenführen“ fügt die neuen Einträge hinzu. „Ersetzen“ löscht ihn vorher."
+    "message": "Zu importierende Einträge: {0}. Einträge im aktuellen Verlauf: {1}.<br>„Zusammenführen“ fügt die neuen Einträge hinzu. „Ersetzen“ löscht ihn vorher."
   },
   "clearLogsTitle": {
     "message": "Protokolle löschen"
@@ -1978,7 +1978,7 @@
     "message": "Seiten: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} von {1} Erkennungen · {2}%"
+    "message": "Erkennungen: {0} von {1} · {2}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Erkennungen: {0} · Tage: {1}"
@@ -2011,7 +2011,7 @@
     "message": "Eigene Detektoren werden gelöscht..."
   },
   "customDetectorsClearedFmt": {
-    "message": "{0} eigene Detektoren entfernt"
+    "message": "Eigene Detektoren entfernt: {0}"
   },
   "noCustomDetectorsToClear": {
     "message": "Es gibt keine eigenen Detektoren zum Löschen"
@@ -3256,7 +3256,7 @@
     "message": "In die Zwischenablage kopiert"
   },
   "advPanelCookiesFoundFmt": {
-    "message": "{0}/{1} Cookies gefunden"
+    "message": "Gefundene Cookies: {0}/{1}"
   },
   "advPanelScriptsFoundFmt": {
     "message": "Gefundene Skripte: {0}"
@@ -4153,7 +4153,7 @@
     "message": "Wert"
   },
   "advCommonCharsFmt": {
-    "message": "{0} Zeichen"
+    "message": "Zeichen: {0}"
   },
   "advCookiePath": {
     "message": "Pfad"
@@ -4535,13 +4535,13 @@
     "message": "Prüfen"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Diese Regel trifft auf {1} von {0} gespeicherten Seiten zu"
+    "message": "Gespeicherte Seiten, auf die diese Regel zutrifft: {1} von {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{0} von {1} Seiten"
+    "message": "Seiten: {0} von {1}"
   },
   "ruleHistoryCheckOtherFmt": {
-    "message": "+{0} andere Seiten"
+    "message": "Andere Seiten: +{0}"
   },
   "ruleHistoryCheckNoHistory": {
     "message": "Der Verlauf ist leer: besuche zuerst einige Seiten."
@@ -4550,7 +4550,7 @@
     "message": "Eine Schätzung: Der Verlauf speichert die gefundenen Werte, nicht ganze Seiten."
   },
   "ruleHistoryCheckCombinationFmt": {
-    "message": "greift auf {0} Seiten"
+    "message": "greift auf Seiten: {0}"
   },
   "ruleHistoryCheckEmpty": {
     "message": "Füge Muster hinzu, um sie zu prüfen."
@@ -5006,7 +5006,7 @@
     "message": "Gesehene Schutzsysteme"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "{0} neu in diesem Zeitraum"
+    "message": "Neu in diesem Zeitraum: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "Regeln insgesamt: {0}"
@@ -5180,7 +5180,7 @@
     "message": "Starke Belege"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{0} von {1} Erkennungen erreichen 80 % oder mehr."
+    "message": "Erkennungen mit 80 % oder mehr: {0} von {1}."
   },
   "statsUnconfirmed": {
     "message": "Erwähnt, nicht bestätigt"
@@ -5249,7 +5249,7 @@
     "message": "Abdeckung"
   },
   "statsRulesCoverageFmt": {
-    "message": "{0} von {1} aktivierten Regeln haben in diesem Zeitraum gegriffen"
+    "message": "Aktivierte Regeln, die in diesem Zeitraum gegriffen haben: {0} von {1}"
   },
   "statsRulesAttention": {
     "message": "Braucht Aufmerksamkeit"
@@ -6114,7 +6114,7 @@
     "message": "Letzte Prüfung: {0} · {1} geprüft, {2} geändert"
   },
   "settingsHistoryWatchDoneFmt": {
-    "message": "{0} Seiten geprüft, {1} geändert"
+    "message": "Geprüfte Seiten: {0}, geändert: {1}"
   },
   "settingsHistoryWatchUncheckedFmt": {
     "message": "Nicht geprüft werden konnten: {0}"
@@ -6483,7 +6483,7 @@
     "message": "greift nicht"
   },
   "ruleLiveTestPageFmt": {
-    "message": "Gelesen: {0} Skripte, {1} Elemente, {2} Cookies und {3} Anfragen."
+    "message": "Von der Seite gelesen. Skripte: {0} · Elemente: {1} · Cookies: {2} · Anfragen: {3}."
   },
   "ruleLiveTestNoRequests": {
     "message": "Die Anfragen der Seite sind gerade nicht verfügbar, daher wurden URL-Muster nur mit ihrer Adresse und ihren Skripten abgeglichen."
@@ -6626,7 +6626,7 @@
     "message": "Keine Seite entspricht diesem Filter."
   },
   "bulkShowingFmt": {
-    "message": "{0} von {1} Seiten angezeigt. Exporte enthalten nur diese.",
+    "message": "Angezeigte Seiten: {0} von {1}. Exporte enthalten nur diese.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {

@@ -3256,7 +3256,7 @@
     "message": "Gekopieerd naar klembord"
   },
   "advPanelCookiesFoundFmt": {
-    "message": "{0}/{1} cookies gevonden"
+    "message": "Gevonden cookies: {0}/{1}"
   },
   "advPanelScriptsFoundFmt": {
     "message": "Gevonden scripts: {0}"
@@ -4153,7 +4153,7 @@
     "message": "Waarde"
   },
   "advCommonCharsFmt": {
-    "message": "{0} tekens"
+    "message": "tekens: {0}"
   },
   "advCookiePath": {
     "message": "Pad"
@@ -4535,7 +4535,7 @@
     "message": "Controleren"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Deze regel komt overeen met {1} van de {0} opgeslagen pagina's"
+    "message": "Opgeslagen pagina's waarmee deze regel overeenkomt: {1} van {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "Pagina's: {0} van {1}"
@@ -5006,7 +5006,7 @@
     "message": "Geziene beveiligingen"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "{0} nieuw in deze periode"
+    "message": "Nieuw in deze periode: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "Totaal aantal regels: {0}"
@@ -6114,7 +6114,7 @@
     "message": "Laatste controle: {0} · {1} gecontroleerd, {2} gewijzigd"
   },
   "settingsHistoryWatchDoneFmt": {
-    "message": "{0} pagina's gecontroleerd, {1} gewijzigd"
+    "message": "Gecontroleerde pagina's: {0}, gewijzigd: {1}"
   },
   "settingsHistoryWatchUncheckedFmt": {
     "message": "Niet gecontroleerd: {0}"
@@ -6483,7 +6483,7 @@
     "message": "niet voldaan"
   },
   "ruleLiveTestPageFmt": {
-    "message": "Gelezen: {0} scripts, {1} elementen, {2} cookies en {3} verzoeken."
+    "message": "Gelezen van de pagina. Scripts: {0} · elementen: {1} · cookies: {2} · verzoeken: {3}."
   },
   "ruleLiveTestNoRequests": {
     "message": "De verzoeken van de pagina zijn nu niet beschikbaar, dus URL-patronen zijn alleen gecontroleerd tegen het adres en de scripts."
@@ -6626,7 +6626,7 @@
     "message": "Geen pagina komt overeen met dit filter."
   },
   "bulkShowingFmt": {
-    "message": "{0} van {1} pagina's getoond. Exports bevatten alleen deze.",
+    "message": "Getoonde pagina's: {0} van {1}. Exports bevatten alleen deze.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {

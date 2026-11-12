@@ -543,6 +543,11 @@ Rules.prototype.updateMethodSectionPagination = function(section, options = {}) 
         infoEl.textContent = paginationEntry.searchQuery
           ? ((_t && _t.get('methodNoMatchingPatterns')) || 'No matching patterns')
           : ((_t && _t.get('methodNoPatterns')) || 'No patterns');
+      } else if (filteredCount === 1) {
+        // One has its own words: "Showing 1-1 of 1 matches" reads wrongly
+        infoEl.textContent = paginationEntry.searchQuery
+          ? ((_t && _t.get('historyOneMatch')) || '1 match')
+          : ((_t && _t.get('methodOnePattern')) || '1 pattern');
       } else {
         const startItem = startIndex + 1;
         const endItem = Math.min(endIndex, filteredCount);

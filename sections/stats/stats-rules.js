@@ -23,7 +23,7 @@
   function renderTiles(app, r) {
     const t = r.totals;
     U.setText('rulesCoverage', t.enabled ? share(t.matched / t.enabled) : '–');
-    U.setText('rulesCoverageSub', fmt('statsRulesCoverageFmt', '{0} of {1} enabled rules matched in this range', num(t.matched), num(t.enabled)));
+    U.setText('rulesCoverageSub', fmt('statsRulesCoverageFmt', 'Enabled rules matched in this range: {0} of {1}', num(t.matched), num(t.enabled)));
     U.setText('rulesAttention', num(t.attention));
     const unseen = r.neverMatched.filter(row => row.attention).length;
     const parts = [];

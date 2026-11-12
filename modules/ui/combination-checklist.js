@@ -216,7 +216,8 @@
     const count = tree.kind === 'group' ? tree.items.length : 1;
     if (!count) return '';
     if (count === 1) return tr('combinationSentenceOne', 'Fires when this condition is met.');
-    if (tree.mode === 'any') return fmt('combinationSentenceAnyFmt', 'Fires when any one of these {0} conditions is met.', count);
+    // "At least 1 of these" is "any one of these", which reads right ("at least 1 ... are met" does not)
+    if (tree.mode === 'any' || (tree.mode === 'of' && tree.atLeast === 1)) return fmt('combinationSentenceAnyFmt', 'Fires when any one of these {0} conditions is met.', count);
     if (tree.mode === 'of') return fmt('combinationSentenceAtLeastFmt', 'Fires when at least {0} of these {1} conditions are met.', tree.atLeast, count);
     return fmt('combinationSentenceAllFmt', 'Fires when all {0} conditions are met.', count);
   }

@@ -21,7 +21,7 @@ class AdvancedCookieResults {
         const uiLocale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
         let count = String(length);
         try { count = length.toLocaleString(uiLocale); } catch (_) { /* plain digits */ }
-        return `${label} · ${BaseAdvancedModule._fmt('advCommonCharsFmt', `${count} chars`, count)}`;
+        return `${label} · ${BaseAdvancedModule._fmt('advCommonCharsFmt', `characters: ${count}`, count)}`;
     }
 
     /** The page's site's protection cookie timeline from the worker ({ cookies: { name: events[] }, now }), or null. */
@@ -92,7 +92,7 @@ class AdvancedCookieResults {
             const facts = [];
             if (Number.isFinite(event.l) && (event.e === 'set' || event.e === 'changed')) {
                 const count = String(event.l);
-                facts.push(esc(K._fmt('advCommonCharsFmt', `${count} chars`, count)));
+                facts.push(esc(K._fmt('advCommonCharsFmt', `characters: ${count}`, count)));
                 if (event.m) facts.push(`<code class="adv-cookie-timeline-marker" title="${markerHint}">${esc(event.m)}</code>`);
             }
             return `
@@ -136,7 +136,7 @@ class AdvancedCookieResults {
         const summary = `
             <div class="adv-cookie-summary adv-cookie-summary--${status}">
                 <span class="adv-cookie-summary-dot" aria-hidden="true"></span>
-                <span>${esc(K._fmt('advPanelCookiesFoundFmt', `Found ${cookies.length}/${total} cookies`, cookies.length, total))}</span>
+                <span>${esc(K._fmt('advPanelCookiesFoundFmt', `Cookies found: ${cookies.length}/${total}`, cookies.length, total))}</span>
             </div>${K.kitFacts(facts)}`;
         const meta = (label, value, wide = false) => (value === '' || value === null || value === undefined) ? ''
             : `<div class="adv-cookie-meta-row${wide ? ' is-wide' : ''}"><dt>${esc(label)}</dt><dd>${esc(String(value))}</dd></div>`;

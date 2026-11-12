@@ -68,7 +68,7 @@ test('Check now asks the worker and says how it went', async () => {
     assert.deepEqual(plain(h.sent), [{ type: 'HISTORY_WATCH_NOW' }]);
     return h.toasts;
   };
-  assert.deepEqual(await run({ reply: { status: 'ok', checked: 3, changed: 1, skipped: 0, failed: 0 } }), [['success', 'Checked 3 pages, 1 changed']]);
+  assert.deepEqual(await run({ reply: { status: 'ok', checked: 3, changed: 1, skipped: 0, failed: 0 } }), [['success', 'Pages checked: 3, changed: 1']]);
   assert.deepEqual(await run({ reply: { status: 'ok', checked: 0, changed: 0, skipped: 0, failed: 0 } }), [['success', 'No page is watched yet: pin a page in History and choose Watch for changes.']]);
   assert.deepEqual(await run({ reply: { status: 'error', ok: false, error: 'no_window' } }), [['error', 'The last check found no browser window to open pages in.']]);
   assert.deepEqual(await run({ reply: { status: 'error', ok: false, error: 'paused' } }), [['error', 'History is paused, so nothing is checked.']]);
@@ -82,8 +82,8 @@ test('pages that could not be checked are said: in the last-check line, and as a
   await some.SettingsUI.refreshHistoryWatch();
   assert.equal(some.last.textContent, '3 of 10 pages watched · Last check: at 1234 · 2 checked, 0 changed · 1 could not be checked');
   const run = async (reply) => { const h = settingsHarness({ reply }); await h.SettingsUI.checkWatchNow.call({}, h.button); return h.toasts; };
-  assert.deepEqual(await run({ status: 'ok', checked: 2, changed: 1, skipped: 0, failed: 1 }), [['success', 'Checked 2 pages, 1 changed · 1 could not be checked']]);
-  assert.deepEqual(await run({ status: 'ok', checked: 0, changed: 0, skipped: 0, failed: 3 }), [['error', 'Checked 0 pages, 0 changed · 3 could not be checked']], 'every site down is not a success');
+  assert.deepEqual(await run({ status: 'ok', checked: 2, changed: 1, skipped: 0, failed: 1 }), [['success', 'Pages checked: 2, changed: 1 · 1 could not be checked']]);
+  assert.deepEqual(await run({ status: 'ok', checked: 0, changed: 0, skipped: 0, failed: 3 }), [['error', 'Pages checked: 0, changed: 0 · 3 could not be checked']], 'every site down is not a success');
 });
 
 test('a check that stopped part way says why (the extension switched off, History paused), not how many pages failed', async () => {

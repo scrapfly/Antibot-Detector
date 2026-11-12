@@ -1062,7 +1062,7 @@
     "message": "Error reading file: {0}"
   },
   "detectorsUpdatedFmt": {
-    "message": "{0} detectors updated"
+    "message": "Detectors updated: {0}"
   },
   "detectorDeletedFmt": {
     "message": "Deleted \"{0}\""
@@ -1120,7 +1120,7 @@
     "message": "Replace"
   },
   "importHistoryModeMessageFmt": {
-    "message": "Import {0} history items? Your current history has {1}.<br>Merge adds the new items to it. Replace deletes it first.",
+    "message": "Entries to import: {0}. Entries in your current history: {1}.<br>Merge adds the new entries to it. Replace deletes it first.",
     "description": "Import-history dialog body. {0} = items in the file, {1} = items stored now. Buttons: Cancel, Replace (replaceOption), Merge (mergeOption) — name them the same way."
   },
   "clearLogsTitle": {
@@ -2006,7 +2006,7 @@
     "message": "Pages: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} of {1} detections · {2}%"
+    "message": "Detections: {0} of {1} · {2}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Detections: {0} · Days: {1}"
@@ -2039,7 +2039,7 @@
     "message": "Clearing custom detectors..."
   },
   "customDetectorsClearedFmt": {
-    "message": "{0} custom detectors removed"
+    "message": "Custom detectors removed: {0}"
   },
   "noCustomDetectorsToClear": {
     "message": "There are no custom detectors to clear"
@@ -3441,7 +3441,7 @@
     "message": "Copied to clipboard"
   },
   "advPanelCookiesFoundFmt": {
-    "message": "Found {0}/{1} cookies",
+    "message": "Cookies found: {0}/{1}",
     "description": "{0} = cookies found, {1} = cookies checked"
   },
   "advPanelScriptsFoundFmt": {
@@ -4427,7 +4427,7 @@
     "message": "Value"
   },
   "advCommonCharsFmt": {
-    "message": "{0} chars"
+    "message": "characters: {0}"
   },
   "advCookiePath": {
     "message": "Path"
@@ -4811,13 +4811,13 @@
     "message": "Check"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "This rule matches {1} of {0} saved pages"
+    "message": "Saved pages this rule matches: {1} of {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{0} of {1} pages"
+    "message": "Pages: {0} of {1}"
   },
   "ruleHistoryCheckOtherFmt": {
-    "message": "+{0} other pages"
+    "message": "Other pages: +{0}"
   },
   "ruleHistoryCheckNoHistory": {
     "message": "History is empty: browse some pages first."
@@ -4826,7 +4826,7 @@
     "message": "An estimate: History keeps the matched values, not whole pages."
   },
   "ruleHistoryCheckCombinationFmt": {
-    "message": "fires on {0} pages"
+    "message": "fires on pages: {0}"
   },
   "ruleHistoryCheckEmpty": {
     "message": "Add patterns to check them."
@@ -5282,7 +5282,7 @@
     "message": "Protections seen"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "{0} new this period"
+    "message": "New this period: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "Total rules: {0}"
@@ -5456,7 +5456,7 @@
     "message": "Strong evidence"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{0} of {1} detections score 80% or more."
+    "message": "Detections scoring 80% or more: {0} of {1}."
   },
   "statsUnconfirmed": {
     "message": "Mentioned, not confirmed"
@@ -5525,7 +5525,7 @@
     "message": "Coverage"
   },
   "statsRulesCoverageFmt": {
-    "message": "{0} of {1} enabled rules matched in this range"
+    "message": "Enabled rules matched in this range: {0} of {1}"
   },
   "statsRulesAttention": {
     "message": "Needs attention"
@@ -5879,7 +5879,7 @@
     "description": "Checkbox in the History export dialog: only pages marked Changed (their protections differ from the earlier scan)"
   },
   "historyExportCountFmt": {
-    "message": "{0} of {1} entries will be exported",
+    "message": "Entries to export: {0} of {1}",
     "description": "{0} = matching entries, {1} = all entries"
   },
   "historyExportNone": {
@@ -6618,7 +6618,7 @@
     "description": "The last watchlist check; {0} is a date and time, {1} how many pages were checked, {2} how many had changed"
   },
   "settingsHistoryWatchDoneFmt": {
-    "message": "Checked {0} pages, {1} changed",
+    "message": "Pages checked: {0}, changed: {1}",
     "description": "Toast after Check now; {0} is how many pages were checked, {1} how many had changed"
   },
   "settingsHistoryWatchUncheckedFmt": {
@@ -7102,7 +7102,7 @@
     "description": "Test on this page: a combination that was not completed on the page"
   },
   "ruleLiveTestPageFmt": {
-    "message": "Read {0} scripts, {1} elements, {2} cookies and {3} requests.",
+    "message": "Read from the page. Scripts: {0} · elements: {1} · cookies: {2} · requests: {3}.",
     "description": "Test on this page: what the page offered to the test. All four are numbers: scripts, page elements, cookies, network requests"
   },
   "ruleLiveTestNoRequests": {
@@ -7286,7 +7286,7 @@
     "description": "Bulk scan: the line in the results table when the chosen Show filter matches no page"
   },
   "bulkShowingFmt": {
-    "message": "Showing {0} of {1} pages. Exports include only these.",
+    "message": "Pages shown: {0} of {1}. Exports include only these.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {

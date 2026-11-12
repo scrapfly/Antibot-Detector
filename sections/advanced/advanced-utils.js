@@ -167,7 +167,7 @@ const AdvancedUtils = {
          * Check cookies operation notifications
          */
         checkCookies: {
-            success: (count, total) => _advUtilsFmt('advPanelCookiesFoundFmt', `Found ${count}/${total} cookies`, count, total),
+            success: (count, total) => _advUtilsFmt('advPanelCookiesFoundFmt', `Cookies found: ${count}/${total}`, count, total),
             none: (moduleName) => _advUtilsFmt('advCommonNoCookiesFmt', `No ${moduleName} cookies found`, moduleName)
         },
 

@@ -1714,7 +1714,7 @@ SettingsUI.checkWatchNow = async function(button) {
       const failed = Number(result.failed) || 0;
       const done = result.checked + result.skipped + failed === 0
         ? text('settingsHistoryWatchNothing', 'No page is watched yet: pin a page in History and choose Watch for changes.')
-        : text('settingsHistoryWatchDoneFmt', 'Checked {0} pages, {1} changed', result.checked, result.changed)
+        : text('settingsHistoryWatchDoneFmt', 'Pages checked: {0}, changed: {1}', result.checked, result.changed)
           + (failed ? ` · ${text('settingsHistoryWatchUncheckedFmt', '{0} could not be checked', failed)}` : '');
       // Every page failed: nothing was checked, which is not a success
       if (failed && !result.checked) NotificationHelper.error(done);

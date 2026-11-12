@@ -1043,7 +1043,7 @@
     "message": "Error al leer el archivo: {0}"
   },
   "detectorsUpdatedFmt": {
-    "message": "{0} detectores actualizados"
+    "message": "Detectores actualizados: {0}"
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" eliminado"
@@ -1100,7 +1100,7 @@
     "message": "Reemplazar"
   },
   "importHistoryModeMessageFmt": {
-    "message": "¿Importar {0} elementos del historial? Tu historial actual tiene {1}.<br>Combinar añade los elementos nuevos. Reemplazar borra antes el historial actual."
+    "message": "Elementos para importar: {0}. Elementos en tu historial actual: {1}.<br>Combinar añade los elementos nuevos. Reemplazar borra antes el historial actual."
   },
   "clearLogsTitle": {
     "message": "Borrar registros"
@@ -1978,7 +1978,7 @@
     "message": "Páginas: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} de {1} detecciones · {2}%"
+    "message": "Detecciones: {0} de {1} · {2}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Detecciones: {0} · Días: {1}"
@@ -2011,7 +2011,7 @@
     "message": "Borrando detectores personalizados..."
   },
   "customDetectorsClearedFmt": {
-    "message": "{0} detectores personalizados eliminados"
+    "message": "Detectores personalizados eliminados: {0}"
   },
   "noCustomDetectorsToClear": {
     "message": "No hay detectores personalizados que borrar"
@@ -4153,7 +4153,7 @@
     "message": "Valor"
   },
   "advCommonCharsFmt": {
-    "message": "{0} caracteres"
+    "message": "caracteres: {0}"
   },
   "advCookiePath": {
     "message": "Ruta"
@@ -4535,13 +4535,13 @@
     "message": "Comprobar"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Esta regla coincide en {1} de {0} páginas guardadas"
+    "message": "Páginas guardadas en las que coincide esta regla: {1} de {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{0} de {1} páginas"
+    "message": "Páginas: {0} de {1}"
   },
   "ruleHistoryCheckOtherFmt": {
-    "message": "+{0} otras páginas"
+    "message": "Otras páginas: +{0}"
   },
   "ruleHistoryCheckNoHistory": {
     "message": "El Historial está vacío: navega por algunas páginas primero."
@@ -4550,7 +4550,7 @@
     "message": "Una estimación: el Historial guarda los valores encontrados, no las páginas completas."
   },
   "ruleHistoryCheckCombinationFmt": {
-    "message": "se activa en {0} páginas"
+    "message": "se activa en páginas: {0}"
   },
   "ruleHistoryCheckEmpty": {
     "message": "Añade patrones para comprobarlos."
@@ -5006,7 +5006,7 @@
     "message": "Protecciones vistas"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "{0} nuevas en este periodo"
+    "message": "Nuevas en este periodo: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "Total de reglas: {0}"
@@ -5180,7 +5180,7 @@
     "message": "Evidencia sólida"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{0} de {1} detecciones puntúan 80 % o más."
+    "message": "Detecciones con 80 % o más: {0} de {1}."
   },
   "statsUnconfirmed": {
     "message": "Mencionadas, sin confirmar"
@@ -5249,7 +5249,7 @@
     "message": "Cobertura"
   },
   "statsRulesCoverageFmt": {
-    "message": "{0} de {1} reglas activadas coincidieron en este periodo"
+    "message": "Reglas activadas que coincidieron en este periodo: {0} de {1}"
   },
   "statsRulesAttention": {
     "message": "Requieren atención"
@@ -6485,7 +6485,7 @@
     "message": "no se activa"
   },
   "ruleLiveTestPageFmt": {
-    "message": "Leídos: {0} scripts, {1} elementos, {2} cookies y {3} solicitudes."
+    "message": "Leído de la página. Scripts: {0} · elementos: {1} · cookies: {2} · solicitudes: {3}."
   },
   "ruleLiveTestNoRequests": {
     "message": "Las solicitudes que hizo la página ya no están disponibles, así que los patrones de URL solo se comprobaron con su dirección y sus scripts."
@@ -6628,7 +6628,7 @@
     "message": "Ninguna página coincide con este filtro."
   },
   "bulkShowingFmt": {
-    "message": "Mostrando {0} de {1} páginas. Las exportaciones incluyen solo estas.",
+    "message": "Páginas mostradas: {0} de {1}. Las exportaciones incluyen solo estas.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {

@@ -22,7 +22,7 @@
       const value = element('div', 'stats-kpi-row');
       value.appendChild(element('div', 'stats-kpi-value', share(row.strong / row.withConfidence)));
       tile.append(element('div', 'stats-kpi-label', U.categoryLabel(row.category)), value, element('div', 'stats-kpi-sub', tr('statsStrongEvidence', 'Strong evidence')));
-      U.setTip(tile, tr('statsStrongEvidence', 'Strong evidence'), fmt('statsStrongEvidenceTipFmt', '{0} of {1} detections score 80% or more.', num(row.strong), num(row.withConfidence)));
+      U.setTip(tile, tr('statsStrongEvidence', 'Strong evidence'), fmt('statsStrongEvidenceTipFmt', 'Detections scoring 80% or more: {0} of {1}.', num(row.strong), num(row.withConfidence)));
       host.appendChild(tile);
     });
   }

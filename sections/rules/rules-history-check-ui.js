@@ -44,8 +44,8 @@ Rules.prototype.runHistoryCheck = async function() {
   const share = (pages) => (r.pages > 0 ? Math.min(100, Math.round((pages / r.pages) * 100)) : 0);
   const bar = (pages) => `<span class="rule-check-bar" aria-hidden="true"><span style="width:${share(pages)}%"></span></span>`;
   const count = (row) => {
-    const own = ruleCheckText('ruleHistoryCheckRulePagesFmt', '{0} of {1} pages', row.rulePages, r.rulePages);
-    const other = row.otherPages ? ` <span class="rule-check-other">${esc(ruleCheckText('ruleHistoryCheckOtherFmt', '+{0} other pages', row.otherPages))}</span>` : '';
+    const own = ruleCheckText('ruleHistoryCheckRulePagesFmt', 'Pages: {0} of {1}', row.rulePages, r.rulePages);
+    const other = row.otherPages ? ` <span class="rule-check-other">${esc(ruleCheckText('ruleHistoryCheckOtherFmt', 'Other pages: +{0}', row.otherPages))}</span>` : '';
     return `<span class="rule-check-count${row.rulePages || row.otherPages ? '' : ' is-zero'}">${esc(own)}</span>${other}${bar(row.rulePages)}`;
   };
   const patternRows = r.patterns.map(row => `
@@ -57,12 +57,12 @@ Rules.prototype.runHistoryCheck = async function() {
   const comboRows = r.combinations.map((row, index) => `
     <li class="rule-check-row${row.pages ? '' : ' is-zero'}">
       <span class="rule-check-text"><span class="rule-check-desc">${esc(FormatUtils.ruleText(row.name) || ruleCheckText('combinationDefaultNameFmt', 'Combination {0}', index + 1))}</span></span>
-      <span class="rule-check-counts"><span class="rule-check-count${row.pages ? '' : ' is-zero'}">${esc(ruleCheckText('ruleHistoryCheckCombinationFmt', 'fires on {0} pages', row.pages))}</span>${bar(row.pages)}</span>
+      <span class="rule-check-counts"><span class="rule-check-count${row.pages ? '' : ' is-zero'}">${esc(ruleCheckText('ruleHistoryCheckCombinationFmt', 'fires on pages: {0}', row.pages))}</span>${bar(row.pages)}</span>
     </li>`).join('');
   const heading = (key, fallback) => `<h4 class="rule-check-heading">${esc(ruleCheckText(key, fallback))}</h4>`;
   results.innerHTML = `
     <div class="rule-check-summary${r.rulePages ? '' : ' is-zero'}">
-      <span class="rule-check-summary-text">${esc(ruleCheckText('ruleHistoryCheckSummaryFmt', 'This rule matches {1} of {0} saved pages', r.pages, r.rulePages))}</span>
+      <span class="rule-check-summary-text">${esc(ruleCheckText('ruleHistoryCheckSummaryFmt', 'Saved pages this rule matches: {1} of {0}', r.pages, r.rulePages))}</span>
       <span class="rule-check-meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${share(r.rulePages)}"><span style="width:${share(r.rulePages)}%"></span></span>
     </div>
     ${heading('ruleHistoryCheckPatterns', 'Patterns')}

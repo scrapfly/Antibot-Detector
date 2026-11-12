@@ -725,7 +725,10 @@ DetectionActions.describeShareExpiry = function(expiry) {
     const SECONDS = { 3600: ['shareExpire1H', '1 hour'], 86400: ['shareExpire1D', '1 day'],
       604800: ['shareExpire1W', '1 week'], 2592000: ['shareExpire30D', '30 days'] };
     switch (expiry?.kind) {
-      case 'days': return fmt('shareExpiryDaysFmt', `deleted after ${expiry.days} days`, expiry.days);
+      // One day has its own words ("1 day"); the count form is for two days or more
+      case 'days': return Number(expiry.days) === 1
+        ? fmt('shareExpiryAfterFmt', 'deleted after 1 day', tr('shareExpire1D', '1 day'))
+        : fmt('shareExpiryDaysFmt', `deleted after ${expiry.days} days`, expiry.days);
       case 'seconds': {
         const [key, fallback] = SECONDS[expiry.seconds] || ['shareExpire30D', '30 days'];
         return fmt('shareExpiryAfterFmt', `deleted after ${fallback}`, tr(key, fallback));

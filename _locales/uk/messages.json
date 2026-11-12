@@ -1978,7 +1978,7 @@
     "message": "Сторінок: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} із {1} виявлень · {2}%"
+    "message": "Виявлень: {0} із {1} · {2}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Виявлень: {0} · Днів: {1}"
@@ -3643,7 +3643,7 @@
     "message": "Спрацьовує, коли виконується будь-яка з цих умов ({0})."
   },
   "combinationSentenceAtLeastFmt": {
-    "message": "Спрацьовує, коли виконано умов: щонайменше {0} із {1}."
+    "message": "Спрацьовує, коли виконано мінімальну кількість умов: {0} із {1}."
   },
   "combinationSentenceConfidenceFmt": {
     "message": "Впевненість: {0}%."
@@ -4153,7 +4153,7 @@
     "message": "Значення"
   },
   "advCommonCharsFmt": {
-    "message": "{0} симв."
+    "message": "символів: {0}"
   },
   "advCookiePath": {
     "message": "Шлях"
@@ -4535,7 +4535,7 @@
     "message": "Перевірити"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Це правило збігається на сторінках: {1} із {0} збережених"
+    "message": "Збережених сторінок, де збігається це правило: {1} із {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "Сторінки: {0} із {1}"
@@ -5559,7 +5559,7 @@
     "message": "Лише змінені сторінки"
   },
   "historyExportCountFmt": {
-    "message": "Буде експортовано {0} із {1} записів"
+    "message": "Буде експортовано записів: {0} із {1}"
   },
   "historyExportNone": {
     "message": "Немає записів, що відповідають цим фільтрам"
