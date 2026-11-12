@@ -1068,7 +1068,7 @@ Rules.prototype._collectDetectionFromForm = function() {
     return detectionMethods;
   };
 
-/** How many patterns of a rule's detection repeat another of the same kind (same text, options and scope; the id and confidence do not count). */
+/** How many patterns of a rule's detection repeat another of the same kind (what they match: RuleDuplicates.keyOf; patterns switched off are skipped). */
 Rules.countDuplicatePatterns = function(detection) {
   return RuleDuplicates.countWithin(detection);
 };
