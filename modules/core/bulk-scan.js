@@ -15,7 +15,9 @@
  *   createRun(), begin(), finish(), fail(), skip(), pause(), resume(), stop(), complete(), recover()
  *                    the run's states: running → paused → running, then done or stopped; recover() is what a service
  *                    worker that starts again does with a run it finds in session storage (nobody is scanning it any
- *                    more: a running one is stopped, never left "running"; a paused one stays paused)
+ *                    more: a running one is stopped, never left "running"; a paused one stays paused). finish() keeps a
+ *                    page's outcome with its HTTP status when it is known (the status code of the response that loaded
+ *                    it: a block page answers 403, 429 or 503), which the table and every export show
  *   continuation(), carryOver()   "Scan the pages still waiting": what a stopped run leaves to scan, and the pages that
  *                    already have their outcome, which stay in the list of the run that scans the rest
  *   summarize()      the protections of a finished page, as the table and the exports show them
@@ -28,6 +30,9 @@
   'use strict';
 
   const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
+  const HttpStatus = root.HttpStatus || (typeof require === 'function' ? require('./http-status.js') : undefined);
+  /** A page's HTTP status as the table and the exports give it, or null when it is not known. */
+  const httpStatusOf = (value) => (HttpStatus ? HttpStatus.of(value) : null);
 
   const MAX_URLS = 200;            // pages per run, at most
   const TIMEOUT_S = Object.freeze({ min: 10, max: 120, default: 45 });
@@ -336,6 +341,8 @@
     item.detections = Array.isArray(outcome.detections) ? outcome.detections : [];
     item.difficulty = outcome.difficulty || '';
     if (outcome.finalUrl && outcome.finalUrl !== item.url) item.finalUrl = outcome.finalUrl;
+    const httpStatus = httpStatusOf(outcome.httpStatus);
+    if (httpStatus) item.httpStatus = httpStatus; else delete item.httpStatus;
     return true;
   }
 
@@ -504,14 +511,15 @@
   const iso = (ts) => (Number.isFinite(ts) ? new Date(ts).toISOString() : '');
 
   function buildCsv(run) {
-    const header = ['url', 'status', 'reason', 'final_url', 'difficulty', 'protection', 'category', 'confidence', 'scanned_at'];
+    // http_status goes last, so the columns a sheet or a script already reads keep their places
+    const header = ['url', 'status', 'reason', 'final_url', 'difficulty', 'protection', 'category', 'confidence', 'scanned_at', 'http_status'];
     const lines = [header.join(',')];
     for (const item of (run && run.items) || []) {
       const detections = Array.isArray(item.detections) && item.detections.length ? item.detections : [null];
       for (const d of detections) {
         lines.push([item.url, item.status, item.reason || '', item.finalUrl || '', item.difficulty || '',
           d ? d.name : '', d ? d.category : '', d && Number.isFinite(d.confidence) ? d.confidence : '',
-          item.status === 'done' ? iso(item.finishedAt) : ''].map(csvCell).join(','));
+          item.status === 'done' ? iso(item.finishedAt) : '', httpStatusOf(item.httpStatus) || ''].map(csvCell).join(','));
       }
     }
     return `${lines.join('\r\n')}\r\n`;
@@ -533,6 +541,7 @@
         status: item.status,
         reason: item.reason || null,
         finalUrl: item.finalUrl || null,
+        httpStatus: httpStatusOf(item.httpStatus),
         difficulty: item.difficulty || null,
         scannedAt: item.status === 'done' ? iso(item.finishedAt) || null : null,
         detections: Array.isArray(item.detections) ? item.detections : []
@@ -567,7 +576,8 @@
     for (const item of (run && run.items) || []) {
       const found = (Array.isArray(item.detections) ? item.detections : [])
         .map(d => `${d.name} (${d.category}${Number.isFinite(d.confidence) ? `, ${d.confidence}%` : ''})`);
-      const status = item.reason ? `${item.status}: ${item.reason}` : item.status;
+      const code = httpStatusOf(item.httpStatus);
+      const status = `${item.reason ? `${item.status}: ${item.reason}` : item.status}${code ? ` · ${code}` : ''}`;
       lines.push(`| ${[mdAddress(item.url), mdCell(status), mdCell(item.difficulty || ''), mdCell(found.length ? found.join('; ') : '-')].join(' | ')} |`);
     }
     return `${lines.join('\n')}\n`;

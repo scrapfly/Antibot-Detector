@@ -217,7 +217,7 @@ const BulkScanRunner = {
             BulkScan.skip(run, index, 'scope');
         } else if (outcome.ok) {
             const summary = BulkScan.summarize(outcome.results, (results) => DetectionUtils.getDifficultyLevel(results));
-            BulkScan.finish(run, index, { ...summary, finalUrl: outcome.url });
+            BulkScan.finish(run, index, { ...summary, finalUrl: outcome.url, httpStatus: outcome.httpStatus });
         } else {
             BulkScan.fail(run, index, outcome.error === 'timeout' || outcome.error === 'load' ? outcome.error : 'error');
         }

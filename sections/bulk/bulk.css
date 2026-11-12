@@ -137,6 +137,10 @@ a.bulk-url:hover { text-decoration: underline; }
 .bulk-status--done { color: var(--success-light); }
 .bulk-status--failed { color: var(--danger-light); }
 .bulk-status--skipped { color: var(--text-muted); }
+/* A finished page's HTTP status in its Status pill: quiet when it is not an error, amber for 4xx, red for 5xx */
+.bulk-http { color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.bulk-http--warn { color: var(--warning-light); }
+.bulk-http--error { color: var(--danger-light); }
 
 .bulk-protections { display: flex; flex-wrap: wrap; gap: 4px 10px; margin: 0; padding: 0; list-style: none; }
 .bulk-protection { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
