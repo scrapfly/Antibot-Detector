@@ -9,8 +9,8 @@
  *
  * Usage:
  *   window.LogCollector.enable()  // Start collecting logs
- *   window.LogCollector.exportAsJSON()  // Export as JSON file
- *   window.LogCollector.exportAsText()  // Export as text file
+ *   window.LogCollector.buildJSON()  // The export as a JSON file: { filename, type, text }
+ *   window.LogCollector.buildText()  // The export as a text file: { filename, type, text }
  *   window.LogCollector.disable()  // Stop collecting
  */
 class LogCollector {
@@ -574,9 +574,12 @@ class LogCollector {
     }
 
     /**
-     * Export logs as JSON
+     * The export as a JSON file. The worker only builds it: Settings saves it from a Blob (sections/settings/settings-ui-logs.js).
+     * A full log is over 2 MB, more than Chrome takes in a data: address, and a service worker cannot make a Blob address, so a
+     * download started here failed with nothing said.
+     * @returns {{filename: string, type: string, text: string}}
      */
-    exportAsJSON() {
+    buildJSON() {
         const logs = this._getOrderedLogs();
         const data = {
             metadata: {
@@ -590,31 +593,14 @@ class LogCollector {
             },
             logs
         };
-
-        const jsonString = JSON.stringify(data, null, 2);
-        const filename = `scrapfly-logs-${Date.now()}.json`;
-
-        // Use chrome.downloads API (works in Service Worker context)
-        // Convert to data URL for chrome.downloads
-        const dataUrl = 'data:application/json;charset=utf-8,' + encodeURIComponent(jsonString);
-
-        chrome.downloads.download({
-            url: dataUrl,
-            filename: filename,
-            saveAs: false  // Don't prompt, use default download location
-        }, (downloadId) => {
-            if (chrome.runtime.lastError) {
-                Logger.error('UTIL', '[LogCollector] Download error:', chrome.runtime.lastError);
-            }
-        });
-
-        return filename;
+        return { filename: `scrapfly-logs-${Date.now()}.json`, type: 'application/json;charset=utf-8', text: JSON.stringify(data, null, 2) };
     }
 
     /**
-     * Export logs as text
+     * The export as a text file, built like buildJSON().
+     * @returns {{filename: string, type: string, text: string}}
      */
-    exportAsText() {
+    buildText() {
         const logs = this._getOrderedLogs();
         const header = [
             '='.repeat(80),
@@ -637,24 +623,7 @@ class LogCollector {
             return `[${time}] [${relative.padStart(12)}] [${level}] ${entry.message}`;
         });
 
-        const text = header + lines.join('\n');
-        const filename = `scrapfly-logs-${Date.now()}.txt`;
-
-        // Use chrome.downloads API (works in Service Worker context)
-        // Convert to data URL for chrome.downloads
-        const dataUrl = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
-
-        chrome.downloads.download({
-            url: dataUrl,
-            filename: filename,
-            saveAs: false  // Don't prompt, use default download location
-        }, (downloadId) => {
-            if (chrome.runtime.lastError) {
-                Logger.error('UTIL', '[LogCollector] Download error:', chrome.runtime.lastError);
-            }
-        });
-
-        return filename;
+        return { filename: `scrapfly-logs-${Date.now()}.txt`, type: 'text/plain;charset=utf-8', text: header + lines.join('\n') };
     }
 
     /**

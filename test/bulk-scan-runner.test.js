@@ -255,14 +255,89 @@ test('start refuses a second run, a switched-off extension and a browser with no
   assert.equal(empty.log.created.length, 0);
 });
 
-test('switching the extension off during a run stops it', async () => {
-  const w = world({ scans: { 'https://a.example/': { results: [] } } });
+const until = async (check, what) => {
+  for (let i = 0; i < 500; i++) { if (check()) return; await tick(2); }
+  throw new Error(`never: ${what}`);
+};
+
+test('switched off between two pages (read before each page), the run pauses before the next one opens, and can be resumed', async () => {
+  const scans = { 'https://a.example/': { results: [] }, 'https://b.example/': { results: [] } };
+  const w = world({ scans });
+  const finish = w.Tabs.scanFinished.bind(w.Tabs);
+  // The extension goes off as the first page finishes, with no word to the worker: only storage says so
+  w.Tabs.scanFinished = (...args) => { finish(...args); w.local.scrapfly_enabled = false; };
   await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/'] });
-  w.local.scrapfly_enabled = false;
-  await finished(w);
-  assert.equal(w.stored().status, 'stopped');
+  await until(() => w.stored().status === 'paused', 'paused');
   assert.equal(w.stored().reason, 'off');
   assert.deepEqual(w.stored().items.map(i => i.status), ['done', 'waiting']);
+  assert.equal(w.log.created.length, 1, 'the next page was not opened');
+  // On again: Resume goes on with the same run
+  w.Tabs.scanFinished = finish;
+  w.local.scrapfly_enabled = true;
+  assert.equal(await w.Runner.resume(), true);
+  await finished(w);
+  assert.equal(w.stored().status, 'done');
+  assert.deepEqual(w.stored().items.map(i => i.status), ['done', 'done']);
+  assert.equal(w.stored().reason, null);
+});
+
+test('switching the extension off pauses the run at once: the open tab closes, its page waits again, nothing else opens; Resume waits for it to be on', async () => {
+  const scans = { 'https://a.example/': { silent: true }, 'https://b.example/': { results: [] } };
+  const w = world({ scans });
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/'], timeoutSec: 120 });
+  await until(() => w.log.open.size === 1, 'the first tab');
+  const switchedAt = Date.now();
+  // What the worker does when the person switches the extension off (background/handlers/messages-settings.js)
+  w.local.scrapfly_enabled = false;
+  assert.equal(await w.Runner.hold('off'), true);
+  await until(() => w.log.open.size === 0, 'the tab closed');
+  assert.ok(Date.now() - switchedAt < 2000, 'closed at once, not after the 120 s time limit');
+  let run = w.stored();
+  assert.deepEqual([run.status, run.reason], ['paused', 'off']);
+  assert.deepEqual(run.items.map(i => i.status), ['waiting', 'waiting'], 'the page being scanned has no result: it waits again');
+  await tick(30);
+  assert.equal(w.log.created.length, 1, 'no other page opened while the extension is off');
+
+  // Resume while it is still off: the run stays paused and keeps saying why
+  assert.equal(await w.Runner.resume(), false);
+  await tick(20);
+  run = w.stored();
+  assert.deepEqual([run.status, run.reason, w.log.created.length], ['paused', 'off', 1]);
+  const registry = {};
+  w.Runner.registerHandlers(registry);
+  const answer = await new Promise(resolve => registry[w.ctx.WorkerMessages.BULK_SCAN_RESUME]({ request: {}, sender: { url: 'chrome-extension://abc/sections/bulk/bulk.html' }, sendResponse: resolve }));
+  assert.deepEqual([answer.status, answer.error, answer.run.status], ['error', 'off', 'paused'], 'the page is told why');
+
+  // Switched on again: the reason goes, the run waits for the person's Resume, then scans the pages left
+  w.local.scrapfly_enabled = true;
+  assert.equal(await w.Runner.release('off'), true);
+  assert.deepEqual([w.stored().status, w.stored().reason], ['paused', null]);
+  scans['https://a.example/'] = { results: [] };
+  assert.equal(await w.Runner.resume(), true);
+  await finished(w);
+  assert.equal(w.stored().status, 'done');
+  assert.deepEqual(w.stored().items.map(i => i.status), ['done', 'done']);
+  assert.equal(w.log.open.size, 0);
+});
+
+test('a background tab is never opened while the extension is off, whoever asks', async () => {
+  const w = world({ enabled: false });
+  const outcome = await w.Tabs.scan('https://a.example/', { windowId: 3, owner: 'watch', quiet: true });
+  assert.deepEqual(plain(outcome), { ok: false, error: 'off' });
+  assert.equal(w.log.created.length, 0);
+  assert.deepEqual(w.log.bypass, [], 'the page\'s saved result is not even set aside');
+});
+
+test('switched off as a page\'s tab was about to open: the page waits again, it is not a failure of the page', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: [] } } });
+  const scan = w.Tabs.scan.bind(w.Tabs);
+  w.Tabs.scan = async (...args) => { w.local.scrapfly_enabled = false; return scan(...args); };
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/'] });
+  await until(() => w.stored().status === 'paused', 'paused');
+  assert.deepEqual([w.stored().reason, w.stored().items.map(i => i.status).join()], ['off', 'waiting,waiting']);
+  assert.equal(w.log.created.length, 0);
+  await w.Runner.stop();
+  await finished(w);
 });
 
 test('the messages are answered for extension pages only', async () => {

@@ -434,7 +434,7 @@ const CATCH = `(() => {
       assert.equal(signedCall.headers[SIG_LOWER], undefined, `${what}: not signed`);
     }
     // Nothing about the secrets or the signatures reached the record, the worker's collected logs or the popup console
-    const collected = await worker.evaluate(() => logCollector.exportAsText());
+    const collected = await worker.evaluate(() => logCollector.buildText().text);
     const everywhere = JSON.stringify([await record(), collected, consoleLines]);
     for (const secretish of ['SYNTHETIC_SECRET', generated, ...digests, ...digests.map(d => d.toUpperCase())]) assert.ok(!everywhere.includes(secretish), `leaked: ${secretish.slice(0, 12)}…`);
     await patch(admin, { debugMode: false, logCollectorEnabled: false, webhook: webhook({ enableWebhook: false }) });

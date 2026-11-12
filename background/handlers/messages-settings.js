@@ -21,6 +21,13 @@ function registerSettingsHandlers(registry, context) {
                         DetectionSessionStore.cancel(tabId, 'disabled');
                         if (typeof stopBadgeSpinner === 'function') stopBadgeSpinner(tabId);
                     }
+                    // Nor does background work go on. No page is scanned while the extension is off, so a background tab would only
+                    // wait out its time limit: the watchlist's check stops now and a Bulk scan pauses (its page waits again), each
+                    // closing its tab, and neither opens another page
+                    if (typeof HistoryWatch !== 'undefined') HistoryWatch.stop('off');
+                    if (typeof BulkScanRunner !== 'undefined') {
+                        await BulkScanRunner.hold('off').catch((error) => Logger.warn('BACKGROUND', '[Background] Could not pause the Bulk scan:', error));
+                    }
                 }
                 await Settings.handleEnableToggle(enabled, {
                     DetectionEngineManager,
@@ -30,6 +37,10 @@ function registerSettingsHandlers(registry, context) {
                 // A held webhook delivery whose retry alarm went off while the extension was off is retried by nothing else:
                 // arm the next alarm now that it can send again
                 if (enabled !== false && typeof SettingsRuntime !== 'undefined') await SettingsRuntime._scheduleWebhookRetries();
+                // A Bulk scan paused when the extension went off no longer says so: it waits for the person's Resume
+                if (enabled !== false && typeof BulkScanRunner !== 'undefined') {
+                    await BulkScanRunner.release('off').catch((error) => Logger.warn('BACKGROUND', '[Background] Could not update the Bulk scan:', error));
+                }
 
                 sendResponse({ status: 'success' });
             } catch (error) {
@@ -135,9 +146,19 @@ function registerSettingsHandlers(registry, context) {
                         await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tab.id });
                         await setBadgeTextColor(tab.id, false, BADGE.COLORS.CLEARED);
                         await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEARED, tabId: tab.id });
+                        if (typeof ToolbarTitle !== 'undefined') await ToolbarTitle.reset(chrome, tab.id);
                         Logger.background('[Background] Badge: cleared state - no cached data with new scope');
                     }
                 }
+
+                // The other extension pages (another popup, a Detection tab) show results of the old scope: they refresh now that
+                // those are gone. A notice with no address (the worker never receives its own messages); no page open is no error
+                try {
+                    const told = chrome.runtime && typeof chrome.runtime.sendMessage === 'function'
+                        ? chrome.runtime.sendMessage({ type: WorkerMessages.DETECTION_CLEAR_CACHE })
+                        : null;
+                    if (told && typeof told.catch === 'function') await told.catch(() => {});
+                } catch (_) { /* no page to tell */ }
 
                 if (sendResponse) {
                     sendResponse({ success: true });

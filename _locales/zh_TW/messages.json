@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "上次檢查時擴充功能已關閉，因此未檢查任何項目。"
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "擴充功能已被關閉，因此上次檢查已中途停止。"
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "歷史記錄已被暫停，因此上次檢查已中途停止。"
+  },
   "settingsUiErrHistoryWatch": {
     "message": "監看功能必須是關閉、每天或每週"
   },

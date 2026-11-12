@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "وجد آخر فحص أن الإضافة معطّلة، لذا لم يُفحص شيء."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "توقف آخر فحص لأن الإضافة عُطّلت."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "توقف آخر فحص لأن السجل أُوقف مؤقتًا."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "يجب أن تكون المراقبة متوقفة أو يومية أو أسبوعية"
   },

@@ -19,7 +19,10 @@
  *   - a change is applied only when a second scan, straight after, shows the same change: a challenge page that
  *     appears now and then must not be reported as a protection that came and went;
  *   - at most MAX_WATCHED pages, a scan that takes longer than SCAN_TIMEOUT_MS is given up, the tab is always closed,
- *     and pages on skipped sites or on sites History ignores are not visited at all.
+ *     and pages on skipped sites or on sites History ignores are not visited at all;
+ *   - the extension's switch, History's pause and whether the settings read are asked again before every page and before
+ *     a page's result is written: switched off (stop(), from the switch itself, closes the open tab at once), paused or
+ *     unreadable, the check stops there, writes nothing for the page it was on, and its record says why it stopped.
  *
  * The schedule is a chrome.alarms alarm, recreated at every start; a check that came due while the browser was closed
  * runs a couple of minutes after it opens, once its windows exist.
@@ -37,6 +40,8 @@ const HistoryWatch = {
 
     _initialized: false,
     _running: null,
+    _stopReason: null,    // why the check under way stops before its next page ('off', 'paused', 'unreadable_settings')
+    _token: null,         // the page being checked: cancelled, its tab closes at once
     OWNER: 'watch',
 
     /** The session key that lists the open scan tabs (BackgroundTabScan's, shared with Bulk scan). */
@@ -82,9 +87,10 @@ const HistoryWatch = {
     /**
      * Check the watched pages now.
      * @param {string} reason 'alarm' | 'startup' | 'manual'
-     * @returns {Promise<{ok: boolean, checked: number, changed: number, skipped: number, failed: number, error?: string}>}
+     * @returns {Promise<{ok: boolean, checked: number, changed: number, skipped: number, failed: number, error?: string, stopped?: boolean}>}
      *   error: 'off' (the extension is switched off), 'paused' (History is), 'no_window', 'recent' (a scheduled check too
-     *   soon after the last one: skipped, nothing recorded)
+     *   soon after the last one: skipped, nothing recorded). stopped: the check began and stopped part way, for the reason in
+     *   error ('off', 'paused' or 'unreadable_settings'); the counts are the pages it had checked
      */
     run(reason = 'manual') {
         // One at a time: an alarm that fires during a manual check joins it
@@ -93,12 +99,50 @@ const HistoryWatch = {
             // would leave a watch tab open for good, so the check keeps the worker awake like a scan does
             const keepalive = typeof workerKeepaliveManager !== 'undefined' && workerKeepaliveManager ? workerKeepaliveManager : null;
             if (keepalive) keepalive.startOperation('history-watch', { reason: 'history_watch' });
+            this._stopReason = null;
             this._running = this._run(reason).finally(() => {
                 this._running = null;
+                this._token = null;
+                this._stopReason = null;
                 if (keepalive) keepalive.endOperation('history-watch');
             });
         }
         return this._running;
+    },
+
+    /**
+     * Stop the check under way (the extension was switched off: background/handlers/messages-settings.js). The tab of the page
+     * being checked closes now and the page is left as it was; no other page is opened, and the record says why it stopped.
+     * @returns {boolean} whether a check was running
+     */
+    stop(reason = 'off') {
+        if (!this._running) return false;
+        if (!this._stopReason) this._stopReason = reason;
+        if (this._token) BackgroundTabScan.cancel(this._token);
+        return true;
+    },
+
+    /**
+     * What stops a check now: a stop() asked for, the extension switched off ('off'), History paused ('paused'), or settings that
+     * cannot be read ('unreadable_settings': they do not say whether History is paused or which sites it ignores). Null when
+     * nothing does, with the History settings as they read now.
+     * @returns {Promise<{halt: string|null, settings: object|null}>}
+     */
+    async _gate() {
+        if (this._stopReason) return { halt: this._stopReason, settings: null };
+        const flags = await chrome.storage.local.get(['scrapfly_enabled']);
+        if (flags.scrapfly_enabled === false) return { halt: 'off', settings: null };
+        const settings = await Utils.getHistorySettings();
+        if (settings.historyEnabled === false) return { halt: 'paused', settings };
+        if (settings.settingsUnreadable === true) return { halt: 'unreadable_settings', settings };
+        return { halt: this._stopReason, settings };
+    },
+
+    /** Part way through a check (after a page's scan, before its result is written): must it stop? The reason is kept. */
+    async _mustStop() {
+        const { halt } = await this._gate();
+        if (halt && !this._stopReason) this._stopReason = halt;
+        return !!halt;
     },
 
     /** A normal (not private) window to open the check's tab in, or null when the browser has none open. */
@@ -109,6 +153,13 @@ const HistoryWatch = {
     async _run(reason) {
         const totals = { ok: true, checked: 0, changed: 0, skipped: 0, failed: 0 };
         const record = (extra = {}) => chrome.storage.local.set({ [this.STATE_KEY]: { at: Date.now(), trigger: reason, ...totals, ...extra } }).catch(() => {});
+        // A check that stops part way keeps what it did, and its record says why it stopped: Settings shows that, not the page it
+        // was on as one that "could not be checked"
+        const halted = async (why) => {
+            totals.ok = false;
+            await record({ error: why, stopped: true });
+            return { ...totals, error: why, stopped: true };
+        };
         try {
             // Chrome fires an overdue periodic alarm at start-up and the catch-up alarm follows it: the second one, and any
             // scheduled check that comes too soon after the last, is skipped without touching the record of the last one
@@ -117,19 +168,18 @@ const HistoryWatch = {
                 // A run that checked nothing (no window yet, the extension off) does not count: the catch-up after it must run
                 if (last && !last.error && Number.isFinite(last.at) && Date.now() - last.at < this.MIN_GAP_MS) return { ...totals, error: 'recent' };
             }
+            const gate = await this._gate();
             // The extension's own switch: off means no scanning at all, so no background tabs either (recorded, so the
             // Settings line says why nothing was checked)
-            const flags = await chrome.storage.local.get(['scrapfly_enabled']);
-            if (flags.scrapfly_enabled === false) {
+            if (gate.halt === 'off') {
                 totals.ok = false;
                 await record({ error: 'off' });
                 return { ...totals, error: 'off' };
             }
-            const settings = await Utils.getHistorySettings();
-            if (settings.historyEnabled === false) return { ...totals, ok: false, error: 'paused' };
-            // Settings that cannot be read do not say whether History is paused or which sites it ignores: no page is visited, and
-            // nothing is recorded of this check, so the next one is not held back by it
-            if (settings.settingsUnreadable === true) return { ...totals, ok: false, error: 'unreadable_settings' };
+            // History paused, or settings that cannot be read (they do not say whether History is paused or which sites it ignores):
+            // no page is visited, and nothing is recorded of this check, so the next one is not held back by it
+            if (gate.halt) return { ...totals, ok: false, error: gate.halt };
+            let settings = gate.settings;
             const watched = HistoryPolicy.watchedOf(await HistoryStore.read(chrome.storage.local));
             if (!watched.length) {
                 await record();
@@ -144,12 +194,19 @@ const HistoryWatch = {
             }
             for (let i = 0; i < watched.length; i++) {
                 if (i > 0) await this.sleep(this.JITTER_MS[0] + Math.random() * (this.JITTER_MS[1] - this.JITTER_MS[0]));
+                // Asked again before every page: the extension switched off, History paused or the settings lost since the check
+                // began stop it here, and the pages it skips by the sites History ignores are judged by the settings of now
+                const next = await this._gate();
+                if (next.halt) return await halted(next.halt);
+                settings = next.settings;
                 // The worker's keepalive drops an operation after two minutes (a leaked one would pin it awake for good), and a
                 // check of many pages takes longer: each page renews it, and looks for a window again (the one used may be closed)
                 if (typeof workerKeepaliveManager !== 'undefined' && workerKeepaliveManager) workerKeepaliveManager.startOperation('history-watch', { reason: 'history_watch' });
                 const currentWindow = i > 0 ? await this.normalWindowId() : windowId;
                 if (currentWindow !== null) windowId = currentWindow;
                 const outcome = await this._checkOne(watched[i], settings, windowId);
+                // Stopped on this page (switched off, paused, unreadable): it is left as it was, neither checked nor tried
+                if (outcome === 'stopped') return await halted(this._stopReason || 'off');
                 // A check that did not get an answer (failed, redirected, unsteady, skipped) still counts as tried
                 if (outcome !== 'changed' && outcome !== 'unchanged' && typeof HistoryRecorder.noteWatchAttempt === 'function') {
                     await HistoryRecorder.noteWatchAttempt(watched[i].id, chrome).catch(() => {});
@@ -172,8 +229,9 @@ const HistoryWatch = {
 
     /**
      * One watched page: scan it, and if its protections differ from the entry's, scan it once more and apply the
-     * change only if the second scan agrees.
-     * @returns {Promise<'unchanged'|'changed'|'skipped'|'failed'|'redirected'|'unstable'>}
+     * change only if the second scan agrees. After each scan the check asks again whether it must stop (_mustStop): a page
+     * that loaded while the extension was switched off or History paused is not written.
+     * @returns {Promise<'unchanged'|'changed'|'skipped'|'failed'|'redirected'|'unstable'|'stopped'>}
      */
     async _checkOne(entry, settings, windowId) {
         let host = '';
@@ -181,28 +239,38 @@ const HistoryWatch = {
         if (await Utils.isUrlBlacklisted(entry.url, { failClosed: true })) return 'skipped';
         if (HistoryPolicy.matchesDomain(host, settings.historyExcludedDomains)) return 'skipped';
 
-        const first = await this.scan(entry.url, windowId);
-        if (!first.ok) return 'failed';
-        if (first.excluded) return 'skipped'; // it ended on a site Settings → Detection skips
-        if (!this.samePage(first.url, entry.url)) return 'redirected';
-        const diff = HistoryPolicy.diffProtections(entry.detections, first.results);
-        if (diff.changed) {
-            await this.sleep(this.JITTER_MS[0]);
-            const second = await this.scan(entry.url, windowId);
-            if (!second.ok || !this.samePage(second.url, entry.url)) return 'unstable';
-            if (!this.sameChange(diff, HistoryPolicy.diffProtections(entry.detections, second.results))) return 'unstable';
+        // The page's scans carry one token: stop() cancels it, and the tab that is open closes at once
+        const token = { cancelled: false };
+        this._token = token;
+        try {
+            const first = await this.scan(entry.url, windowId, token);
+            if (await this._mustStop()) return 'stopped';
+            if (!first.ok) return 'failed';
+            if (first.excluded) return 'skipped'; // it ended on a site Settings → Detection skips
+            if (!this.samePage(first.url, entry.url)) return 'redirected';
+            const diff = HistoryPolicy.diffProtections(entry.detections, first.results);
+            if (diff.changed) {
+                await this.sleep(this.JITTER_MS[0]);
+                const second = await this.scan(entry.url, windowId, token);
+                if (await this._mustStop()) return 'stopped';
+                if (!second.ok || !this.samePage(second.url, entry.url)) return 'unstable';
+                if (!this.sameChange(diff, HistoryPolicy.diffProtections(entry.detections, second.results))) return 'unstable';
+            }
+            const applied = await HistoryRecorder.applyWatchResult(entry.id, first.results, chrome);
+            if (!applied.found) return 'skipped'; // unpinned or unwatched while it was being checked
+            return applied.changed ? 'changed' : 'unchanged';
+        } finally {
+            if (this._token === token) this._token = null;
         }
-        const applied = await HistoryRecorder.applyWatchResult(entry.id, first.results, chrome);
-        if (!applied.found) return 'skipped'; // unpinned or unwatched while it was being checked
-        return applied.changed ? 'changed' : 'unchanged';
     },
 
     /**
      * Open the address in a background tab and wait for the extension's scan of it (a quiet scan: the check records it).
+     * @param {{cancelled?: boolean}} [token] - BackgroundTabScan.cancel(token) closes the tab at once
      * @returns {Promise<{ok: boolean, url?: string, results?: Array, error?: string}>}
      */
-    scan(url, windowId) {
-        return BackgroundTabScan.scan(url, { windowId, timeoutMs: this.SCAN_TIMEOUT_MS, owner: this.OWNER, quiet: true });
+    scan(url, windowId, token = null) {
+        return BackgroundTabScan.scan(url, { windowId, timeoutMs: this.SCAN_TIMEOUT_MS, owner: this.OWNER, quiet: true, token });
     },
 
     /** The scan tabs a stopped worker left open are closed when it starts again (BackgroundTabScan). */

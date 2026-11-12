@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "L’ultimo controllo ha trovato l’estensione disattivata, quindi non è stato controllato nulla."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "L’ultimo controllo si è interrotto perché l’estensione è stata disattivata."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "L’ultimo controllo si è interrotto perché la cronologia è stata messa in pausa."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "Il monitoraggio deve essere disattivato, giornaliero o settimanale"
   },

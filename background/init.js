@@ -63,6 +63,8 @@ async function initialize(reason = 'startup', previousVersion = null) {
                 const shown = await chrome.action.getBadgeText({ tabId: tab.id }).catch(() => '');
                 if (shown === BADGE.TEXT.DISABLED || isLoadingBadgeText(shown)) {
                     chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: tab.id }).catch(() => {});
+                    // With the OFF badge goes "Detection is switched off" on hover (a result named there stays)
+                    if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.resetIf(chrome, tab.id, 'off');
                 }
             }
         }

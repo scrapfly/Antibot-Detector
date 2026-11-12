@@ -276,6 +276,7 @@ function registerDetectionHandlers(registry, context) {
                                 Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Clearing stale loading badge for idle tab ${targetTabId}`);
                                 try {
                                     await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: targetTabId });
+                                    if (typeof ToolbarTitle !== 'undefined') await ToolbarTitle.reset(chrome, targetTabId);
                                 } catch (badgeClearError) {
                                     Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Failed to clear stale loading badge for tab ${targetTabId}:`, badgeClearError.message);
                                 }
@@ -292,7 +293,9 @@ function registerDetectionHandlers(registry, context) {
                                 const isNumericBadge = /^\d+\+?$/.test(trimmed);
                                 if (isNumericBadge) {
                                     Logger.debug('BACKGROUND', `[GET_DETECTION_DATA] Clearing stale numeric badge '${trimmed}' for idle tab ${targetTabId}`);
-                                    await chrome.action.setBadgeText({ text: '', tabId: targetTabId });
+                                    await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId: targetTabId });
+                                    // The number went because the saved result is gone: so does the hover text that named it
+                                    if (typeof ToolbarTitle !== 'undefined') await ToolbarTitle.reset(chrome, targetTabId);
                                 }
                             } catch (e) {
                                 // Silently fail

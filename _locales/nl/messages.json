@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "Bij de laatste controle stond de extensie uit, dus er is niets gecontroleerd."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "De laatste controle is gestopt omdat de extensie werd uitgezet."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "De laatste controle is gestopt omdat de geschiedenis werd gepauzeerd."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "De volglijst moet uit, dagelijks of wekelijks staan"
   },

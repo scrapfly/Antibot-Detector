@@ -355,3 +355,85 @@ test('every page of a long check renews the worker keepalive, which is dropped a
   assert.equal(result.checked, 3);
   assert.deepEqual(ops, ['start', 'start', 'start', 'start', 'end'], 'one for the check, one renewal per page, released after');
 });
+
+// ---- Switching the extension off, pausing History or losing the settings while a check runs: it stops there, with the reason
+
+const three = () => [entry('a', 'https://a.example/'), entry('b', 'https://b.example/'), entry('c', 'https://c.example/')];
+
+test('switching the extension off during a check closes its open tab at once, opens no other page, and records that it stopped', async () => {
+  const w = world({ items: three(), scans: { 'https://a.example/': [{ silent: true }] }, scanTimeout: 20000 });
+  const started = Date.now();
+  const running = w.Watch.run('manual');
+  while (!w.log.created.length) await new Promise(resolve => setTimeout(resolve, 2));
+  // What the worker does when the person switches the extension off (background/handlers/messages-settings.js)
+  w.store.scrapfly_enabled = false;
+  assert.equal(w.Watch.stop('off'), true);
+  const result = await running;
+  assert.ok(Date.now() - started < 5000, 'the open tab did not wait out its 20 s time limit');
+  assert.deepEqual(plain(result), { ok: false, checked: 0, changed: 0, skipped: 0, failed: 0, error: 'off', stopped: true });
+  assert.equal(w.log.created.length, 1, 'no other page was opened');
+  assert.deepEqual(w.log.removed, [w.log.created[0].id], 'the open tab is closed');
+  assert.deepEqual(w.log.applied, [], 'nothing is written for the page it was on');
+  assert.deepEqual(w.log.bypass, w.log.restored, 'the page\'s saved result answers again');
+  const saved = w.saved();
+  assert.deepEqual([saved.ok, saved.error, saved.stopped, saved.failed], [false, 'off', true, 0], 'Settings can say why it stopped, not "1 could not be checked"');
+  assert.equal(w.Watch.stop('off'), false, 'nothing runs any more');
+});
+
+test('the switch is read again before every page: switched off after a page, the pages after it are not opened', async () => {
+  const w = world({ items: three() });
+  const apply = w.ctx.HistoryRecorder.applyWatchResult;
+  w.ctx.HistoryRecorder.applyWatchResult = async (...args) => {
+    const applied = await apply(...args);
+    w.store.scrapfly_enabled = false; // switched off with no word to the worker (another window, a restore): only storage says so
+    return applied;
+  };
+  const result = await w.Watch.run('manual');
+  assert.deepEqual(w.log.created.map(c => c.url), ['https://a.example/'], 'one page, then nothing');
+  assert.deepEqual(plain(result), { ok: false, checked: 1, changed: 0, skipped: 0, failed: 0, error: 'off', stopped: true });
+  assert.deepEqual([w.saved().error, w.saved().stopped, w.saved().checked], ['off', true, 1]);
+});
+
+test('a page whose scan ends after the extension was switched off is not written to History', async () => {
+  const w = world({ items: three() });
+  const create = w.ctx.chrome.tabs.create;
+  w.ctx.chrome.tabs.create = async (options) => {
+    const tab = await create(options);
+    w.store.scrapfly_enabled = false; // switched off while the first page loads; its scan still comes in
+    return tab;
+  };
+  const result = await w.Watch.run('manual');
+  assert.equal(w.log.created.length, 1);
+  assert.deepEqual(w.log.applied, [], 'a scan that finished into an extension that is off is not kept');
+  assert.deepEqual(plain(result), { ok: false, checked: 0, changed: 0, skipped: 0, failed: 0, error: 'off', stopped: true });
+});
+
+test('History paused during a check stops it: the page being checked is not written, no other page opens, the record says why', async () => {
+  const w = world({ items: three() });
+  let paused = false;
+  w.ctx.Utils.getHistorySettings = async () => ({ historyEnabled: !paused, historyExcludedDomains: [], historyWatch: 'daily' });
+  const create = w.ctx.chrome.tabs.create;
+  w.ctx.chrome.tabs.create = async (options) => { const tab = await create(options); paused = true; return tab; };
+  const result = await w.Watch.run('manual');
+  assert.equal(w.log.created.length, 1);
+  assert.deepEqual(w.log.applied, [], 'History is paused: the check writes nothing to it');
+  assert.deepEqual(plain(result), { ok: false, checked: 0, changed: 0, skipped: 0, failed: 0, error: 'paused', stopped: true });
+  assert.deepEqual([w.saved().error, w.saved().stopped], ['paused', true]);
+  // Paused before the check begins: as before, nothing is opened and nothing recorded
+  const before = world({ items: three(), settings: { historyEnabled: false } });
+  assert.deepEqual(plain(await before.Watch.run('manual')), { ok: false, checked: 0, changed: 0, skipped: 0, failed: 0, error: 'paused' });
+  assert.equal(before.saved(), undefined);
+});
+
+test('a stop asked for between two pages is honoured before the next page opens, and a new check starts afresh', async () => {
+  const w = world({ items: three() });
+  const apply = w.ctx.HistoryRecorder.applyWatchResult;
+  w.ctx.HistoryRecorder.applyWatchResult = async (...args) => { const applied = await apply(...args); w.Watch.stop('off'); return applied; };
+  const result = await w.Watch.run('manual');
+  assert.equal(w.log.created.length, 1);
+  assert.deepEqual([result.error, result.stopped, result.checked], ['off', true, 1]);
+  // The stop was for that check only: the next one (the extension on again) runs every page
+  w.ctx.HistoryRecorder.applyWatchResult = apply;
+  const next = await w.Watch.run('manual');
+  assert.deepEqual(plain(next), { ok: true, checked: 3, changed: 0, skipped: 0, failed: 0 });
+});

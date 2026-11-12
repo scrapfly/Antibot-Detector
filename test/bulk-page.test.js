@@ -370,3 +370,24 @@ test('a finished row shows its HTTP status beside Done, toned when it is an erro
   assert.equal(pills[0].children[0], ' · ', '"Done · 403"');
   assert.equal(pills[0].children[1].title, en.detectionTipHttpStatus.message);
 });
+
+test('a run paused because the extension was switched off says so under its status; a pause the person chose says nothing more', async () => {
+  const BulkScan = require('../modules/core/bulk-scan.js');
+  const held = BulkScan.createRun({ items: [{ url: 'https://a.example/', status: 'done', detections: [] }, { url: 'https://b.example/', status: 'scanning' }] }, { now: 1 });
+  BulkScan.hold(held, 'off');
+  const page = pageWorld({ run: plain(held) });
+  await page.open();
+  assert.match(page.byId('bulkRunStatus').textContent, /^Paused · 1 of 2 finished$/);
+  assert.equal(page.byId('bulkRunReason').hidden, false);
+  assert.equal(page.byId('bulkRunReason').textContent, en.bulkStoppedOff.message);
+  assert.equal(page.byId('bulkResumeBtn').hidden, false, 'Resume is there, for when the extension is on again');
+  // Switched on again (the worker drops the reason): a plain pause
+  BulkScan.release(held, 'off');
+  page.update(plain(held));
+  assert.equal(page.byId('bulkRunReason').hidden, true);
+  assert.equal(page.byId('bulkRunReason').textContent, '');
+  const paused = BulkScan.createRun({ items: [{ url: 'https://a.example/', status: 'waiting' }] }, { now: 1 });
+  BulkScan.pause(paused);
+  page.update(plain(paused));
+  assert.equal(page.byId('bulkRunReason').hidden, true, 'the person\'s own pause needs no words');
+});

@@ -6110,6 +6110,12 @@
   "settingsHistoryWatchOff": {
     "message": "La dernière vérification a trouvé l’extension désactivée : rien n’a été vérifié."
   },
+  "settingsHistoryWatchStoppedOff": {
+    "message": "La dernière vérification s’est arrêtée car l’extension a été désactivée."
+  },
+  "settingsHistoryWatchStoppedPaused": {
+    "message": "La dernière vérification s’est arrêtée car l’historique a été mis en pause."
+  },
   "settingsUiErrHistoryWatch": {
     "message": "La liste de surveillance doit être désactivée, quotidienne ou hebdomadaire"
   },

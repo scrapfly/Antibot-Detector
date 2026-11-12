@@ -18,6 +18,9 @@
  *                    more: a running one is stopped, never left "running"; a paused one stays paused). finish() keeps a
  *                    page's outcome with its HTTP status when it is known (the status code of the response that loaded
  *                    it: a block page answers 403, 429 or 503), which the table and every export show
+ *   hold(), release()   a pause the person did not ask for ('off': the extension was switched off, so no page can be
+ *                    scanned): the page being scanned waits again at once, and the reason stays until the extension is
+ *                    on again (release) or the run resumes
  *   continuation(), carryOver()   "Scan the pages still waiting": what a stopped run leaves to scan, and the pages that
  *                    already have their outcome, which stay in the list of the run that scans the rest
  *   summarize()      the protections of a finished page, as the table and the exports show them
@@ -373,6 +376,29 @@
   function resume(run) {
     if (!run || run.status !== 'paused') return false;
     run.status = 'running';
+    run.reason = null;
+    return true;
+  }
+
+  /**
+   * Pause a run for a reason the person did not choose ('off': the extension was switched off, so no page can be scanned).
+   * Unlike pause(), the page being scanned does not finish: it goes back to waiting (it has no result), and the reason stays
+   * until release() or resume(). A run the person had paused takes the reason too. The run is still the one in progress.
+   */
+  function hold(run, reason) {
+    if (!isActive(run)) return false;
+    for (const item of run.items) {
+      if (item.status === 'scanning') { item.status = 'waiting'; delete item.startedAt; }
+    }
+    run.status = 'paused';
+    run.reason = reason || null;
+    return true;
+  }
+
+  /** What a run was held for is over (the extension is on again): it stays paused, with no reason, until Resume. */
+  function release(run, reason) {
+    if (!run || run.status !== 'paused' || !reason || run.reason !== reason) return false;
+    run.reason = null;
     return true;
   }
 
@@ -622,7 +648,7 @@
   const api = {
     MAX_URLS, TIMEOUT_S, MAX_SKIPPED_LISTED, MOST_SEEN, REASONS, FORMATS,
     capOf, timeoutOf, linesOf, normalize, isSitemap, parseSitemap, sameSite, prepare,
-    createRun, isActive, nextWaiting, counts, begin, finish, fail, skip, pause, resume, stop, complete, recover, continuation, carryOver,
+    createRun, isActive, nextWaiting, counts, begin, finish, fail, skip, pause, resume, hold, release, stop, complete, recover, continuation, carryOver,
     summarize, protectionTotals, oneLines, build, fileName
   };
   root.BulkScan = api;

@@ -124,7 +124,11 @@ test('when the settings stop reading in the middle of a check, the pages left ar
   };
   const result = await w.Watch.run('manual');
   assert.deepEqual(w.log.scans, ['https://a.example/page'], 'the second page is not opened on a guess');
-  assert.equal(result.skipped, 1);
+  // The check stops there and says why, rather than going through the pages left and counting them skipped; and the page whose
+  // scan came in as the settings stopped reading is not written either (they no longer say whether History is paused)
+  assert.deepEqual([result.ok, result.error, result.stopped, result.skipped], [false, 'unreadable_settings', true, 0]);
+  assert.deepEqual(w.log.applied, [], 'nothing is written on a guess');
+  assert.deepEqual([w.store.scrapfly_history_watch.error, w.store.scrapfly_history_watch.stopped], ['unreadable_settings', true]);
 });
 
 // ---- The catch-up alarm

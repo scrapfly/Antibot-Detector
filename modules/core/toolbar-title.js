@@ -87,6 +87,21 @@
             return title;
         },
 
+        /**
+         * Back to the manifest's title if the tab's hover text is still that of `state` (the language it was set in or English):
+         * for a state that ended without a badge of its own (a site no longer skipped, the extension on again after a worker
+         * restart), where any other text is a newer result and stays. Never throws; true when it reset.
+         */
+        async resetIf(chromeApi, tabId, state) {
+            if (!chromeApi || !chromeApi.action || typeof chromeApi.action.getTitle !== 'function') return false;
+            let shown;
+            try { shown = await chromeApi.action.getTitle({ tabId }); } catch (_) { return false; }
+            if (root.I18n && typeof root.I18n.ready === 'function') await root.I18n.ready().catch(() => {});
+            if (shown !== this.text(state, null, this.workerTr()) && shown !== this.text(state)) return false;
+            await this.reset(chromeApi, tabId);
+            return true;
+        },
+
         /** Back to the manifest's title, as before a scan. */
         async reset(chromeApi, tabId) {
             if (!chromeApi || !chromeApi.action || typeof chromeApi.action.setTitle !== 'function') return;

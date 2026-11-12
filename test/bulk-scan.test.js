@@ -191,6 +191,41 @@ test('pause and resume; a paused run starts no page; stop puts the page being sc
   assert.equal(BulkScan.complete(run), false);
 });
 
+test('hold: the extension switched off pauses a run at once, its page being scanned waiting again, with the reason until Resume', () => {
+  const run = sampleRun();
+  BulkScan.begin(run, 0, 2000);
+  assert.equal(BulkScan.hold(run, 'off'), true);
+  assert.deepEqual([run.status, run.reason], ['paused', 'off']);
+  assert.equal(run.items[0].status, 'waiting', 'given up mid-scan: no result, so it waits');
+  assert.equal(run.items[0].startedAt, undefined);
+  assert.equal(BulkScan.finish(run, 0, { detections: [] }), false, 'a scan that comes in late is not taken');
+  assert.equal(BulkScan.begin(run, 1), false, 'held: no new page');
+  assert.equal(BulkScan.isActive(run), true, 'still the run in progress: Resume goes on with it');
+  // A run the person had paused, its page still finishing, takes the reason and gives up that page too
+  const paused = sampleRun();
+  BulkScan.begin(paused, 0);
+  BulkScan.pause(paused);
+  assert.equal(BulkScan.hold(paused, 'off'), true);
+  assert.deepEqual([paused.status, paused.reason, paused.items[0].status], ['paused', 'off', 'waiting']);
+  // On again: the reason goes, the run waits for Resume; Resume clears a reason it still has
+  assert.equal(BulkScan.release(run, 'user'), false, 'only the reason it was held for');
+  assert.equal(BulkScan.release(run, 'off'), true);
+  assert.deepEqual([run.status, run.reason], ['paused', null]);
+  assert.equal(BulkScan.release(run, 'off'), false, 'once');
+  assert.equal(BulkScan.resume(paused), true);
+  assert.deepEqual([paused.status, paused.reason], ['running', null]);
+  // A run that is over is not held
+  const over = sampleRun();
+  BulkScan.stop(over, 'user');
+  assert.equal(BulkScan.hold(over, 'off'), false);
+  assert.deepEqual([over.status, over.reason], ['stopped', 'user']);
+  assert.equal(BulkScan.hold(null, 'off'), false);
+  // A worker that starts again keeps a held run held, with its reason
+  const held = sampleRun();
+  BulkScan.hold(held, 'off');
+  assert.deepEqual([BulkScan.recover(plain(held)).status, BulkScan.recover(plain(held)).reason], ['paused', 'off']);
+});
+
 test('worker restart: a run found running is marked stopped, never left running; a paused one stays paused; a finished one is kept', () => {
   const run = sampleRun();
   BulkScan.begin(run, 0);

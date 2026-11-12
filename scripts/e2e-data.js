@@ -9,6 +9,7 @@
  *                    (merge or replace, per part) and hands an older export to the importer it always had
  *   Presets          Privacy and Developer list what they change and change only that; Reset goes back to the defaults
  *                    and keeps site lists, connections, language, theme and rules
+ *   Logs             Log collector export saves a full log (over 2 MB) as text and as JSON
  *
  * Not part of `npm run verify`: it needs Playwright and its Chromium.
  *   npm i --no-save playwright && npx playwright install chromium
@@ -446,6 +447,35 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       await dialogsGone();
       assert.equal((await stored()).debugMode, true, 'Cancel keeps the settings');
       console.log('PASS Reset returns the settings to their defaults and keeps site lists, connections, language, theme and rules, unless the connections are removed');
+    }
+
+    // ---- Log collector export -----------------------------------------------------------------------------------------
+    // A full log (5,000 entries) is over 2 MB: as a data: address it was over Chrome's limit and the download failed with nothing
+    // said. The worker now hands the file to Settings, which saves it from a Blob
+    if (!only || 'logs'.includes(only)) {
+      const LINES = 5000;
+      await W(async (count) => {
+        await logCollector.setMaxLogs(count);
+        const long = 'x'.repeat(400);
+        for (let i = 0; i < count; i++) logCollector._writeEntry({ timestamp: Date.now(), relativeTime: i, level: 'log', message: `e2e log line ${i} ${long}` });
+      }, LINES);
+      await boot();
+      const english = JSON.parse(fs.readFileSync(path.join(REPO, '_locales', 'en', 'messages.json'), 'utf8'));
+      for (const [button, extension] of [['#exportLogsTextBtn', 'txt'], ['#exportLogsJsonBtn', 'json']]) {
+        const [download] = await Promise.all([page.waitForEvent('download', { timeout: 15000 }), page.$eval(button, el => el.click())]);
+        // (Playwright names a chrome.downloads file after its Blob address; the name Settings gives it is pinned by the unit tests)
+        assert.ok(download.suggestedFilename().endsWith(`.${extension}`), `${button}: ${download.suggestedFilename()}`);
+        assert.equal(await download.failure(), null, `${button}: the download did not fail`);
+        const text = fs.readFileSync(await download.path(), 'utf8');
+        assert.ok(text.length > 2 * 1024 * 1024, `${button}: the whole log, over 2 MB (${text.length})`);
+        assert.ok(text.includes('e2e log line 0 ') && text.includes(`e2e log line ${LINES - 1} `), `${button}: first and last entries`);
+        if (extension === 'json') assert.equal(JSON.parse(text).logs.length, LINES);
+      }
+      await sleep(300);
+      const toasts = await page.$$eval('.notification-toast', els => els.map(el => el.textContent));
+      assert.ok(!toasts.some(text => text.includes(english.failedExportLogs.message)), `an export said it failed: ${JSON.stringify(toasts)}`);
+      await W(() => logCollector.clear());
+      console.log('PASS Log collector export saves a full log of 5,000 entries, over 2 MB, as text and as JSON, and says nothing failed');
     }
 
     // ---- Settings that cannot be read -------------------------------------------------------------------------------
