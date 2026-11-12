@@ -171,7 +171,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 | Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Извлечь SiteKey · Анализ скриптов |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Анализ скриптов |
 
-Результаты и захваты хранятся 30 минут в **Дополнительно → История**, где их можно фильтровать по сайту, вендору и инструменту, открывать снова и экспортировать.
+Результаты и захваты хранятся 30 минут в **Дополнительно → Захваты**, где их можно фильтровать по сайту, вендору и инструменту, открывать снова и экспортировать.
 
 ### Настройки
 

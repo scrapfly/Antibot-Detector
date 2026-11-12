@@ -171,7 +171,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 | Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
-結果とキャプチャは **詳細 → 履歴** に 30 分間保存され、サイト、プロバイダー、ツールで絞り込み、再度開き、エクスポートできます。
+結果とキャプチャは **詳細 → キャプチャ** に 30 分間保存され、サイト、プロバイダー、ツールで絞り込み、再度開き、エクスポートできます。
 
 ### 設定
 

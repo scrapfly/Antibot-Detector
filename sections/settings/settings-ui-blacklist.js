@@ -68,8 +68,8 @@ SettingsUI.renderBlacklistUI = function() {
 
     if (filteredDomains.length === 0) {
       const emptyText = searchTerm
-        ? FormatUtils.t('settingsUiBlacklistNoMatches', 'No domains match your search')
-        : (allowMode ? FormatUtils.t('settingsUiAllowlistEmpty', 'No sites chosen: nothing is scanned yet') : FormatUtils.t('settingsUiBlacklistEmpty', 'No domains blacklisted'));
+        ? FormatUtils.t('settingsUiBlacklistNoMatches', 'No sites match your search')
+        : (allowMode ? FormatUtils.t('settingsUiAllowlistEmpty', 'No sites chosen: nothing is scanned yet') : FormatUtils.t('settingsUiBlacklistEmpty', 'No skipped sites'));
       container.innerHTML = `<div style="color: var(--text-muted); font-size: 12px; padding: 8px; text-align: center;">${FormatUtils.escapeHtml(emptyText)}</div>`;
       return;
     }
@@ -78,7 +78,7 @@ SettingsUI.renderBlacklistUI = function() {
     const endIndex = startIndex + itemsPerPage;
     const currentDomains = filteredDomains.slice(startIndex, endIndex);
 
-    const removeLabel = FormatUtils.escapeAttr(allowMode ? FormatUtils.t('actionRemoveFromAllowlist', 'Remove from the list') : FormatUtils.t('actionRemoveFromBlacklist', 'Remove from Blacklist'));
+    const removeLabel = FormatUtils.escapeAttr(allowMode ? FormatUtils.t('actionRemoveFromAllowlist', 'Remove from the list') : FormatUtils.t('actionRemoveFromBlacklist', 'Remove from the list'));
     const html = currentDomains.map(domain => `
       <div class="blacklist-item" style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; background: var(--bg-tertiary); border-radius: 4px; margin-bottom: 4px;">
         <span style="font-size: 12px; line-height: 14px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${FormatUtils.escapeHtml(domain)}</span>

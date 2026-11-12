@@ -310,7 +310,7 @@ DetectionUI.applyDisabledStateCopy = function() {
     }
     if (blacklistBtn) {
       blacklistBtn.setAttribute('data-i18n-title', 'detectionDomainBlacklistedTitle');
-      const titleText = tr('detectionDomainBlacklistedTitle', 'This domain is blacklisted');
+      const titleText = tr('detectionDomainBlacklistedTitle', 'This site is skipped');
       blacklistBtn.setAttribute('title', titleText);
     }
 };

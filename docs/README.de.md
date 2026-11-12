@@ -171,7 +171,7 @@ Praktische Werkzeuge für die Schutzmaßnahmen, die eine Seite einsetzt. Eine Sc
 | Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
-Ergebnisse und Mitschnitte werden 30 Minuten lang unter **Erweitert → Verlauf** aufbewahrt, wo Sie sie nach Website, Anbieter und Werkzeug filtern, erneut öffnen und exportieren können.
+Ergebnisse und Mitschnitte werden 30 Minuten lang unter **Erweitert → Erfassungen** aufbewahrt, wo Sie sie nach Website, Anbieter und Werkzeug filtern, erneut öffnen und exportieren können.
 
 ### Einstellungen
 

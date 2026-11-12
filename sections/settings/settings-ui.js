@@ -773,7 +773,7 @@ SettingsUI.validateSettings = function(settings) {
     if (settings.history && settings.history.historyLimit !== undefined) {
       // An emptied number field reads as NaN, which no range comparison catches
       if (!Number.isInteger(settings.history.historyLimit) || settings.history.historyLimit < 0 || settings.history.historyLimit > 10000) {
-        fail('#historyLimit', text('settingsUiErrHistoryLimit', 'History limit must be between 0 (unlimited) and 10000'));
+        fail('#historyLimit', text('settingsUiErrHistoryLimit', 'History limit must be a whole number from 0 to 10000 (0 keeps up to 1,000 entries)'));
       }
     }
 
@@ -1096,7 +1096,7 @@ SettingsUI.setupEventListeners = function() {
           if (this.settings.detection[listKey].includes(domain)) {
             NotificationHelper.info(listKey === 'allowedDomains'
               ? _fmt2('domainAlreadyAllowedFmt', `${domain} is already on the list`, domain)
-              : _fmt2('domainAlreadyBlacklistedFmt', `${domain} is already blacklisted`, domain));
+              : _fmt2('domainAlreadyBlacklistedFmt', `${domain} is already skipped`, domain));
             return;
           }
 

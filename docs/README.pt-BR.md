@@ -171,7 +171,7 @@ Ferramentas práticas para as proteções que uma página usa. Uma proteção ga
 | Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
-Os resultados e as capturas ficam guardados por 30 minutos em **Avançado → Histórico**, onde você pode filtrá-los por site, fornecedor e ferramenta, reabri-los e exportá-los.
+Os resultados e as capturas ficam guardados por 30 minutos em **Avançado → Capturas**, onde você pode filtrá-los por site, fornecedor e ferramenta, reabri-los e exportá-los.
 
 ### Configurações
 

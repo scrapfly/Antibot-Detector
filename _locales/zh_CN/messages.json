@@ -282,7 +282,7 @@
     "message": "扫描完成后，结果将在此处显示。"
   },
   "actionRemoveFromBlacklist": {
-    "message": "从黑名单中移除"
+    "message": "从列表中移除"
   },
   "statDetections": {
     "message": "检测数"
@@ -537,7 +537,7 @@
     "message": "工具"
   },
   "advancedSubtabHistory": {
-    "message": "历史记录"
+    "message": "捕获"
   },
   "advancedFilterSite": {
     "message": "站点"
@@ -711,10 +711,10 @@
     "message": "天"
   },
   "blacklistedDomains": {
-    "message": "黑名单域名"
+    "message": "已跳过的站点"
   },
   "blacklistedDomainsDesc": {
-    "message": "完全跳过检测的域名"
+    "message": "检测永远不会在这些站点上运行。每一项都是确切的主机名：其子域名仍会被扫描。"
   },
   "jsApiEvents": {
     "message": "JS API 事件"
@@ -842,7 +842,7 @@
     "message": "清除缓存"
   },
   "clearCacheConfirmMsg": {
-    "message": "此操作将移除该域名的缓存检测数据并触发新一轮分析。"
+    "message": "这会移除此页面已保存的检测结果（缓存范围为“域名”或“路径”时，该结果也可能适用于其他页面）。重新加载页面后会再次扫描。"
   },
   "clearCacheConfirmBtn": {
     "message": "清除缓存"
@@ -860,28 +860,28 @@
     "message": "无效的域名"
   },
   "addBlacklistTitle": {
-    "message": "添加到黑名单"
+    "message": "跳过此站点"
   },
   "addBlacklistMsgFmt": {
-    "message": "域名 \"{0}\" 将从今后所有检测中排除。您可以稍后在设置中将其移除。"
+    "message": "从现在起将不再扫描 \"{0}\"。你可以在“设置 → 检测 → 要扫描的站点”中撤销。"
   },
   "addBlacklistBtn": {
-    "message": "添加到黑名单"
+    "message": "跳过此站点"
   },
   "alreadyBlacklistedFmt": {
-    "message": "域名 \"{0}\" 已在黑名单中"
+    "message": "\"{0}\" 已被跳过"
   },
   "addedToBlacklistFmt": {
-    "message": "已将 \"{0}\" 添加到黑名单"
+    "message": "已将 \"{0}\" 添加到已跳过的站点"
   },
   "failedAddBlacklistFmt": {
-    "message": "添加到黑名单失败:{0}"
+    "message": "无法跳过此站点：{0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "已将 \"{0}\" 从黑名单中移除"
+    "message": "已将 \"{0}\" 从已跳过的站点中移除"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "从黑名单移除失败:{0}"
+    "message": "无法将站点从已跳过的站点中移除：{0}"
   },
   "historyNoDetections": {
     "message": "无检测结果"
@@ -914,10 +914,10 @@
     "message": "清除缓存失败"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "已将 \"{0}\" 添加到黑名单"
+    "message": "已将 \"{0}\" 添加到已跳过的站点"
   },
   "notificationBlacklistFailed": {
-    "message": "添加到黑名单失败"
+    "message": "无法跳过此站点"
   },
   "notificationHistoryItemDeleted": {
     "message": "历史记录项已删除"
@@ -989,7 +989,7 @@
     "message": "无法获取当前页面 URL"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} 已在黑名单中"
+    "message": "{0} 已被跳过"
   },
   "failedAddDomainFmt": {
     "message": "添加域名失败:{0}"
@@ -1418,7 +1418,7 @@
     "message": "缓存设置"
   },
   "settingsCardSkipDomains": {
-    "message": "跳过的域名"
+    "message": "跳过这些站点"
   },
   "settingsAddCurrentPage": {
     "message": "添加当前页面"
@@ -1517,13 +1517,13 @@
     "message": "使用示例"
   },
   "detectionDisabledForDomain": {
-    "message": "已为此域名禁用检测"
+    "message": "检测已暂停：你跳过了此站点"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "从黑名单移除"
+    "message": "重新扫描此站点"
   },
   "detectionBlacklistHint": {
-    "message": "也可前往“设置 → 检测 → 黑名单域名”进行管理。"
+    "message": "也可前往“设置 → 检测 → 要扫描的站点”管理列表。"
   },
   "detectionNoDetectionsDesc": {
     "message": "在此页面上未发现匹配的反爬虫、CAPTCHA 或指纹识别信号。"
@@ -1541,7 +1541,7 @@
     "message": "无法读取设置 — 操作已取消"
   },
   "failedRemoveBlacklist": {
-    "message": "从黑名单移除失败"
+    "message": "无法将站点从已跳过的站点中移除"
   },
   "pasteConfirmTitle": {
     "message": "上传检测结果？"
@@ -1562,7 +1562,7 @@
     "message": "复制概览"
   },
   "detectionTitleBlockDomain": {
-    "message": "屏蔽此域名"
+    "message": "跳过此站点"
   },
   "detectionStatSite": {
     "message": "网站"
@@ -1589,7 +1589,7 @@
     "message": "页 / 共"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "此域名已在黑名单中"
+    "message": "此站点已被跳过"
   },
   "detectionModalConfidence": {
     "message": "置信度"
@@ -1858,7 +1858,7 @@
     "message": "支持的防护"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "查看捕获历史（{0}）"
+    "message": "查看捕获（{0}）"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript 钩子"
@@ -3100,7 +3100,7 @@
     "message": "否"
   },
   "advHcaptchaNoHistory": {
-    "message": "暂无捕获历史"
+    "message": "暂无捕获"
   },
   "advHcaptchaNotAvailable": {
     "message": "无"
@@ -3289,10 +3289,10 @@
     "message": "不适用"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "已清除 {0} 捕获历史"
+    "message": "已清除 {0} 的捕获"
   },
   "advPanelFailedClearHistory": {
-    "message": "清除历史记录失败"
+    "message": "清除捕获失败"
   },
   "rulesUiNewDetectorName": {
     "message": "新检测器"
@@ -3550,16 +3550,16 @@
     "message": "错误:{0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "黑名单中没有域名"
+    "message": "没有已跳过的站点"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "没有与搜索匹配的域名"
+    "message": "没有与搜索匹配的站点"
   },
   "settingsUiChecking": {
     "message": "正在检查..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "历史记录上限必须介于 0(不限)到 10000 之间"
+    "message": "历史记录上限必须是 0 到 10000 之间的整数（0 表示最多保留 1,000 条）"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "缓存时长必须介于 1 到 {0} 之间({1})"
@@ -6790,5 +6790,14 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "单行"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "哪些页面共用同一份已保存的结果。域名：站点的所有页面。路径：同一地址，不论查询参数。完整 URL：仅完全相同的地址。"
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "在 CSV、纯文本和 Markdown 导出中加入每个页面的扫描日期。JSON 导出始终包含该日期。"
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "当页面的结果直接取自缓存而不是重新扫描时，也将该页面记入历史记录。"
   }
 }

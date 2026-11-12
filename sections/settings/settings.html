@@ -463,12 +463,15 @@
               </div>
               <div class="setting-row">
                 <label class="setting-row-label" for="cacheScope" data-i18n="statCacheScope">Cache Scope</label>
-                <select id="cacheScope" class="select-field">
+                <select id="cacheScope" class="select-field" aria-describedby="cacheScopeDesc">
                   <button type="button" class="select-button"><selectedcontent></selectedcontent></button>
                   <option value="domain" data-i18n="scopeDomain"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="opt-label">Domain</span></option>
                   <option value="path" data-i18n="scopePath"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="opt-label">Path</span></option>
                   <option value="full" data-i18n="scopeFullUrl"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg><span class="opt-label">Full URL</span></option>
                 </select>
+                <div class="setting-row-help">
+                  <p id="cacheScopeDesc" data-i18n="settingsCacheScopeDesc">Which pages share one saved result. Domain: every page of the site. Path: the same address, whatever the query. Full URL: only the exact address.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -553,7 +556,7 @@
 
         <!-- Sites: every site except the skipped ones, or only the chosen sites -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title" data-scan-mode-show="blocklist" data-i18n="blacklistedDomains">Blacklisted Domains</div>
+          <div class="settings-card-group-title" data-scan-mode-show="blocklist" data-i18n="blacklistedDomains">Skipped sites</div>
           <div class="settings-card-group-title" data-scan-mode-show="allowlist" data-i18n="allowedDomainsTitle" hidden>Chosen Sites</div>
 
           <div class="settings-card">
@@ -561,10 +564,10 @@
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C7.58,4 4,7.58 4,12C4,16.42 7.58,20 12,20C16.42,20 20,16.42 20,12C20,7.58 16.42,4 12,4M16.95,5.63L18.37,7.05L7.05,18.37L5.63,16.95L16.95,5.63Z"/></svg>
-                  <span data-scan-mode-show="blocklist" data-i18n="settingsCardSkipDomains">Skip Domains</span>
+                  <span data-scan-mode-show="blocklist" data-i18n="settingsCardSkipDomains">Skip these sites</span>
                   <span data-scan-mode-show="allowlist" data-i18n="settingsCardAllowDomains" hidden>Scan Only These Sites</span>
                 </div>
-                <p class="settings-row-desc" data-scan-mode-show="blocklist" data-i18n="blacklistedDomainsDesc">Domains where detection is completely skipped</p>
+                <p class="settings-row-desc" data-scan-mode-show="blocklist" data-i18n="blacklistedDomainsDesc">Detection never runs on these sites. Each entry is an exact host name: its subdomains are still scanned.</p>
                 <p class="settings-row-desc" data-scan-mode-show="allowlist" data-i18n="allowedDomainsDesc" hidden>Detection runs only on these sites and their subdomains. Everywhere else it is paused.</p>
               </div>
             </div>
@@ -1138,17 +1141,19 @@
                   <option value="md">Markdown</option>
                 </select>
               </div>
-              <div class="setting-row setting-row--inline setting-row--toggle">
+              <div class="setting-row setting-row--switch-below">
                 <span id="includeTimestampsLabel" class="setting-row-label" data-i18n="settingsIncludeTimestamps">Include Timestamps</span>
+                <p id="includeTimestampsDesc" class="setting-row-desc" data-i18n="settingsIncludeTimestampsDesc">Adds each page's scan date to CSV, plain text and Markdown exports. JSON exports always include it.</p>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="includeTimestamps" checked aria-labelledby="includeTimestampsLabel">
+                  <input type="checkbox" id="includeTimestamps" checked aria-labelledby="includeTimestampsLabel" aria-describedby="includeTimestampsDesc">
                   <span class="slider"></span>
                 </label>
               </div>
-              <div class="setting-row setting-row--inline setting-row--toggle">
+              <div class="setting-row setting-row--switch-below">
                 <span id="historyBypassCacheLabel" class="setting-row-label" data-i18n="settingsSaveOnCacheHits">Save on Cache Hits</span>
+                <p id="historyBypassCacheDesc" class="setting-row-desc" data-i18n="settingsSaveOnCacheHitsDesc">Also records a page in History when its result is reused from the cache instead of a new scan.</p>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="historyBypassCache" aria-labelledby="historyBypassCacheLabel">
+                  <input type="checkbox" id="historyBypassCache" aria-labelledby="historyBypassCacheLabel" aria-describedby="historyBypassCacheDesc">
                   <span class="slider"></span>
                 </label>
               </div>

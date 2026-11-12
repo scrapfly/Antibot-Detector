@@ -282,7 +282,7 @@
     "message": "Los resultados aparecerán aquí al terminar."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Quitar de la lista negra"
+    "message": "Quitar de la lista"
   },
   "statDetections": {
     "message": "Detecciones"
@@ -537,7 +537,7 @@
     "message": "Herramientas"
   },
   "advancedSubtabHistory": {
-    "message": "Historial"
+    "message": "Capturas"
   },
   "advancedFilterSite": {
     "message": "Sitio"
@@ -711,10 +711,10 @@
     "message": "Días"
   },
   "blacklistedDomains": {
-    "message": "Dominios en lista negra"
+    "message": "Sitios omitidos"
   },
   "blacklistedDomainsDesc": {
-    "message": "Dominios donde la detección se omite por completo"
+    "message": "La detección nunca se ejecuta en estos sitios. Cada entrada es un nombre de host exacto: sus subdominios se siguen analizando."
   },
   "jsApiEvents": {
     "message": "Eventos JS API"
@@ -842,7 +842,7 @@
     "message": "Vaciar caché"
   },
   "clearCacheConfirmMsg": {
-    "message": "Esto eliminará los datos de detección en caché para este dominio y activará un nuevo análisis."
+    "message": "Esto elimina el resultado de detección guardado de esta página (con el ámbito de caché Dominio o Ruta, puede abarcar también otras páginas). La página se vuelve a analizar cuando la recargas."
   },
   "clearCacheConfirmBtn": {
     "message": "Vaciar caché"
@@ -860,28 +860,28 @@
     "message": "Dominio no válido"
   },
   "addBlacklistTitle": {
-    "message": "Añadir a lista negra"
+    "message": "Omitir este sitio"
   },
   "addBlacklistMsgFmt": {
-    "message": "El dominio \"{0}\" se excluirá de todas las detecciones futuras. Puedes quitarlo más tarde en Ajustes."
+    "message": "\"{0}\" ya no se analizará a partir de ahora. Puedes deshacerlo en Ajustes → Detección → Sitios a analizar."
   },
   "addBlacklistBtn": {
-    "message": "Añadir a lista negra"
+    "message": "Omitir este sitio"
   },
   "alreadyBlacklistedFmt": {
-    "message": "El dominio \"{0}\" ya está en la lista negra"
+    "message": "\"{0}\" ya se omite"
   },
   "addedToBlacklistFmt": {
-    "message": "\"{0}\" añadido a la lista negra"
+    "message": "Se añadió \"{0}\" a los sitios omitidos"
   },
   "failedAddBlacklistFmt": {
-    "message": "Error al añadir a la lista negra: {0}"
+    "message": "No se pudo omitir este sitio: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "\"{0}\" quitado de la lista negra"
+    "message": "Se quitó \"{0}\" de los sitios omitidos"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Error al quitar de la lista negra: {0}"
+    "message": "No se pudo quitar el sitio de los sitios omitidos: {0}"
   },
   "historyNoDetections": {
     "message": "Sin detecciones"
@@ -914,10 +914,10 @@
     "message": "Error al vaciar la caché"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "\"{0}\" añadido a la lista negra"
+    "message": "Se añadió \"{0}\" a los sitios omitidos"
   },
   "notificationBlacklistFailed": {
-    "message": "Error al añadir a la lista negra"
+    "message": "No se pudo omitir este sitio"
   },
   "notificationHistoryItemDeleted": {
     "message": "Elemento de historial eliminado"
@@ -989,7 +989,7 @@
     "message": "No se pudo obtener la URL de la página actual"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} ya está en la lista negra"
+    "message": "{0} ya se omite"
   },
   "failedAddDomainFmt": {
     "message": "Error al añadir el dominio: {0}"
@@ -1418,7 +1418,7 @@
     "message": "Ajustes de caché"
   },
   "settingsCardSkipDomains": {
-    "message": "Omitir dominios"
+    "message": "Omitir estos sitios"
   },
   "settingsAddCurrentPage": {
     "message": "Añadir página actual"
@@ -1517,13 +1517,13 @@
     "message": "Ejemplo de uso"
   },
   "detectionDisabledForDomain": {
-    "message": "Detección desactivada para este dominio"
+    "message": "Detección en pausa: omites este sitio"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Quitar de la lista negra"
+    "message": "Volver a analizar este sitio"
   },
   "detectionBlacklistHint": {
-    "message": "O ve a Ajustes → Detección → Dominios en lista negra para gestionarlos."
+    "message": "O ve a Ajustes → Detección → Sitios a analizar para gestionar la lista."
   },
   "detectionNoDetectionsDesc": {
     "message": "No se encontraron señales coincidentes de antibot, CAPTCHA o fingerprinting en esta página."
@@ -1541,7 +1541,7 @@
     "message": "No se pudieron leer los ajustes — operación cancelada"
   },
   "failedRemoveBlacklist": {
-    "message": "Error al quitar de la lista negra"
+    "message": "No se pudo quitar el sitio de los sitios omitidos"
   },
   "pasteConfirmTitle": {
     "message": "¿Subir detecciones?"
@@ -1562,7 +1562,7 @@
     "message": "Copiar resumen"
   },
   "detectionTitleBlockDomain": {
-    "message": "Bloquear este dominio"
+    "message": "Omitir este sitio"
   },
   "detectionStatSite": {
     "message": "Sitio"
@@ -1589,7 +1589,7 @@
     "message": "de"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Este dominio está en la lista negra"
+    "message": "Este sitio se omite"
   },
   "detectionModalConfidence": {
     "message": "Confianza"
@@ -1858,7 +1858,7 @@
     "message": "Protecciones compatibles"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Ver historial de capturas ({0})"
+    "message": "Ver capturas ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "Interceptores de JavaScript"
@@ -3100,7 +3100,7 @@
     "message": "No"
   },
   "advHcaptchaNoHistory": {
-    "message": "Aún no hay historial de capturas"
+    "message": "Aún no hay capturas"
   },
   "advHcaptchaNotAvailable": {
     "message": "N/D"
@@ -3289,10 +3289,10 @@
     "message": "N/D"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "Historial de capturas de {0} borrado"
+    "message": "Capturas de {0} borradas"
   },
   "advPanelFailedClearHistory": {
-    "message": "No se pudo borrar el historial"
+    "message": "No se pudieron borrar las capturas"
   },
   "rulesUiNewDetectorName": {
     "message": "Nuevo detector"
@@ -3550,16 +3550,16 @@
     "message": "Error: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "No hay dominios en la lista negra"
+    "message": "No hay sitios omitidos"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Ningún dominio coincide con tu búsqueda"
+    "message": "Ningún sitio coincide con tu búsqueda"
   },
   "settingsUiChecking": {
     "message": "Comprobando..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "El límite del historial debe estar entre 0 (ilimitado) y 10000"
+    "message": "El límite del historial debe ser un número entero de 0 a 10000 (0 conserva hasta 1.000 entradas)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "La duración de la caché debe estar entre 1 y {0} ({1})"
@@ -6792,5 +6792,14 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Una línea"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Qué páginas comparten un mismo resultado guardado. Dominio: todas las páginas del sitio. Ruta: la misma dirección, sea cual sea la consulta. URL completa: solo la dirección exacta."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Añade la fecha de análisis de cada página a las exportaciones CSV, de texto plano y Markdown. Las exportaciones JSON siempre la incluyen."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Registra también una página en el Historial cuando su resultado se reutiliza de la caché en lugar de un nuevo análisis."
   }
 }

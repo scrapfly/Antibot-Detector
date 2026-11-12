@@ -282,7 +282,7 @@
     "message": "結果準備好後會顯示在這裡。"
   },
   "actionRemoveFromBlacklist": {
-    "message": "從黑名單中移除"
+    "message": "從清單中移除"
   },
   "statDetections": {
     "message": "偵測數"
@@ -537,7 +537,7 @@
     "message": "工具"
   },
   "advancedSubtabHistory": {
-    "message": "歷史記錄"
+    "message": "擷取項目"
   },
   "advancedFilterSite": {
     "message": "網站"
@@ -711,10 +711,10 @@
     "message": "天"
   },
   "blacklistedDomains": {
-    "message": "黑名單網域"
+    "message": "略過的網站"
   },
   "blacklistedDomainsDesc": {
-    "message": "完全略過偵測的網域"
+    "message": "偵測永遠不會在這些網站上執行。每一項都是確切的主機名稱：其子網域仍會被掃描。"
   },
   "jsApiEvents": {
     "message": "JS API 事件"
@@ -842,7 +842,7 @@
     "message": "清除快取"
   },
   "clearCacheConfirmMsg": {
-    "message": "這會移除此網域的快取偵測資料，並觸發全新的分析。"
+    "message": "這會移除此頁面已儲存的偵測結果（快取範圍為「網域」或「路徑」時，該結果也可能適用於其他頁面）。重新載入頁面後會再次掃描。"
   },
   "clearCacheConfirmBtn": {
     "message": "清除快取"
@@ -860,28 +860,28 @@
     "message": "無效的網域"
   },
   "addBlacklistTitle": {
-    "message": "加入黑名單"
+    "message": "略過此網站"
   },
   "addBlacklistMsgFmt": {
-    "message": "網域「{0}」將排除在日後所有偵測之外。您之後可以在設定中將它移除。"
+    "message": "從現在起將不再掃描「{0}」。您可以在「設定 → 偵測 → 要掃描的網站」中復原。"
   },
   "addBlacklistBtn": {
-    "message": "加入黑名單"
+    "message": "略過此網站"
   },
   "alreadyBlacklistedFmt": {
-    "message": "網域「{0}」已在黑名單中"
+    "message": "「{0}」已被略過"
   },
   "addedToBlacklistFmt": {
-    "message": "已將「{0}」加入黑名單"
+    "message": "已將「{0}」加入略過的網站"
   },
   "failedAddBlacklistFmt": {
-    "message": "無法加入黑名單：{0}"
+    "message": "無法略過此網站：{0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "已將「{0}」從黑名單中移除"
+    "message": "已將「{0}」從略過的網站中移除"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "無法從黑名單中移除：{0}"
+    "message": "無法將網站從略過的網站中移除：{0}"
   },
   "historyNoDetections": {
     "message": "沒有偵測結果"
@@ -914,10 +914,10 @@
     "message": "無法清除快取"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "已將「{0}」加入黑名單"
+    "message": "已將「{0}」加入略過的網站"
   },
   "notificationBlacklistFailed": {
-    "message": "無法加入黑名單"
+    "message": "無法略過此網站"
   },
   "notificationHistoryItemDeleted": {
     "message": "歷史記錄項目已刪除"
@@ -989,7 +989,7 @@
     "message": "無法取得目前網頁的 URL"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} 已在黑名單中"
+    "message": "{0} 已被略過"
   },
   "failedAddDomainFmt": {
     "message": "無法新增網域：{0}"
@@ -1418,7 +1418,7 @@
     "message": "快取設定"
   },
   "settingsCardSkipDomains": {
-    "message": "略過的網域"
+    "message": "略過這些網站"
   },
   "settingsAddCurrentPage": {
     "message": "新增目前網頁"
@@ -1517,13 +1517,13 @@
     "message": "使用範例"
   },
   "detectionDisabledForDomain": {
-    "message": "已對此網域停用偵測"
+    "message": "偵測已暫停：您略過了此網站"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "從黑名單中移除"
+    "message": "重新掃描此網站"
   },
   "detectionBlacklistHint": {
-    "message": "您也可以前往「設定 → 偵測 → 黑名單網域」進行管理。"
+    "message": "或前往「設定 → 偵測 → 要掃描的網站」管理清單。"
   },
   "detectionNoDetectionsDesc": {
     "message": "在此網頁上找不到符合的反機器人、CAPTCHA 或指紋辨識訊號。"
@@ -1541,7 +1541,7 @@
     "message": "無法讀取設定 — 已取消操作"
   },
   "failedRemoveBlacklist": {
-    "message": "無法從黑名單中移除"
+    "message": "無法將網站從略過的網站中移除"
   },
   "pasteConfirmTitle": {
     "message": "要上傳偵測結果嗎？"
@@ -1562,7 +1562,7 @@
     "message": "複製總覽"
   },
   "detectionTitleBlockDomain": {
-    "message": "封鎖此網域"
+    "message": "略過此網站"
   },
   "detectionStatSite": {
     "message": "網站"
@@ -1589,7 +1589,7 @@
     "message": "/"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "此網域已列入黑名單"
+    "message": "此網站已被略過"
   },
   "detectionModalConfidence": {
     "message": "信賴度"
@@ -1858,7 +1858,7 @@
     "message": "支援的防護"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "檢視擷取歷史記錄（{0}）"
+    "message": "檢視擷取項目（{0}）"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript 掛鉤"
@@ -3100,7 +3100,7 @@
     "message": "否"
   },
   "advHcaptchaNoHistory": {
-    "message": "尚無擷取歷史記錄"
+    "message": "尚無擷取項目"
   },
   "advHcaptchaNotAvailable": {
     "message": "不適用"
@@ -3289,10 +3289,10 @@
     "message": "不適用"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "已清除 {0} 的擷取歷史記錄"
+    "message": "已清除 {0} 的擷取項目"
   },
   "advPanelFailedClearHistory": {
-    "message": "無法清除歷史記錄"
+    "message": "無法清除擷取項目"
   },
   "rulesUiNewDetectorName": {
     "message": "新偵測器"
@@ -3550,16 +3550,16 @@
     "message": "錯誤：{0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "黑名單中沒有網域"
+    "message": "沒有略過的網站"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "沒有符合搜尋的網域"
+    "message": "沒有符合搜尋的網站"
   },
   "settingsUiChecking": {
     "message": "正在檢查..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "歷史記錄上限必須介於 0（不限）和 10000 之間"
+    "message": "歷史記錄上限必須是 0 到 10000 之間的整數（0 表示最多保留 1,000 筆）"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "快取持續時間必須介於 1 到 {0} {1} 之間"
@@ -6790,5 +6790,14 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "單行"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "哪些頁面共用同一份已儲存的結果。網域：網站的所有頁面。路徑：同一位址，不論查詢參數。完整 URL：僅限完全相同的位址。"
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "在 CSV、純文字和 Markdown 匯出中加入每個頁面的掃描日期。JSON 匯出一律包含此日期。"
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "當頁面的結果直接取自快取而非重新掃描時，也將該頁面記入歷史記錄。"
   }
 }

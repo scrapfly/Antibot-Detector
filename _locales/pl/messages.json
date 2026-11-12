@@ -282,7 +282,7 @@
     "message": "Wyniki pojawią się tutaj, gdy będą gotowe."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Usuń z czarnej listy"
+    "message": "Usuń z listy"
   },
   "statDetections": {
     "message": "Wykrycia"
@@ -537,7 +537,7 @@
     "message": "Narzędzia"
   },
   "advancedSubtabHistory": {
-    "message": "Historia"
+    "message": "Przechwycenia"
   },
   "advancedFilterSite": {
     "message": "Witryna"
@@ -711,10 +711,10 @@
     "message": "Dni"
   },
   "blacklistedDomains": {
-    "message": "Domeny na czarnej liście"
+    "message": "Pomijane witryny"
   },
   "blacklistedDomainsDesc": {
-    "message": "Domeny, w których wykrywanie jest całkowicie pomijane"
+    "message": "Na tych witrynach wykrywanie nigdy nie działa. Każdy wpis to dokładna nazwa hosta: jego subdomeny są nadal skanowane."
   },
   "jsApiEvents": {
     "message": "Zdarzenia JS API"
@@ -842,7 +842,7 @@
     "message": "Wyczyść pamięć podręczną"
   },
   "clearCacheConfirmMsg": {
-    "message": "Spowoduje to usunięcie danych wykryć z pamięci podręcznej dla tej domeny i uruchomienie nowej analizy."
+    "message": "Usuwa zapisany wynik wykrywania dla tej strony (przy zakresie cache Domena lub Ścieżka może obejmować także inne strony). Strona zostanie ponownie przeskanowana po jej przeładowaniu."
   },
   "clearCacheConfirmBtn": {
     "message": "Wyczyść pamięć podręczną"
@@ -860,28 +860,28 @@
     "message": "Nieprawidłowa domena"
   },
   "addBlacklistTitle": {
-    "message": "Dodaj do czarnej listy"
+    "message": "Pomijaj tę witrynę"
   },
   "addBlacklistMsgFmt": {
-    "message": "Domena „{0}” zostanie wykluczona ze wszystkich przyszłych wykryć. Możesz ją później usunąć w Ustawieniach."
+    "message": "Witryna „{0}” nie będzie już skanowana. Możesz to cofnąć w Ustawienia → Wykrywanie → Witryny do skanowania."
   },
   "addBlacklistBtn": {
-    "message": "Dodaj do czarnej listy"
+    "message": "Pomijaj tę witrynę"
   },
   "alreadyBlacklistedFmt": {
-    "message": "Domena „{0}” jest już na czarnej liście"
+    "message": "Witryna „{0}” jest już pomijana"
   },
   "addedToBlacklistFmt": {
-    "message": "Dodano „{0}” do czarnej listy"
+    "message": "Dodano „{0}” do pomijanych witryn"
   },
   "failedAddBlacklistFmt": {
-    "message": "Nie udało się dodać do czarnej listy: {0}"
+    "message": "Nie udało się dodać witryny do pomijanych: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "Usunięto „{0}” z czarnej listy"
+    "message": "Usunięto „{0}” z pomijanych witryn"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Nie udało się usunąć z czarnej listy: {0}"
+    "message": "Nie udało się usunąć witryny z pomijanych: {0}"
   },
   "historyNoDetections": {
     "message": "Brak wykryć"
@@ -914,10 +914,10 @@
     "message": "Nie udało się wyczyścić pamięci podręcznej"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "Dodano „{0}” do czarnej listy"
+    "message": "Dodano „{0}” do pomijanych witryn"
   },
   "notificationBlacklistFailed": {
-    "message": "Nie udało się dodać do czarnej listy"
+    "message": "Nie udało się dodać witryny do pomijanych"
   },
   "notificationHistoryItemDeleted": {
     "message": "Usunięto element historii"
@@ -989,7 +989,7 @@
     "message": "Nie udało się uzyskać adresu URL bieżącej strony"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} jest już na czarnej liście"
+    "message": "{0} jest już pomijana"
   },
   "failedAddDomainFmt": {
     "message": "Nie udało się dodać domeny: {0}"
@@ -1418,7 +1418,7 @@
     "message": "Ustawienia pamięci podręcznej"
   },
   "settingsCardSkipDomains": {
-    "message": "Pomijane domeny"
+    "message": "Pomijaj te witryny"
   },
   "settingsAddCurrentPage": {
     "message": "Dodaj bieżącą stronę"
@@ -1517,13 +1517,13 @@
     "message": "Przykład użycia"
   },
   "detectionDisabledForDomain": {
-    "message": "Wykrywanie wyłączone dla tej domeny"
+    "message": "Wykrywanie wstrzymane: pomijasz tę witrynę"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Usuń z czarnej listy"
+    "message": "Skanuj tę witrynę ponownie"
   },
   "detectionBlacklistHint": {
-    "message": "Albo przejdź do Ustawienia → Wykrywanie → Domeny na czarnej liście, aby nimi zarządzać."
+    "message": "Albo przejdź do Ustawienia → Wykrywanie → Witryny do skanowania, aby zarządzać listą."
   },
   "detectionNoDetectionsDesc": {
     "message": "Na tej stronie nie znaleziono pasujących sygnałów anti-bot, CAPTCHA ani fingerprintingu."
@@ -1541,7 +1541,7 @@
     "message": "Nie udało się odczytać ustawień — operację anulowano"
   },
   "failedRemoveBlacklist": {
-    "message": "Nie udało się usunąć z czarnej listy"
+    "message": "Nie udało się usunąć witryny z pomijanych"
   },
   "pasteConfirmTitle": {
     "message": "Przesłać wykrycia?"
@@ -1562,7 +1562,7 @@
     "message": "Kopiuj przegląd"
   },
   "detectionTitleBlockDomain": {
-    "message": "Zablokuj tę domenę"
+    "message": "Pomijaj tę witrynę"
   },
   "detectionStatSite": {
     "message": "Witryna"
@@ -1589,7 +1589,7 @@
     "message": "z"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Ta domena jest na czarnej liście"
+    "message": "Ta witryna jest pomijana"
   },
   "detectionModalConfidence": {
     "message": "Pewność"
@@ -1858,7 +1858,7 @@
     "message": "Obsługiwane ochrony"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Wyświetl historię przechwytywania ({0})"
+    "message": "Wyświetl przechwycenia ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "Hooki JavaScript"
@@ -3100,7 +3100,7 @@
     "message": "Nie"
   },
   "advHcaptchaNoHistory": {
-    "message": "Brak historii przechwytywania"
+    "message": "Brak przechwyceń"
   },
   "advHcaptchaNotAvailable": {
     "message": "N/D"
@@ -3289,10 +3289,10 @@
     "message": "N/D"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "Wyczyszczono historię przechwytywania {0}"
+    "message": "Wyczyszczono przechwycenia {0}"
   },
   "advPanelFailedClearHistory": {
-    "message": "Nie udało się wyczyścić historii"
+    "message": "Nie udało się wyczyścić przechwyceń"
   },
   "rulesUiNewDetectorName": {
     "message": "Nowy detektor"
@@ -3550,16 +3550,16 @@
     "message": "Błąd: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "Brak domen na czarnej liście"
+    "message": "Brak pomijanych witryn"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Żadna domena nie pasuje do wyszukiwania"
+    "message": "Żadna witryna nie pasuje do wyszukiwania"
   },
   "settingsUiChecking": {
     "message": "Sprawdzanie..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "Limit historii musi mieścić się w zakresie od 0 (bez limitu) do 10000"
+    "message": "Limit historii musi być liczbą całkowitą od 0 do 10000 (0 przechowuje do 1000 wpisów)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "Czas ważności pamięci podręcznej musi mieścić się w zakresie od 1 do {0}; jednostka: {1}"
@@ -6790,5 +6790,14 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Jedna linia"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Które strony dzielą jeden zapisany wynik. Domena: każda strona witryny. Ścieżka: ten sam adres bez względu na zapytanie. Pełny URL: tylko dokładnie ten sam adres."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Dodaje datę skanowania każdej strony do eksportów CSV, zwykłego tekstu i Markdown. Eksporty JSON zawsze ją zawierają."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Zapisuje stronę w historii także wtedy, gdy jej wynik pochodzi z pamięci podręcznej zamiast z nowego skanowania."
   }
 }

@@ -282,7 +282,7 @@
     "message": "Resultaten visas här när de är klara."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Ta bort från svartlistan"
+    "message": "Ta bort från listan"
   },
   "statDetections": {
     "message": "Upptäckter"
@@ -537,7 +537,7 @@
     "message": "Verktyg"
   },
   "advancedSubtabHistory": {
-    "message": "Historik"
+    "message": "Insamlingar"
   },
   "advancedFilterSite": {
     "message": "Webbplats"
@@ -711,10 +711,10 @@
     "message": "Dagar"
   },
   "blacklistedDomains": {
-    "message": "Svartlistade domäner"
+    "message": "Webbplatser som hoppas över"
   },
   "blacklistedDomainsDesc": {
-    "message": "Domäner där upptäckt hoppas över helt"
+    "message": "Upptäckten körs aldrig på de här webbplatserna. Varje post är ett exakt värdnamn: dess underdomäner skannas fortfarande."
   },
   "jsApiEvents": {
     "message": "JS API-händelser"
@@ -842,7 +842,7 @@
     "message": "Rensa cache"
   },
   "clearCacheConfirmMsg": {
-    "message": "Detta tar bort cachade upptäcktsdata för den här domänen och utlöser en ny analys."
+    "message": "Detta tar bort det sparade upptäcktsresultatet för den här sidan (med cacheomfånget Domän eller Sökväg kan det gälla även andra sidor). Sidan skannas igen när du läser in den på nytt."
   },
   "clearCacheConfirmBtn": {
     "message": "Rensa cache"
@@ -860,28 +860,28 @@
     "message": "Ogiltig domän"
   },
   "addBlacklistTitle": {
-    "message": "Lägg till på svartlistan"
+    "message": "Hoppa över den här webbplatsen"
   },
   "addBlacklistMsgFmt": {
-    "message": "Domänen \"{0}\" undantas från alla framtida upptäckter. Du kan ta bort den senare i Inställningar."
+    "message": "\"{0}\" skannas inte längre från och med nu. Du kan ångra det i Inställningar → Upptäckt → Webbplatser att skanna."
   },
   "addBlacklistBtn": {
-    "message": "Lägg till på svartlistan"
+    "message": "Hoppa över den här webbplatsen"
   },
   "alreadyBlacklistedFmt": {
-    "message": "Domänen \"{0}\" finns redan på svartlistan"
+    "message": "\"{0}\" hoppas redan över"
   },
   "addedToBlacklistFmt": {
-    "message": "\"{0}\" lades till på svartlistan"
+    "message": "\"{0}\" lades till bland webbplatserna som hoppas över"
   },
   "failedAddBlacklistFmt": {
-    "message": "Det gick inte att lägga till på svartlistan: {0}"
+    "message": "Det gick inte att hoppa över webbplatsen: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "\"{0}\" togs bort från svartlistan"
+    "message": "\"{0}\" togs bort från webbplatserna som hoppas över"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Det gick inte att ta bort från svartlistan: {0}"
+    "message": "Det gick inte att ta bort webbplatsen från dem som hoppas över: {0}"
   },
   "historyNoDetections": {
     "message": "Inga upptäckter"
@@ -914,10 +914,10 @@
     "message": "Det gick inte att rensa cachen"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "\"{0}\" lades till på svartlistan"
+    "message": "\"{0}\" lades till bland webbplatserna som hoppas över"
   },
   "notificationBlacklistFailed": {
-    "message": "Det gick inte att lägga till på svartlistan"
+    "message": "Det gick inte att hoppa över webbplatsen"
   },
   "notificationHistoryItemDeleted": {
     "message": "Historikposten togs bort"
@@ -989,7 +989,7 @@
     "message": "Det gick inte att hämta den aktuella sidans URL"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} finns redan på svartlistan"
+    "message": "{0} hoppas redan över"
   },
   "failedAddDomainFmt": {
     "message": "Det gick inte att lägga till domänen: {0}"
@@ -1418,7 +1418,7 @@
     "message": "Cacheinställningar"
   },
   "settingsCardSkipDomains": {
-    "message": "Domäner som hoppas över"
+    "message": "Hoppa över de här webbplatserna"
   },
   "settingsAddCurrentPage": {
     "message": "Lägg till aktuell sida"
@@ -1517,13 +1517,13 @@
     "message": "Användningsexempel"
   },
   "detectionDisabledForDomain": {
-    "message": "Upptäckt är inaktiverad för den här domänen"
+    "message": "Upptäckten är pausad: du hoppar över den här webbplatsen"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Ta bort från svartlistan"
+    "message": "Skanna den här webbplatsen igen"
   },
   "detectionBlacklistHint": {
-    "message": "Eller gå till Inställningar → Upptäckt → Svartlistade domäner för att hantera."
+    "message": "Eller gå till Inställningar → Upptäckt → Webbplatser att skanna för att hantera listan."
   },
   "detectionNoDetectionsDesc": {
     "message": "Inga matchande signaler för anti-bot, CAPTCHA eller fingerprinting hittades på den här sidan."
@@ -1541,7 +1541,7 @@
     "message": "Det gick inte att läsa inställningarna — åtgärden avbröts"
   },
   "failedRemoveBlacklist": {
-    "message": "Det gick inte att ta bort från svartlistan"
+    "message": "Det gick inte att ta bort webbplatsen från dem som hoppas över"
   },
   "pasteConfirmTitle": {
     "message": "Ladda upp upptäckter?"
@@ -1562,7 +1562,7 @@
     "message": "Kopiera översikt"
   },
   "detectionTitleBlockDomain": {
-    "message": "Blockera den här domänen"
+    "message": "Hoppa över den här webbplatsen"
   },
   "detectionStatSite": {
     "message": "Webbplats"
@@ -1589,7 +1589,7 @@
     "message": "av"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Den här domänen är svartlistad"
+    "message": "Den här webbplatsen hoppas över"
   },
   "detectionModalConfidence": {
     "message": "Säkerhet"
@@ -1858,7 +1858,7 @@
     "message": "Skydd som stöds"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Visa insamlingshistorik ({0})"
+    "message": "Visa insamlingar ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript-hooks"
@@ -3100,7 +3100,7 @@
     "message": "Nej"
   },
   "advHcaptchaNoHistory": {
-    "message": "Ingen insamlingshistorik än"
+    "message": "Inga insamlingar än"
   },
   "advHcaptchaNotAvailable": {
     "message": "Saknas"
@@ -3289,10 +3289,10 @@
     "message": "Saknas"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "Insamlingshistoriken för {0} rensades"
+    "message": "Insamlingarna för {0} rensades"
   },
   "advPanelFailedClearHistory": {
-    "message": "Det gick inte att rensa historiken"
+    "message": "Det gick inte att rensa insamlingarna"
   },
   "rulesUiNewDetectorName": {
     "message": "Ny detektor"
@@ -3550,16 +3550,16 @@
     "message": "Fel: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "Inga domäner på svartlistan"
+    "message": "Inga webbplatser hoppas över"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Inga domäner matchar din sökning"
+    "message": "Inga webbplatser matchar din sökning"
   },
   "settingsUiChecking": {
     "message": "Kontrollerar..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "Historikgränsen måste vara mellan 0 (obegränsad) och 10 000"
+    "message": "Historikgränsen måste vara ett heltal från 0 till 10 000 (0 behåller upp till 1 000 poster)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "Cachetiden måste vara mellan 1 och {0} {1}"
@@ -6790,5 +6790,14 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "En rad"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Vilka sidor som delar ett sparat resultat. Domän: alla sidor på webbplatsen. Sökväg: samma adress, oavsett fråga. Fullständig URL: bara exakt samma adress."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Lägger till varje sidas skanningsdatum i export till CSV, oformaterad text och Markdown. Export till JSON innehåller det alltid."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Sparar en sida i historiken även när dess resultat återanvänds från cachen i stället för en ny skanning."
   }
 }

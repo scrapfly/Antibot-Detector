@@ -1347,7 +1347,7 @@ async function main() {
           const shown = await popup.evaluate(async () => ({ text: document.querySelector('#advancedNoToolsHistoryBtn').textContent.trim(),
             total: Object.values(await AdvancedHistoryStore.load()).reduce((sum, list) => sum + list.filter(item => item && item.id && item.timestamp).length, 0) }));
           assert.ok(shown.total >= 10, `captures saved by the sessions above: ${shown.total}`);
-          assert.equal(shown.text, `View capture history (${shown.total})`);
+          assert.equal(shown.text, `View captures (${shown.total})`);
           await popup.$eval('#advancedNoToolsHistoryBtn', el => el.click());
           await wait(popup, () => document.querySelector('#capturesPanel').classList.contains('active'), null, 10000);
         });

@@ -282,7 +282,7 @@
     "message": "जाँच पूरी होने पर परिणाम यहाँ दिखेंगे।"
   },
   "actionRemoveFromBlacklist": {
-    "message": "ब्लैकलिस्ट से हटाएं"
+    "message": "सूची से हटाएँ"
   },
   "statDetections": {
     "message": "जांच"
@@ -537,7 +537,7 @@
     "message": "टूल"
   },
   "advancedSubtabHistory": {
-    "message": "इतिहास"
+    "message": "कैप्चर"
   },
   "advancedFilterSite": {
     "message": "साइट"
@@ -711,10 +711,10 @@
     "message": "दिन"
   },
   "blacklistedDomains": {
-    "message": "ब्लैकलिस्टेड डोमेन"
+    "message": "छोड़ी गई साइटें"
   },
   "blacklistedDomainsDesc": {
-    "message": "डोमेन जहां जांच पूरी तरह से छोड़ दी जाती है"
+    "message": "इन साइटों पर जांच कभी नहीं चलती। हर प्रविष्टि एक सटीक होस्ट नाम है: उसके सबडोमेन फिर भी स्कैन होते हैं।"
   },
   "jsApiEvents": {
     "message": "JS API इवेंट"
@@ -842,7 +842,7 @@
     "message": "कैश साफ़ करें"
   },
   "clearCacheConfirmMsg": {
-    "message": "इससे इस डोमेन के लिए कैश किया गया डिटेक्शन डेटा हटा दिया जाएगा और एक नया विश्लेषण शुरू हो जाएगा।"
+    "message": "इससे इस पेज का सहेजा गया जांच परिणाम हट जाएगा (कैश दायरा डोमेन या पथ होने पर यह दूसरे पेजों पर भी लागू हो सकता है)। पेज को दोबारा लोड करने पर वह फिर से स्कैन होगा।"
   },
   "clearCacheConfirmBtn": {
     "message": "कैश साफ़ करें"
@@ -860,28 +860,28 @@
     "message": "अमान्य डोमेन"
   },
   "addBlacklistTitle": {
-    "message": "ब्लैकलिस्ट में जोड़ें"
+    "message": "इस साइट को छोड़ें"
   },
   "addBlacklistMsgFmt": {
-    "message": "डोमेन \"{0}\" को भविष्य के सभी डिटेक्शन से बाहर रखा जाएगा। आप इसे बाद में सेटिंग्स में हटा सकते हैं।"
+    "message": "\"{0}\" को अब से स्कैन नहीं किया जाएगा। आप इसे सेटिंग्स → जांच → स्कैन की जाने वाली साइटें में वापस बदल सकते हैं।"
   },
   "addBlacklistBtn": {
-    "message": "ब्लैकलिस्ट में जोड़ें"
+    "message": "इस साइट को छोड़ें"
   },
   "alreadyBlacklistedFmt": {
-    "message": "डोमेन \"{0}\" पहले से ब्लैकलिस्टेड है"
+    "message": "\"{0}\" पहले से छोड़ी गई है"
   },
   "addedToBlacklistFmt": {
-    "message": "\"{0}\" को ब्लैकलिस्ट में जोड़ा गया"
+    "message": "\"{0}\" को छोड़ी गई साइटों में जोड़ा गया"
   },
   "failedAddBlacklistFmt": {
-    "message": "ब्लैकलिस्ट में जोड़ने में विफल: {0}"
+    "message": "इस साइट को छोड़ा नहीं जा सका: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "\"{0}\" को ब्लैकलिस्ट से हटाया गया"
+    "message": "\"{0}\" को छोड़ी गई साइटों से हटाया गया"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "ब्लैकलिस्ट से हटाने में विफल: {0}"
+    "message": "साइट को छोड़ी गई साइटों से हटाया नहीं जा सका: {0}"
   },
   "historyNoDetections": {
     "message": "कोई डिटेक्शन नहीं"
@@ -914,10 +914,10 @@
     "message": "कैश साफ़ करने में विफल"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "\"{0}\" को ब्लैकलिस्ट में जोड़ा गया"
+    "message": "\"{0}\" को छोड़ी गई साइटों में जोड़ा गया"
   },
   "notificationBlacklistFailed": {
-    "message": "ब्लैकलिस्ट में जोड़ने में विफल"
+    "message": "इस साइट को छोड़ा नहीं जा सका"
   },
   "notificationHistoryItemDeleted": {
     "message": "इतिहास आइटम हटा दिया गया"
@@ -989,7 +989,7 @@
     "message": "वर्तमान पेज URL प्राप्त नहीं हो सका"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} पहले से ब्लैकलिस्टेड है"
+    "message": "{0} पहले से छोड़ी गई है"
   },
   "failedAddDomainFmt": {
     "message": "डोमेन जोड़ने में विफल: {0}"
@@ -1418,7 +1418,7 @@
     "message": "कैश सेटिंग्स"
   },
   "settingsCardSkipDomains": {
-    "message": "डोमेन छोड़ें"
+    "message": "इन साइटों को छोड़ें"
   },
   "settingsAddCurrentPage": {
     "message": "वर्तमान पेज जोड़ें"
@@ -1517,13 +1517,13 @@
     "message": "उपयोग उदाहरण"
   },
   "detectionDisabledForDomain": {
-    "message": "इस डोमेन के लिए डिटेक्शन अक्षम है"
+    "message": "जांच रुकी है: आप इस साइट को छोड़ते हैं"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "ब्लैकलिस्ट से हटाएँ"
+    "message": "इस साइट को फिर से स्कैन करें"
   },
   "detectionBlacklistHint": {
-    "message": "या प्रबंधन के लिए सेटिंग्स → डिटेक्शन → ब्लैकलिस्टेड डोमेन पर जाएँ।"
+    "message": "या सूची प्रबंधित करने के लिए सेटिंग्स → जांच → स्कैन की जाने वाली साइटें पर जाएँ।"
   },
   "detectionNoDetectionsDesc": {
     "message": "इस पेज पर कोई मिलान वाले एंटी-बॉट, CAPTCHA, या फ़िंगरप्रिंटिंग सिग्नल नहीं मिले।"
@@ -1541,7 +1541,7 @@
     "message": "सेटिंग्स पढ़ नहीं सकीं — कार्रवाई रद्द की गई"
   },
   "failedRemoveBlacklist": {
-    "message": "ब्लैकलिस्ट से हटाने में विफल"
+    "message": "साइट को छोड़ी गई साइटों से हटाया नहीं जा सका"
   },
   "pasteConfirmTitle": {
     "message": "पहचान अपलोड करें?"
@@ -1562,7 +1562,7 @@
     "message": "अवलोकन कॉपी करें"
   },
   "detectionTitleBlockDomain": {
-    "message": "इस डोमेन को ब्लॉक करें"
+    "message": "इस साइट को छोड़ें"
   },
   "detectionStatSite": {
     "message": "साइट"
@@ -1589,7 +1589,7 @@
     "message": "का"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "यह डोमेन ब्लैकलिस्टेड है"
+    "message": "यह साइट छोड़ी गई है"
   },
   "detectionModalConfidence": {
     "message": "विश्वसनीयता"
@@ -1858,7 +1858,7 @@
     "message": "समर्थित सुरक्षा प्रणालियाँ"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "कैप्चर इतिहास देखें ({0})"
+    "message": "कैप्चर देखें ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript हुक"
@@ -3100,7 +3100,7 @@
     "message": "नहीं"
   },
   "advHcaptchaNoHistory": {
-    "message": "अभी तक कोई कैप्चर इतिहास नहीं"
+    "message": "अभी तक कोई कैप्चर नहीं"
   },
   "advHcaptchaNotAvailable": {
     "message": "उपलब्ध नहीं"
@@ -3289,10 +3289,10 @@
     "message": "उपलब्ध नहीं"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "{0} कैप्चर इतिहास साफ़ किया गया"
+    "message": "{0} कैप्चर साफ़ किए गए"
   },
   "advPanelFailedClearHistory": {
-    "message": "इतिहास साफ़ करने में विफल"
+    "message": "कैप्चर साफ़ करने में विफल"
   },
   "rulesUiNewDetectorName": {
     "message": "नया डिटेक्टर"
@@ -3550,16 +3550,16 @@
     "message": "त्रुटि: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "ब्लैकलिस्ट में कोई डोमेन नहीं है"
+    "message": "कोई छोड़ी गई साइट नहीं"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "आपकी खोज से कोई डोमेन मेल नहीं खाता"
+    "message": "आपकी खोज से कोई साइट मेल नहीं खाती"
   },
   "settingsUiChecking": {
     "message": "जांच हो रही है..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "इतिहास सीमा 0 (असीमित) और 10000 के बीच होनी चाहिए"
+    "message": "इतिहास सीमा 0 से 10000 तक की पूर्ण संख्या होनी चाहिए (0 पर अधिकतम 1,000 प्रविष्टियाँ रखी जाती हैं)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "कैश अवधि 1 और {0} के बीच होनी चाहिए ({1})"
@@ -6790,5 +6790,14 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "एक पंक्ति"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "कौन-से पेज एक ही सहेजा गया परिणाम साझा करते हैं। डोमेन: साइट का हर पेज। पथ: वही पता, क्वेरी चाहे जो हो। पूर्ण URL: सिर्फ़ बिल्कुल वही पता।"
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "CSV, सादा टेक्स्ट और Markdown निर्यात में हर पेज की स्कैन तिथि जोड़ता है। JSON निर्यात में यह हमेशा रहती है।"
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "जब किसी पेज का परिणाम नए स्कैन के बजाय कैश से दोबारा इस्तेमाल होता है, तब भी उस पेज को इतिहास में दर्ज करता है।"
   }
 }

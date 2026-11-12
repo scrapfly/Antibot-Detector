@@ -45,19 +45,19 @@
             <circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/>
           </svg>
         </span>
-        <h3 class="state-card-title" data-scan-mode-show="blocklist" data-i18n="detectionDisabledForDomain">Detection disabled for this domain</h3>
+        <h3 class="state-card-title" data-scan-mode-show="blocklist" data-i18n="detectionDisabledForDomain">Detection paused: you skip this site</h3>
         <h3 class="state-card-title" data-scan-mode-show="allowlist" data-i18n="detectionNotOnList" hidden>Detection paused: this site is not on your list</h3>
       </div>
       <div class="detection-pause-site">
         <p id="blacklistDomain" class="blacklist-domain-text"></p>
       </div>
       <button id="removeFromBlacklistBtn" class="state-card-enable-btn remove-blacklist-btn" type="button" data-scan-mode-show="blocklist">
-        <span data-i18n="detectionRemoveFromBlacklistBtn">Remove from Blacklist</span>
+        <span data-i18n="detectionRemoveFromBlacklistBtn">Scan this site again</span>
       </button>
       <button id="allowSiteBtn" class="state-card-enable-btn remove-blacklist-btn" type="button" data-scan-mode-show="allowlist" hidden>
         <span data-i18n="detectionAllowSiteBtn">Scan this site</span>
       </button>
-      <p class="blacklist-hint" data-scan-mode-show="blocklist" data-i18n="detectionBlacklistHint">Or go to Settings → Detection → Blacklisted Domains to manage.</p>
+      <p class="blacklist-hint" data-scan-mode-show="blocklist" data-i18n="detectionBlacklistHint">Or go to Settings → Detection → Sites to scan to manage the list.</p>
       <p class="blacklist-hint" data-scan-mode-show="allowlist" data-i18n="detectionAllowlistHint" hidden>Or go to Settings → Detection → Sites to scan to manage the list.</p>
     </div>
   </div>
@@ -135,7 +135,7 @@
               <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" fill="currentColor"/>
             </svg>
           </button>
-          <button id="addToBlacklistBtn" class="url-action-btn blacklist-btn" title="Block this domain" data-i18n-title="detectionTitleBlockDomain">
+          <button id="addToBlacklistBtn" class="url-action-btn blacklist-btn" title="Skip this site" data-i18n-title="detectionTitleBlockDomain">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <circle cx="12" cy="12" r="10"/>
               <path d="M4.93 4.93l14.14 14.14"/>
@@ -312,11 +312,11 @@
       </div>
       <p class="state-card-description" data-i18n="detectionDisabledDesc">Security detection is currently turned off.</p>
       <button id="enableDetectionBtn" class="state-card-enable-btn" type="button" data-i18n="detectionEnableBtn">Enable detection</button>
-      <button id="disabledBlacklistBtn" class="state-card-blacklist-btn" type="button" title="This domain is blacklisted" data-i18n-title="detectionDomainBlacklistedTitle">
+      <button id="disabledBlacklistBtn" class="state-card-blacklist-btn" type="button" title="This site is skipped" data-i18n-title="detectionDomainBlacklistedTitle">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C7.58,4 4,7.58 4,12C4,16.42 7.58,20 12,20C16.42,20 20,16.42 20,12C20,7.58 16.42,4 12,4M16.95,5.63L18.37,7.05L7.05,18.37L5.63,16.95L16.95,5.63Z"/>
         </svg>
-        <span data-i18n="detectionRemoveFromBlacklistBtn">Remove from Blacklist</span>
+        <span data-i18n="detectionRemoveFromBlacklistBtn">Scan this site again</span>
       </button>
     </div>
   </div>

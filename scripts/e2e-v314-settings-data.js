@@ -197,7 +197,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     assert.equal(await page.$eval('#historyLimit', element => element.getAttribute('aria-invalid')), 'true');
     assert.equal(await page.$eval('#historyLimit', element => element.closest('.settings-card').classList.contains('is-collapsed')), false, 'its card, folded when Settings opened, is open');
     assert.equal(await page.$eval('#historyLimit', element => { const box = element.getBoundingClientRect(); return box.width > 0 && box.height > 0; }), true, 'and the field is displayed');
-    assert.deepEqual(await page.evaluate(() => window.__toasts), ['Invalid settings: History limit must be between 0 (unlimited) and 10000'], 'the message is kept');
+    assert.deepEqual(await page.evaluate(() => window.__toasts), ['Invalid settings: History limit must be a whole number from 0 to 10000 (0 keeps up to 1,000 entries)'], 'the message is kept');
     assert.deepEqual(await page.$$eval('.settings-tab-btn.active', buttons => buttons.map(button => button.dataset.settingsTab)), ['history'], 'only the field\'s tab is selected');
     await sleep(400);
     await snap('invalid-field');

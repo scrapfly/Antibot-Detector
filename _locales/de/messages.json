@@ -282,7 +282,7 @@
     "message": "Die Ergebnisse erscheinen hier, sobald sie bereit sind."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Von Sperrliste entfernen"
+    "message": "Aus der Liste entfernen"
   },
   "statDetections": {
     "message": "Erkennungen"
@@ -537,7 +537,7 @@
     "message": "Werkzeuge"
   },
   "advancedSubtabHistory": {
-    "message": "Verlauf"
+    "message": "Erfassungen"
   },
   "advancedFilterSite": {
     "message": "Website"
@@ -711,10 +711,10 @@
     "message": "Tage"
   },
   "blacklistedDomains": {
-    "message": "Gesperrte Domains"
+    "message": "Übersprungene Sites"
   },
   "blacklistedDomainsDesc": {
-    "message": "Domains, bei denen die Erkennung komplett übersprungen wird"
+    "message": "Auf diesen Sites läuft die Erkennung nie. Jeder Eintrag ist ein genauer Hostname: seine Subdomains werden weiter gescannt."
   },
   "jsApiEvents": {
     "message": "JS-API-Ereignisse"
@@ -842,7 +842,7 @@
     "message": "Cache leeren"
   },
   "clearCacheConfirmMsg": {
-    "message": "Dadurch werden die zwischengespeicherten Erkennungsdaten für diese Domain entfernt und eine neue Analyse ausgelöst."
+    "message": "Dadurch wird das gespeicherte Erkennungsergebnis für diese Seite entfernt (beim Cache-Bereich Domain oder Pfad kann es auch für andere Seiten gelten). Die Seite wird erneut gescannt, wenn du sie neu lädst."
   },
   "clearCacheConfirmBtn": {
     "message": "Cache leeren"
@@ -860,28 +860,28 @@
     "message": "Ungültige Domain"
   },
   "addBlacklistTitle": {
-    "message": "Zur Sperrliste hinzufügen"
+    "message": "Diese Site überspringen"
   },
   "addBlacklistMsgFmt": {
-    "message": "Die Domain \"{0}\" wird von allen zukünftigen Erkennungen ausgeschlossen. Sie können sie später in den Einstellungen wieder entfernen."
+    "message": "\"{0}\" wird ab jetzt nicht mehr gescannt. Du kannst das unter Einstellungen → Erkennung → Zu scannende Sites rückgängig machen."
   },
   "addBlacklistBtn": {
-    "message": "Zur Sperrliste hinzufügen"
+    "message": "Diese Site überspringen"
   },
   "alreadyBlacklistedFmt": {
-    "message": "Die Domain \"{0}\" steht bereits auf der Sperrliste"
+    "message": "\"{0}\" wird bereits übersprungen"
   },
   "addedToBlacklistFmt": {
-    "message": "\"{0}\" zur Sperrliste hinzugefügt"
+    "message": "\"{0}\" zu den übersprungenen Sites hinzugefügt"
   },
   "failedAddBlacklistFmt": {
-    "message": "Hinzufügen zur Sperrliste fehlgeschlagen: {0}"
+    "message": "Die Site konnte nicht übersprungen werden: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "\"{0}\" von der Sperrliste entfernt"
+    "message": "\"{0}\" aus den übersprungenen Sites entfernt"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Entfernen von der Sperrliste fehlgeschlagen: {0}"
+    "message": "Die Site konnte nicht aus den übersprungenen Sites entfernt werden: {0}"
   },
   "historyNoDetections": {
     "message": "Keine Erkennungen"
@@ -914,10 +914,10 @@
     "message": "Cache konnte nicht geleert werden"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "\"{0}\" zur Sperrliste hinzugefügt"
+    "message": "\"{0}\" zu den übersprungenen Sites hinzugefügt"
   },
   "notificationBlacklistFailed": {
-    "message": "Hinzufügen zur Sperrliste fehlgeschlagen"
+    "message": "Die Site konnte nicht übersprungen werden"
   },
   "notificationHistoryItemDeleted": {
     "message": "Verlaufseintrag gelöscht"
@@ -989,7 +989,7 @@
     "message": "URL der aktuellen Seite konnte nicht abgerufen werden"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} steht bereits auf der Sperrliste"
+    "message": "{0} wird bereits übersprungen"
   },
   "failedAddDomainFmt": {
     "message": "Domain konnte nicht hinzugefügt werden: {0}"
@@ -1418,7 +1418,7 @@
     "message": "Cache-Einstellungen"
   },
   "settingsCardSkipDomains": {
-    "message": "Domains überspringen"
+    "message": "Diese Sites überspringen"
   },
   "settingsAddCurrentPage": {
     "message": "Aktuelle Seite hinzufügen"
@@ -1517,13 +1517,13 @@
     "message": "Anwendungsbeispiel"
   },
   "detectionDisabledForDomain": {
-    "message": "Erkennung für diese Domain deaktiviert"
+    "message": "Erkennung pausiert: Du überspringst diese Site"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Von der Sperrliste entfernen"
+    "message": "Diese Site wieder scannen"
   },
   "detectionBlacklistHint": {
-    "message": "Oder verwalten Sie sie unter Einstellungen → Erkennung → Gesperrte Domains."
+    "message": "Oder verwalte die Liste unter Einstellungen → Erkennung → Zu scannende Sites."
   },
   "detectionNoDetectionsDesc": {
     "message": "Auf dieser Seite wurden keine passenden Anti-Bot-, CAPTCHA- oder Fingerprinting-Signale gefunden."
@@ -1541,7 +1541,7 @@
     "message": "Einstellungen konnten nicht gelesen werden — Vorgang abgebrochen"
   },
   "failedRemoveBlacklist": {
-    "message": "Entfernen von der Sperrliste fehlgeschlagen"
+    "message": "Die Site konnte nicht aus den übersprungenen Sites entfernt werden"
   },
   "pasteConfirmTitle": {
     "message": "Erkennungen hochladen?"
@@ -1562,7 +1562,7 @@
     "message": "Übersicht kopieren"
   },
   "detectionTitleBlockDomain": {
-    "message": "Diese Domain blockieren"
+    "message": "Diese Site überspringen"
   },
   "detectionStatSite": {
     "message": "Website"
@@ -1589,7 +1589,7 @@
     "message": "von"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Diese Domain steht auf der Sperrliste"
+    "message": "Diese Site wird übersprungen"
   },
   "detectionModalConfidence": {
     "message": "Zuverlässigkeit"
@@ -1858,7 +1858,7 @@
     "message": "Unterstützte Schutzsysteme"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Erfassungsverlauf anzeigen ({0})"
+    "message": "Erfassungen anzeigen ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript-Hooks"
@@ -3100,7 +3100,7 @@
     "message": "Nein"
   },
   "advHcaptchaNoHistory": {
-    "message": "Noch kein Erfassungsverlauf"
+    "message": "Noch keine Erfassungen"
   },
   "advHcaptchaNotAvailable": {
     "message": "k. A."
@@ -3289,10 +3289,10 @@
     "message": "k. A."
   },
   "advPanelHistoryClearedFmt": {
-    "message": "{0}-Erfassungsverlauf gelöscht"
+    "message": "{0}-Erfassungen gelöscht"
   },
   "advPanelFailedClearHistory": {
-    "message": "Verlauf konnte nicht gelöscht werden"
+    "message": "Erfassungen konnten nicht gelöscht werden"
   },
   "rulesUiNewDetectorName": {
     "message": "Neuer Detektor"
@@ -3550,16 +3550,16 @@
     "message": "Fehler: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "Keine Domains auf der Sperrliste"
+    "message": "Keine übersprungenen Sites"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Keine Domains entsprechen Ihrer Suche"
+    "message": "Keine Sites entsprechen deiner Suche"
   },
   "settingsUiChecking": {
     "message": "Wird geprüft..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "Das Verlaufslimit muss zwischen 0 (unbegrenzt) und 10000 liegen"
+    "message": "Das Verlaufslimit muss eine ganze Zahl von 0 bis 10000 sein (0 behält bis zu 1.000 Einträge)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "Die Cache-Dauer muss zwischen 1 und {0} liegen ({1})"
@@ -6790,5 +6790,14 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Eine Zeile"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Welche Seiten sich ein gespeichertes Ergebnis teilen. Domain: jede Seite der Site. Pfad: dieselbe Adresse, unabhängig von der Abfrage. Vollständige URL: nur genau dieselbe Adresse."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Fügt CSV-, Klartext- und Markdown-Exporten das Scandatum jeder Seite hinzu. JSON-Exporte enthalten es immer."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Speichert eine Seite auch dann im Verlauf, wenn ihr Ergebnis statt eines neuen Scans aus dem Cache kommt."
   }
 }

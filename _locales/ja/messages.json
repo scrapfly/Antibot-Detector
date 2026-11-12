@@ -282,7 +282,7 @@
     "message": "準備ができ次第、結果がここに表示されます。"
   },
   "actionRemoveFromBlacklist": {
-    "message": "ブラックリストから削除"
+    "message": "リストから削除"
   },
   "statDetections": {
     "message": "検出数"
@@ -537,7 +537,7 @@
     "message": "ツール"
   },
   "advancedSubtabHistory": {
-    "message": "履歴"
+    "message": "キャプチャ"
   },
   "advancedFilterSite": {
     "message": "サイト"
@@ -711,10 +711,10 @@
     "message": "日"
   },
   "blacklistedDomains": {
-    "message": "ブラックリストドメイン"
+    "message": "スキップするサイト"
   },
   "blacklistedDomainsDesc": {
-    "message": "検出が完全にスキップされるドメイン"
+    "message": "これらのサイトでは検出を実行しません。各項目は正確なホスト名で、そのサブドメインは引き続きスキャンされます。"
   },
   "jsApiEvents": {
     "message": "JS API イベント"
@@ -842,7 +842,7 @@
     "message": "キャッシュをクリア"
   },
   "clearCacheConfirmMsg": {
-    "message": "このドメインのキャッシュされた検出データを削除し、新しい解析を実行します。"
+    "message": "このページの保存済み検出結果を削除します（キャッシュ範囲がドメインまたはパスの場合、他のページにも適用されていることがあります）。ページを再読み込みすると、もう一度スキャンされます。"
   },
   "clearCacheConfirmBtn": {
     "message": "キャッシュをクリア"
@@ -860,28 +860,28 @@
     "message": "無効なドメイン"
   },
   "addBlacklistTitle": {
-    "message": "ブラックリストに追加"
+    "message": "このサイトをスキップ"
   },
   "addBlacklistMsgFmt": {
-    "message": "ドメイン「{0}」は今後すべての検出から除外されます。後で設定から削除できます。"
+    "message": "\"{0}\" は今後スキャンされません。設定 → 検出 → スキャンするサイト で元に戻せます。"
   },
   "addBlacklistBtn": {
-    "message": "ブラックリストに追加"
+    "message": "このサイトをスキップ"
   },
   "alreadyBlacklistedFmt": {
-    "message": "ドメイン「{0}」は既にブラックリストに登録されています"
+    "message": "\"{0}\" は既にスキップしています"
   },
   "addedToBlacklistFmt": {
-    "message": "「{0}」をブラックリストに追加しました"
+    "message": "\"{0}\" をスキップするサイトに追加しました"
   },
   "failedAddBlacklistFmt": {
-    "message": "ブラックリストへの追加に失敗しました: {0}"
+    "message": "このサイトをスキップできませんでした: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "「{0}」をブラックリストから削除しました"
+    "message": "\"{0}\" をスキップするサイトから削除しました"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "ブラックリストからの削除に失敗しました: {0}"
+    "message": "スキップするサイトから削除できませんでした: {0}"
   },
   "historyNoDetections": {
     "message": "検出なし"
@@ -914,10 +914,10 @@
     "message": "キャッシュのクリアに失敗しました"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "「{0}」をブラックリストに追加しました"
+    "message": "\"{0}\" をスキップするサイトに追加しました"
   },
   "notificationBlacklistFailed": {
-    "message": "ブラックリストへの追加に失敗しました"
+    "message": "このサイトをスキップできませんでした"
   },
   "notificationHistoryItemDeleted": {
     "message": "履歴項目を削除しました"
@@ -989,7 +989,7 @@
     "message": "現在のページのURLを取得できませんでした"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0}は既にブラックリストに登録されています"
+    "message": "{0} は既にスキップしています"
   },
   "failedAddDomainFmt": {
     "message": "ドメインの追加に失敗しました: {0}"
@@ -1418,7 +1418,7 @@
     "message": "キャッシュ設定"
   },
   "settingsCardSkipDomains": {
-    "message": "スキップするドメイン"
+    "message": "これらのサイトをスキップ"
   },
   "settingsAddCurrentPage": {
     "message": "現在のページを追加"
@@ -1517,13 +1517,13 @@
     "message": "使用例"
   },
   "detectionDisabledForDomain": {
-    "message": "このドメインでは検出が無効化されています"
+    "message": "検出は一時停止中: このサイトはスキップしています"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "ブラックリストから削除"
+    "message": "このサイトを再びスキャン"
   },
   "detectionBlacklistHint": {
-    "message": "または、設定 → 検出 → ブラックリストドメイン から管理できます。"
+    "message": "または、設定 → 検出 → スキャンするサイト からリストを管理できます。"
   },
   "detectionNoDetectionsDesc": {
     "message": "このページではアンチボット、CAPTCHA、フィンガープリンティングの該当する痕跡は見つかりませんでした。"
@@ -1541,7 +1541,7 @@
     "message": "設定を読み込めませんでした — 操作をキャンセルしました"
   },
   "failedRemoveBlacklist": {
-    "message": "ブロックリストからの削除に失敗しました"
+    "message": "スキップするサイトから削除できませんでした"
   },
   "pasteConfirmTitle": {
     "message": "検出結果をアップロードしますか？"
@@ -1562,7 +1562,7 @@
     "message": "概要をコピー"
   },
   "detectionTitleBlockDomain": {
-    "message": "このドメインをブロック"
+    "message": "このサイトをスキップ"
   },
   "detectionStatSite": {
     "message": "サイト"
@@ -1589,7 +1589,7 @@
     "message": "/"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "このドメインはブラックリストに登録されています"
+    "message": "このサイトはスキップしています"
   },
   "detectionModalConfidence": {
     "message": "信頼度"
@@ -1858,7 +1858,7 @@
     "message": "サポート対象の保護"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "キャプチャ履歴を表示（{0}）"
+    "message": "キャプチャを表示（{0}）"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript フック"
@@ -3100,7 +3100,7 @@
     "message": "いいえ"
   },
   "advHcaptchaNoHistory": {
-    "message": "キャプチャ履歴はまだありません"
+    "message": "キャプチャはまだありません"
   },
   "advHcaptchaNotAvailable": {
     "message": "なし"
@@ -3289,10 +3289,10 @@
     "message": "該当なし"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "{0} のキャプチャ履歴をクリアしました"
+    "message": "{0} のキャプチャをクリアしました"
   },
   "advPanelFailedClearHistory": {
-    "message": "履歴をクリアできませんでした"
+    "message": "キャプチャをクリアできませんでした"
   },
   "rulesUiNewDetectorName": {
     "message": "新しい検出器"
@@ -3550,16 +3550,16 @@
     "message": "エラー: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "ブラックリストにドメインはありません"
+    "message": "スキップするサイトはありません"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "検索に一致するドメインはありません"
+    "message": "検索に一致するサイトはありません"
   },
   "settingsUiChecking": {
     "message": "確認中..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "履歴の上限は 0(無制限)から 10000 の間で指定してください"
+    "message": "履歴の上限は 0 から 10000 までの整数で指定してください（0 の場合は最大 1,000 件を保持）"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "キャッシュ期間は 1 から {0} の間で指定してください({1})"
@@ -6790,5 +6790,14 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "1行"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "1 つの保存済み結果を共有するページの範囲です。ドメイン: サイトのすべてのページ。パス: クエリに関係なく同じアドレス。完全URL: まったく同じアドレスのみ。"
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "CSV、プレーンテキスト、Markdown のエクスポートに各ページのスキャン日時を追加します。JSON のエクスポートには常に含まれます。"
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "新しいスキャンではなくキャッシュの結果が再利用されたときも、そのページを履歴に記録します。"
   }
 }

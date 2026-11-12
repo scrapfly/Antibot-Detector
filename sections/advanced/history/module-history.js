@@ -360,10 +360,10 @@ class AdvancedModuleHistory {
             await AdvancedHistoryStore.clear(this.moduleName);
 
             await this.renderCapturedDataSection();
-            NotificationHelper.success(BaseAdvancedModule._fmt('advPanelHistoryClearedFmt', `${this.displayName} capture history cleared`, this.displayName));
+            NotificationHelper.success(BaseAdvancedModule._fmt('advPanelHistoryClearedFmt', `${this.displayName} captures cleared`, this.displayName));
         } catch (error) {
             Logger.error('UI', `[${this.moduleName}] Failed to clear history:`, error);
-            NotificationHelper.error(BaseAdvancedModule._tr('advPanelFailedClearHistory', 'Failed to clear history'));
+            NotificationHelper.error(BaseAdvancedModule._tr('advPanelFailedClearHistory', 'Failed to clear captures'));
         }
     }
 

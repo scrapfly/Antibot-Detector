@@ -253,7 +253,7 @@ Advanced.prototype.setupNoToolsHistoryLink = async function() {
         return;
       }
       const label = (typeof I18n !== 'undefined' && I18n.format('advancedToolsOpenHistoryFmt', total))
-        || `View capture history (${total})`;
+        || `View captures (${total})`;
       button.textContent = label;
       button.hidden = false;
       button.onclick = () => {
