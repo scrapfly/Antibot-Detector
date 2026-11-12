@@ -13,8 +13,16 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection details: explains what the difficulty level means and links the vendor's website and its detection guide in your language.
 - Detection details: Open tools goes straight to the Advanced tools for that protection.
 
+### Changed
+
+- Sites you exclude from scanning are now called skipped sites, with Skip this site buttons, instead of a blacklist; your saved list is kept.
+- The Advanced tab's History sub-tab is now called Captures, so it is not confused with the History tab.
+- Settings explains what Cache scope, Include timestamps and Save on cache hits do.
+
 ### Fixed
 
+- The Clear cache confirmation no longer promises a new scan that never starts, or says "this domain" when the cache covers a path or exact address.
+- The History limit error no longer says 0 means unlimited; 0 keeps up to 1,000 entries.
 - Detection and Rules stay on the page you were viewing when you come back to their tab.
 - In Arabic, the arrow keys move through the Advanced code window's language tabs in reading order.
 - Settings: removing a site or a webhook header keeps keyboard focus in the list, and copying a webhook template variable says when the browser refuses it.
