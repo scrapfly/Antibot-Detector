@@ -212,7 +212,7 @@ on('onDetection', (e) => {
 
 ### Webhook
 
-扫描发现防护措施时，扩展可以把结果发送到你自己的端点。你可以选择 HTTP 方法、添加请求头，并用模板编写请求体，模板中可使用 `<SITEURL>`、`<HOSTNAME>`、`<TITLE>`、`<DETECTIONS>`、`<DETECTION_COUNT>`、`<DETECTION_NAMES>`（单行列出各防护措施及其置信度）、`<CATEGORIES>` 和 `<TIMESTAMP>` 等变量。**从预设开始**（Slack、Mattermost 或 Google Chat、Discord，或一行纯文本）会填入 Content-Type 和现成的聊天消息模板。Webhook 只会发往公共主机上的 HTTPS 地址，默认关闭，并带有**测试**按钮。可在**设置 → 检测 → Webhook 集成**中配置。
+扫描发现防护措施时，扩展可以把结果发送到你自己的端点。你可以选择 HTTP 方法、添加请求头，并用模板编写请求体，模板中可使用 `<SITEURL>`、`<HOSTNAME>`、`<TITLE>`、`<DETECTIONS>`、`<DETECTION_COUNT>`、`<DETECTION_NAMES>`（单行列出各防护措施及其置信度）、`<HTTP_STATUS>`（页面的 HTTP 状态码，例如拦截页面的 403）、`<CATEGORIES>` 和 `<TIMESTAMP>` 等变量。**从预设开始**（Slack、Mattermost 或 Google Chat、Discord，或一行纯文本）会填入 Content-Type 和现成的聊天消息模板。Webhook 只会发往公共主机上的 HTTPS 地址，默认关闭，并带有**测试**按钮。可在**设置 → 检测 → Webhook 集成**中配置。
 
 **最近发送记录与重试。** **设置 → 检测 → Webhook** 会列出最近 20 次发送尝试（页面、状态、耗时；绝不包含地址、请求头或负载）。失败的发送可以用**重试**再次发送；开启**自动重试失败的发送**（默认开启）后，如果没有收到响应，或服务器返回 408、425、429 或 5xx，扩展还会在 1、5 和 15 分钟后自动重试；401、403 或 404 这类拒绝则会等你手动**重试**。为此，失败发送的页面数据会在内存中保留一小时（最多 20 条），绝不写入磁盘，浏览器关闭后即清除；重试时会按你当前的 Webhook 设置重新构建请求，因此修正后的地址或密钥会生效，也不会随之存储任何请求头或密钥。
 
