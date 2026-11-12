@@ -6197,6 +6197,15 @@
   "historyScanAgain": {
     "message": "Nu opnieuw scannen"
   },
+  "detectionFromPageFmt": {
+    "message": "Uit een scan van {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Gewijzigd sinds {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Geen wijziging sinds {0}"
+  },
   "rulesDuplicate": {
     "message": "Dupliceren"
   },

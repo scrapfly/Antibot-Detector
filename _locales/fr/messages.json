@@ -6197,6 +6197,15 @@
   "historyScanAgain": {
     "message": "Analyser à nouveau maintenant"
   },
+  "detectionFromPageFmt": {
+    "message": "D’après une analyse de {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Modifié depuis le {0} : {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Aucun changement depuis le {0}"
+  },
   "rulesDuplicate": {
     "message": "Dupliquer"
   },

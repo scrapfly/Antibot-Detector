@@ -6197,6 +6197,15 @@
   "historyScanAgain": {
     "message": "Pindai ulang sekarang"
   },
+  "detectionFromPageFmt": {
+    "message": "Dari pindaian {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Berubah sejak {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Tidak ada perubahan sejak {0}"
+  },
   "rulesDuplicate": {
     "message": "Duplikasi"
   },

@@ -112,7 +112,66 @@ DetectionActions.RESCAN_NOTICES = Object.freeze({
 
 /** Both Scan again buttons off while the worker answers (the toolbar one and the one on the dead-end card). */
 DetectionActions.setRescanBusy = function(busy) {
-    document.querySelectorAll('#rescanBtn, #emptyRescanBtn').forEach((button) => { button.disabled = busy; });
+    document.querySelectorAll(DetectionActions.RESCAN_BUTTONS).forEach((button) => { button.disabled = busy; });
+};
+
+/**
+ * Every Scan again button of the tab: next to Clear cache, on the card of a page with no completed scan, under the all-clear card,
+ * and on the line that says the results were found on another page of the site.
+ */
+DetectionActions.RESCAN_BUTTONS = '#rescanBtn, #emptyRescanBtn, #checkedRescanBtn, #sourceRescanBtn';
+
+/**
+ * Compare scans on the change line: the History tab, with its compare dialog open on the page's newest saved scan (the dialog
+ * picks the earlier scan, as from the entry's menu).
+ */
+DetectionActions.compareChange = async function() {
+    const entry = this.changeEntry;
+    const popup = typeof window !== 'undefined' ? window.popupInstance : null;
+    if (!entry || !popup || !popup.history || typeof popup.switchTab !== 'function') return;
+    try {
+      await popup.switchTab('history');
+      const history = popup.history;
+      await history.loadHistoryFromStorage();
+      const item = (history.historyItems || []).find(candidate => candidate && candidate.id === entry.id) || entry;
+      await history.compareHistoryItem(item);
+    } catch (error) {
+      Logger.warn('UI', '[Detection] Could not open Compare scans', error);
+    }
+};
+
+/**
+ * Watch for changes on the change line: the page's newest saved scan joins the watchlist (watching also pins it), as from the
+ * History entry's menu. The line turns to "Watching for changes" when the stored History says so.
+ */
+DetectionActions.watchChange = async function() {
+    const entry = this.changeEntry;
+    if (!entry || typeof entry.id !== 'string' || entry.watch === true) return;
+    const t = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+    const button = document.querySelector('#changeWatchBtn');
+    if (button) button.disabled = true;
+    try {
+      const response = await chrome.runtime.sendMessage({ type: HistoryStore.Messages.UPDATE_ITEM, id: entry.id, patch: { watch: true } });
+      if (response && response.status === 'unknown') {
+        NotificationHelper.error(t('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."));
+        return;
+      }
+      if (!response || response.status !== 'ok') throw new Error((response && response.error) || 'History update failed');
+      if (response.updated === 0 && response.limit) {
+        NotificationHelper.error(t('historyWatchLimitFmt', 'You can watch up to {0} pages. Stop watching one first.', response.limit));
+        return;
+      }
+      const settings = await Utils.getHistorySettings();
+      NotificationHelper.success(HistoryPolicy.watchModeOf(settings) === 'off'
+        ? t('historyWatchStartedOffNotice', 'Watching this page. Turn on Watch pinned pages in Settings → History for it to be checked.')
+        : t('historyWatchStartedNotice', 'Watching this page'));
+    } catch (error) {
+      Logger.warn('UI', '[Detection] Watch failed', error);
+      NotificationHelper.error(error.message);
+    } finally {
+      if (button) button.disabled = false;
+      DetectionUI.syncChangeNote.call(this);
+    }
 };
 
 /** The page is reloading to be scanned from the start: no result of the old scan stays, and the scanning screen shows until the new one arrives. */

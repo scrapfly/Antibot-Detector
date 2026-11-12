@@ -6197,6 +6197,15 @@
   "historyScanAgain": {
     "message": "Сканировать заново сейчас"
   },
+  "detectionFromPageFmt": {
+    "message": "По сканированию {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Изменения с {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Без изменений с {0}"
+  },
   "rulesDuplicate": {
     "message": "Дублировать"
   },

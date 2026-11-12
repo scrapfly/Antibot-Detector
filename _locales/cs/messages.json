@@ -6197,6 +6197,15 @@
   "historyScanAgain": {
     "message": "Znovu skenovat nyní"
   },
+  "detectionFromPageFmt": {
+    "message": "Ze skenování {0}, {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Změněno od {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "Beze změny od {0}"
+  },
   "rulesDuplicate": {
     "message": "Duplikovat"
   },

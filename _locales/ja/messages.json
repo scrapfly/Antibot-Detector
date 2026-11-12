@@ -6197,6 +6197,15 @@
   "historyScanAgain": {
     "message": "今すぐ再スキャン"
   },
+  "detectionFromPageFmt": {
+    "message": "{0} のスキャン結果（{1}）"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "{0} 以降の変化: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "{0} 以降変化なし"
+  },
   "rulesDuplicate": {
     "message": "複製"
   },

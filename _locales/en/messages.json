@@ -6722,6 +6722,18 @@
     "message": "Scan again now",
     "description": "History entry menu and details window: clears the page's saved result and scans the page again (reloads the tab that shows it, or opens it in a new tab)"
   },
+  "detectionFromPageFmt": {
+    "message": "From a scan of {0}, {1}",
+    "description": "Detection tab, under the site's name: the results shown were found on another page of the same site (the Domain cache scope). {0} = that page's path, like /login; {1} = how long ago, like 3h ago"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "Changed since {0}: {1}",
+    "description": "Detection tab, under the stats: History's scans of this page differ. {0} = the date of the earlier scan; {1} = the protections added and removed, like +DataDome −Kasada"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "No change since {0}",
+    "description": "Detection tab, under the stats: History's latest scan of this page found the same protections as the earlier one. {0} = the date of the earlier scan"
+  },
   "rulesDuplicate": {
     "message": "Duplicate",
     "description": "Rule card menu: opens the editor on a copy of this rule, as a new custom rule (the original is not changed)"

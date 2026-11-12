@@ -6197,6 +6197,15 @@
   "historyScanAgain": {
     "message": "إعادة الفحص الآن"
   },
+  "detectionFromPageFmt": {
+    "message": "من فحص {0}، {1}"
+  },
+  "detectionChangedSinceFmt": {
+    "message": "تغيّر منذ {0}: {1}"
+  },
+  "detectionNoChangeSinceFmt": {
+    "message": "لا تغيير منذ {0}"
+  },
   "rulesDuplicate": {
     "message": "إنشاء نسخة"
   },
