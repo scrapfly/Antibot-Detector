@@ -6,6 +6,10 @@
  *                           sg-captcha: challenge, the page under /.well-known/sgcaptcha/ with its inline constants): the
  *                           extension names it SiteGround SG-CAPTCHA at 100% with the three rules and the three combinations;
  *                           a SiteGround-hosted page that challenges nobody (only the platform's headers) is not named
+ *   Block pages (3.1.9)     local copies of the F5 BIG-IP ASM, Sucuri and Radware block pages (test/fixtures/block-pages), with the
+ *                           status, cookies and headers those firewalls send: each is named from its own page text (content
+ *                           scope "page"), the saved result keeps the page's HTTP status (the 403/503 tile); an ordinary large
+ *                           page quoting all three block pages names none of them
  *   Custom detector         with the interface in Spanish and in Japanese, Rules → Add opens the editor on a new detector whose
  *                           description reads in that language; in English it reads as it is stored
  *
@@ -52,8 +56,24 @@ const HOSTING_HEADERS = {
   'x-proxy-cache': 'MISS', 'x-proxy-cache-info': '0 NC:000000 UP:'
 };
 
+// ---- Block pages (3.1.9): what F5 BIG-IP ASM, Sucuri and Radware Cloud WAF serve to a blocked visitor --------------------------
+const blockPage = (name) => fs.readFileSync(path.join(REPO, 'test', 'fixtures', 'block-pages', `${name}.html`), 'utf8');
+const BLOCK_PAGES = {
+  '/f5-block': { status: 200, name: 'f5', headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache', connection: 'close',
+    'set-cookie': `TS01a2b3c4=01${'9f'.repeat(30)}; Path=/` } },
+  '/sucuri-block': { status: 403, name: 'sucuri', headers: { 'content-type': 'text/html', server: 'Sucuri/Cloudproxy', 'x-sucuri-id': '14013',
+    'x-sucuri-block': 'BNP005' } },
+  '/radware-block': { status: 403, name: 'radware', headers: { 'content-type': 'text/html; charset=utf-8', 'x-sl-compstate': 'Disabled', 'cache-control': 'no-cache' } }
+};
+// An article about firewalls that quotes every block page, a few thousand elements long: an ordinary page
+const ARTICLE = () => `<!doctype html><html><head><title>How WAF block pages look</title></head><body><main>${['f5', 'sucuri', 'radware'].map(name =>
+  `<section><pre>${blockPage(name)}</pre><div>${blockPage(name)}</div></section>`).join('')}${'<p>More about firewalls.</p>'.repeat(3000)}</main></body></html>`;
+
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
+  const block = BLOCK_PAGES[url.pathname];
+  if (block) { res.writeHead(block.status, block.headers); return res.end(blockPage(block.name)); }
+  if (url.pathname === '/waf-article') { res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' }); return res.end(ARTICLE()); }
   if (url.pathname === '/.well-known/sgcaptcha/') { res.writeHead(200, CHALLENGE_HEADERS); return res.end(CHALLENGE_PAGE); }
   if (url.pathname === '/plain') {
     res.writeHead(200, HOSTING_HEADERS);
@@ -169,6 +189,43 @@ async function scenario(name, fn) {
     const savedPlain = await savedResult(plainUrl);
     assert.ok(!savedPlain || !savedPlain.detectionResults.some(d => d.detector.id === 'detect-siteground-captcha'), 'a SiteGround-hosted page is not the challenge');
     await plain.close();
+  });
+
+  // ===============================================================================================
+  await scenario('Block pages: F5, Sucuri and Radware are named from their own block page, with its HTTP status; an ordinary page quoting them names none', async () => {
+    const expected = {
+      '/f5-block': { id: 'detect-f5', title: 'F5 BIG-IP ASM 100%', confidence: 100, combo: 'f5-asm-block', content: ['asm-support-id'], status: 200 },
+      '/sucuri-block': { id: 'detect-sucuri', title: 'Sucuri WAF 100%', confidence: 100, combo: 'sucuri-block-page', content: ['sucuri-block-id', 'sucuri-block-title'], status: 403 },
+      '/radware-block': { id: 'detect-radware', title: 'Radware Bot Manager 90%', confidence: 90, combo: 'radware-complete-profile',
+        content: ['radware-block-message', 'radware-cloudwebsec-reference'], status: 403 }
+    };
+    for (const [pathname, want] of Object.entries(expected)) {
+      const url = `${origin}${pathname}`;
+      const page = await open(url);
+      const tabId = await tabIdOf(url);
+      await until(async () => (await titleOf(tabId)).includes(want.title), 25000, `the hover text of ${pathname}`);
+      const saved = await until(() => savedResult(url), 10000, 'the saved result');
+      const found = saved.detectionResults.find(d => d.detector.id === want.id);
+      assert.ok(found, `${pathname}: ${saved.detectionResults.map(d => d.detector.id).join(', ')}`);
+      assert.equal(found.confidence, want.confidence, pathname);
+      assert.deepEqual([...new Set(found.matches.filter(m => m.type === 'content').map(m => m.patternId))].sort(), want.content, pathname);
+      assert.ok(found.combinations.some(c => c.id === want.combo), `${pathname}: ${found.combinations.map(c => c.id).join(', ')}`);
+      assert.ok(found.matches.filter(m => m.type === 'content').every(m => m.foundIn === 'page content'), 'read from the page itself');
+      assert.equal(saved.httpStatus, want.status, `${pathname}: the HTTP status the tile shows`);
+      console.log(`      ${pathname}: ${await titleOf(tabId)}, HTTP ${saved.httpStatus}`);
+      await page.close();
+    }
+
+    const articleUrl = `${origin}/waf-article`;
+    const article = await open(articleUrl);
+    const articleTab = await tabIdOf(articleUrl);
+    await until(async () => (await titleOf(articleTab)) === 'Scrapfly: No protections found', 25000, 'the clean hover text of the article');
+    const savedArticle = await savedResult(articleUrl);
+    const named = savedArticle ? savedArticle.detectionResults.map(d => d.detector.id) : [];
+    assert.ok(!named.some(id => ['detect-f5', 'detect-sucuri', 'detect-radware'].includes(id)), `the article names: ${named.join(', ')}`);
+    const elements = await article.evaluate(() => document.getElementsByTagName('*').length);
+    assert.ok(elements > 3000, `an ordinary page: ${elements} elements`);
+    await article.close();
   });
 
   // ===============================================================================================
