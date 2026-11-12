@@ -211,7 +211,7 @@ test('never with a modifier key or with a dialog open; the edge of History takes
 
 test('the card handler only moves for keys on the card itself (not its buttons), and cards name their shortcuts', () => {
   const src = read('sections/history/history.js');
-  assert.ok(/if \(e\.target !== e\.currentTarget\) return;[\s\S]{0,200}if \(this\.moveCardFocus\(e\)\) e\.preventDefault\(\);/.test(src));
+  assert.ok(/if \(e\.target !== e\.currentTarget\) return;\s*if \(e\.key !== 'Enter' && e\.key !== ' '\) \{\s*if \(this\.moveCardFocus\(e\)\) e\.preventDefault\(\);/.test(src));
   assert.ok(src.includes('aria-keyshortcuts="${History.CARD_KEYS}"'));
   assert.equal(world().context.History.CARD_KEYS, 'j k ArrowDown ArrowUp Home End');
 });
