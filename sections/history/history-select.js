@@ -1,11 +1,12 @@
 /**
- * History → … → Select entries: pick several entries and pin, watch, copy, export or delete them together.
+ * History → … → Select entries: pick several entries and pin, watch, bulk scan, copy, export or delete them together.
  * A mixin of History (loads after history.js).
  *
  * The selection is always about what the list shows: a search or a chip that hides a selected entry also
  * unselects it, so Delete can never reach an entry nobody can see. Pin, watch and delete are one message
  * each to the worker, which is the only History writer; Export builds the file here, in the format
- * chosen in Settings → History; Copy as lines puts one line per entry on the clipboard, in the list's order.
+ * chosen in Settings → History; Copy as lines puts one line per entry on the clipboard, in the list's order;
+ * Bulk scan hands the entries' addresses to the Bulk scan page (BulkHandoff), which scans them again.
  */
 
 History.prototype.selectedItems = function() {
@@ -97,7 +98,7 @@ History.prototype.syncSelectBar = function() {
   const allPicked = shown.length > 0 && shown.every(item => this.selectedIds.has(item.id));
   set('#historySelectAll', allPicked ? t('historySelectNone', 'Select none') : t('historySelectAll', 'Select all'));
   const none = picked.length === 0;
-  for (const selector of ['#historySelectPin', '#historySelectWatch', '#historySelectCopyLines', '#historySelectExport', '#historySelectDelete']) {
+  for (const selector of ['#historySelectPin', '#historySelectWatch', '#historySelectBulkScan', '#historySelectCopyLines', '#historySelectExport', '#historySelectDelete']) {
     const button = bar.querySelector(selector);
     if (button) button.disabled = none;
   }
@@ -157,18 +158,45 @@ History.prototype.bulkWatch = async function() {
   }
 };
 
+/** The selected entries in the order the list shows them (its sort), not the order History keeps: what the person sees. */
+History.prototype.selectedInListOrder = function() {
+  const picked = this.selectedItems();
+  const order = new Map(this.getFilteredItems().map((item, index) => [item.id, index]));
+  const rankOf = (item) => (order.has(item.id) ? order.get(item.id) : order.size);
+  return picked.slice().sort((a, b) => rankOf(a) - rankOf(b));
+};
+
 /**
  * The selected entries as one line each ("address: Cloudflare 95%, reCAPTCHA 70%"), for a chat or a ticket. They come in the order the
  * list shows them (its sort), not the order History keeps: what the person sees is what gets pasted. No query string, no cookie or
  * header value; the standard copy notice says it is done.
  */
 History.prototype.bulkCopyLines = async function() {
-  const picked = this.selectedItems();
+  const picked = this.selectedInListOrder();
   if (!picked.length) return;
-  const order = new Map(this.getFilteredItems().map((item, index) => [item.id, index]));
-  const rankOf = (item) => (order.has(item.id) ? order.get(item.id) : order.size);
-  const lines = HistoryExport.oneLines(picked.slice().sort((a, b) => rankOf(a) - rankOf(b)));
+  const lines = HistoryExport.oneLines(picked);
   if (lines) await FormatUtils.copyToClipboard(lines);
+};
+
+/**
+ * Scan the selected entries again with Bulk scan: their addresses (each once, in the list's order) are handed to the Bulk scan
+ * page through session storage (BulkHandoff), and the page is opened, or the open one brought forward, as History's "…" menu
+ * does. The page fills its list with them and puts the keyboard on Start; a run going on there is left alone, and the page says
+ * so. The 200-page cap and Settings → Detection → Sites to scan apply when the run starts, as for a list typed on the page.
+ */
+History.prototype.bulkScanSelected = async function() {
+  const picked = this.selectedInListOrder();
+  if (!picked.length) return;
+  const handoff = BulkHandoff.create(picked);
+  if (handoff.urls.length) {
+    try {
+      await chrome.storage.session.set({ [BulkHandoff.KEY]: handoff });
+    } catch (error) {
+      // The page still opens, with an empty list: what to scan can be pasted there
+      Logger.warn('UI', '[History] The selection could not be handed to Bulk scan', error);
+    }
+  }
+  await this.openBulkScan();
 };
 
 /** The selected entries as one file, in the format chosen in Settings → History. */
@@ -232,6 +260,7 @@ History.prototype.setupSelectListeners = function() {
   on('#historySelectAll', () => this.toggleSelectAll());
   on('#historySelectPin', () => this.bulkPin());
   on('#historySelectWatch', () => this.bulkWatch());
+  on('#historySelectBulkScan', () => this.bulkScanSelected());
   on('#historySelectCopyLines', () => this.bulkCopyLines());
   on('#historySelectExport', () => this.bulkExport());
   on('#historySelectDelete', () => this.bulkDelete());

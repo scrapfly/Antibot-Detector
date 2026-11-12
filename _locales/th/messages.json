@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "ประวัติการตรวจจับจะแสดงที่นี่เมื่อคุณท่องเว็บไซต์"
   },
+  "historyPausedNote": {
+    "message": "ประวัติหยุดชั่วคราวอยู่ หน้าที่สแกนจึงไม่ถูกบันทึก"
+  },
   "rulesUpdateTitle": {
     "message": "ติดตั้งการอัปเดตกฎจากรีลีสล่าสุดของ Scrapfly"
   },
@@ -6709,6 +6712,12 @@
   },
   "bulkHistoryPaused": {
     "message": "ประวัติหยุดชั่วคราวอยู่ หน้าจะถูกสแกนแต่ไม่ถูกบันทึก"
+  },
+  "bulkFromHistoryFmt": {
+    "message": "หน้าจากประวัติ: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "กำลังสแกนหลายหน้าอยู่ จึงไม่ได้เพิ่มหน้าจากประวัติ"
   },
   "bulkReadingSitemaps": {
     "message": "กำลังอ่านแผนผังเว็บไซต์…"

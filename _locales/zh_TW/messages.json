@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "瀏覽網站時，偵測歷史記錄會顯示在這裡。"
   },
+  "historyPausedNote": {
+    "message": "歷史記錄已暫停，掃描過的網頁不會被記錄。"
+  },
   "rulesUpdateTitle": {
     "message": "從最新的 Scrapfly 發行版本安裝規則更新"
   },
@@ -6709,6 +6712,12 @@
   },
   "bulkHistoryPaused": {
     "message": "歷史記錄已暫停：網頁會被掃描，但不會被記錄。"
+  },
+  "bulkFromHistoryFmt": {
+    "message": "來自歷史記錄的網頁：{0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "批次掃描正在進行，因此未加入歷史記錄中的網頁。"
   },
   "bulkReadingSitemaps": {
     "message": "正在讀取網站地圖…"

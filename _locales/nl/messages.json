@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Detectiegeschiedenis verschijnt hier terwijl je websites bezoekt."
   },
+  "historyPausedNote": {
+    "message": "De geschiedenis is gepauzeerd, dus gescande pagina's worden niet vastgelegd."
+  },
   "rulesUpdateTitle": {
     "message": "Regelupdates installeren uit de nieuwste Scrapfly-release"
   },
@@ -6709,6 +6712,12 @@
   },
   "bulkHistoryPaused": {
     "message": "De geschiedenis is gepauzeerd: de pagina's worden gescand maar niet vastgelegd."
+  },
+  "bulkFromHistoryFmt": {
+    "message": "Pagina's uit de geschiedenis: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Er loopt een bulkscan, dus de pagina's uit de geschiedenis zijn niet toegevoegd."
   },
   "bulkReadingSitemaps": {
     "message": "Sitemaps lezen…"

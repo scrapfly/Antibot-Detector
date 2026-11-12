@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Web sitelerinde gezindikçe tespit geçmişi burada görünecek."
   },
+  "historyPausedNote": {
+    "message": "Geçmiş duraklatıldı, bu yüzden taranan sayfalar kaydedilmiyor."
+  },
   "rulesUpdateTitle": {
     "message": "En son Scrapfly sürümündeki kural güncellemelerini yükle"
   },
@@ -6709,6 +6712,12 @@
   },
   "bulkHistoryPaused": {
     "message": "Geçmiş duraklatıldı: sayfalar taranır ama kaydedilmez."
+  },
+  "bulkFromHistoryFmt": {
+    "message": "Geçmişten sayfa: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Bir toplu tarama sürüyor, bu yüzden Geçmişteki sayfalar eklenmedi."
   },
   "bulkReadingSitemaps": {
     "message": "Site haritaları okunuyor…"

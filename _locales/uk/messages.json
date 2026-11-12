@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Історія виявлень з’являтиметься тут під час перегляду веб-сайтів."
   },
+  "historyPausedNote": {
+    "message": "Історію призупинено, тому проскановані сторінки не записуються."
+  },
   "rulesUpdateTitle": {
     "message": "Установити оновлення правил з останнього випуску Scrapfly"
   },
@@ -6709,6 +6712,12 @@
   },
   "bulkHistoryPaused": {
     "message": "Історію призупинено: сторінки скануються, але не записуються."
+  },
+  "bulkFromHistoryFmt": {
+    "message": "Сторінок з історії: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Триває масове сканування, тому сторінки з історії не додано."
   },
   "bulkReadingSitemaps": {
     "message": "Читання карт сайту…"

@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "El historial de detecciones aparecerá aquí a medida que navegues."
   },
+  "historyPausedNote": {
+    "message": "El Historial está en pausa: las páginas analizadas no se guardan."
+  },
   "rulesUpdateTitle": {
     "message": "Instalar actualizaciones de reglas de la última versión de Scrapfly"
   },
@@ -6711,6 +6714,12 @@
   },
   "bulkHistoryPaused": {
     "message": "El Historial está en pausa: las páginas se analizan pero no se guardan."
+  },
+  "bulkFromHistoryFmt": {
+    "message": "Páginas del Historial: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Hay un análisis masivo en curso, así que no se añadieron las páginas del Historial."
   },
   "bulkReadingSitemaps": {
     "message": "Leyendo sitemaps…"

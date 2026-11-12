@@ -409,6 +409,10 @@
   "historyEmptyDescription": {
     "message": "Detection history will appear here as you browse websites."
   },
+  "historyPausedNote": {
+    "message": "History is paused, so scanned pages are not recorded.",
+    "description": "History tab: note above the list and in the empty state while History is paused (Settings → History, or the Privacy preset); next to a Resume button"
+  },
   "rulesUpdateTitle": {
     "message": "Install rule updates from the latest Scrapfly release"
   },
@@ -7396,6 +7400,14 @@
   "bulkHistoryPaused": {
     "message": "History is paused, so the pages are scanned but not recorded.",
     "description": "Bulk scan: notice when History is paused"
+  },
+  "bulkFromHistoryFmt": {
+    "message": "Pages from History: {0}",
+    "description": "Bulk scan: notice when the list was filled from History's Select bar ({0} = count)"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "A bulk scan is in progress, so the pages from History were not added.",
+    "description": "Bulk scan: notice when History's Select bar sent pages while a run is going on, so the list was left as it is"
   },
   "bulkReadingSitemaps": {
     "message": "Reading sitemaps…",

@@ -13,6 +13,8 @@
  *   Controls     Pause lets the current page finish and opens no other; Resume goes on; Stop closes the scan tab at once
  *   Restart      the service worker is stopped during a run: when it starts again the run reads "stopped" (not stuck
  *                "running") and the scan tab it left is closed
+ *   From History History → Select entries → Bulk scan fills the open page once (focus on Start); a run going on keeps its list
+ *   History tab  the paused note and Resume, j/k between cards, Statistics from the "…" menu
  *
  * One local server answers on 127.0.0.1, localhost (the skipped site) and sitemap.test (mapped to 127.0.0.1 by the browser).
  * A probe rule (a marker in the page) makes a page "protected". The sitemap is served at https://sitemap.test/ by
@@ -325,6 +327,77 @@ const PROBE = {
     await sleep(1000);
     assert.deepEqual(await scanTabs(), [], 'the scan tab the stopped worker left is closed');
     console.log('PASS Restart: a run the stopped worker left reads "stopped", and its tab is closed');
+
+    // 8. From History (3.1.8): Select entries → Bulk scan hands the selected addresses to the open Bulk page; a run going on keeps its list
+    const pop = await context.newPage();
+    pop.on('pageerror', error => errors.push(`popup: ${error.message}`));
+    await pop.goto(`${base}/popup.html`);
+    await pop.waitForFunction(() => window.popupInstance?.detectorManager?.initialized, null, { polling: 250, timeout: 30000 });
+    await pop.$eval('#nav-history', el => el.click());
+    await pop.waitForFunction(() => document.querySelectorAll('#historyList .history-item').length >= 2, null, { polling: 250, timeout: 15000 });
+    const recorded = await pop.evaluate(() => window.popupInstance.history.getFilteredItems().map(item => item.url));
+    const handOver = async () => {
+      await pop.$eval('#historyMenuBtn', el => el.click());
+      await pop.$eval('#selectHistoryBtn', el => el.click());
+      await pop.waitForSelector('#historySelectBar', { state: 'visible' });
+      assert.equal(await pop.$eval('#historySelectBulkScan', el => el.disabled), true, 'off until something is selected');
+      await pop.$eval('#historySelectAll', el => el.click());
+      assert.equal(await pop.$eval('#historySelectBulkScan', el => el.disabled), false);
+      assert.equal(await pop.$eval('#historySelectBulkScan', el => el.textContent.trim()), 'Bulk scan');
+      await pop.$eval('#historySelectBulkScan', el => el.click());
+    };
+    await bulk.fill('#bulkInput', '');
+    await handOver();
+    await bulk.waitForFunction((want) => document.querySelector('#bulkInput').value === want, [...new Set(recorded)].join('\n'), { polling: 250, timeout: 8000 });
+    assert.equal(await bulk.$eval('#bulkNotice', el => el.textContent), `Pages from History: ${new Set(recorded).size}`);
+    await focusIs('bulkStartBtn');
+    assert.equal(await X(async () => 'session_bulk_from_history' in (await chrome.storage.session.get('session_bulk_from_history'))), false, 'the hand-over is taken once');
+    assert.equal((await context.pages()).filter(p => p.url() === `${base}/sections/bulk/bulk.html`).length, 1, 'the open page is reused, not a second one opened');
+    console.log('PASS From History: Select entries → Bulk scan fills the open Bulk page, once, says how many, and focuses Start');
+
+    // A run going on: its list is left alone and the page says so
+    await bulk.fill('#bulkInput', at('/hang?h=1'));
+    await bulk.click('#bulkStartBtn');
+    await waitRun(r => r.status === 'running' && r.items[0].status === 'scanning', 30000);
+    await pop.$eval('#historySelectDone', el => el.click()).catch(() => {});
+    await handOver();
+    await bulk.waitForFunction(() => /in progress/.test(document.querySelector('#bulkNotice').textContent), null, { polling: 250, timeout: 8000 });
+    const busy = await run();
+    assert.deepEqual(busy.items.map(i => i.url), [at('/hang?h=1')], 'the run keeps its own list');
+    await bulk.click('#bulkStopBtn');
+    await waitRun(r => r.status === 'stopped', 5000);
+    console.log('PASS From History: a run going on keeps its list, and the page says the pages were not added');
+
+    // History tab (3.1.8): the paused note with Resume, j/k between cards, Statistics from the "…" menu
+    await pop.$eval('#historySelectDone', el => el.click()).catch(() => {});
+    // Through the popup (the worker handle is stale after the restart above): StorageManager sends SETTINGS_MUTATE to the worker
+    await pop.evaluate(async () => { if (!await StorageManager.patchSettings({ history: { historyEnabled: false } })) throw new Error('fixture failed'); });
+    await pop.waitForSelector('#historyPaused', { state: 'visible', timeout: 8000 });
+    assert.match(await pop.$eval('#historyPaused', el => el.textContent), /History is paused/);
+    await pop.click('#historyPaused .history-paused-resume');
+    await pop.waitForSelector('#historyPaused', { state: 'hidden', timeout: 8000 });
+    await pop.waitForFunction(async () => (await StorageManager.readSettingsStrict()).history.historyEnabled === true, null, { polling: 250, timeout: 5000 });
+    console.log('PASS History paused: the note shows while History is paused, follows the setting, and Resume turns recording back on');
+
+    await pop.focus('#historyList .history-item');
+    await pop.keyboard.press('j');
+    assert.equal(await pop.evaluate(() => [...document.querySelectorAll('#historyList .history-item')].indexOf(document.activeElement)), 1);
+    await pop.keyboard.press('ArrowUp');
+    assert.equal(await pop.evaluate(() => [...document.querySelectorAll('#historyList .history-item')].indexOf(document.activeElement)), 0);
+    await pop.keyboard.press('End');
+    assert.equal(await pop.evaluate(() => { const cards = [...document.querySelectorAll('#historyList .history-item')]; return cards.indexOf(document.activeElement) === cards.length - 1; }), true);
+    assert.equal(await pop.$eval('#historyList .history-item', el => el.getAttribute('aria-keyshortcuts')), 'j k ArrowDown ArrowUp Home End');
+    console.log('PASS History keyboard: j/ArrowUp/End move between cards');
+
+    await pop.$eval('#historyMenuBtn', el => el.click());
+    assert.equal(await pop.$eval('#openStatsBtn', el => el.textContent.trim()), 'Open statistics');
+    const statsOpened = context.waitForEvent('page');
+    await pop.$eval('#openStatsBtn', el => el.click());
+    const stats = await statsOpened;
+    await stats.waitForURL(`${base}/sections/stats/stats.html`);
+    await stats.close();
+    await pop.close();
+    console.log('PASS History menu: Open statistics opens the Statistics page');
 
     assert.deepEqual(errors, [], 'no page errors');
     console.log('RESULT ALL PASS, no page errors');

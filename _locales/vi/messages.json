@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Lịch sử phát hiện sẽ xuất hiện tại đây khi bạn duyệt các trang web."
   },
+  "historyPausedNote": {
+    "message": "Lịch sử đang tạm dừng nên các trang đã quét không được ghi lại."
+  },
   "rulesUpdateTitle": {
     "message": "Cài đặt bản cập nhật quy tắc từ bản phát hành Scrapfly mới nhất"
   },
@@ -6709,6 +6712,12 @@
   },
   "bulkHistoryPaused": {
     "message": "Lịch sử đang tạm dừng: các trang vẫn được quét nhưng không được ghi lại."
+  },
+  "bulkFromHistoryFmt": {
+    "message": "Trang từ Lịch sử: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Đang có một lần quét hàng loạt, nên các trang từ Lịch sử chưa được thêm."
   },
   "bulkReadingSitemaps": {
     "message": "Đang đọc sơ đồ trang web…"

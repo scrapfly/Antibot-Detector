@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "浏览网站时,检测历史记录将显示在此处。"
   },
+  "historyPausedNote": {
+    "message": "历史记录已暂停，扫描过的页面不会被记录。"
+  },
   "rulesUpdateTitle": {
     "message": "从 Scrapfly 最新发布版本安装规则更新"
   },
@@ -6709,6 +6712,12 @@
   },
   "bulkHistoryPaused": {
     "message": "历史记录已暂停：页面会被扫描，但不会被记录。"
+  },
+  "bulkFromHistoryFmt": {
+    "message": "来自历史记录的页面：{0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "批量扫描正在进行，因此未添加历史记录中的页面。"
   },
   "bulkReadingSitemaps": {
     "message": "正在读取站点地图…"

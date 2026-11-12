@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Historia wykryć pojawi się tutaj podczas przeglądania stron internetowych."
   },
+  "historyPausedNote": {
+    "message": "Historia jest wstrzymana, więc zeskanowane strony nie są zapisywane."
+  },
   "rulesUpdateTitle": {
     "message": "Zainstaluj aktualizacje reguł z najnowszego wydania Scrapfly"
   },
@@ -6709,6 +6712,12 @@
   },
   "bulkHistoryPaused": {
     "message": "Historia jest wstrzymana: strony są skanowane, ale nie zapisywane."
+  },
+  "bulkFromHistoryFmt": {
+    "message": "Strony z historii: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Trwa skanowanie zbiorcze, więc strony z historii nie zostały dodane."
   },
   "bulkReadingSitemaps": {
     "message": "Odczytywanie map witryn…"

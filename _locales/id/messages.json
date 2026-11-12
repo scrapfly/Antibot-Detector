@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Riwayat deteksi akan muncul di sini saat Anda menjelajahi situs web."
   },
+  "historyPausedNote": {
+    "message": "Riwayat sedang dijeda, jadi halaman yang dipindai tidak dicatat."
+  },
   "rulesUpdateTitle": {
     "message": "Instal pembaruan aturan dari rilis Scrapfly terbaru"
   },
@@ -6709,6 +6712,12 @@
   },
   "bulkHistoryPaused": {
     "message": "Riwayat sedang dijeda: halaman dipindai tetapi tidak dicatat."
+  },
+  "bulkFromHistoryFmt": {
+    "message": "Halaman dari Riwayat: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Pindai massal sedang berjalan, jadi halaman dari Riwayat tidak ditambahkan."
   },
   "bulkReadingSitemaps": {
     "message": "Membaca peta situs…"

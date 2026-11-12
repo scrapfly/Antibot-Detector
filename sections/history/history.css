@@ -2083,6 +2083,70 @@
   color: var(--danger-light);
 }
 
+/* History is paused: a quiet note above the list (and in the empty state), with Resume */
+.history-paused {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  padding: 7px 10px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  background: var(--bg-secondary);
+  border: 1px solid var(--g-424242);
+  border-radius: 8px;
+}
+
+.history-paused[hidden],
+.history-empty-paused[hidden] {
+  display: none;
+}
+
+.history-paused-icon {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
+
+.history-paused-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.history-empty-paused {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.history-paused-resume {
+  flex-shrink: 0;
+  padding: 4px 10px;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.history-paused-resume:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.history-paused-resume:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.history-paused-resume:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
 /* The checkbox of a card in Select mode is the shared .ui-checkbox (modules/styles/common.css) */
 .history-item.is-selected {
   border-color: var(--accent);

@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "La cronologia di rilevamento apparirà qui mentre navighi."
   },
+  "historyPausedNote": {
+    "message": "La cronologia è in pausa, quindi le pagine analizzate non vengono registrate."
+  },
   "rulesUpdateTitle": {
     "message": "Installa gli aggiornamenti delle regole dall'ultima release di Scrapfly"
   },
@@ -6709,6 +6712,12 @@
   },
   "bulkHistoryPaused": {
     "message": "La cronologia è in pausa: le pagine vengono analizzate ma non registrate."
+  },
+  "bulkFromHistoryFmt": {
+    "message": "Pagine dalla cronologia: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "È in corso un’analisi in blocco, quindi le pagine della cronologia non sono state aggiunte."
   },
   "bulkReadingSitemaps": {
     "message": "Lettura delle sitemap…"

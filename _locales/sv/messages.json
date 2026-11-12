@@ -398,6 +398,9 @@
   "historyEmptyDescription": {
     "message": "Upptäcktshistoriken visas här medan du surfar på webbplatser."
   },
+  "historyPausedNote": {
+    "message": "Historiken är pausad, så skannade sidor sparas inte."
+  },
   "rulesUpdateTitle": {
     "message": "Installera regeluppdateringar från den senaste Scrapfly-utgåvan"
   },
@@ -6709,6 +6712,12 @@
   },
   "bulkHistoryPaused": {
     "message": "Historiken är pausad: sidorna skannas men sparas inte."
+  },
+  "bulkFromHistoryFmt": {
+    "message": "Sidor från historiken: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "En massskanning pågår, så sidorna från historiken lades inte till."
   },
   "bulkReadingSitemaps": {
     "message": "Läser sitemaps…"
