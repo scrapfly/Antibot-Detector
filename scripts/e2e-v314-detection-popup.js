@@ -10,7 +10,10 @@
  *   Clear cache     the worker's answer decides the toast and the card (cleared, already cleared, failed, an older worker); a failure,
  *                   a worker that cannot be reached and no active tab each say so and leave the button usable
  *   Upload          "Link copied to clipboard" only when the copy worked
- *   History         a scan result alone reads nothing of History; an open History still follows what the worker saves
+ *   History         a scan result does not start the History tab (the change line reads History once per result and save); an open
+ *                   History still follows what the worker saves
+ *   Summary lines   3.1.8: results from another page of the site say which page (Scan again now); a clean result says when it was
+ *                   checked (Scan again now); a change since the earlier scan, Watch for changes, Compare scans, nothing while paused
  *   Labels          the "Confidence: value" tips of the summary tiles and the cards use the translated forms (French, Traditional
  *                   Chinese)
  *
@@ -44,12 +47,15 @@ const say = (key, messages = EN) => messages[key].message;
 // ---- Local site -----------------------------------------------------------------------------------
 const MARKERS = { b: 'v314-bot-marker', c: 'v314-captcha-marker', f: 'v314-fingerprint-marker' };
 const loads = {}; // page name -> how many times the server sent it
+const served = {}; // page name -> the markers it shows from now on ('&c=1'), whatever its address says: the same page changes
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
-  if (url.pathname === '/p') {
+  // /p/<anything> too: pages of one site that History counts as different pages (it ignores the query)
+  if (url.pathname === '/p' || url.pathname.startsWith('/p/')) {
     const name = url.searchParams.get('n') || 'page';
     loads[name] = (loads[name] || 0) + 1;
-    const shown = Object.entries(MARKERS).filter(([flag]) => url.searchParams.get(flag) === '1').map(([, text]) => `<p>${text}</p>`).join('');
+    const flags = served[name] !== undefined ? new URLSearchParams(served[name]) : url.searchParams;
+    const shown = Object.entries(MARKERS).filter(([flag]) => flags.get(flag) === '1').map(([, text]) => `<p>${text}</p>`).join('');
     res.writeHead(200, { 'content-type': 'text/html', 'cache-control': 'no-store' });
     return res.end(`<!doctype html><html><head><title>V314 ${name}</title></head><body>${shown}<p>probe page</p></body></html>`);
   }
@@ -500,7 +506,7 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
-  await scenario('History: a scan result alone reads nothing of it; an open History still follows what the worker saves', async () => {
+  await scenario('History: a scan result alone does not start it (the change line reads it once per result and save); an open History still follows what the worker saves', async () => {
     await W(() => chrome.storage.local.remove(['scrapfly_history']));
     const first = await scanned(`hist-a-${uniq()}`, ALL);
     const popup = await popupFor(first.tab);
@@ -519,8 +525,11 @@ async function scenario(name, fn) {
       await until(() => popup.evaluate((token) => { const d = window.popupInstance.detection; return d.isShowingResults && !!d.cacheMetadata && String(d.cacheMetadata.url).includes(token); }, second), 30000, 'the new result in the popup');
       await sleep(1500); // the worker saves History after it tells the popup; a redraw would follow the save by 300 ms
       assert.ok((await popup.evaluate(() => window.__writes)) >= 1, 'the worker saved the page to History');
-      assert.deepEqual(await popup.evaluate(() => ({ reads: window.__reads, initialized: window.popupInstance.history.initialized })), { reads: 0, initialized: false },
-        'a scan result reads nothing of History and does not start its tab');
+      // Since 3.1.8 the summary's change line reads History once the result is drawn, and again when the worker saves the page:
+      // at most one read for the result and one per save, and the History tab itself is not started
+      const early = await popup.evaluate(() => ({ reads: window.__reads, writes: window.__writes, initialized: window.popupInstance.history.initialized }));
+      assert.equal(early.initialized, false, 'a scan result does not start the History tab');
+      assert.ok(early.reads <= early.writes + 1, `the change line reads History once per result and per save at most (${early.reads} reads, ${early.writes} saves)`);
 
       // 2. Open History: it shows both pages; a third scan while it is open lands in the list, read once per save
       await popup.$eval('.tab-btn[data-tab="history"]', el => el.click());
@@ -533,7 +542,8 @@ async function scenario(name, fn) {
       const { reads, writes } = await popup.evaluate(() => ({ reads: window.__reads, writes: window.__writes }));
       console.log(`      open History: ${reads} read(s) for ${writes} save(s)`);
       assert.ok(writes >= 1 && reads >= 1, `the list followed the save (${reads} reads, ${writes} saves)`);
-      assert.ok(reads <= writes, `one read per save at most: the scan result itself asked for none (${reads} reads, ${writes} saves)`);
+      // the open list and the Detection change line each read once per save
+      assert.ok(reads <= 2 * writes, `one read per save and reader at most (${reads} reads, ${writes} saves)`);
     } finally {
       await popup.close();
       await first.page.close();
@@ -569,6 +579,149 @@ async function scenario(name, fn) {
     } finally {
       await W(() => chrome.storage.local.set({ scrapfly_language_override: 'en' }));
       await site.close();
+    }
+  });
+
+  // ===============================================================================================
+  // 3.1.8: the Detection summary says where its results come from, when a clean page was checked, and what changed
+  await scenario('Summary lines: results from another page of the site say which page, with Scan again now; this page\'s own scan does not', async () => {
+    const token = uniq();
+    const home = `${origin}/p/home-${token}?n=src-${token}&b=1`;
+    const login = `${origin}/p/login-${token}?n=login-${token}&c=1`;
+    await patchSettings({ detection: { cacheScope: 'domain' } });
+    // The worker saves the next result under the scope it reads: wait until it reads Domain (a result saved as Full URL stands
+    // for its own page only, and the other page would be scanned instead)
+    await until(() => W(() => Utils.getCacheScope()).then(scope => scope === 'domain'), 10000, 'the Domain scope in the worker');
+    const site = await ctx.newPage();
+    const other = await ctx.newPage();
+    let popup = null;
+    try {
+      site.on('pageerror', (e) => pageErrors.push(`site: ${e.message}`));
+      other.on('pageerror', (e) => pageErrors.push(`site: ${e.message}`));
+      await site.goto(home, { waitUntil: 'commit' }).catch(() => {});
+      await until(() => W(async (u) => {
+        let storage = (await chrome.storage.local.get(DetectionEngineManager.STORAGE_KEY))[DetectionEngineManager.STORAGE_KEY] || {};
+        if (typeof storage === 'string') storage = JSON.parse(storage);
+        const saved = storage[UrlUtils.hashUrl(u, 'domain')];
+        return !!saved && saved.cacheScope === 'domain' && saved.url === u;
+      }, home), 25000, 'the home page\'s result saved for the whole site');
+      // and the home page's scan has settled (nothing saved for it for a moment): the other page is visited after it, not during it
+      let stamp = await cacheStamp(home);
+      await until(async () => { await sleep(1500); const now = await cacheStamp(home); const settled = now === stamp; stamp = now; return settled; }, 20000, 'the home page\'s scan to settle');
+      // Another page of the site: under Domain it is served the home page's result
+      await other.goto(login, { waitUntil: 'load' }).catch(() => {});
+      const tab = await until(() => tabOf(login), 5000, 'the login tab');
+      // The popup is opened once the page has taken the cached result (its badge shows the home page's count): opened while the
+      // page is still loading, it would find no result for the tab yet
+      await until(() => W((id) => chrome.action.getBadgeText({ tabId: id }), tab.id).then(text => text === '1'), 15000, 'the cached result on the login tab');
+      await sleep(500);
+      popup = await popupFor(tab);
+      await resultsShown(popup, 1);
+      const line = () => popup.$eval('#detectionSourceNote', el => ({ hidden: el.hidden, text: el.querySelector('.detection-note-text').textContent, title: el.querySelector('.detection-note-text').title }));
+      const shown = await until(async () => { const l = await line(); return !l.hidden && l; }, 10000, 'the line under the site\'s name');
+      assert.match(shown.text, new RegExp(`^From a scan of /p/home-${token}, `), shown.text);
+      assert.ok(shown.title.startsWith(home), 'the whole address on hover');
+      assert.equal(await popup.$eval('#detectionChangeNote', el => el.hidden), true, 'no change line for another page\'s results');
+      // Scan again now scans this page: its own result, and the line goes
+      const before = await cacheStamp(login);
+      await popup.$eval('#sourceRescanBtn', el => el.click());
+      await until(() => popup.evaluate((t) => { const d = window.popupInstance.detection; return d.isShowingResults && !!d.cacheMetadata && String(d.cacheMetadata.url).includes(`login-${t}`); }, token), 30000, 'the login page\'s own result');
+      assert.ok((await cacheStamp(login)) > before, 'a fresh scan of this page');
+      await resultsShown(popup, 1);
+      await until(async () => (await line()).hidden, 5000, 'the line hidden for this page\'s own scan');
+      assert.deepEqual(await popup.evaluate(() => window.popupInstance.detection.currentResults.map(d => d.detector.name)), ['V314 Captcha Probe'], 'the CAPTCHA of this page is no longer hidden');
+      console.log(`      "${shown.text}"`);
+    } finally {
+      if (popup) await popup.close();
+      await site.close();
+      await other.close();
+      await dropSavedResult(home);
+      await dropSavedResult(login);
+      await patchSettings({ detection: { cacheScope: 'full' } });
+    }
+  });
+
+  await scenario('Summary lines: a clean result says when it was checked and can be scanned again from the card', async () => {
+    const url = `${origin}/p?n=checked-${uniq()}`;
+    const site = await ctx.newPage();
+    let popup = null;
+    try {
+      site.on('pageerror', (e) => pageErrors.push(`site: ${e.message}`));
+      await site.goto(url, { waitUntil: 'commit' }).catch(() => {});
+      await until(() => cacheStamp(url), 25000, 'the saved clean result');
+      const tab = await until(() => tabOf(url), 5000, 'the tab');
+      popup = await popupFor(tab);
+      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing Detected');
+      const note = await until(() => popup.$eval('#emptyCheckedNote', el => !el.hidden && el.offsetParent !== null && el.querySelector('.detection-note-text').textContent), 5000, 'the Last checked line');
+      assert.match(note, /^Last checked /, note);
+      assert.equal(await popup.$eval('#checkedRescanBtn', el => el.textContent.trim()), say('historyScanAgain'));
+      const before = await cacheStamp(url);
+      await popup.$eval('#checkedRescanBtn', el => el.click());
+      await until(async () => (await cacheStamp(url)) > before, 30000, 'a fresh scan of the clean page');
+      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing Detected again');
+      console.log(`      "${note}"`);
+    } finally {
+      if (popup) await popup.close();
+      await site.close();
+    }
+  });
+
+  await scenario('Summary lines: a change since the earlier scan, Watch for changes, Compare scans; nothing while History is paused', async () => {
+    await W(() => chrome.storage.local.remove(['scrapfly_history']));
+    const name = `chg-${uniq()}`;
+    const url = `${origin}/p?n=${name}`;
+    served[name] = '&b=1';
+    const site = await ctx.newPage();
+    let popup = null;
+    const historyOf = () => W(async (u) => (await HistoryStore.read(chrome.storage.local)).filter(item => item.url === u && item.fromCache !== true), url);
+    try {
+      site.on('pageerror', (e) => pageErrors.push(`site: ${e.message}`));
+      await site.goto(url, { waitUntil: 'commit' }).catch(() => {});
+      await until(async () => (await historyOf()).length === 1, 25000, 'the first scan in History');
+      // The page changes: the bot protection goes, a CAPTCHA comes
+      served[name] = '&c=1';
+      await dropSavedResult(url);
+      await site.reload({ waitUntil: 'commit' }).catch(() => {});
+      await until(async () => (await historyOf()).length === 2, 25000, 'the second scan in History');
+      const tab = await until(() => tabOf(url), 5000, 'the tab');
+      popup = await popupFor(tab);
+      await resultsShown(popup, 1);
+      const line = () => popup.$eval('#detectionChangeNote', el => ({
+        hidden: el.hidden, text: el.querySelector('.detection-note-text').textContent,
+        actions: [...el.querySelectorAll('[data-change-action]')].filter(n => !n.hidden).map(n => n.dataset.changeAction)
+      }));
+      const shown = await until(async () => { const l = await line(); return !l.hidden && l; }, 10000, 'the change line');
+      assert.match(shown.text, /^Changed since .+: \+V314 Captcha Probe −V314 Bot Probe$/, shown.text);
+      assert.deepEqual(shown.actions, ['compare', 'watch']);
+      assert.equal(await popup.$eval('#detectionSourceNote', el => el.hidden), true, 'this page\'s own results');
+      console.log(`      "${shown.text}"`);
+
+      // Watch for changes: the entry joins the watchlist (and is pinned), and the line says Watching
+      await clearToasts(popup);
+      await popup.$eval('#changeWatchBtn', el => el.click());
+      await until(async () => (await line()).actions.includes('watching'), 10000, 'Watching');
+      assert.deepEqual((await line()).actions, ['compare', 'watching']);
+      const watched = (await historyOf()).find(item => item.watch === true);
+      assert.ok(watched && watched.pinned === true, 'the newest scan is watched and pinned');
+      assert.ok((await toasts(popup)).some(text => text.startsWith('Watching this page')), JSON.stringify(await toasts(popup)));
+
+      // Paused History: the line goes (stored settings changed), and comes back when History is on again
+      await patchSettings({ history: { historyEnabled: false } });
+      await until(async () => (await line()).hidden, 10000, 'no line while History is paused');
+      await patchSettings({ history: { historyEnabled: true } });
+      await until(async () => !(await line()).hidden, 10000, 'the line back');
+
+      // Compare scans: the History tab, with the compare dialog open
+      await popup.$eval('#changeCompareBtn', el => el.click());
+      await popup.waitForSelector('.notification-confirm .history-compare', { timeout: 10000 });
+      assert.equal(await popup.evaluate(() => window.popupInstance.currentTab), 'history');
+      const options = await popup.$$eval('.history-compare select option', els => els.length);
+      assert.equal(options, 1, 'the earlier scan to compare with');
+    } finally {
+      delete served[name];
+      if (popup) await popup.close();
+      await site.close();
+      await patchSettings({ history: { historyEnabled: true } });
     }
   });
 
