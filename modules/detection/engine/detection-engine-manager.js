@@ -420,24 +420,6 @@ class DetectionEngineManager {
         // The page's own icon link; the background prefers Chrome's tab favicon
         const favicon = UrlUtils.findPageIconHref(document);
 
-        // Get JS Hook detections from storage
-        let jsHooks = [];
-        try {
-            const hookData = await new Promise((resolve) => {
-                chrome.storage.local.get(['scrapfly_js_hook_detections'], (result) => {
-                    resolve(result.scrapfly_js_hook_detections || {});
-                });
-            });
-
-            const currentHooks = hookData[window.location.href];
-            if (currentHooks && currentHooks.hooks) {
-                jsHooks = currentHooks.hooks;
-                Logger.debug('DETECTION', `${jsHooks.length} hook hits already recorded`);
-            }
-        } catch (error) {
-            Logger.warn('HOOKS', '[runDetection] Hook detections load failed', error);
-        }
-
         // Smart lazy data collection
         let cachedPageHTML = null;
         let cachedCookies = null;
@@ -452,7 +434,9 @@ class DetectionEngineManager {
             timestamp: new Date().toISOString(),
 
             externalContent: externalContent,
-            jsHooks: jsHooks,
+            // Hook hits reach the worker in their own batches (JS_HOOK_DETECTION_BATCH); the storage key a scan once read
+            // here is written by nothing, so reading it cost every scan a storage round trip for an empty answer
+            jsHooks: [],
             headers: [],
 
             _extractCookies: () => this.extractCookies(),
