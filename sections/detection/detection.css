@@ -2136,10 +2136,15 @@
 }
 
 /* Quiet lines of the summary card (the results came from another page of the site; what changed since the earlier scan) and
-   under the all-clear card (when it was checked): secondary text, small, link-style buttons; they wrap in long languages */
+   under the all-clear card (when it was checked): secondary text, small, link-style buttons. A line of the summary card is one
+   line: its text gives way (cut with an ellipsis, whole in its hover text) and its buttons stay, because the two cards of a first
+   page have to fit above the pagination without scrolling (the line takes 20px; the results list gives them back below) */
 .detection-summary-note {
+  display: flex;
+  align-items: baseline;
+  column-gap: 4px;
   margin: 0;
-  padding: 5px 12px 0;
+  padding: 4px 12px 0;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-top: none;
@@ -2147,7 +2152,41 @@
   color: var(--text-secondary);
   font-size: 11px;
   line-height: 16px;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.detection-summary-note .detection-note-text {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.detection-summary-note .detection-note-action {
+  flex: 0 0 auto;
+}
+
+/* The room that line takes, given back by the results list under it: a little less space round the list, its category headers
+   and the cards of a two-card page (as the chip row's 28px were given back) */
+.detection-results:has(.detection-summary-note:not([hidden])) .results-list {
+  padding-block: 0 6px;
+}
+
+.detection-results:has(.detection-summary-note:not([hidden])) .detection-group-head {
+  margin-block: 0 2px;
+}
+
+.detection-results:has(.detection-summary-note:not([hidden])) .results-list:has(> .detection-item + .detection-item) .card-header {
+  padding-block: 9px 10px;
+}
+
+.detection-results:has(.detection-summary-note:not([hidden])) .results-list:has(> .detection-item + .detection-item):has(.detection-group-head) .card-header {
+  padding-block: 8px 9px;
+}
+
+.detection-results:has(.detection-summary-note:not([hidden])) .results-list:has(> .detection-item + .detection-item .detection-group-head) .card-header {
+  padding-block: 4px 5px;
 }
 
 .detection-summary-note[hidden],

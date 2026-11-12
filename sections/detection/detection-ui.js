@@ -490,7 +490,8 @@ DetectionUI.syncChangeNote = async function() {
       show('compare', info.comparable);
       show('watch', info.entry.watch !== true);
       show('watching', info.entry.watch === true);
-      DetectionUI.setNoteText(note, text, FormatUtils.formatDateTime(info.since));
+      // The line is one line and its text may end in an ellipsis: the hover text has it whole, then the earlier scan's date
+      DetectionUI.setNoteText(note, text, `${text}\n${FormatUtils.formatDateTime(info.since)}`);
     } catch (error) {
       Logger.debug('UI', '[Detection] Could not read History for the change line', error);
       hide();
