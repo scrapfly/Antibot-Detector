@@ -19,8 +19,11 @@ const fn = (name) => {
 function contentPage({ prerendering = false, engine = true } = {}) {
   const listeners = [];
   const notified = [];
+  const document = { prerendering, addEventListener: (type, cb, options) => listeners.push({ type, cb, options }) };
   const ctx = vm.createContext({
-    document: { prerendering, addEventListener: (type, cb, options) => listeners.push({ type, cb, options }) },
+    document,
+    // The content script's outbox (modules/core/prerender-outbox.js): a prerendered page starts after its held reports went out
+    workerOutbox: require(path.join(repo, 'modules/core/prerender-outbox.js')).create({ document, send: async () => ({}) }),
     hasCleanedUp: false,
     detectionEngine: engine ? {} : null,
     notifyPageLoad: (source) => notified.push(source)
@@ -29,7 +32,7 @@ function contentPage({ prerendering = false, engine = true } = {}) {
   return { ctx, listeners, notified };
 }
 
-test('a prerendered page starts once it is shown, a visible one at once', () => {
+test('a prerendered page starts once it is shown, a visible one at once', async () => {
   const visible = contentPage();
   let started = 0;
   visible.ctx.whenPageShown(() => started++);
@@ -42,6 +45,7 @@ test('a prerendered page starts once it is shown, a visible one at once', () => 
   assert.equal(hidden.listeners[0].type, 'prerenderingchange');
   assert.equal(hidden.listeners[0].options.once, true);
   hidden.listeners[0].cb();
+  await new Promise(resolve => setImmediate(resolve));
   assert.equal(started, 2);
   assert.match(content, /whenPageShown\(waitForUtilsAndInitialize\)/, 'the content script starts through it');
 });

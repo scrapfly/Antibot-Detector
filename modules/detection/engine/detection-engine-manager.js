@@ -2226,7 +2226,10 @@ class DetectionEngineManager {
         Logger.debug('SCAN', `Page load (${triggerSource}) tab ${tabId}`);
         // A prerendered page just shown: its load sent no request in this tab, so what the tab captured (requests,
         // bodies, headers, cookies) is still the page shown before, maybe another site. It is not this page's evidence
-        if (triggerSource === 'prerender_activation' && typeof forgetTabRequests === 'function') {
+        // Already done when the page was shown (PRERENDER_SHOWN, header-capture.js activatePrerenderedPage): cleared again, the
+        // page's own load and what it sent since would go
+        const shownHandled = typeof prerenderShownHandled === 'function' && prerenderShownHandled(tabId, sender.documentId);
+        if (triggerSource === 'prerender_activation' && !shownHandled && typeof forgetTabRequests === 'function') {
             if (typeof noteTabLeaving === 'function') noteTabLeaving(tabId, sender.documentId);
             forgetTabRequests(tabId);
         }

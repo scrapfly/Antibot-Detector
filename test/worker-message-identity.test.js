@@ -463,6 +463,21 @@ test('a prerendered page just shown starts without what the tab captured for the
   assert.deepEqual(forgotten, [7], 'a normal load was cleared by its own main-frame request already');
 });
 
+test('a prerendered page whose showing the worker already handled is not cleared again by its load notice', async () => {
+  const h = pageLoadHarness();
+  const forgotten = [];
+  h.context.forgetTabRequests = (tabId) => forgotten.push(tabId);
+  h.context.noteTabLeaving = () => {};
+  // PRERENDER_SHOWN came first and gave the tab the page's own load (header-capture.js activatePrerenderedPage)
+  h.context.prerenderShownHandled = (tabId, documentId) => tabId === 7 && documentId === 'doc-current';
+  await h.context.Engine.handlePageLoadNotification({ url: 'https://example.test/', triggerSource: 'prerender_activation' },
+    { documentId: 'doc-current', tab: { id: 7 } }, h.dependencies);
+  assert.deepEqual(forgotten, [], 'its response headers and what it sent since stay');
+  await h.context.Engine.handlePageLoadNotification({ url: 'https://example.test/', triggerSource: 'prerender_activation' },
+    { documentId: 'doc-other', tab: { id: 7 } }, h.dependencies);
+  assert.deepEqual(forgotten, [7], 'a page the worker was not told about is still cleared');
+});
+
 test('PAGE_LOAD saves a cached page to History even when the webhook server never answers', async () => {
   const h = pageLoadHarness();
   h.dependencies.Settings = { sendWebhookIfEnabled: () => new Promise(() => {}) };
