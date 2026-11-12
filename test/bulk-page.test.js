@@ -78,7 +78,7 @@ function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [], clip
     }
   });
   ctx.self = ctx;
-  for (const file of ['modules/core/worker-messages.js', 'modules/core/categories.js', 'modules/core/bulk-scan.js', 'modules/core/bulk-filter.js', 'sections/bulk/bulk.js']) {
+  for (const file of ['modules/core/worker-messages.js', 'modules/core/categories.js', 'modules/core/http-status.js', 'modules/core/bulk-scan.js', 'modules/core/bulk-filter.js', 'sections/bulk/bulk.js']) {
     vm.runInContext(read(file), ctx, { filename: file });
   }
   const byId = (id) => document.getElementById(id);
@@ -347,4 +347,26 @@ test('the results table has a name for screen readers and the page has the new b
     const messages = JSON.parse(read(`_locales/${code}/messages.json`));
     for (const key of ['bulkCopyLines', 'bulkFilterNone']) assert.ok(messages[key] && messages[key].message, `${code}: ${key}`);
   }
+});
+
+test('a finished row shows its HTTP status beside Done, toned when it is an error; a row without one shows none', async () => {
+  const page = pageWorld({ run: runOf([
+    { ...finished('https://a.example/', []), httpStatus: 403 },
+    { ...finished('https://b.example/', []), httpStatus: 503 },
+    { ...finished('https://c.example/', []), httpStatus: 200 },
+    finished('https://d.example/', []),
+    { url: 'https://e.example/', status: 'failed', reason: 'timeout', httpStatus: 500 }
+  ]) });
+  await page.open();
+  const pills = page.byId('bulkRows').children[0].children.map(row => row.children[2].children[0]);
+  const codes = pills.map(pill => pill.children.filter(child => typeof child === 'object').map(child => [child.textContent, child.className]));
+  assert.deepEqual(codes, [
+    [['403', 'bulk-http bulk-http--warn']],
+    [['503', 'bulk-http bulk-http--error']],
+    [['200', 'bulk-http bulk-http--ok']],
+    [],
+    []
+  ], 'only a finished page with a known status shows one');
+  assert.equal(pills[0].children[0], ' · ', '"Done · 403"');
+  assert.equal(pills[0].children[1].title, en.detectionTipHttpStatus.message);
 });
