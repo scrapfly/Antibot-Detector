@@ -4,7 +4,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 global.Logger = new Proxy({}, { get: () => () => {} });
 global.DetectionUtils = require('../utils/detection-utils.js');
-global.chrome = { runtime: { getManifest: () => ({ version: '2.8.8' }) } }; // the first engine that reads response bodies: some packaged rules need it
+// This build's version: the packaged rules need recent engines (2.8.8 reads response bodies, 3.1.9 small pages' HTML)
+const BUILD_VERSION = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'manifest.json'), 'utf8')).version;
+global.chrome = { runtime: { getManifest: () => ({ version: BUILD_VERSION }) } };
 const DetectorManager = require('../modules/detection/rules/detector-manager.js');
 const DetectorSchema = require('../modules/detection/rules/detector-schema.js');
 const vm = require('node:vm');
