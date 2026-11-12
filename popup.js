@@ -845,7 +845,8 @@ class ScrapflyPopup {
           if (this.detection.currentResults && this.detection.currentResults.length > 0) {
             // The list as the search and the chips leave it, not the whole list for a moment
             if (this.detection.paginationManager) {
-              DetectionUI.applyFilters.call(this.detection);
+              // On the page of results that was shown before the tab was left
+              DetectionUI.applyFilters.call(this.detection, { keepPage: true });
             }
           }
         }
@@ -872,7 +873,8 @@ class ScrapflyPopup {
         } else {
           // Re-attach event listeners after cleanup (search, buttons, etc.)
           this.rules.setupEventListeners();
-          this.rules.displayRules();
+          // On the page of rules that was shown before the tab was left
+          this.rules.displayRules({ keepPage: true });
         }
         break;
       case 'advanced':
