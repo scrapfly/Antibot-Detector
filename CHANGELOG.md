@@ -9,6 +9,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
+- Detection shows the page's HTTP status beside Cache, amber or red for an error, which often means a block page.
+- Bulk scan shows each page's HTTP status ("Done · 403") and adds it to the CSV, JSON and Markdown exports; webhooks get an `<HTTP_STATUS>` variable.
 - Rules → Update: new detectors for Tencent Cloud EdgeOne, Bunny Shield, Signifyd, Azure WAF, Google Cloud Armor and Myra's EU CAPTCHA.
 
 ### Fixed
