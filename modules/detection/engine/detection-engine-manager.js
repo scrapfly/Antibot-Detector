@@ -2621,6 +2621,7 @@ class DetectionEngineManager {
                     await chrome.action.setBadgeText({ text: BADGE.TEXT.EMPTY, tabId }).catch(error => {
                         Logger.warn('DETECTION', '[requestDetection] Empty badge reset failed', error);
                     });
+                    if (typeof ToolbarTitle !== 'undefined') await ToolbarTitle.reset(chrome, tabId);
                 }
                 sendResponse({ status: 'needs_reload', reason: 'content_script_unavailable', message: 'Reload the page to run detection.' });
                 return true;

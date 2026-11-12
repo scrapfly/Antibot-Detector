@@ -146,6 +146,7 @@ function registerSettingsHandlers(registry, context) {
                         await chrome.action.setBadgeText({ text: BADGE.TEXT.CLEARED, tabId: tab.id });
                         await setBadgeTextColor(tab.id, false, BADGE.COLORS.CLEARED);
                         await chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.CLEARED, tabId: tab.id });
+                        if (typeof ToolbarTitle !== 'undefined') await ToolbarTitle.reset(chrome, tab.id);
                         Logger.background('[Background] Badge: cleared state - no cached data with new scope');
                     }
                 }

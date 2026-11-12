@@ -26,6 +26,8 @@ async function clearTabDetectionCache(request, sendResponse = () => {}) {
                 color: BADGE.COLORS.CLEARED,
                 tabId: request.tabId
             });
+            // The result the hover text named is gone with it
+            if (typeof ToolbarTitle !== 'undefined') await ToolbarTitle.reset(chrome, request.tabId);
             Logger.debug('BACKGROUND', `[Background] Badge set to CLR for tab ${request.tabId}`);
         } catch (badgeError) {
             Logger.warn('BACKGROUND', `[Background] Could not update badge for tab ${request.tabId}:`, badgeError);

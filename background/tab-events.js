@@ -104,6 +104,7 @@ function setupTabListeners() {
             shapeSecurityExtractionState.delete(tabId);
         }
 
+        // The tab is closed: no hover text to set
         chrome.action.setBadgeText({
             text: BADGE.TEXT.EMPTY,
             tabId: tabId

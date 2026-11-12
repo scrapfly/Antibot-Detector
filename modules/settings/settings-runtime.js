@@ -146,6 +146,9 @@ SettingsRuntime.syncPausedIcons = async function() {
             chrome.action.setBadgeBackgroundColor({ color: BADGE.COLORS.BLACKLISTED, tabId: tab.id })
           ]).catch(() => {});
           if (typeof ToolbarTitle !== 'undefined') ToolbarTitle.apply(chrome, tab.id, 'skipped');
+        } else if (enabled !== false && typeof ToolbarTitle !== 'undefined') {
+          // No longer skipped: "This site is not scanned" goes from the hover text too, until the next scan names its result
+          await ToolbarTitle.resetIf(chrome, tab.id, 'skipped');
         }
       }
     } catch (error) {
