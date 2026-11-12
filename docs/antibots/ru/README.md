@@ -2,7 +2,7 @@
 
 # Анти-бот защиты, которые распознаёт Antibot Detector
 
-По одной странице для каждого из 44 анти-бот детекторов в расширении [Scrapfly Anti-bot Detector](../../README.ru.md): что это за защита, какие публичные признаки её выдают, насколько сложной она оценена и что обычно означает для парсинга сайтов. Страницы создаются из правил обнаружения в `detectors/antibot/`. Чтобы обходить анти-бот системы в больших объёмах, см. [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) от Scrapfly.
+По одной странице для каждого из 49 анти-бот детекторов в расширении [Scrapfly Anti-bot Detector](../../README.ru.md): что это за защита, какие публичные признаки её выдают, насколько сложной она оценена и что обычно означает для парсинга сайтов. Страницы создаются из правил обнаружения в `detectors/antibot/`. Чтобы обходить анти-бот системы в больших объёмах, см. [Anti Scraping Protection](https://scrapfly.io/docs/scrape-api/anti-scraping-protection) от Scrapfly.
 
 | Защита | Сложность | Страница |
 | --- | --- | --- |
@@ -12,6 +12,8 @@
 | Anubis | Низкая | [Anubis](anubis.md) |
 | AWS WAF | Средняя | [AWS WAF](aws-waf.md) |
 | Azure Front Door | Низкая | [Azure Front Door](azurefrontdoor.md) |
+| Azure WAF | Средняя | [Azure WAF](azure-waf.md) |
+| Bunny Shield | Средняя | [Bunny Shield](bunny-shield.md) |
 | Castle | Средняя | [Castle](castle.md) |
 | Cheq | Средняя | [Cheq](cheq.md) |
 | Cloudflare Bot Management | Средняя | [Cloudflare Bot Management](cloudflare.md) |
@@ -24,6 +26,7 @@
 | FingerprintJS | Низкая | [FingerprintJS](fingerprintjs.md) |
 | Forter | Средняя | [Forter](forter.md) |
 | Google BotGuard | Высокая | [Google BotGuard](botguard.md) |
+| Google Cloud Armor | Средняя | [Google Cloud Armor](cloud-armor.md) |
 | Huawei Cloud WAF | Низкая | [Huawei Cloud WAF](huaweicloud-waf.md) |
 | HUMAN (PerimeterX) | Высокая | [HUMAN (PerimeterX)](perimeterx.md) |
 | Hunt | Высокая | [Hunt](hunt.md) |
@@ -44,8 +47,10 @@
 | SEON | Средняя | [SEON](seon.md) |
 | Shape Security | Высокая | [Shape Security](shapesecurity.md) |
 | Sift | Низкая | [Sift](sift.md) |
+| Signifyd | Низкая | [Signifyd](signifyd.md) |
 | SiteGround SG-CAPTCHA | Низкая | [SiteGround SG-CAPTCHA](siteground-captcha.md) |
 | Sucuri WAF | Низкая | [Sucuri WAF](sucuri.md) |
+| Tencent Cloud EdgeOne | Средняя | [Tencent Cloud EdgeOne](edgeone.md) |
 | ThreatMetrix | Средняя | [ThreatMetrix](threatmetrix.md) |
 | Vercel Firewall | Средняя | [Vercel Firewall](vercel.md) |
 | Wordfence | Низкая | [Wordfence](wordfence.md) |
