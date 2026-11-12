@@ -293,9 +293,9 @@ SettingsUI.saveSettings = async function(options = {}) {
       };
       if (oldScope !== newScope) {
         UrlUtils.clearUrlHashCache();
+        // The worker drops the old scope's results, then tells the other extension pages to refresh (a message never reaches the
+        // page that sent it: this popup's Detection tab refreshes here)
         notifyWorker(WorkerMessages.CACHE_SCOPE_CHANGED);
-        notifyWorker(WorkerMessages.DETECTION_CLEAR_CACHE);
-        // That message reaches other extension pages, never this popup: its Detection tab refreshes here
         window.popupInstance?.detection?.refreshAfterCacheChange?.();
       }
       notifyWorker(WorkerMessages.SETTINGS_UPDATED);

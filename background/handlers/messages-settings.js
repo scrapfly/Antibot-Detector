@@ -151,6 +151,15 @@ function registerSettingsHandlers(registry, context) {
                     }
                 }
 
+                // The other extension pages (another popup, a Detection tab) show results of the old scope: they refresh now that
+                // those are gone. A notice with no address (the worker never receives its own messages); no page open is no error
+                try {
+                    const told = chrome.runtime && typeof chrome.runtime.sendMessage === 'function'
+                        ? chrome.runtime.sendMessage({ type: WorkerMessages.DETECTION_CLEAR_CACHE })
+                        : null;
+                    if (told && typeof told.catch === 'function') await told.catch(() => {});
+                } catch (_) { /* no page to tell */ }
+
                 if (sendResponse) {
                     sendResponse({ success: true });
                 }

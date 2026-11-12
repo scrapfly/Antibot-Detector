@@ -2442,6 +2442,17 @@ class DetectionEngineManager {
         return true;
     }
 
+    /** A page address a cache clear can work with: a string that parses as a URL. */
+    static isClearableUrl(url) {
+        if (typeof url !== 'string' || !url) return false;
+        try {
+            new URL(url);
+            return true;
+        } catch (_) {
+            return false;
+        }
+    }
+
     /**
      * Handle CLEAR_DETECTION_CACHE message
      * @param {object} request - Message request object
@@ -2449,6 +2460,13 @@ class DetectionEngineManager {
      * @returns {boolean} True (async response)
      */
     static async handleClearDetectionCache(request, sendResponse) {
+        // Which page to clear is the request's address: without one (or with something that is not one) nothing is cleared, and
+        // the caller is told so instead of the address hash throwing
+        if (!DetectionEngineManager.isClearableUrl(request && request.url)) {
+            Logger.debug('DETECTION', '[handleClearDetectionCache] No page address to clear');
+            sendResponse({ status: 'error', error: 'invalid_url' });
+            return true;
+        }
         try {
             const requestedScopeRaw = String(request.cacheScope || '').toLowerCase();
             const requestedScope = requestedScopeRaw === 'url' ? 'full' : requestedScopeRaw;

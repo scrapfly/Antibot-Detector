@@ -4,7 +4,10 @@
  * (background/commands.js) share. `sendResponse` answers the message, if any.
  */
 async function clearTabDetectionCache(request, sendResponse = () => {}) {
-    await DetectionEngineManager.handleClearDetectionCache(request, sendResponse);
+    let answer = null;
+    await DetectionEngineManager.handleClearDetectionCache(request, (response) => { answer = response; sendResponse(response); });
+    // No page address, nothing cleared (the engine answered the error): the tab keeps its scan and its badge
+    if (answer && answer.error === 'invalid_url') return;
 
     if (request.tabId) {
         DetectionSessionStore.cancel(request.tabId, 'cache_cleared');
