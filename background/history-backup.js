@@ -17,10 +17,15 @@
  *
  * Settings → History → Backups to keep (KEEP_CHOICES) deletes the files of the older backups after a new one is written; All, the
  * default, deletes nothing. A backup is all the files one run wrote. They are found by the ids the browser gave their downloads,
- * kept in RUNS_KEY and written before anything is deleted, and never by a name in Downloads. An id is not for ever (clearing the
- * browser's downloads list can hand an old one to some other file), so each download is checked before it is deleted: started by
- * this extension and a file in the Scrapfly folder named like a backup. Only a run whose files were all written counts among the
- * backups kept; the files of one that failed are on record too, so they go with the older backups.
+ * kept in RUNS_KEY and written before anything is deleted, and never by a name in Downloads. Only a run whose files were all
+ * written counts among the backups kept; the files of one that failed are on record too, so they go with the older backups.
+ *
+ * An id is not for ever: when the browser starts, it numbers new downloads on from the highest id left in its list, so once that
+ * list is cleared an old backup's id goes to a new download (a later backup as much as any other file). So the record also keeps
+ * when each file's download started and where it was written, and a download is deleted only while it is still that one, was
+ * started by this extension and is a file in the Scrapfly folder named like a backup; an id that belongs to a backup being kept is
+ * never deleted for an older one. The runs 3.1.7 recorded hold only ids: for those, the download must have started within
+ * MATCH_WINDOW_MS of the run. Backups made before 3.1.7 were never recorded, so they stay until the person deletes them.
  *
  * The schedule is a chrome.alarms alarm. Alarms may be cleared when the browser
  * restarts, so on every start the alarm is recreated and a backup that came due
@@ -33,8 +38,9 @@ const HistoryBackup = {
     FOLDER: 'Scrapfly',
     RETRY_AFTER_FAILURE_MS: 3600000,
     STATE_KEY: 'scrapfly_history_backup',
-    // What the backups saved, as { at, ids } with the ids the browser gave the downloads, oldest first (STATE_KEY holds only the last
-    // outcome); partial: true marks a run that is no backup to keep (it failed, its files are not written yet, or some could not be deleted yet)
+    // What the backups saved, as { at, ids, files } with the ids the browser gave the downloads and, for each, { id, start, name }: when
+    // its download started and the file it wrote. Oldest first (STATE_KEY holds only the last outcome); partial: true marks a run that
+    // is no backup to keep (it failed, its files are not written yet, or some could not be deleted yet). 3.1.7 wrote { at, ids } only
     RUNS_KEY: 'scrapfly_history_backup_runs',
     // The numbers Backups to keep offers (anything else is "all")
     KEEP_CHOICES: Object.freeze([3, 7, 14, 30]),
@@ -42,6 +48,8 @@ const HistoryBackup = {
     MAX_TRACKED_RUNS: 200,
     // How long a backup waits for the browser to write its files; one not written by then fails the backup
     WRITE_WAIT_MS: 60000,
+    // A run on record without files (3.1.7 wrote none): a download is that run's only if it started within this long of the run
+    MATCH_WINDOW_MS: 600000,
     // The worker keepalive's name for a backup that waits for its files
     KEEPALIVE_ID: 'history-backup',
     Messages: Object.freeze({ BACKUP_NOW: 'HISTORY_BACKUP_NOW' }),
@@ -138,9 +146,9 @@ const HistoryBackup = {
                 this._keepAwake(true);
                 const failure = await this.written(ids, heard);
                 if (failure) throw new Error(failure);
-                // Every file is written: now it is a backup to keep, on record before anything older is deleted, so a worker that stops
-                // in between loses track of no file
-                const record = await this.remember({ at: now, ids }, true);
+                // Every file is written: now it is a backup to keep, on record (with what tells its files from later downloads that get
+                // their ids) before anything older is deleted, so a worker that stops in between loses track of no file
+                const record = await this.remember({ at: now, ids, files: await this.identify(ids) }, true);
                 recorded = 'written';
                 if (record) removed = await this.prune(record, this.keepOf(settings.historyBackupKeep));
             }
@@ -149,7 +157,7 @@ const HistoryBackup = {
             return { ok: true, entries: items.length, files };
         } catch (error) {
             // Files started before the failure are files these backups made: on record, though not as a backup to keep
-            if (ids.length && recorded !== 'written') await this.remember({ at: now, ids, partial: true }, recorded === 'started');
+            if (ids.length && recorded !== 'written') await this.remember({ at: now, ids, files: await this.identify(ids), partial: true }, recorded === 'started');
             const message = String((error && error.message) || error);
             await chrome.storage.local.set({ [this.STATE_KEY]: { at: now, ok: false, error: message, trigger: reason } }).catch(() => {});
             await this.notifyFailure().catch(() => {});
@@ -244,7 +252,30 @@ const HistoryBackup = {
         });
     },
 
-    /** The record of what backups saved ({ at, ids }, oldest first). Whatever in it is not a run of whole-number ids is left out. */
+    /**
+     * What tells each download from a later one that gets its id, as the browser says now: when it started and the file it wrote.
+     * Never throws: a download it cannot say this of is left out, and the run's own time stands in for it.
+     * @returns {Promise<Array<{id: number, start: number, name: string}>>}
+     */
+    async identify(ids) {
+        const files = [];
+        for (const id of ids) {
+            try {
+                const [item] = await chrome.downloads.search({ id });
+                const start = Date.parse(item && item.startTime);
+                if (Number.isFinite(start)) files.push({ id, start, name: typeof item.filename === 'string' ? item.filename : '' });
+            } catch (error) { /* not known: the run's time stands in for it */ }
+        }
+        return files;
+    },
+
+    /** A run as the record keeps it: files only for its own ids and only when there are some, partial only when it is one. */
+    entry({ at, ids, files, partial }) {
+        const known = (Array.isArray(files) ? files : []).filter(file => ids.includes(file.id));
+        return { at, ids, ...(known.length ? { files: known } : {}), ...(partial ? { partial: true } : {}) };
+    },
+
+    /** The record of what backups saved ({ at, ids, files }, oldest first). Whatever in it is not a run of whole-number ids is left out. */
     async record() {
         const stored = await chrome.storage.local.get(this.RUNS_KEY);
         const list = stored[this.RUNS_KEY];
@@ -252,15 +283,20 @@ const HistoryBackup = {
         for (const run of Array.isArray(list) ? list : []) {
             if (!run || typeof run !== 'object' || !Number.isFinite(run.at) || !Array.isArray(run.ids)) continue;
             const ids = run.ids.filter(id => Number.isSafeInteger(id) && id >= 0);
-            if (ids.length) runs.push(run.partial === true ? { at: run.at, ids, partial: true } : { at: run.at, ids });
+            if (!ids.length) continue;
+            // A file whose description is damaged is left out: for it the run's time stands in, as for a run 3.1.7 recorded
+            const files = (Array.isArray(run.files) ? run.files : [])
+                .filter(file => file && typeof file === 'object' && Number.isSafeInteger(file.id) && Number.isFinite(file.start) && typeof file.name === 'string')
+                .map(file => ({ id: file.id, start: file.start, name: file.name }));
+            runs.push(this.entry({ at: run.at, ids, files, partial: run.partial === true }));
         }
         return runs;
     },
 
     /**
      * Put a run on the record. Never throws.
-     * @param {{at: number, ids: number[], partial?: boolean}} run  partial: files of a backup that failed, that are not written yet, or
-     *   that could not be deleted yet
+     * @param {{at: number, ids: number[], files?: Array, partial?: boolean}} run  files: from identify(); partial: files of a backup that
+     *   failed, that are not written yet, or that could not be deleted yet
      * @param {boolean} [replace]  in place of the same run (same time, same ids) already on record
      * @returns {Promise<Array|null>} the record, or null when it could not be read or written (then nothing is deleted)
      */
@@ -268,7 +304,7 @@ const HistoryBackup = {
         try {
             const same = (other) => other.at === run.at && other.ids.length === run.ids.length && other.ids.every((id, i) => id === run.ids[i]);
             const runs = (await this.record()).filter(other => !(replace && same(other)));
-            runs.push(run.partial ? { at: run.at, ids: run.ids, partial: true } : { at: run.at, ids: run.ids });
+            runs.push(this.entry(run));
             const kept = runs.slice(-this.MAX_TRACKED_RUNS);
             await chrome.storage.local.set({ [this.RUNS_KEY]: kept });
             return kept;
@@ -280,7 +316,8 @@ const HistoryBackup = {
 
     /**
      * Delete the files of every backup but the newest `keep`, and take them off the record. A run that is not a whole backup (one
-     * that failed, or whose files could not be deleted yet) never counts among those kept and is tried again. Never throws.
+     * that failed, or whose files could not be deleted yet) never counts among those kept and is tried again. An id that belongs to
+     * a backup being kept is that backup's file, whatever older run had it before: it is never deleted for that run. Never throws.
      * @param {Array} record  what remember() answered, the backup just made last
      * @param {number} keep   from keepOf; 0 is all, which deletes nothing
      * @returns {Promise<number>} how many files were deleted
@@ -290,17 +327,19 @@ const HistoryBackup = {
         try {
             const newest = new Set(record.filter(run => !run.partial).slice(-keep));
             if (newest.size === record.length) return 0;
+            const kept = new Set([...newest].flatMap(run => run.ids));
             let removed = 0;
             const rest = [];
             for (const run of record) {
                 if (newest.has(run)) { rest.push(run); continue; }
                 const left = [];
                 for (const id of run.ids) {
-                    const outcome = await this.discard(id);
+                    if (kept.has(id)) continue;
+                    const outcome = await this.discard(id, run);
                     if (outcome === 'removed') removed++;
                     else if (outcome === 'retry') left.push(id);
                 }
-                if (left.length) rest.push({ at: run.at, ids: left, partial: true });
+                if (left.length) rest.push(this.entry({ at: run.at, ids: left, files: run.files, partial: true }));
             }
             await chrome.storage.local.set({ [this.RUNS_KEY]: rest });
             return removed;
@@ -320,14 +359,28 @@ const HistoryBackup = {
     },
 
     /**
-     * Delete one download by the id the browser gave it, and take its entry out of the browser's list. Never throws.
-     * @returns {Promise<'removed'|'gone'|'retry'>} removed: the file was deleted; gone: nothing is left to delete by this id (the file
-     *   was already deleted, the browser forgot the download, or the id now belongs to something that is not one of ours); retry: it may still be there
+     * Is the browser's download under this id still the file the run recorded? It must have the start and the file name on record
+     * for it (a name the browser had not given yet when it was recorded is not compared); for a run recorded without them (3.1.7),
+     * it must have started within MATCH_WINDOW_MS of the run. A download that does not say when it started is never taken for one.
      */
-    async discard(id) {
+    sameDownload(item, run, id) {
+        const start = Date.parse(item && item.startTime);
+        if (!Number.isFinite(start)) return false;
+        const file = (run.files || []).find(known => known.id === id);
+        if (file) return start === file.start && (!file.name || item.filename === file.name);
+        return Math.abs(start - run.at) <= this.MATCH_WINDOW_MS;
+    },
+
+    /**
+     * Delete one file of a run by the id the browser gave its download, and take its entry out of the browser's list. Never throws.
+     * @returns {Promise<'removed'|'gone'|'retry'>} removed: the file was deleted; gone: nothing is left to delete by this id (the file
+     *   was already deleted, the browser forgot the download, or the id now belongs to another download, one that is not ours or not
+     *   this run's file); retry: it may still be there
+     */
+    async discard(id, run) {
         try {
             const [item] = await chrome.downloads.search({ id });
-            if (!item || !this.madeHere(item)) return 'gone';
+            if (!item || !this.madeHere(item) || !this.sameDownload(item, run, id)) return 'gone';
             if (item.state === 'in_progress') return 'retry';
             let outcome = 'gone';
             if (item.state === 'complete' && item.exists !== false) {
