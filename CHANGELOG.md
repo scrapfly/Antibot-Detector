@@ -7,6 +7,16 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.1.8] - 2026-11-12
 
+### Fixed
+
+- Resuming a paused site reloads the page, so its scan includes headers and cookies instead of saving an incomplete result.
+- A page left open while its site is turned back on is not scanned until it is reloaded; the popup offers Scan again.
+
+### Security
+
+- Skipped sites no longer have their headers, cookies or request bodies read into memory while you browse them.
+
+
 ## [3.1.7] - 2026-11-11
 
 ### Added
