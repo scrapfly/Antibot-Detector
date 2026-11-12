@@ -3,7 +3,7 @@ Zjistěte, jak se jakýkoli web brání proti botům. Scrapfly detektor anti-bot
 Co uvidíte
 • Číslo na ikoně v panelu nástrojů: kolik ochran stránka používá.
 • Ke každé ochraně jedna karta se spolehlivostí, obtížností a signály, které ji prozradily: URL, cookies, hlavičky, kód stránky, prvky stránky, volání API prohlížeče a těla požadavků.
-• Součástí je 88 detektorů: 44 anti-bot systémů, 23 CAPTCHA a 21 technik fingerprintingu. Každý z nich je obyčejný soubor JSON, který si můžete přečíst, upravit nebo rozšířit.
+• Součástí je 94 detektorů: 49 anti-bot systémů, 24 CAPTCHA a 21 technik fingerprintingu. Každý z nich je obyčejný soubor JSON, který si můžete přečíst, upravit nebo rozšířit.
 
 V okně rozšíření
 • Detekce: co používá aktuální stránka, s důkazy ke každé shodě.
