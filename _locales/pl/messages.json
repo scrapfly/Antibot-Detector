@@ -5439,7 +5439,7 @@
     "message": "Kopie zapasowe do zachowania"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Po każdej kopii starsze kopie ponad tę liczbę są usuwane z folderu Pobrane (kopia zapisana w kilku częściach liczy się jako jedna). Usuwane są tylko pliki kopii zapisane przez to rozszerzenie. Jeśli zachowasz wszystkie, nic nie zostanie usunięte."
+    "message": "Po każdej kopii starsze kopie ponad tę liczbę są usuwane z folderu Pobrane (kopia zapisana w kilku częściach liczy się jako jedna). Usuwane są tylko pliki kopii zapisane przez to rozszerzenie. Jeśli zachowasz wszystkie, nic nie zostanie usunięte. Kopie utworzone przed wersją 3.1.7 pozostają, dopóki ich nie usuniesz."
   },
   "settingsHistoryBackupNow": {
     "message": "Utwórz kopię teraz"

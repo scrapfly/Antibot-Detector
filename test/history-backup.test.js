@@ -19,31 +19,57 @@ const entry = (i, extra = {}) => ({
 
 /**
  * A browser with History in its storage, the extension's settings, alarms and notifications, and a downloads list that behaves like
- * Chrome's: ids are the browser's own (not a count), a taken name is made unique, a finished download can have its file removed
- * from the disk and its entry erased from the list, and a call that cannot work throws what Chrome throws.
+ * Chrome's:
+ *  - download() answers with an id as soon as the download has started; the file is written afterwards, and onChanged tells when (or
+ *    that the download was interrupted: a full disk, a folder that cannot be written, a download blocked or cancelled). How each one
+ *    ends is browser.ends: 'complete' (the default), 'interrupted' (with browser.reason), 'never' (still in progress, until finish(id)),
+ *    'before' (written, and told, before download() answers) or 'unheard' (written before download() answers, and never told).
+ *  - ids are the browser's own (not a count), and they are handed out again: after restart() the next id follows the highest one
+ *    still in the list, so 1 again once the list was cleared, as Chrome numbers them.
+ *  - a taken name is made unique; a finished download can have its file removed from the disk and its entry erased from the list; a
+ *    file deleted by hand is reported with exists: false; and a call that cannot work throws what Chrome throws.
  *
- *   downloads  what the extension asked to download, in order     made     the ids the browser gave, in order
+ *   downloads  what the extension asked to download, in order     made     the ids the browser gave, in order (paths: where each was written)
  *   list       the browser's downloads list (id -> item)           disk     the paths of the files on the disk
  *   removed    the ids whose file was removed                      log      every call, in order: download:41, set:key, search:41, removeFile:41, erase:41
  *   fail       { download, after, remove, hang }: make downloads fail (after that many have worked), make removeFile fail with a
  *              message, or never answer (a worker that is stopped in the middle of a delete)
+ *   browser    { ends, reason }: how the downloads end (a value, or a function of the download's number, 0 first), and why one is interrupted
  *   seen       the storage as it was when the first file was about to be removed
+ *   finish(id, how)  ends a download still in progress     restart({ clear })  the browser restarts (after "Clear all")     settle()  lets the downloads end
  */
 function world({ items = [entry(1), entry(2)], settings = {}, notifications = true, failDownload = null } = {}) {
   const store = { scrapfly_history: JSON.stringify({ items }) };
   const downloads = [];
   const notes = [];
   const alarms = new Map();
-  const listeners = { alarm: [], changed: [] };
+  const listeners = { alarm: [], changed: [], downloads: [] };
   const log = [];
   const list = new Map();
   const disk = new Set();
   const made = [];
+  const paths = [];
   const removed = [];
   const fail = { download: failDownload, after: 0, remove: null, hang: false };
+  const browser = { ends: 'complete', reason: 'FILE_NO_SPACE' };
   const seen = { atFirstRemoval: null };
   let lastId = 40;
   const clone = (value) => JSON.parse(JSON.stringify(value));
+  /** A download in progress ends: 'complete' writes its file, anything else interrupts it ('interrupted': for browser.reason). */
+  const finish = (id, how = 'complete', { told = true } = {}) => {
+    const item = list.get(id);
+    if (!item || item.state !== 'in_progress') return;
+    if (how === 'complete') {
+      item.state = 'complete';
+      disk.add(item.filename);
+    } else {
+      item.state = 'interrupted';
+      item.error = how === 'interrupted' ? browser.reason : how;
+    }
+    // What Chrome sends: only what changed, each as { previous, current }
+    const delta = { id, state: { previous: 'in_progress', current: item.state }, ...(item.error ? { error: { current: item.error } } : {}) };
+    if (told) for (const fn of listeners.downloads.slice()) fn(clone(delta));
+  };
   global.chrome = {
     storage: {
       local: {
@@ -60,31 +86,41 @@ function world({ items = [entry(1), entry(2)], settings = {}, notifications = tr
         }
         downloads.push(options);
         const id = ++lastId;
+        // A name is taken by a file on the disk, or by a download still writing it
+        const taken = (file) => disk.has(file) || [...list.values()].some(item => item.state === 'in_progress' && item.filename === file);
         let file = `/home/me/Downloads/${options.filename}`;
-        for (let n = 1; disk.has(file); n++) file = `/home/me/Downloads/${options.filename.replace(/(\.[^./]+)$/, ` (${n})$1`)}`;
-        disk.add(file);
-        list.set(id, { id, filename: file, byExtensionId: 'ext-abc', state: 'complete' });
+        for (let n = 1; taken(file); n++) file = `/home/me/Downloads/${options.filename.replace(/(\.[^./]+)$/, ` (${n})$1`)}`;
+        list.set(id, { id, filename: file, byExtensionId: 'ext-abc', state: 'in_progress', startTime: new Date(Date.now()).toISOString() });
         made.push(id);
+        paths.push(file);
         log.push(`download:${id}`);
+        const how = typeof browser.ends === 'function' ? browser.ends(made.length - 1, options) : browser.ends;
+        if (how === 'before') finish(id);
+        else if (how === 'unheard') finish(id, 'complete', { told: false });
+        else if (how !== 'never') setTimeout(() => finish(id, how), 0);
         return id;
       },
       search: async (query) => {
         log.push(`search:${query.id}`);
-        return list.has(query.id) ? [{ ...list.get(query.id), exists: disk.has(list.get(query.id).filename) }] : [];
+        return list.has(query.id) ? [{ ...clone(list.get(query.id)), exists: disk.has(list.get(query.id).filename) }] : [];
       },
       removeFile: async (id) => {
         log.push(`removeFile:${id}`);
         if (!seen.atFirstRemoval) seen.atFirstRemoval = clone(store);
         if (fail.hang) await new Promise(() => {});
         const item = list.get(id);
-        if (!item) throw new Error('Invalid download id');
-        if (item.state !== 'complete') throw new Error('Download not complete');
+        if (!item) throw new Error('Invalid downloadId');
+        if (item.state !== 'complete') throw new Error('Download must be complete');
         if (!disk.has(item.filename)) throw new Error('Download file already deleted');
         if (fail.remove) throw new Error(fail.remove);
         disk.delete(item.filename);
         removed.push(id);
       },
-      erase: async (query) => { log.push(`erase:${query.id}`); return list.delete(query.id) ? [query.id] : []; }
+      erase: async (query) => { log.push(`erase:${query.id}`); return list.delete(query.id) ? [query.id] : []; },
+      onChanged: {
+        addListener: (fn) => listeners.downloads.push(fn),
+        removeListener: (fn) => { const at = listeners.downloads.indexOf(fn); if (at >= 0) listeners.downloads.splice(at, 1); }
+      }
     },
     notifications: { create: (id, options) => notes.push({ id, ...options }) },
     alarms: {
@@ -97,7 +133,18 @@ function world({ items = [entry(1), entry(2)], settings = {}, notifications = tr
   };
   const history = { exportFormat: 'json', includeTimestamps: true, historyBackup: 'daily', ...settings };
   global.Utils = { getHistorySettings: async () => history, getSettings: async () => ({ notificationsEnabled: notifications }) };
-  return { store, downloads, notes, alarms, listeners, history, log, list, disk, made, removed, fail, seen };
+  /**
+   * The browser restarts, after "Clear all" in chrome://downloads when `clear` (the files stay on the disk): a download still in
+   * progress is cut short, the worker that listened is gone, and the next id follows the highest one left in the list.
+   */
+  const restart = ({ clear = false } = {}) => {
+    if (clear) list.clear();
+    for (const item of list.values()) if (item.state === 'in_progress') Object.assign(item, { state: 'interrupted', error: 'USER_SHUTDOWN' });
+    listeners.downloads.length = 0;
+    lastId = Math.max(0, ...list.keys());
+  };
+  const settle = () => new Promise(resolve => setTimeout(resolve, 5));
+  return { store, downloads, notes, alarms, listeners, history, log, list, disk, made, paths, removed, fail, browser, seen, finish, restart, settle };
 }
 const cleanup = () => { delete global.chrome; delete global.Utils; };
 const fresh = () => Object.assign(Object.create(HistoryBackup), { _initialized: false, _running: null });
@@ -397,6 +444,21 @@ const nameOf = (day, extension = 'json', part = 0) => HistoryExport.fileName(ext
 const onDisk = (w) => [...w.disk].map(file => file.split('/').pop()).sort();
 const recordOf = (w) => w.store[HistoryBackup.RUNS_KEY];
 const callsTo = (w, name) => w.log.filter(op => op.startsWith(`${name}:`));
+/** The calls about any download but the ones these backups made (a backup asks the browser whether its own files are written). */
+const callsAboutOthers = (w, name) => callsTo(w, name).filter(op => !w.made.some(id => op === `${name}:${id}`));
+/** A download already in the browser's list, its file on the disk: what an earlier version, or the person, left there. */
+const listed = (w, id, file, startedAt, extra = {}) => {
+  const filename = `/home/me/Downloads/${file}`;
+  w.list.set(id, { id, filename, byExtensionId: 'ext-abc', state: 'complete', startTime: new Date(startedAt).toISOString(), ...extra });
+  w.disk.add(filename);
+};
+/** What the record holds for the backup made on `day` by the downloads numbered `from` (0 first) on: their ids, and when and where each file was written. */
+const onRecordAs = (w, day, from, count = 1, extra = {}) => ({
+  at: NOW + day * DAY,
+  ids: w.made.slice(from, from + count),
+  files: w.made.slice(from, from + count).map((id, i) => ({ id, start: NOW + day * DAY, name: w.paths[from + i] })),
+  ...extra
+});
 /** `count` backups on consecutive days, the first on day `from`; each is a run of its own, as after a worker restart. */
 async function backUp(count, { trigger = 'alarm', make = fresh, from = 0 } = {}) {
   const results = [];
@@ -452,7 +514,7 @@ test('Backups to keep: with 3 kept, every new backup deletes the older ones, so 
     assert.deepStrictEqual(onDisk(w), [nameOf(3), nameOf(4), nameOf(5)], 'the first three backups are gone, the newest three stay');
     assert.deepStrictEqual(w.removed, w.made.slice(0, 3), 'each file went when a newer backup made it one too many');
     assert.deepStrictEqual([...w.list.keys()], w.made.slice(3), 'and its entry left the browser list too, so that list stays clean');
-    assert.deepStrictEqual(recordOf(w), [3, 4, 5].map(day => ({ at: NOW + day * DAY, ids: [w.made[day]] })));
+    assert.deepStrictEqual(recordOf(w), [3, 4, 5].map(day => onRecordAs(w, day, day)), 'each with when its file started and where it was written');
     assert.strictEqual(w.store.scrapfly_history_backup.removed, 1, 'the last backup says how many files it deleted');
     assert.strictEqual(w.store.scrapfly_history_backup.ok, true);
   } finally { cleanup(); }
@@ -487,7 +549,8 @@ test('Backups to keep: All, and any value that is not one of the choices, delete
     try {
       await backUp(5);
       assert.strictEqual(onDisk(w).length, 5, `keep ${String(keep)}: every backup is still there`);
-      assert.deepStrictEqual(w.log.filter(op => /^(search|removeFile|erase):/.test(op)), [], `keep ${String(keep)}: the browser is not even asked about a download`);
+      assert.deepStrictEqual(w.log.filter(op => /^(removeFile|erase):/.test(op)), [], `keep ${String(keep)}: nothing is removed or erased`);
+      assert.deepStrictEqual(callsAboutOthers(w, 'search'), [], `keep ${String(keep)}: the browser is not even asked about a download but the new backups' own`);
       assert.strictEqual(w.store.scrapfly_history_backup.removed, undefined, `keep ${String(keep)}: no count of deleted files`);
     } finally { cleanup(); }
   }
@@ -604,7 +667,8 @@ test('Backups to keep: if the browser cannot say what a download is, nothing is 
 test('Backups to keep: only what these backups made is ever deleted, even when an old id now belongs to something else', async () => {
   const w = world({ settings: { historyBackupKeep: 3 } });
   try {
-    const add = (id, file, extra = {}) => { w.list.set(id, { id, filename: `/home/me/Downloads/${file}`, state: 'complete', ...extra }); w.disk.add(`/home/me/Downloads/${file}`); };
+    // Each started with the run that recorded it, so only what it is decides
+    const add = (id, file, extra = {}) => listed(w, id, file, NOW - 10 * DAY + 2000, { byExtensionId: undefined, ...extra });
     add(901, 'Scrapfly/scrapfly-history-2026-01-01.json', { byExtensionId: 'ext-abc' });                       // an older backup of this extension
     add(902, 'report.pdf');                                                                                    // the person's own download, which got an old id after the list was cleared
     add(903, 'Scrapfly/scrapfly-history-2026-01-02.json', { byExtensionId: 'another-extension' });             // another extension's file with a name like ours
@@ -628,7 +692,7 @@ test('Backups to keep: a damaged record never fails a backup, and only whole-num
     w.store[HistoryBackup.RUNS_KEY] = [{ at: NOW - 9 * DAY, ids: [7, -3, 1.5, '9', null, 11, 2 ** 53, { id: 12 }] }, 'junk', null, 5, { at: 'x', ids: [5] }, { at: NOW - 8 * DAY, ids: 'nope' }, { ids: [6] }];
     const results = await backUp(3);
     assert.ok(results.every(r => r.ok), JSON.stringify(results));
-    assert.deepStrictEqual(callsTo(w, 'search'), ['search:7', 'search:11']);
+    assert.deepStrictEqual(callsAboutOthers(w, 'search'), ['search:7', 'search:11']);
     assert.deepStrictEqual(recordOf(w).map(run => run.ids), [[w.made[0]], [w.made[1]], [w.made[2]]], 'what was kept is clean');
   } finally { cleanup(); }
   for (const damaged of [null, 5, 'text', {}, { runs: [] }, true]) {
@@ -637,7 +701,7 @@ test('Backups to keep: a damaged record never fails a backup, and only whole-num
       v.store[HistoryBackup.RUNS_KEY] = damaged;
       const [result] = await backUp(1);
       assert.strictEqual(result.ok, true, JSON.stringify(damaged));
-      assert.deepStrictEqual(recordOf(v), [{ at: NOW, ids: [v.made[0]] }], JSON.stringify(damaged));
+      assert.deepStrictEqual(recordOf(v), [onRecordAs(v, 0, 0)], JSON.stringify(damaged));
     } finally { cleanup(); }
   }
 });
@@ -677,9 +741,10 @@ test('Backups to keep: a backup that failed deletes nothing; the parts it did wr
     const cut = await withNow(() => make().run('alarm'), NOW + 4 * DAY);
     assert.strictEqual(cut.ok, false);
     const lonely = w.made[w.made.length - 1];
+    await w.settle();                                             // the part's file is written after download() answered
     assert.strictEqual(w.disk.size, before.length + 1);
     assert.deepStrictEqual(w.removed, [], 'and a failed backup still deletes nothing');
-    assert.deepStrictEqual(recordOf(w).slice(-1), [{ at: NOW + 4 * DAY, ids: [lonely], partial: true }]);
+    assert.deepStrictEqual(recordOf(w).slice(-1), [onRecordAs(w, 4, w.made.length - 1, 1, { partial: true })]);
     // A good backup follows: the newest three real backups stay (days 1, 2 and 5), the cut one goes with the oldest
     w.fail.download = null;
     const good = await withNow(() => make().run('alarm'), NOW + 5 * DAY);
@@ -701,4 +766,300 @@ test('Backups to keep: a run that had nothing to write is not a backup, so a str
     assert.strictEqual(recordOf(w).length, 3);
     assert.deepStrictEqual(w.removed, []);
   } finally { cleanup(); }
+});
+
+// ---- A backup counts once its files are written: download() answers when a download starts, and the file can still fail after that
+
+/** A backup that waits `ms` at most for its files (the real wait is a minute). */
+const waiting = (ms) => () => Object.assign(fresh(), { WRITE_WAIT_MS: ms });
+const lastOf = (w) => recordOf(w)[recordOf(w).length - 1];
+
+test('Backups to keep: nothing older is deleted until the new backup is written; a backup whose download is interrupted fails, says why, notifies and deletes nothing', async () => {
+  const w = world({ settings: { historyBackupKeep: 3 } });
+  try {
+    await backUp(3);
+    const good = onDisk(w);
+    assert.deepStrictEqual(good, [nameOf(0), nameOf(1), nameOf(2)]);
+    // The disk fills up: every download starts (download() answers with its id), then is interrupted
+    w.browser.ends = 'interrupted';
+    const failed = await backUp(3, { from: 3 });
+    for (const result of failed) assert.deepStrictEqual(result, { ok: false, entries: 0, files: 0, error: 'Download interrupted (FILE_NO_SPACE)' });
+    assert.deepStrictEqual(onDisk(w), good, 'three broken backups in a row and the three good ones are all still there');
+    assert.deepStrictEqual(w.removed, []);
+    assert.deepStrictEqual(callsTo(w, 'removeFile'), [], 'not one file was even asked to go');
+    assert.deepStrictEqual(w.store.scrapfly_history_backup, { at: NOW + 5 * DAY, ok: false, error: 'Download interrupted (FILE_NO_SPACE)', trigger: 'alarm' }, 'Settings shows that the backup failed');
+    assert.deepStrictEqual(w.notes.map(note => note.id), Array(3).fill('scrapfly-history-backup-failed'), 'with the failure notification each time');
+    assert.deepStrictEqual(recordOf(w).map(run => run.partial === true), [false, false, false, true, true, true], 'the broken runs are on record, never as backups to keep');
+    // Space is freed: the next backup is written, and only then does the oldest good one go (with the broken runs' entries)
+    w.browser.ends = 'complete';
+    const [next] = await backUp(1, { from: 6 });
+    assert.deepStrictEqual(next, { ok: true, entries: 2, files: 1 });
+    assert.deepStrictEqual(onDisk(w), [nameOf(1), nameOf(2), nameOf(6)]);
+    assert.deepStrictEqual(w.removed, [w.made[0]]);
+    assert.deepStrictEqual(recordOf(w).map(run => run.at), [1, 2, 6].map(day => NOW + day * DAY));
+    for (const id of w.made.slice(3, 6)) assert.ok(!w.list.has(id), `the interrupted download ${id} left the browser list`);
+  } finally { cleanup(); }
+});
+
+test('Backups to keep: a download still not written when the wait is over fails the backup and deletes nothing; it is on record from the start, never as a backup to keep', async () => {
+  const w = world({ settings: { historyBackupKeep: 3 } });
+  try {
+    await backUp(3);
+    w.browser.ends = 'never';
+    const real = Date.now;
+    Date.now = () => NOW + 3 * DAY;
+    let stuck;
+    try {
+      const running = waiting(40)().run('alarm');
+      await new Promise(resolve => setTimeout(resolve, 10));
+      // While it waits, the started download is on record (a worker stopped now would lose track of no file), but not as a backup
+      assert.deepStrictEqual(lastOf(w), { at: NOW + 3 * DAY, ids: [w.made[3]], partial: true });
+      assert.deepStrictEqual(callsTo(w, 'removeFile'), [], 'and nothing older is deleted while it is not written');
+      stuck = await running;
+    } finally { Date.now = real; }
+    assert.strictEqual(stuck.ok, false);
+    assert.strictEqual(stuck.error, 'Download did not finish within 1 s', 'the time limit is a minute; this test waits 40 ms');
+    assert.strictEqual(HistoryBackup.WRITE_WAIT_MS, 60000);
+    assert.strictEqual(w.store.scrapfly_history_backup.ok, false);
+    assert.strictEqual(w.notes.length, 1);
+    assert.deepStrictEqual(w.removed, []);
+    assert.deepStrictEqual(onDisk(w), [nameOf(0), nameOf(1), nameOf(2)]);
+    assert.strictEqual(lastOf(w).partial, true);
+    // The download ends later, after the backup gave up on it: it was never a backup to keep, so the next good one takes it along
+    const late = w.made[3];
+    w.finish(late);
+    w.browser.ends = 'complete';
+    await backUp(1, { from: 4 });
+    assert.deepStrictEqual(onDisk(w), [nameOf(1), nameOf(2), nameOf(4)]);
+    assert.deepStrictEqual([...w.removed].sort(), [w.made[0], late].sort());
+  } finally { cleanup(); }
+});
+
+test('Backups to keep: a backup in parts with one part interrupted is no backup; it fails and deletes nothing, and its written parts go with the next good one', async () => {
+  const w = world({ items: bigHistory(), settings: { historyBackupKeep: 3 } });
+  try {
+    const make = inParts();
+    const parts = (await backUp(3, { make }))[0].files;
+    assert.ok(parts > 2, `several parts: ${parts}`);
+    const before = onDisk(w);
+    const first = w.made.length;
+    w.browser.ends = (n) => (n === first + 1 ? 'interrupted' : 'complete');    // the second part of the fourth backup
+    const [cut] = await backUp(1, { from: 3, make });
+    assert.strictEqual(cut.ok, false);
+    assert.strictEqual(cut.error, 'Download interrupted (FILE_NO_SPACE)');
+    await w.settle();
+    assert.deepStrictEqual(w.removed, []);
+    assert.strictEqual(onDisk(w).length, before.length + parts - 1, 'its other parts were written');
+    assert.deepStrictEqual([lastOf(w).ids, lastOf(w).partial], [w.made.slice(first), true], 'every part is on record, as no backup to keep');
+    w.browser.ends = 'complete';
+    const [good] = await backUp(1, { from: 4, make });
+    assert.strictEqual(good.ok, true);
+    assert.deepStrictEqual(onDisk(w), [1, 2, 4].flatMap(day => Array.from({ length: parts }, (_, i) => nameOf(day, 'json', i + 1))).sort(), 'the backups kept are days 1, 2 and 4: day 0 and what day 3 wrote are gone');
+  } finally { cleanup(); }
+});
+
+test('Backups to keep: a file written before download() answers, or whose news never comes, is still known to be written, without waiting for the time limit', async () => {
+  for (const ends of ['before', 'unheard']) {
+    const w = world({ settings: { historyBackupKeep: 3 } });
+    try {
+      w.browser.ends = ends;
+      const started = process.hrtime.bigint();
+      const results = await backUp(4, { make: waiting(5000) });
+      const ms = Number(process.hrtime.bigint() - started) / 1e6;
+      assert.ok(results.every(r => r.ok), `${ends}: ${JSON.stringify(results)}`);
+      assert.ok(ms < 2000, `${ends}: four backups took ${Math.round(ms)} ms, so one waited for the time limit`);
+      assert.deepStrictEqual(onDisk(w), [nameOf(1), nameOf(2), nameOf(3)], ends);
+      assert.deepStrictEqual(w.listeners.downloads, [], `${ends}: the backup stopped listening when it was done`);
+    } finally { cleanup(); }
+  }
+});
+
+test('a backup keeps the worker awake while it waits for its files, and lets it go when it is done, whatever the outcome', async () => {
+  const calls = [];
+  for (const ends of ['never', 'complete', 'interrupted']) {
+    const w = world();
+    global.workerKeepaliveManager = { startOperation: (id, info) => calls.push(['start', id, info && info.reason]), endOperation: (id) => calls.push(['end', id]) };
+    try {
+      calls.length = 0;
+      w.browser.ends = ends;
+      const running = waiting(40)().run('manual');
+      await new Promise(resolve => setTimeout(resolve, ends === 'never' ? 15 : 0));
+      if (ends === 'never') {
+        assert.ok(calls.some(([what, id, reason]) => what === 'start' && id === 'history-backup' && reason === 'history_backup'), `${ends}: awake while it waits: ${JSON.stringify(calls)}`);
+        assert.ok(!calls.some(([what]) => what === 'end'), `${ends}: not let go before the file is written`);
+      }
+      await running;
+      assert.deepStrictEqual(calls[0], ['start', 'history-backup', 'history_backup'], `${ends}: ${JSON.stringify(calls)}`);
+      assert.deepStrictEqual(calls[calls.length - 1], ['end', 'history-backup'], `${ends}: ${JSON.stringify(calls)}`);
+    } finally { delete global.workerKeepaliveManager; cleanup(); }
+  }
+});
+
+test('Back up now tells the page that asked when its file could not be written', async () => {
+  const w = world();
+  try {
+    w.browser.ends = 'interrupted';
+    w.browser.reason = 'FILE_ACCESS_DENIED';
+    const registry = {};
+    fresh().registerHandlers(registry);
+    const answer = await new Promise(resolve => registry[HistoryBackup.Messages.BACKUP_NOW]({ sender: { url: 'chrome-extension://abc/popup.html' }, sendResponse: resolve }));
+    assert.deepStrictEqual(answer, { status: 'error', ok: false, entries: 0, files: 0, error: 'Download interrupted (FILE_ACCESS_DENIED)' });
+  } finally { cleanup(); }
+});
+
+// ---- An id is not for ever: Chrome numbers downloads again from the highest one left in its list when it starts, so once the list is
+// cleared (chrome://downloads → Clear all, or clearing the download history) and the browser restarts, an old backup's id goes to a new download
+
+
+test('Backups to keep: each backup is on record with when its files started and where the browser wrote them', async () => {
+  const w = world({ items: bigHistory() });
+  try {
+    await backUp(1, { make: inParts() });
+    const parts = w.made.length;
+    assert.ok(parts > 1);
+    await withNow(() => inParts()().run('manual'), NOW + 60000);       // a second backup the same day: the browser makes the names unique
+    assert.deepStrictEqual(recordOf(w)[0], onRecordAs(w, 0, 0, parts));
+    const second = recordOf(w)[1];
+    assert.deepStrictEqual(second.files.map(file => file.name), w.paths.slice(parts));
+    assert.ok(second.files.every(file => / \(1\)\.json$/.test(file.name) && file.start === NOW + 60000), JSON.stringify(second));
+  } finally { cleanup(); }
+});
+
+test('Backups to keep: after the downloads list is cleared and the browser restarts, a new backup that gets an old backup\'s id is never deleted for it', async () => {
+  const w = world({ settings: { historyBackupKeep: 3 } });
+  try {
+    w.restart();                                              // a profile whose list is empty: the first download is 1
+    await backUp(3);
+    assert.deepStrictEqual(w.made, [1, 2, 3]);
+    w.restart({ clear: true });                               // Clear all (the files stay on the disk), then a restart
+    for (let day = 3; day < 6; day++) {
+      const [result] = await backUp(1, { from: day });
+      assert.strictEqual(result.ok, true);
+      assert.ok(onDisk(w).includes(nameOf(day)), `day ${day}: the backup just made is still there (${onDisk(w).join(', ')})`);
+    }
+    assert.deepStrictEqual(w.made, [1, 2, 3, 1, 2, 3], 'the new backups got the old ids');
+    assert.deepStrictEqual(w.removed, [], 'nothing was deleted: the old backups cannot be reached by their ids any more');
+    assert.deepStrictEqual(onDisk(w), [0, 1, 2, 3, 4, 5].map(day => nameOf(day)), 'so they stay, like the ones made before 3.1.7');
+    assert.deepStrictEqual(recordOf(w), [3, 4, 5].map(day => onRecordAs(w, day, day)), 'only what can still be reached is on record');
+    assert.strictEqual(w.store.scrapfly_history_backup.removed, undefined);
+    // From there on it works as before
+    await backUp(1, { from: 6 });
+    assert.deepStrictEqual(w.removed, [1], 'day 3\'s file, by its new id');
+    assert.deepStrictEqual(onDisk(w), [0, 1, 2, 4, 5, 6].map(day => nameOf(day)));
+  } finally { cleanup(); }
+});
+
+test('Backups to keep: lowered from All to 3 after the downloads list was cleared, it deletes only the oldest of the backups it can still reach', async () => {
+  const w = world();
+  try {
+    w.restart();
+    await backUp(10);                                         // ids 1 to 10
+    w.restart({ clear: true });
+    await backUp(5, { from: 10 });                            // ids 1 to 5 again
+    w.history.historyBackupKeep = 3;
+    const [result] = await backUp(1, { from: 15 });           // id 6
+    assert.strictEqual(result.ok, true);
+    assert.strictEqual(w.store.scrapfly_history_backup.removed, 3);
+    const days = (from, to) => Array.from({ length: to - from }, (_, i) => nameOf(from + i));
+    assert.deepStrictEqual(onDisk(w), [...days(0, 10), ...days(13, 16)].sort(), 'days 10 to 12 went; the newest three stay, and the ten it can no longer reach');
+    assert.deepStrictEqual(recordOf(w).map(run => run.at), [13, 14, 15].map(day => NOW + day * DAY));
+  } finally { cleanup(); }
+});
+
+test('Backups to keep: a record written by 3.1.7 holds only ids, so a download is taken for that backup only if it started within minutes of it', async () => {
+  const w = world({ settings: { historyBackupKeep: 3 } });
+  try {
+    const at = NOW - 10 * DAY;
+    listed(w, 901, 'Scrapfly/scrapfly-history-2026-10-09-part-1.json', at + 2000);         // the backup itself
+    listed(w, 902, 'Scrapfly/scrapfly-history-2026-10-09-part-2.json', at + 9 * 60000);    // its last part, slow to start
+    listed(w, 903, 'Scrapfly/scrapfly-history-2026-10-12.json', at + 3 * DAY);             // a later backup that got an old id
+    listed(w, 904, 'Scrapfly/scrapfly-history-2026-10-09 (1).json', at + 11 * 60000);      // eleven minutes after it: another run's
+    listed(w, 905, 'Scrapfly/scrapfly-history-2026-10-08.json', at - DAY);                 // a day before it
+    listed(w, 906, 'Scrapfly/scrapfly-history-2026-10-09 (2).json', at + 2000, { startTime: 'not a time' });
+    w.store[HistoryBackup.RUNS_KEY] = [{ at, ids: [901, 902, 903, 904, 905, 906] }];
+    await backUp(3);
+    assert.deepStrictEqual(w.removed, [901, 902], 'only the downloads that started with that run');
+    for (const id of [903, 904, 905, 906]) assert.ok(w.list.has(id) && w.disk.has(w.list.get(id).filename), `${id} is still there, and in the list`);
+    assert.deepStrictEqual(callsAboutOthers(w, 'erase'), ['erase:901', 'erase:902']);
+    assert.deepStrictEqual(recordOf(w).map(run => run.at), [0, 1, 2].map(day => NOW + day * DAY));
+  } finally { cleanup(); }
+});
+
+test('Backups to keep: a download is taken for a recorded file only while it is the same one: same start, same file', async () => {
+  const w = world({ settings: { historyBackupKeep: 3 } });
+  try {
+    await backUp(1);
+    const [first] = w.made;
+    // The browser now has another download under that id (the list was cleared and it restarted): a backup of this extension in the
+    // same folder, started the same day; first one that started later, then one that wrote another file
+    const item = w.list.get(first);
+    w.list.set(first, { ...item, startTime: new Date(NOW + 1000).toISOString() });
+    await backUp(3, { from: 1 });
+    assert.deepStrictEqual(w.removed, [], 'started a second later: not the recorded file');
+    assert.ok(w.list.has(first), 'and its entry stays in the list');
+    const v = world({ settings: { historyBackupKeep: 3 } });
+    await backUp(1);
+    const other = v.made[0];
+    v.list.set(other, { ...v.list.get(other), filename: '/home/me/Downloads/Scrapfly/scrapfly-history-2026-10-19 (1).json' });
+    v.disk.add('/home/me/Downloads/Scrapfly/scrapfly-history-2026-10-19 (1).json');
+    await backUp(3, { from: 1 });
+    assert.deepStrictEqual(v.removed, [], 'another file under the same start: not the recorded file');
+  } finally { cleanup(); }
+});
+
+test('Backups to keep: an id that belongs to a backup being kept is never deleted, whatever older record names it', async () => {
+  const w = world({ settings: { historyBackupKeep: 3 } });
+  try {
+    w.restart();
+    // 3.1.7 recorded a backup as id 1. The downloads list was cleared and the browser restarted, and three backups followed within
+    // minutes: the first got id 1 again, and started close enough to the old record to pass for its file
+    w.store[HistoryBackup.RUNS_KEY] = [{ at: NOW - 60000, ids: [1] }];
+    for (let i = 0; i < 3; i++) await withNow(() => fresh().run('manual'), NOW + i * 60000);
+    assert.deepStrictEqual(w.made, [1, 2, 3]);
+    assert.deepStrictEqual(w.removed, [], 'the old record\'s id belongs to a backup being kept');
+    assert.deepStrictEqual(callsAboutOthers(w, 'search'), [], 'so the browser is not even asked about it for the old record');
+    assert.strictEqual(onDisk(w).length, 3);
+    assert.deepStrictEqual(recordOf(w).map(run => run.ids), [[1], [2], [3]], 'and the old record is done with');
+  } finally { cleanup(); }
+});
+
+test('Backups to keep: a damaged description of a file is left out and the run\'s time stands in for it; it never fails a backup', async () => {
+  const w = world({ settings: { historyBackupKeep: 3 } });
+  try {
+    const at = NOW - 10 * DAY;
+    listed(w, 901, 'Scrapfly/scrapfly-history-2026-10-09.json', at + 2000);
+    listed(w, 902, 'Scrapfly/scrapfly-history-2026-10-09 (1).json', at + 3000);
+    const second = '/home/me/Downloads/Scrapfly/scrapfly-history-2026-10-09 (1).json';
+    w.store[HistoryBackup.RUNS_KEY] = [{ at, ids: [901, 902], files: [{ id: 901, start: 'yesterday', name: 5 }, null, 'junk', { id: 902, start: at + 4000, name: second }, { id: 77, start: at, name: '' }] }];
+    const results = await backUp(3);
+    assert.ok(results.every(r => r.ok), JSON.stringify(results));
+    assert.deepStrictEqual(w.removed, [901], '901 by the run\'s time; 902\'s description is whole, and says it started a second later than the download under its id');
+    assert.ok(w.list.has(902) && w.disk.has(second));
+  } finally { cleanup(); }
+});
+
+test('Backups to keep: a download the browser forgets between the look and the delete ("Invalid downloadId") is done with, not tried again at every backup', async () => {
+  for (const spelling of ['Invalid downloadId', 'Invalid download id']) {
+    const w = world({ settings: { historyBackupKeep: 3 } });
+    try {
+      await backUp(3);
+      const [first] = w.made;
+      if (spelling === 'Invalid downloadId') {
+        // What Chrome says: the person clears the downloads list just as the oldest backup is about to be deleted
+        const search = chrome.downloads.search;
+        chrome.downloads.search = async (query) => {
+          const found = await search(query);
+          if (query.id === first) w.list.delete(first);
+          return found;
+        };
+      } else {
+        w.fail.remove = spelling;                              // the same, as some builds spell it
+      }
+      const [fourth] = await backUp(1, { from: 3 });
+      assert.strictEqual(fourth.ok, true, spelling);
+      assert.deepStrictEqual(callsTo(w, 'removeFile'), [`removeFile:${first}`], `${spelling}: it tried`);
+      assert.deepStrictEqual(recordOf(w).map(run => run.ids), [[w.made[1]], [w.made[2]], [w.made[3]]], `${spelling}: the forgotten id left the record`);
+      assert.strictEqual(onDisk(w).length, 4, `${spelling}: and its file stays where it is`);
+    } finally { cleanup(); }
+  }
 });

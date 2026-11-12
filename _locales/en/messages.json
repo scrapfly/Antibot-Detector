@@ -5723,7 +5723,7 @@
     "message": "Backups to keep"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "After each backup, older backups beyond this number are deleted from your Downloads folder (a backup saved in several parts counts as one). Only backup files saved by this extension are removed. Keep all and nothing is deleted."
+    "message": "After each backup, older backups beyond this number are deleted from your Downloads folder (a backup saved in several parts counts as one). Only backup files saved by this extension are removed. Keep all and nothing is deleted. Backups made before version 3.1.7 stay until you delete them."
   },
   "settingsHistoryBackupNow": {
     "message": "Back up now",

@@ -5439,7 +5439,7 @@
     "message": "Copias de seguridad que conservar"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Después de cada copia, las más antiguas por encima de este número se eliminan de tu carpeta de Descargas (una copia guardada en varias partes cuenta como una). Solo se eliminan los archivos de copia guardados por esta extensión. Si las conservas todas, no se elimina nada."
+    "message": "Después de cada copia, las más antiguas por encima de este número se eliminan de tu carpeta de Descargas (una copia guardada en varias partes cuenta como una). Solo se eliminan los archivos de copia guardados por esta extensión. Si las conservas todas, no se elimina nada. Las copias anteriores a la versión 3.1.7 se conservan hasta que las elimines tú."
   },
   "settingsHistoryBackupNow": {
     "message": "Hacer copia ahora"

@@ -5439,7 +5439,7 @@
     "message": "Sicherungen behalten"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Nach jeder Sicherung werden ältere Sicherungen über dieser Anzahl aus deinem Downloads-Ordner gelöscht (eine in mehreren Teilen gespeicherte Sicherung zählt als eine). Entfernt werden nur Sicherungsdateien, die diese Erweiterung gespeichert hat. Wenn du alle behältst, wird nichts gelöscht."
+    "message": "Nach jeder Sicherung werden ältere Sicherungen über dieser Anzahl aus deinem Downloads-Ordner gelöscht (eine in mehreren Teilen gespeicherte Sicherung zählt als eine). Entfernt werden nur Sicherungsdateien, die diese Erweiterung gespeichert hat. Wenn du alle behältst, wird nichts gelöscht. Sicherungen, die vor Version 3.1.7 erstellt wurden, bleiben erhalten, bis du sie selbst löschst."
   },
   "settingsHistoryBackupNow": {
     "message": "Jetzt sichern"

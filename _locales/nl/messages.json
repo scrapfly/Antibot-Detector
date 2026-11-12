@@ -5439,7 +5439,7 @@
     "message": "Back-ups om te bewaren"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Na elke back-up worden oudere back-ups boven dit aantal uit je map Downloads verwijderd (een back-up die in meerdere delen is opgeslagen, telt als één). Alleen back-upbestanden die door deze extensie zijn opgeslagen, worden verwijderd. Bewaar je ze allemaal, dan wordt er niets verwijderd."
+    "message": "Na elke back-up worden oudere back-ups boven dit aantal uit je map Downloads verwijderd (een back-up die in meerdere delen is opgeslagen, telt als één). Alleen back-upbestanden die door deze extensie zijn opgeslagen, worden verwijderd. Bewaar je ze allemaal, dan wordt er niets verwijderd. Back-ups van vóór versie 3.1.7 blijven staan tot je ze zelf verwijdert."
   },
   "settingsHistoryBackupNow": {
     "message": "Nu back-up maken"

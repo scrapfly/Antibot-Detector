@@ -5439,7 +5439,7 @@
     "message": "Kolik záloh ponechat"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Po každé záloze se starší zálohy nad tento počet odstraní ze složky Stažené soubory (záloha uložená ve více částech se počítá jako jedna). Odstraňují se jen soubory záloh uložené tímto rozšířením. Pokud ponecháte všechny, nic se nesmaže."
+    "message": "Po každé záloze se starší zálohy nad tento počet odstraní ze složky Stažené soubory (záloha uložená ve více částech se počítá jako jedna). Odstraňují se jen soubory záloh uložené tímto rozšířením. Pokud ponecháte všechny, nic se nesmaže. Zálohy vytvořené před verzí 3.1.7 zůstanou, dokud je sami nesmažete."
   },
   "settingsHistoryBackupNow": {
     "message": "Zálohovat nyní"

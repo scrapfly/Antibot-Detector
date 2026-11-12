@@ -5439,7 +5439,7 @@
     "message": "Saklanacak yedekler"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Her yedeklemeden sonra, bu sayıyı aşan eski yedekler İndirilenler klasörünüzden silinir (birkaç parça halinde kaydedilen bir yedek bir sayılır). Yalnızca bu uzantının kaydettiği yedek dosyaları silinir. Hepsini saklarsanız hiçbir şey silinmez."
+    "message": "Her yedeklemeden sonra, bu sayıyı aşan eski yedekler İndirilenler klasörünüzden silinir (birkaç parça halinde kaydedilen bir yedek bir sayılır). Yalnızca bu uzantının kaydettiği yedek dosyaları silinir. Hepsini saklarsanız hiçbir şey silinmez. 3.1.7 sürümünden önce oluşturulan yedekler, siz silene kadar kalır."
   },
   "settingsHistoryBackupNow": {
     "message": "Şimdi yedekle"

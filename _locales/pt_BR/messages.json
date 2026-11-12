@@ -5439,7 +5439,7 @@
     "message": "Backups a manter"
   },
   "settingsHistoryBackupKeepDesc": {
-    "message": "Após cada backup, os mais antigos além deste número são excluídos da sua pasta Downloads (um backup salvo em várias partes conta como um). Somente arquivos de backup salvos por esta extensão são excluídos. Se você mantiver todos, nada é excluído."
+    "message": "Após cada backup, os mais antigos além deste número são excluídos da sua pasta Downloads (um backup salvo em várias partes conta como um). Somente arquivos de backup salvos por esta extensão são excluídos. Se você mantiver todos, nada é excluído. Backups feitos antes da versão 3.1.7 continuam lá até você excluí-los."
   },
   "settingsHistoryBackupNow": {
     "message": "Fazer backup agora"
