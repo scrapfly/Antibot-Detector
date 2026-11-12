@@ -6790,5 +6790,11 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Eén regel"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Alleen blokkeer- en challengepagina's"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Doorzoekt de volledige HTML, inclusief titel, van alleen kleine pagina's, zoals de blokkeerpagina van een firewall. Grotere pagina's worden niet doorzocht"
   }
 }

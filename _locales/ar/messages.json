@@ -6790,5 +6790,11 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "سطر واحد"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "صفحات الحظر والتحدي فقط"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "البحث في كامل HTML، بما فيه العنوان، للصفحات الصغيرة فقط، مثل صفحة الحظر لجدار الحماية. لا يتم البحث في الصفحات الأكبر"
   }
 }

@@ -6790,5 +6790,11 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Tek satır"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Yalnızca engelleme ve doğrulama sayfaları"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Başlık dahil tüm HTML'yi yalnızca küçük sayfalarda arar; örneğin bir güvenlik duvarının engelleme sayfası. Daha büyük sayfalar aranmaz"
   }
 }

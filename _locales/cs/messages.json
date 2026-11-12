@@ -6790,5 +6790,11 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Jeden řádek"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Jen blokovací a ověřovací stránky"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Prohledá celé HTML včetně titulku, ale jen u malých stránek, jako je blokovací stránka firewallu. Větší stránky se neprohledávají"
   }
 }

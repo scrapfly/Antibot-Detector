@@ -6790,5 +6790,11 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Một dòng"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Chỉ trang chặn và trang thử thách"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Tìm trong toàn bộ HTML, kể cả tiêu đề, chỉ ở các trang nhỏ, như trang chặn của tường lửa. Các trang lớn hơn không được tìm"
   }
 }

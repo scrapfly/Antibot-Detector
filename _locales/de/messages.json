@@ -6790,5 +6790,11 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Eine Zeile"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Nur Sperr- und Challenge-Seiten"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Durchsucht das gesamte HTML samt Titel, aber nur bei kleinen Seiten wie der Sperrseite einer Firewall. Größere Seiten werden nicht durchsucht"
   }
 }

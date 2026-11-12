@@ -6790,5 +6790,11 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Uma linha"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Somente páginas de bloqueio e desafio"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Pesquisa todo o HTML, incluindo o título, apenas de páginas pequenas, como a página de bloqueio de um firewall. Páginas maiores não são pesquisadas"
   }
 }
