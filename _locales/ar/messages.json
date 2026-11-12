@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "المؤلف"
   },
-  "ruleSectionBadgeColor": {
-    "message": "لون الشارة"
-  },
   "ruleSectionDetectionMethods": {
     "message": "طرق الكشف"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "سيؤدي هذا إلى حذف جميع البيانات الملتقطة لهذا المزوِّد بشكل دائم."
-  },
-  "rulesColorPickerCancel": {
-    "message": "إلغاء"
-  },
-  "rulesColorPickerOk": {
-    "message": "موافق"
   },
   "rulesContentSearchScopeTitle": {
     "message": "نطاق البحث في المحتوى"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "تغيير أيقونة الكاشف"
-  },
-  "rulesUiCustomColor": {
-    "message": "لون مخصص"
   },
   "iconPickerTitle": {
     "message": "اختيار أيقونة"

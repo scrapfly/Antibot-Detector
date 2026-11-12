@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "ผู้เขียน"
   },
-  "ruleSectionBadgeColor": {
-    "message": "สีป้าย"
-  },
   "ruleSectionDetectionMethods": {
     "message": "วิธีการตรวจจับ"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "การดำเนินการนี้จะลบข้อมูลที่จับทั้งหมดของผู้ให้บริการรายนี้อย่างถาวร"
-  },
-  "rulesColorPickerCancel": {
-    "message": "ยกเลิก"
-  },
-  "rulesColorPickerOk": {
-    "message": "ตกลง"
   },
   "rulesContentSearchScopeTitle": {
     "message": "ขอบเขตการค้นหาเนื้อหา"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "เปลี่ยนไอคอนตัวตรวจจับ"
-  },
-  "rulesUiCustomColor": {
-    "message": "สีที่กำหนดเอง"
   },
   "iconPickerTitle": {
     "message": "เลือกไอคอน"

@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Автор"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Цвет значка"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Методы обнаружения"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Это безвозвратно удалит все захваченные данные для этого провайдера."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Отмена"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Область поиска по содержимому"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Изменить значок детектора"
-  },
-  "rulesUiCustomColor": {
-    "message": "Свой цвет"
   },
   "iconPickerTitle": {
     "message": "Выбор значка"

@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Författare"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Märkesfärg"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Upptäcktsmetoder"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Detta tar permanent bort alla insamlade data för den här leverantören."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Avbryt"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Sökomfång för innehåll"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Byt detektorikon"
-  },
-  "rulesUiCustomColor": {
-    "message": "Egen färg"
   },
   "iconPickerTitle": {
     "message": "Välj ikon"

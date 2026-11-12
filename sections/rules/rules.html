@@ -234,38 +234,6 @@
               </div>
             </div>
             <p id="detectorAuthorError" class="form-field-error" role="alert" hidden></p>
-            <div class="form-group form-group-badge-color">
-              <span class="form-label" id="badgeColorLabel" data-i18n="ruleSectionBadgeColor">Badge Color</span>
-              <div class="color-picker-card">
-                <div class="color-picker-grid" role="group" aria-labelledby="badgeColorLabel">
-                  <div class="color-option" style="background: #3b82f6;" data-color="#3b82f6"></div>
-                  <div class="color-option" style="background: #10b981;" data-color="#10b981"></div>
-                  <div class="color-option" style="background: #ef4444;" data-color="#ef4444"></div>
-                  <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b"></div>
-                  <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6"></div>
-                  <div class="color-option" style="background: #ec4899;" data-color="#ec4899"></div>
-                  <div class="color-option" style="background: #eab308;" data-color="#eab308"></div>
-                  <div class="color-option rainbow-picker" id="rainbowPicker" title="Custom Color" data-i18n-title="rulesUiCustomColor">
-                    <span class="custom-color-hex"></span>
-                    <svg width="16" height="16" viewBox="0 0 24 24">
-                      <defs>
-                        <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" style="stop-color:#ff0000"/>
-                          <stop offset="16.66%" style="stop-color:#ff8800"/>
-                          <stop offset="33.33%" style="stop-color:#ffff00"/>
-                          <stop offset="50%" style="stop-color:#00ff00"/>
-                          <stop offset="66.66%" style="stop-color:#0088ff"/>
-                          <stop offset="83.33%" style="stop-color:#8800ff"/>
-                          <stop offset="100%" style="stop-color:#ff00ff"/>
-                        </linearGradient>
-                      </defs>
-                      <rect x="2" y="2" width="20" height="20" rx="4" fill="url(#rainbow)"/>
-                      <path d="M12,17.5L8,14L10,9L12,11L14,9L16,14L12,17.5Z" fill="white" opacity="0.8"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -346,51 +314,6 @@
       <div class="rule-modal-footer">
         <button id="saveRuleEdit" class="rule-btn rule-btn-save" data-i18n="btnSaveRule">Save Rule</button>
         <button id="cancelRuleEdit" class="rule-btn rule-btn-cancel" data-i18n="btnCancel">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Advanced Color Picker Modal -->
-  <div id="advancedColorModal" class="rule-modal" style="display: none;">
-    <div class="rule-modal-backdrop"></div>
-    <div class="rule-modal-content canvas-color-modal">
-      <div class="rule-modal-body">
-        <div class="canvas-color-picker">
-          <div class="color-picker-canvas">
-            <canvas id="colorCanvas" width="180" height="120"></canvas>
-            <div id="colorPickerCursor" class="color-picker-cursor"></div>
-          </div>
-
-          <div class="hue-strip">
-            <canvas id="hueCanvas" width="20" height="120"></canvas>
-            <div id="hueSliderCursor" class="hue-slider-cursor"></div>
-          </div>
-
-          <div class="color-controls">
-            <div class="selected-color-display">
-              <div id="selectedColorPreview" class="selected-color-preview"></div>
-            </div>
-
-            <div class="rgb-controls">
-              <div class="rgb-input-group">
-                <label for="rInput">R</label>
-                <input type="number" id="rInput" min="0" max="255" class="rgb-input">
-              </div>
-              <div class="rgb-input-group">
-                <label for="gInput">G</label>
-                <input type="number" id="gInput" min="0" max="255" class="rgb-input">
-              </div>
-              <div class="rgb-input-group">
-                <label for="bInput">B</label>
-                <input type="number" id="bInput" min="0" max="255" class="rgb-input">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="rule-modal-footer">
-        <button id="selectAdvancedColor" class="rule-btn rule-btn-save" data-i18n="rulesColorPickerOk">OK</button>
-        <button id="cancelAdvancedColor" class="rule-btn rule-btn-cancel" data-i18n="rulesColorPickerCancel">Cancel</button>
       </div>
     </div>
   </div>

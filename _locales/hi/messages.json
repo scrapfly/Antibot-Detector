@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "लेखक"
   },
-  "ruleSectionBadgeColor": {
-    "message": "बैज रंग"
-  },
   "ruleSectionDetectionMethods": {
     "message": "जांच विधियां"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "इससे इस प्रदाता के लिए सारा कैप्चर किया गया डेटा स्थायी रूप से हट जाएगा।"
-  },
-  "rulesColorPickerCancel": {
-    "message": "रद्द करें"
-  },
-  "rulesColorPickerOk": {
-    "message": "ठीक है"
   },
   "rulesContentSearchScopeTitle": {
     "message": "सामग्री खोज स्कोप"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "डिटेक्टर का आइकन बदलें"
-  },
-  "rulesUiCustomColor": {
-    "message": "कस्टम रंग"
   },
   "iconPickerTitle": {
     "message": "आइकन चुनें"

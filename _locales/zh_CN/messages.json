@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "作者"
   },
-  "ruleSectionBadgeColor": {
-    "message": "徽章颜色"
-  },
   "ruleSectionDetectionMethods": {
     "message": "检测方法"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "此操作将永久删除该提供商的所有已捕获数据。"
-  },
-  "rulesColorPickerCancel": {
-    "message": "取消"
-  },
-  "rulesColorPickerOk": {
-    "message": "确定"
   },
   "rulesContentSearchScopeTitle": {
     "message": "内容搜索范围"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "更改检测器图标"
-  },
-  "rulesUiCustomColor": {
-    "message": "自定义颜色"
   },
   "iconPickerTitle": {
     "message": "选择图标"

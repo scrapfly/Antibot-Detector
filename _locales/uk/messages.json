@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Автор"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Колір значка"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Методи виявлення"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Це безповоротно видалить усі захоплені дані цього провайдера."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Скасувати"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Область пошуку за вмістом"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Змінити піктограму детектора"
-  },
-  "rulesUiCustomColor": {
-    "message": "Власний колір"
   },
   "iconPickerTitle": {
     "message": "Вибір піктограми"

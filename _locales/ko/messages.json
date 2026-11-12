@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "작성자"
   },
-  "ruleSectionBadgeColor": {
-    "message": "배지 색상"
-  },
   "ruleSectionDetectionMethods": {
     "message": "탐지 방법"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "이 공급자에 대해 캡처된 모든 데이터가 영구적으로 삭제됩니다."
-  },
-  "rulesColorPickerCancel": {
-    "message": "취소"
-  },
-  "rulesColorPickerOk": {
-    "message": "확인"
   },
   "rulesContentSearchScopeTitle": {
     "message": "콘텐츠 검색 범위"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "탐지기 아이콘 변경"
-  },
-  "rulesUiCustomColor": {
-    "message": "사용자 지정 색상"
   },
   "iconPickerTitle": {
     "message": "아이콘 선택"

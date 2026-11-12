@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Autor"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Kolor plakietki"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Metody wykrywania"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Spowoduje to trwałe usunięcie wszystkich przechwyconych danych dla tego dostawcy."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Anuluj"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Zakres wyszukiwania treści"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Zmień ikonę detektora"
-  },
-  "rulesUiCustomColor": {
-    "message": "Kolor niestandardowy"
   },
   "iconPickerTitle": {
     "message": "Wybierz ikonę"

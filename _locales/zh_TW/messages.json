@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "作者"
   },
-  "ruleSectionBadgeColor": {
-    "message": "徽章顏色"
-  },
   "ruleSectionDetectionMethods": {
     "message": "偵測方法"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "這會永久刪除此供應商所有已擷取的資料。"
-  },
-  "rulesColorPickerCancel": {
-    "message": "取消"
-  },
-  "rulesColorPickerOk": {
-    "message": "確定"
   },
   "rulesContentSearchScopeTitle": {
     "message": "內容搜尋範圍"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "變更偵測器圖示"
-  },
-  "rulesUiCustomColor": {
-    "message": "自訂顏色"
   },
   "iconPickerTitle": {
     "message": "選擇圖示"

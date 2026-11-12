@@ -249,53 +249,6 @@
   pointer-events: none;
 }
 
-/* ---------- Badge colour ---------- */
-/* Lives in the Detector Information card, as its last field */
-#editRuleModal .form-group-badge-color {
-  margin: 0;
-}
-
-#editRuleModal .color-picker-card {
-  display: block;
-  padding: 0;
-  background: none;
-  border-radius: 0;
-}
-
-#editRuleModal .color-picker-grid {
-  grid-template-columns: repeat(8, 28px);
-  gap: 8px;
-  padding: 1px;
-  justify-content: start;
-}
-
-#editRuleModal .color-option {
-  width: 28px;
-  height: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 6px;
-  box-shadow: none;
-  transform: none;
-}
-
-#editRuleModal .color-option:hover {
-  border-color: rgba(255, 255, 255, 0.6);
-  box-shadow: none;
-  transform: none;
-}
-
-#editRuleModal .color-option:focus,
-#editRuleModal .color-option:focus-visible,
-#editRuleModal .color-option.selected {
-  border-color: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 0 0 2px var(--re-card-bg), 0 0 0 3px var(--re-text);
-  transform: none;
-}
-
-#editRuleModal .color-option.selected::after {
-  display: none;
-}
-
 /* ---------- Detection methods ---------- */
 #editRuleModal .modal-card-body-methods {
   padding: 8px;

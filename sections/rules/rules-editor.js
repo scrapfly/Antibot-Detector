@@ -1068,20 +1068,6 @@ Rules.prototype._collectDetectionFromForm = function() {
     return detectionMethods;
   };
 
-Rules.prototype.updateDetectorBadgeColor = function(detectorName, color) {
-    if (!this.categoryManager || !detectorName || !color) return;
-
-    const categories = this.categoryManager.getCategories();
-
-    Object.values(categories).forEach(category => {
-      if (category.detectors && category.detectors[detectorName]) {
-        category.detectors[detectorName].color = color;
-      }
-    });
-
-    this.categoryManager.saveToStorage();
-  };
-
 /** How many patterns of a rule's detection repeat another of the same kind (same text, options and scope; the id and confidence do not count). */
 Rules.countDuplicatePatterns = function(detection) {
   return RuleDuplicates.countWithin(detection);
@@ -1322,10 +1308,6 @@ Rules.prototype.saveRule = async function() {
     if (!saved) return false;
 
     chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, () => { void chrome.runtime.lastError; });
-    if (this.categoryManager && this.colorManager) {
-      const color = this.colorManager.getColor();
-      this.updateDetectorBadgeColor(edit.detectorName, color);
-    }
     this.closeEditModal();
     this.displayRules();
     if (Rules.countDuplicatePatterns(draft.detector.detection) > 0 && typeof NotificationHelper !== 'undefined' && typeof NotificationHelper.warning === 'function') {

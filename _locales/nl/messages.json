@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Auteur"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Badgekleur"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Detectiemethoden"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Hiermee worden alle opgenomen gegevens van deze aanbieder definitief verwijderd."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Annuleren"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Zoekbereik voor inhoud"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Detectorpictogram wijzigen"
-  },
-  "rulesUiCustomColor": {
-    "message": "Aangepaste kleur"
   },
   "iconPickerTitle": {
     "message": "Pictogram kiezen"

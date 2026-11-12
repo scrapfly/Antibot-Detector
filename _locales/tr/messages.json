@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Yazar"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Rozet rengi"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Tespit yöntemleri"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Bu sağlayıcı için yakalanan tüm veriler kalıcı olarak silinecek."
-  },
-  "rulesColorPickerCancel": {
-    "message": "İptal"
-  },
-  "rulesColorPickerOk": {
-    "message": "Tamam"
   },
   "rulesContentSearchScopeTitle": {
     "message": "İçerik arama kapsamı"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Dedektör simgesini değiştir"
-  },
-  "rulesUiCustomColor": {
-    "message": "Özel renk"
   },
   "iconPickerTitle": {
     "message": "Simge seç"

@@ -457,9 +457,6 @@
   "ruleFieldAuthor": {
     "message": "Author"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Badge Color"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Detection Methods"
   },
@@ -1683,12 +1680,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "This will permanently delete all captured data for this provider."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Cancel"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Content Search Scope"
@@ -3498,10 +3489,6 @@
   "rulesUiChangeDetectorIcon": {
     "message": "Change detector icon",
     "description": "Screen-reader label of the detector icon button"
-  },
-  "rulesUiCustomColor": {
-    "message": "Custom Color",
-    "description": "Tooltip of the rainbow swatch that opens the custom colour picker"
   },
   "iconPickerTitle": {
     "message": "Choose Icon"

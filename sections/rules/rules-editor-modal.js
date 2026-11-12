@@ -401,23 +401,6 @@ Rules.prototype.populateModalData = function(detector) {
       authorInput.oninput = () => this.clearAuthorError();
     }
 
-    // Set badge color using CategoryManager (colors come from Settings, not detector objects)
-    if (this.colorManager && this.categoryManager) {
-      const category = this.currentEditDetector?.category || 'antibot';
-      const colorToSet = this.categoryManager.getCategoryColor(category) || '#3b82f6'; // Default to blue if no color
-      Logger.debug('UI', 'Loading category color:', detector.name, 'Category:', category, 'Color:', colorToSet);
-      this.colorManager.setColor(colorToSet);
-
-      // If it's a custom color, make sure it's stored on the rainbow picker
-      const presetColors = this.colorManager.getPresetColors();
-      if (!presetColors.includes(colorToSet)) {
-        const rainbowPicker = document.querySelector('#rainbowPicker');
-        if (rainbowPicker) {
-          rainbowPicker.dataset.customColor = colorToSet;
-        }
-      }
-    }
-
     // Populate detection methods, then the combinations that refer to them
     this.populateDetectionMethods(detector);
     this.initCombinationsEditor(detector);

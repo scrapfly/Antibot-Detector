@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "作成者"
   },
-  "ruleSectionBadgeColor": {
-    "message": "バッジの色"
-  },
   "ruleSectionDetectionMethods": {
     "message": "検出方法"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "このプロバイダーのキャプチャしたすべてのデータが永久に削除されます。"
-  },
-  "rulesColorPickerCancel": {
-    "message": "キャンセル"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "コンテンツ検索スコープ"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "検出器のアイコンを変更"
-  },
-  "rulesUiCustomColor": {
-    "message": "カスタムカラー"
   },
   "iconPickerTitle": {
     "message": "アイコンを選択"

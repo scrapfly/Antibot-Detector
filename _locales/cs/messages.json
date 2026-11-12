@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Autor"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Barva odznaku"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Metody detekce"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Tím se trvale smažou všechna zachycená data tohoto poskytovatele."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Zrušit"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Rozsah hledání v obsahu"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Změnit ikonu detektoru"
-  },
-  "rulesUiCustomColor": {
-    "message": "Vlastní barva"
   },
   "iconPickerTitle": {
     "message": "Zvolit ikonu"

@@ -446,9 +446,6 @@
   "ruleFieldAuthor": {
     "message": "Penulis"
   },
-  "ruleSectionBadgeColor": {
-    "message": "Warna badge"
-  },
   "ruleSectionDetectionMethods": {
     "message": "Metode deteksi"
   },
@@ -1662,12 +1659,6 @@
   },
   "advConfirmClearAllMsg": {
     "message": "Ini akan menghapus permanen semua data rekaman untuk provider ini."
-  },
-  "rulesColorPickerCancel": {
-    "message": "Batal"
-  },
-  "rulesColorPickerOk": {
-    "message": "OK"
   },
   "rulesContentSearchScopeTitle": {
     "message": "Cakupan pencarian konten"
@@ -3302,9 +3293,6 @@
   },
   "rulesUiChangeDetectorIcon": {
     "message": "Ubah ikon detektor"
-  },
-  "rulesUiCustomColor": {
-    "message": "Warna kustom"
   },
   "iconPickerTitle": {
     "message": "Pilih ikon"
