@@ -22,6 +22,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Fixed
 
+- Pages Chrome loads ahead of time and then shows keep their JS hooks, window checks, headers, cookies and HTTP status in the scan.
 - F5 BIG-IP, Sucuri and Radware block pages are recognised from the page's own text, not only from cookies and headers.
 - Counts read correctly for one and for many in every language, including the Russian, Polish, Czech, Ukrainian and Arabic forms.
 - Labels and values are joined the way each language writes them, such as the full-width colon in Chinese and Japanese.
