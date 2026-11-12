@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "Historia jest wstrzymana: strony są skanowane, ale nie zapisywane."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Strony z historii: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Trwa skanowanie zbiorcze, więc strony z historii nie zostały dodane."
+  },
   "bulkReadingSitemaps": {
     "message": "Odczytywanie map witryn…"
   },

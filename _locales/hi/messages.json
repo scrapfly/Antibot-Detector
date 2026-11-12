@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "इतिहास रुका हुआ है: पेज स्कैन होते हैं पर दर्ज नहीं होते।"
   },
+  "bulkFromHistoryFmt": {
+    "message": "इतिहास से पेज: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "एक बल्क स्कैन चल रहा है, इसलिए इतिहास से पेज नहीं जोड़े गए।"
+  },
   "bulkReadingSitemaps": {
     "message": "साइटमैप पढ़े जा रहे हैं…"
   },

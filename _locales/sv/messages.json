@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "Historiken är pausad: sidorna skannas men sparas inte."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Sidor från historiken: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "En massskanning pågår, så sidorna från historiken lades inte till."
+  },
   "bulkReadingSitemaps": {
     "message": "Läser sitemaps…"
   },

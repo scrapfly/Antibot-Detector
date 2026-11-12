@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "Historie je pozastavená: stránky se skenují, ale neukládají."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Stránky z historie: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Probíhá hromadné skenování, proto stránky z historie nebyly přidány."
+  },
   "bulkReadingSitemaps": {
     "message": "Načítají se mapy webu…"
   },

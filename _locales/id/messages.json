@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "Riwayat sedang dijeda: halaman dipindai tetapi tidak dicatat."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Halaman dari Riwayat: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Pindai massal sedang berjalan, jadi halaman dari Riwayat tidak ditambahkan."
+  },
   "bulkReadingSitemaps": {
     "message": "Membaca peta situs…"
   },

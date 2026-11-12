@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "История приостановлена: страницы сканируются, но не записываются."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Страниц из истории: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Идёт массовое сканирование, поэтому страницы из истории не добавлены."
+  },
   "bulkReadingSitemaps": {
     "message": "Чтение карт сайта…"
   },

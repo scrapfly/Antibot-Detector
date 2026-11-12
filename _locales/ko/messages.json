@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "기록이 일시 중지되어 페이지는 스캔되지만 기록되지 않습니다."
   },
+  "bulkFromHistoryFmt": {
+    "message": "기록에서 가져온 페이지: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "일괄 스캔이 진행 중이어서 기록의 페이지를 추가하지 않았습니다."
+  },
   "bulkReadingSitemaps": {
     "message": "사이트맵을 읽는 중…"
   },

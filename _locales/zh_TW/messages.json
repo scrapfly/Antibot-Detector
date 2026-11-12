@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "歷史記錄已暫停：網頁會被掃描，但不會被記錄。"
   },
+  "bulkFromHistoryFmt": {
+    "message": "來自歷史記錄的網頁：{0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "批次掃描正在進行，因此未加入歷史記錄中的網頁。"
+  },
   "bulkReadingSitemaps": {
     "message": "正在讀取網站地圖…"
   },

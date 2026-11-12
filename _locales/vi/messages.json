@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "Lịch sử đang tạm dừng: các trang vẫn được quét nhưng không được ghi lại."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Trang từ Lịch sử: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Đang có một lần quét hàng loạt, nên các trang từ Lịch sử chưa được thêm."
+  },
   "bulkReadingSitemaps": {
     "message": "Đang đọc sơ đồ trang web…"
   },

@@ -249,7 +249,7 @@ test('the button is in the bar, named, after Watch and before Export, and a clic
   const html = fs.readFileSync(path.join(root, 'sections/history/history.html'), 'utf8');
   const bar = html.slice(html.indexOf('id="historySelectBar"'), html.indexOf('id="historyList"'));
   const ids = [...bar.matchAll(/<button\b[^>]*\bid="(historySelect\w+)"/g)].map(m => m[1]);
-  assert.deepEqual(ids, ['historySelectAll', 'historySelectDone', 'historySelectPin', 'historySelectWatch', 'historySelectCopyLines', 'historySelectExport', 'historySelectDelete']);
+  assert.deepEqual(ids, ['historySelectAll', 'historySelectDone', 'historySelectPin', 'historySelectWatch', 'historySelectBulkScan', 'historySelectCopyLines', 'historySelectExport', 'historySelectDelete']);
   const button = bar.match(/<button\b[^>]*\bid="historySelectCopyLines"[\s\S]*?<\/button>/)[0];
   assert.ok(/type="button"/.test(button) && /\bdisabled\b/.test(button), 'a plain button, off until something is selected');
   assert.ok(/<span data-i18n="bulkCopyLines">Copy as lines<\/span>/.test(button), 'the words of Bulk scan\'s button, already translated');

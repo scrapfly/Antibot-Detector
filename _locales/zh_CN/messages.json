@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "历史记录已暂停：页面会被扫描，但不会被记录。"
   },
+  "bulkFromHistoryFmt": {
+    "message": "来自历史记录的页面：{0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "批量扫描正在进行，因此未添加历史记录中的页面。"
+  },
   "bulkReadingSitemaps": {
     "message": "正在读取站点地图…"
   },

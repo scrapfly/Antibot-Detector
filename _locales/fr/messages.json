@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "L’historique est en pause : les pages sont analysées mais pas enregistrées."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Pages de l’historique : {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Une analyse groupée est en cours : les pages de l’historique n’ont pas été ajoutées."
+  },
   "bulkReadingSitemaps": {
     "message": "Lecture des sitemaps…"
   },

@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "Geçmiş duraklatıldı: sayfalar taranır ama kaydedilmez."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Geçmişten sayfa: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Bir toplu tarama sürüyor, bu yüzden Geçmişteki sayfalar eklenmedi."
+  },
   "bulkReadingSitemaps": {
     "message": "Site haritaları okunuyor…"
   },

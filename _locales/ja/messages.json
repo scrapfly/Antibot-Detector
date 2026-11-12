@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "履歴が一時停止中のため、ページはスキャンされますが記録されません。"
   },
+  "bulkFromHistoryFmt": {
+    "message": "履歴からのページ: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "一括スキャンの実行中のため、履歴のページは追加されませんでした。"
+  },
   "bulkReadingSitemaps": {
     "message": "サイトマップを読み込んでいます…"
   },

@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "السجل متوقف مؤقتًا: تُفحص الصفحات لكن لا تُسجَّل."
   },
+  "bulkFromHistoryFmt": {
+    "message": "صفحات من السجل: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "يجري فحص جماعي الآن، لذا لم تُضَف الصفحات من السجل."
+  },
   "bulkReadingSitemaps": {
     "message": "جارٍ قراءة خرائط المواقع…"
   },

@@ -6686,6 +6686,12 @@
   "bulkHistoryPaused": {
     "message": "Der Verlauf ist pausiert: Die Seiten werden gescannt, aber nicht gespeichert."
   },
+  "bulkFromHistoryFmt": {
+    "message": "Seiten aus dem Verlauf: {0}"
+  },
+  "bulkFromHistoryBusy": {
+    "message": "Ein Massenscan läuft gerade, daher wurden die Seiten aus dem Verlauf nicht hinzugefügt."
+  },
   "bulkReadingSitemaps": {
     "message": "Sitemaps werden gelesen…"
   },
