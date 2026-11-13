@@ -5989,6 +5989,10 @@
     "message": "History",
     "description": "Row of the Storage card: the History entries"
   },
+  "storageBulkRuns": {
+    "message": "Bulk runs",
+    "description": "Settings → Data → Storage: row for the finished Bulk scan runs kept to compare the next run of a list with"
+  },
   "storageRules": {
     "message": "Rules and categories",
     "description": "Row of the Storage card: detection rules (detectors), categories and their translations"
@@ -6052,6 +6056,18 @@
   "storageCapturesCleared": {
     "message": "Tool captures deleted",
     "description": "Toast after the Advanced tools' captures were deleted"
+  },
+  "storageClearBulkTitle": {
+    "message": "Clear the Bulk runs",
+    "description": "Settings → Data → Storage: title of the question before the kept Bulk scan runs are deleted"
+  },
+  "storageClearBulkMessage": {
+    "message": "The finished Bulk scan runs kept to compare the next run of a list with are deleted. History, rules and settings are not touched.",
+    "description": "Settings → Data → Storage: what clearing the kept Bulk scan runs does"
+  },
+  "storageBulkCleared": {
+    "message": "Bulk runs cleared",
+    "description": "Settings → Data → Storage: the kept Bulk scan runs were deleted"
   },
   "storageClearFailed": {
     "message": "Could not clear it. Try again.",
@@ -7305,6 +7321,10 @@
     "message": "Scan the failed pages again",
     "description": "Bulk scan: scan again the pages of a finished run that failed (a timeout or a load error); the rest of the run stays in the table"
   },
+  "bulkRunAgain": {
+    "message": "Run again",
+    "description": "Bulk scan: button of a finished or stopped run that scans the same list again, with the same limits and wait, and compares the new results with this run"
+  },
   "bulkFilterLabel": {
     "message": "Show",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -7329,6 +7349,10 @@
     "message": "Error status (4xx, 5xx)",
     "description": "Bulk scan results filter: pages that answered with an HTTP error status (4xx client errors, 5xx server errors)"
   },
+  "bulkFilterChanged": {
+    "message": "Changed since previous run",
+    "description": "Bulk scan: choice of the Show dropdown that keeps the pages whose protections, HTTP status or outcome changed since the earlier run of the same list"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Only {0}",
     "description": "Bulk scan results filter, one per protection the run found: the pages where that protection was found. {0} = the protection's name (Cloudflare, reCAPTCHA...)"
@@ -7336,6 +7360,10 @@
   "bulkCopyLines": {
     "message": "Copy as lines",
     "description": "Bulk scan: button that copies the shown pages as one line each (address and protections), for chats and tickets"
+  },
+  "bulkCompareExport": {
+    "message": "Compare with an export…",
+    "description": "Bulk scan: button that picks a Bulk scan JSON export saved earlier and compares the results shown with it"
   },
   "bulkFilterNone": {
     "message": "No page matches this filter.",
@@ -7356,6 +7384,18 @@
   "bulkColAddress": {
     "message": "Address",
     "description": "Bulk scan: results column with the page address"
+  },
+  "bulkColPrevious": {
+    "message": "Vs previous run",
+    "description": "Bulk scan: heading of the results column that says what changed on each page since the earlier run of the same list (for example +DataDome −Kasada, 200 → 403)"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Unchanged",
+    "description": "Bulk scan: the page is the same as in the earlier run of the list (column Vs previous run)"
+  },
+  "bulkPrevNew": {
+    "message": "Not in the previous run",
+    "description": "Bulk scan: the earlier run of the list had no such page (column Vs previous run)"
   },
   "bulkStatusWaiting": {
     "message": "Waiting",
@@ -7433,6 +7473,10 @@
     "message": "{0} of {1} finished",
     "description": "Bulk scan: progress ({0} = pages finished, {1} = all pages)"
   },
+  "bulkStoredFmt": {
+    "message": "Results of the run of {0}",
+    "description": "Bulk scan: status line of the results kept from a run that finished before the browser restarted (read-only). {0} = date and time of that run"
+  },
   "bulkCountsFmt": {
     "message": "Done: {0} · With protections: {1} · Failed: {2} · Skipped: {3}",
     "description": "Bulk scan: totals of the run"
@@ -7465,6 +7509,10 @@
     "message": "Other lines left out: {0}",
     "description": "Bulk scan: skipped lines not listed in the table ({0} = count)"
   },
+  "bulkComparedFmt": {
+    "message": "Compared with the run of {0}. Pages changed: {1}",
+    "description": "Bulk scan: line under the results. {0} = date and time of the earlier run the results are compared with; {1} = how many pages changed"
+  },
   "bulkHistoryPaused": {
     "message": "History is paused, so the pages are scanned but not recorded.",
     "description": "Bulk scan: notice when History is paused"
@@ -7496,6 +7544,10 @@
   "bulkErrFile": {
     "message": "The file could not be read.",
     "description": "Bulk scan: upload failed"
+  },
+  "bulkErrCompareFile": {
+    "message": "This file is not a Bulk scan JSON export.",
+    "description": "Bulk scan: the file picked to compare with is not a Bulk scan JSON export (or cannot be read)"
   },
   "bulkEmpty": {
     "message": "Paste addresses or upload a file, then choose Start.",

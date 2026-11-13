@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "Histórico"
   },
+  "storageBulkRuns": {
+    "message": "Execuções da análise em massa"
+  },
   "storageRules": {
     "message": "Regras e categorias"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "Capturas das ferramentas excluídas"
+  },
+  "storageClearBulkTitle": {
+    "message": "Limpar as execuções da análise em massa"
+  },
+  "storageClearBulkMessage": {
+    "message": "As execuções concluídas da análise em massa, guardadas para comparar com a próxima execução de uma lista, são excluídas. Histórico, regras e configurações não são alterados."
+  },
+  "storageBulkCleared": {
+    "message": "Execuções da análise em massa limpas"
   },
   "storageClearFailed": {
     "message": "Não foi possível limpar. Tente novamente."
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "Analisar novamente as páginas que falharam"
   },
+  "bulkRunAgain": {
+    "message": "Executar de novo"
+  },
   "bulkFilterLabel": {
     "message": "Mostrar",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "Status de erro (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Alteradas desde a execução anterior"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Somente {0}"
   },
   "bulkCopyLines": {
     "message": "Copiar como linhas"
+  },
+  "bulkCompareExport": {
+    "message": "Comparar com uma exportação…"
   },
   "bulkFilterNone": {
     "message": "Nenhuma página corresponde a este filtro."
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "Endereço"
+  },
+  "bulkColPrevious": {
+    "message": "Em relação à execução anterior"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Sem alteração"
+  },
+  "bulkPrevNew": {
+    "message": "Não estava na execução anterior"
   },
   "bulkStatusWaiting": {
     "message": "Aguardando"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "{0} de {1} concluídas"
   },
+  "bulkStoredFmt": {
+    "message": "Resultados da execução de {0}"
+  },
   "bulkCountsFmt": {
     "message": "Concluídas: {0} · Com proteções: {1} · Com falha: {2} · Ignoradas: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Outras linhas deixadas de fora: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Comparado com a execução de {0}. Páginas alteradas: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "O Histórico está pausado: as páginas são analisadas, mas não registradas."
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "Não foi possível ler o arquivo."
+  },
+  "bulkErrCompareFile": {
+    "message": "Este arquivo não é uma exportação JSON da análise em massa."
   },
   "bulkEmpty": {
     "message": "Cole endereços ou envie um arquivo e depois escolha Iniciar."

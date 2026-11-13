@@ -22,8 +22,10 @@ const sitemapIndex = (...locs) => `<?xml version="1.0"?><sitemapindex xmlns="htt
  *   run: the run the worker answers to BULK_SCAN_STATE
  *   clipboardAccepts: false when the browser refuses a copy (FormatUtils.copyToClipboard answers false)
  *   session: what chrome.storage.session holds (History's hand-over); left out, the page has no session storage
+ *   kept: what chrome.storage.local holds (the finished runs the worker keeps, BulkRuns); left out, the page has no local storage
+ *   onStart: (message) => the run the worker answers to BULK_SCAN_START (default: a new run of the entries)
  */
-function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [], clipboardAccepts = true, session = null } = {}) {
+function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [], clipboardAccepts = true, session = null, kept = null, onStart = null } = {}) {
   const elements = new Map();
   const handlers = {};
   const sent = [];
@@ -71,18 +73,20 @@ function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [], clip
           sent.push(message);
           const BulkScan = ctx.BulkScan;
           if (message.type === ctx.WorkerMessages.BULK_SCAN_STATE) callback({ status: 'ok', run });
-          else if (message.type === ctx.WorkerMessages.BULK_SCAN_START) callback({ status: 'ok', run: BulkScan.createRun(BulkScan.prepare(message.entries, { cap: message.cap }), { cap: message.cap }) });
+          else if (message.type === ctx.WorkerMessages.BULK_SCAN_START) callback({ status: 'ok', run: onStart ? onStart(plain(message)) : BulkScan.createRun(BulkScan.prepare(message.entries, { cap: message.cap }), { cap: message.cap }) });
           else callback({ status: 'ok' });
         }
       },
-      storage: Object.assign({ onChanged: { addListener: (fn) => { onChanged = fn; } } }, session ? { session: {
+      storage: Object.assign({ onChanged: { addListener: (fn) => { onChanged = fn; } } }, kept ? { local: {
+        get: async (keys) => Object.fromEntries([].concat(keys).filter(k => k in kept).map(k => [k, plain(kept[k])]))
+      } } : {}, session ? { session: {
         get: async (key) => (key in session ? { [key]: plain(session[key]) } : {}),
         remove: async (key) => { delete session[key]; }
       } } : {})
     }
   });
   ctx.self = ctx;
-  for (const file of ['modules/core/worker-messages.js', 'modules/core/categories.js', 'modules/core/http-status.js', 'modules/core/bulk-scan.js', 'modules/core/bulk-filter.js', 'modules/core/bulk-handoff.js', 'sections/bulk/bulk.js']) {
+  for (const file of ['modules/core/worker-messages.js', 'modules/core/categories.js', 'modules/core/http-status.js', 'modules/core/bulk-scan.js', 'modules/core/bulk-runs.js', 'modules/core/bulk-filter.js', 'modules/core/bulk-handoff.js', 'sections/bulk/bulk.js']) {
     vm.runInContext(read(file), ctx, { filename: file });
   }
   const byId = (id) => document.getElementById(id);
@@ -105,7 +109,7 @@ function pageWorld({ sitemaps = {}, run = null, local = {}, clipboard = [], clip
     /** The worker's run state changes (what chrome.storage.session tells the page). */
     update(nextRun) { onChanged({ session_bulk_scan: { newValue: nextRun } }, 'session'); },
     /** Session storage reports a change of one key (History handing addresses over while the page is open). */
-    changed(key, newValue) { onChanged({ [key]: { newValue } }, 'session'); }
+    changed(key, newValue, area = 'session') { onChanged({ [key]: { newValue } }, area); }
   };
 }
 
@@ -531,4 +535,123 @@ test('"Wait between pages" beside the time limit: sent with Start (kept to 0 to 
   assert.equal(reopened.byId('bulkDelay').disabled, false);
   const html = read('sections/bulk/bulk.html');
   assert.match(html, /id="bulkTimeout"[^>]*>\s*<\/label>\s*<label class="bulk-field">\s*<span class="bulk-field-label" data-i18n="bulkDelayLabel">Wait between pages, in seconds<\/span>\s*<input type="number" id="bulkDelay" class="bulk-number" min="0" max="60" step="1" value="0" inputmode="numeric">/);
+});
+
+// ---- 3.2.0: compared with the previous run, the results after a restart, the CSV's other columns, Run again ----
+
+const keptStore = (...runs) => runs.reduce((store, r) => require('../modules/core/bulk-runs.js').remember(store, r, { maxBytes: 1e9 }), null);
+const keptRun = (id, items, extra = {}) => ({ id, status: 'done', startedAt: Date.UTC(2026, 10, 10, 9), finishedAt: Date.UTC(2026, 10, 10, 10), timeoutSec: 60, delaySec: 5, cap: 50, items, ...extra });
+const cellsOf = (page) => ((page.byId('bulkRows').children[0] || { children: [] }).children).map(row => row.children.map(cell => cell.textContent));
+
+test('with no run in session storage (the browser restarted), the page shows the run that finished last, read-only, with its exports', async () => {
+  const kept = keptRun('r2', [finished('https://a.example/', [{ name: 'Kasada', category: 'antibot', confidence: 90 }]), { url: 'https://b.example/', status: 'failed', reason: 'load' }]);
+  const page = pageWorld({ kept: { scrapfly_bulk_runs: keptStore(kept) } });
+  await page.open();
+  assert.equal(page.byId('bulkRunCard').hidden, false);
+  assert.match(page.byId('bulkRunStatus').textContent, /^Results of the run of .*2026/);
+  assert.deepEqual(page.rows().map(row => row.address), ['https://a.example/', 'https://b.example/']);
+  assert.equal(page.byId('bulkRetryFailedBtn').hidden, true, 'no worker run to go on with');
+  assert.equal(page.byId('bulkWaitingBtn').hidden, true);
+  assert.equal(page.byId('bulkRunAgainBtn').hidden, false);
+  assert.equal(page.byId('bulkExportCsvBtn').disabled, false);
+  assert.equal(page.byId('bulkTimeout').value, 60, 'its limits are shown');
+  const built = [];
+  const build = page.ctx.BulkScan.build;
+  page.ctx.BulkScan.build = (run, options) => { built.push([run, options]); return build(run, options); };
+  try { await page.handlers.bulkExportCsvBtn.click(); } catch (_) { /* the download itself needs a browser */ }
+  assert.equal(built.length, 1);
+  assert.equal(built[0][0].items.length, 2);
+  // New list only hides it (Settings → Data clears it): the worker is not asked to clear a run it does not have
+  await page.handlers.bulkNewBtn.click();
+  assert.equal(page.byId('bulkRunCard').hidden, true);
+  assert.equal(page.sent.some(m => m.type === page.ctx.WorkerMessages.BULK_SCAN_CLEAR), false);
+  // Without kept runs, the page opens empty as before
+  const empty = pageWorld({ kept: {} });
+  await empty.open();
+  assert.equal(empty.byId('bulkRunCard').hidden, true);
+});
+
+test('a run of a list that ran before shows what changed on each page, a line with the count, and Show → Changed since previous run', async () => {
+  const earlier = keptRun('r1', [
+    { ...finished('https://a.example/', [{ name: 'Kasada', category: 'antibot', confidence: 90 }]), httpStatus: 200 },
+    finished('https://b.example/', [])
+  ]);
+  const now = { ...runOf([
+    { ...finished('https://a.example/', [{ name: 'DataDome', category: 'antibot', confidence: 90 }]), httpStatus: 403 },
+    finished('https://b.example/', [])
+  ]), id: 'r2', startedAt: 5 };
+  const page = pageWorld({ run: now, kept: { scrapfly_bulk_runs: keptStore(earlier) } });
+  await page.open();
+  assert.equal(page.byId('bulkColPrevious').hidden, false);
+  assert.deepEqual(cellsOf(page).map(cells => cells[5]), ['+DataDome −Kasada · 200 → 403', 'Unchanged']);
+  assert.match(page.byId('bulkRunCompared').textContent, /^Compared with the run of .*\. Pages changed: 1$/);
+  assert.equal(page.byId('bulkFilterChangedOption').hidden, false);
+  page.byId('bulkFilter').value = 'changed';
+  page.handlers.bulkFilter.change({ target: page.byId('bulkFilter') });
+  assert.deepEqual(page.rows().map(row => row.address), ['https://a.example/']);
+  // Once this run is kept too, it is still compared with the one before it
+  page.changed('scrapfly_bulk_runs', keptStore(earlier, { ...now, finishedAt: 9 }), 'local');
+  assert.deepEqual(page.rows().map(row => row.address), ['https://a.example/']);
+  // A list that never ran before: no column, and the Changed choice shows every page
+  const fresh = pageWorld({ run: now, kept: {}, local: { bulkFilter: 'changed' } });
+  await fresh.open();
+  assert.equal(fresh.byId('bulkColPrevious').hidden, true);
+  assert.equal(fresh.byId('bulkFilterChangedOption').hidden, true);
+  assert.equal(fresh.rows().length, 2);
+  assert.equal(cellsOf(fresh)[0].length, 5);
+});
+
+test('an earlier JSON export can be picked to compare with; a file that is not one is refused with a message', async () => {
+  const BulkScan = require('../modules/core/bulk-scan.js');
+  const now = { ...runOf([finished('https://a.example/', [])]), id: 'r9' };
+  const page = pageWorld({ run: now, kept: {} });
+  await page.open();
+  assert.equal(page.byId('bulkCompareBtn').hidden, false);
+  const pick = (text) => page.handlers.bulkCompareFile.change({ target: { value: 'x', files: [{ size: text.length, text: async () => text }] } });
+  await pick('{"type":"scrapfly-backup"}');
+  assert.equal(page.byId('bulkNotice').textContent, 'This file is not a Bulk scan JSON export.');
+  assert.equal(page.byId('bulkColPrevious').hidden, true);
+  const exported = BulkScan.build(runOf([finished('https://a.example/', [{ name: 'Akamai', category: 'antibot', confidence: 80 }])]), { format: 'json', now: 1 }).text;
+  await pick(exported);
+  assert.equal(page.byId('bulkNotice').hidden, true);
+  assert.equal(page.byId('bulkColPrevious').hidden, false);
+  assert.equal(cellsOf(page)[0][5], '−Akamai');
+});
+
+test('a CSV\'s other columns go to the worker with the list and come back as columns of the table', async () => {
+  const page = pageWorld({
+    onStart: (message) => {
+      const B = page.ctx.BulkScan;
+      return B.attachExtras(B.createRun(B.prepare(message.entries, { cap: message.cap }), { cap: message.cap }), message.extras);
+    }
+  });
+  await page.open();
+  await page.start('url,owner\nhttps://a.example/,Ann\nb.example,=1+1');
+  const message = page.sent.find(m => m.type === page.ctx.WorkerMessages.BULK_SCAN_START);
+  assert.deepEqual(plain(message.extras), { columns: ['owner'], rows: { 'https://a.example/': ['Ann'], 'https://b.example/': ['=1+1'] } });
+  const head = page.byId('bulkHeadRow').children.map(th => th.textContent);
+  assert.deepEqual(head, ['owner']);
+  assert.deepEqual(cellsOf(page).map(cells => cells.slice(5)), [['Ann'], ['=1+1']]);
+});
+
+test('Run again scans the same list with the same limits and wait, leaving out the pages Sites to scan refused, and keeps the CSV columns', async () => {
+  const run = { ...runOf([
+    { ...finished('https://a.example/', []), extra: ['Ann'] },
+    { url: 'https://b.example/', status: 'failed', reason: 'timeout', extra: ['Bob'] },
+    { url: 'https://skip.example/', status: 'skipped', reason: 'scope', extra: ['Sky'] },
+    { url: 'nope', status: 'skipped', reason: 'invalid' }
+  ], 'stopped'), columns: ['owner'], cap: 20, timeoutSec: 90, delaySec: 7 };
+  const page = pageWorld({ run });
+  await page.open();
+  page.byId('bulkTimeout').value = '10';
+  assert.equal(page.byId('bulkRunAgainBtn').hidden, false);
+  await page.handlers.bulkRunAgainBtn.click();
+  const message = plain(page.sent.find(m => m.type === page.ctx.WorkerMessages.BULK_SCAN_START));
+  assert.deepEqual(message.entries, ['https://a.example/', 'https://b.example/']);
+  assert.deepEqual([message.cap, message.timeoutSec, message.delaySec], [20, 90, 7]);
+  assert.equal(message.continueRun, undefined, 'a new run, not the stopped one going on');
+  assert.deepEqual(message.extras.rows['https://a.example/'], ['Ann']);
+  // Hidden while a run goes on
+  page.update({ ...runOf([{ url: 'https://a.example/', status: 'scanning' }], 'running') });
+  assert.equal(page.byId('bulkRunAgainBtn').hidden, true);
 });

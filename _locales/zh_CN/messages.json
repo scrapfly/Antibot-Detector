@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "历史记录"
   },
+  "storageBulkRuns": {
+    "message": "批量扫描运行记录"
+  },
   "storageRules": {
     "message": "规则和类别"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "工具捕获已删除"
+  },
+  "storageClearBulkTitle": {
+    "message": "清除批量扫描运行记录"
+  },
+  "storageClearBulkMessage": {
+    "message": "将删除为与列表的下一次运行比较而保留的已完成批量扫描运行记录。历史记录、规则和设置不受影响。"
+  },
+  "storageBulkCleared": {
+    "message": "批量扫描运行记录已清除"
   },
   "storageClearFailed": {
     "message": "无法清除。请重试。"
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "重新扫描失败的页面"
   },
+  "bulkRunAgain": {
+    "message": "再次运行"
+  },
   "bulkFilterLabel": {
     "message": "显示",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "错误状态（4xx、5xx）"
   },
+  "bulkFilterChanged": {
+    "message": "自上次运行以来有变化"
+  },
   "bulkFilterOnlyFmt": {
     "message": "仅 {0}"
   },
   "bulkCopyLines": {
     "message": "复制为行"
+  },
+  "bulkCompareExport": {
+    "message": "与导出文件比较…"
   },
   "bulkFilterNone": {
     "message": "没有页面符合此筛选条件。"
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "地址"
+  },
+  "bulkColPrevious": {
+    "message": "与上次运行相比"
+  },
+  "bulkPrevUnchanged": {
+    "message": "无变化"
+  },
+  "bulkPrevNew": {
+    "message": "上次运行中没有"
   },
   "bulkStatusWaiting": {
     "message": "等待中"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "已完成 {0}/{1}"
   },
+  "bulkStoredFmt": {
+    "message": "{0} 运行的结果"
+  },
   "bulkCountsFmt": {
     "message": "完成：{0} · 有防护：{1} · 失败：{2} · 已跳过：{3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "其他未纳入的行：{0}"
   },
+  "bulkComparedFmt": {
+    "message": "已与 {0} 的运行比较。有变化的页面：{1}"
+  },
   "bulkHistoryPaused": {
     "message": "历史记录已暂停：页面会被扫描，但不会被记录。"
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "无法读取该文件。"
+  },
+  "bulkErrCompareFile": {
+    "message": "此文件不是批量扫描的 JSON 导出文件。"
   },
   "bulkEmpty": {
     "message": "粘贴地址或上传文件，然后选择开始。"

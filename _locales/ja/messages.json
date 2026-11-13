@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "履歴"
   },
+  "storageBulkRuns": {
+    "message": "一括スキャンの実行"
+  },
   "storageRules": {
     "message": "ルールとカテゴリ"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "ツールのキャプチャを削除しました"
+  },
+  "storageClearBulkTitle": {
+    "message": "一括スキャンの実行を消去"
+  },
+  "storageClearBulkMessage": {
+    "message": "リストの次回の実行と比較するために保存されている、完了した一括スキャンの実行を削除します。履歴、ルール、設定は変更されません。"
+  },
+  "storageBulkCleared": {
+    "message": "一括スキャンの実行を消去しました"
   },
   "storageClearFailed": {
     "message": "クリアできませんでした。もう一度お試しください。"
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "失敗したページを再スキャン"
   },
+  "bulkRunAgain": {
+    "message": "もう一度実行"
+  },
   "bulkFilterLabel": {
     "message": "表示",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "エラーステータス（4xx、5xx）"
   },
+  "bulkFilterChanged": {
+    "message": "前回の実行から変化"
+  },
   "bulkFilterOnlyFmt": {
     "message": "{0} のみ"
   },
   "bulkCopyLines": {
     "message": "行としてコピー"
+  },
+  "bulkCompareExport": {
+    "message": "エクスポートと比較…"
   },
   "bulkFilterNone": {
     "message": "このフィルターに一致するページはありません。"
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "アドレス"
+  },
+  "bulkColPrevious": {
+    "message": "前回の実行との比較"
+  },
+  "bulkPrevUnchanged": {
+    "message": "変化なし"
+  },
+  "bulkPrevNew": {
+    "message": "前回の実行にはなし"
   },
   "bulkStatusWaiting": {
     "message": "待機中"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "{1} 件中 {0} 件完了"
   },
+  "bulkStoredFmt": {
+    "message": "{0} の実行の結果"
+  },
   "bulkCountsFmt": {
     "message": "完了: {0} · 保護あり: {1} · 失敗: {2} · スキップ: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "その他の除外された行: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "{0} の実行と比較しました。変化したページ: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "履歴が一時停止中のため、ページはスキャンされますが記録されません。"
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "ファイルを読み込めませんでした。"
+  },
+  "bulkErrCompareFile": {
+    "message": "このファイルは一括スキャンの JSON エクスポートではありません。"
   },
   "bulkEmpty": {
     "message": "アドレスを貼り付けるかファイルをアップロードして、開始を選んでください。"

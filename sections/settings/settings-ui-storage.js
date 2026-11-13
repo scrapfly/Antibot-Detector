@@ -101,6 +101,10 @@ SettingsUI.clearStoragePart = async function(part) {
             if (!await confirm(text('storageClearUpdatesTitle', 'Clear the pending rule updates'), text('storageClearUpdatesMessage', 'Rule updates that are waiting for a newer extension, and ones that failed, are forgotten; the next Rules → Update finds them again. Rules and settings are not touched.'))) return;
             await chrome.storage.local.remove([...StorageOverview.GROUPS.find(group => group.id === 'updates').keys]);
             NotificationHelper.success(text('storageUpdatesCleared', 'Pending rule updates cleared'));
+        } else if (part === 'bulk') {
+            if (!await confirm(text('storageClearBulkTitle', 'Clear the Bulk runs'), text('storageClearBulkMessage', 'The finished Bulk scan runs kept to compare the next run of a list with are deleted. History, rules and settings are not touched.'))) return;
+            await chrome.storage.local.remove([...StorageOverview.GROUPS.find(group => group.id === 'bulk').keys]);
+            NotificationHelper.success(text('storageBulkCleared', 'Bulk runs cleared'));
         } else if (part === 'logs') {
             if (!await confirm(text('clearLogsTitle', 'Clear logs'), text('clearLogsMessage', 'Are you sure you want to clear all collected logs? This action cannot be undone.'))) return;
             if (!await ask({ type: WorkerMessages.LOG_COLLECTOR_CLEAR })) throw new Error('The worker did not clear the logs');

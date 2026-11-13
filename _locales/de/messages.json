@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "Verlauf"
   },
+  "storageBulkRuns": {
+    "message": "Massenscan-Läufe"
+  },
   "storageRules": {
     "message": "Regeln und Kategorien"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "Tool-Aufnahmen gelöscht"
+  },
+  "storageClearBulkTitle": {
+    "message": "Massenscan-Läufe löschen"
+  },
+  "storageClearBulkMessage": {
+    "message": "Die abgeschlossenen Massenscan-Läufe, die zum Vergleich mit dem nächsten Lauf einer Liste aufbewahrt werden, werden gelöscht. Verlauf, Regeln und Einstellungen bleiben unberührt."
+  },
+  "storageBulkCleared": {
+    "message": "Massenscan-Läufe gelöscht"
   },
   "storageClearFailed": {
     "message": "Das Leeren ist fehlgeschlagen. Versuche es erneut."
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "Die fehlgeschlagenen Seiten erneut scannen"
   },
+  "bulkRunAgain": {
+    "message": "Erneut ausführen"
+  },
   "bulkFilterLabel": {
     "message": "Anzeigen",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "Fehlerstatus (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Seit dem vorherigen Lauf geändert"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Nur {0}"
   },
   "bulkCopyLines": {
     "message": "Als Zeilen kopieren"
+  },
+  "bulkCompareExport": {
+    "message": "Mit einem Export vergleichen…"
   },
   "bulkFilterNone": {
     "message": "Keine Seite entspricht diesem Filter."
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "Adresse"
+  },
+  "bulkColPrevious": {
+    "message": "Gegenüber vorherigem Lauf"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Unverändert"
+  },
+  "bulkPrevNew": {
+    "message": "Nicht im vorherigen Lauf"
   },
   "bulkStatusWaiting": {
     "message": "Wartet"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "{0} von {1} fertig"
   },
+  "bulkStoredFmt": {
+    "message": "Ergebnisse des Laufs vom {0}"
+  },
   "bulkCountsFmt": {
     "message": "Fertig: {0} · Mit Schutz: {1} · Fehlgeschlagen: {2} · Übersprungen: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Weitere ausgelassene Zeilen: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Verglichen mit dem Lauf vom {0}. Geänderte Seiten: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Der Verlauf ist pausiert: Die Seiten werden gescannt, aber nicht gespeichert."
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "Die Datei konnte nicht gelesen werden."
+  },
+  "bulkErrCompareFile": {
+    "message": "Diese Datei ist kein JSON-Export des Massenscans."
   },
   "bulkEmpty": {
     "message": "Fügen Sie Adressen ein oder laden Sie eine Datei hoch und wählen Sie dann Starten."

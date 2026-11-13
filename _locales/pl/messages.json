@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "Historia"
   },
+  "storageBulkRuns": {
+    "message": "Przebiegi skanowania zbiorczego"
+  },
   "storageRules": {
     "message": "Reguły i kategorie"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "Usunięto przechwycenia narzędzi"
+  },
+  "storageClearBulkTitle": {
+    "message": "Wyczyść przebiegi skanowania zbiorczego"
+  },
+  "storageClearBulkMessage": {
+    "message": "Zakończone przebiegi skanowania zbiorczego, przechowywane do porównania z kolejnym przebiegiem listy, zostaną usunięte. Historia, reguły i ustawienia pozostaną bez zmian."
+  },
+  "storageBulkCleared": {
+    "message": "Wyczyszczono przebiegi skanowania zbiorczego"
   },
   "storageClearFailed": {
     "message": "Nie udało się wyczyścić. Spróbuj ponownie."
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "Skanuj ponownie strony, które się nie powiodły"
   },
+  "bulkRunAgain": {
+    "message": "Uruchom ponownie"
+  },
   "bulkFilterLabel": {
     "message": "Pokaż",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "Status błędu (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Zmienione od poprzedniego przebiegu"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Tylko {0}"
   },
   "bulkCopyLines": {
     "message": "Kopiuj jako wiersze"
+  },
+  "bulkCompareExport": {
+    "message": "Porównaj z eksportem…"
   },
   "bulkFilterNone": {
     "message": "Żadna strona nie pasuje do tego filtra."
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "Adres"
+  },
+  "bulkColPrevious": {
+    "message": "Względem poprzedniego przebiegu"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Bez zmian"
+  },
+  "bulkPrevNew": {
+    "message": "Nie było w poprzednim przebiegu"
   },
   "bulkStatusWaiting": {
     "message": "Czeka"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "Ukończono {0} z {1}"
   },
+  "bulkStoredFmt": {
+    "message": "Wyniki przebiegu z {0}"
+  },
   "bulkCountsFmt": {
     "message": "Gotowe: {0} · Z zabezpieczeniami: {1} · Nieudane: {2} · Pominięte: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Inne pominięte wiersze: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Porównano z przebiegiem z {0}. Zmienione strony: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Historia jest wstrzymana: strony są skanowane, ale nie zapisywane."
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "Nie udało się odczytać pliku."
+  },
+  "bulkErrCompareFile": {
+    "message": "Ten plik nie jest eksportem JSON skanowania zbiorczego."
   },
   "bulkEmpty": {
     "message": "Wklej adresy lub wczytaj plik, a potem wybierz Rozpocznij."

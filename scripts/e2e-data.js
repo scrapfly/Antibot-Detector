@@ -101,6 +101,9 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
         // a bundled pending update survives the worker's start-up (GitHub ones are dropped when the release cannot be read)
         scrapfly_pending_updates: [{ id: 'detect-pending', source: 'bundled', version: '9.9.9', minExtensionVersion: '99.0', filler }],
         scrapfly_update_errors: [{ id: 'detect-broken', error: 'synthetic', at: now, filler }],
+        // a finished Bulk scan run kept to compare the next run of its list with
+        scrapfly_bulk_runs: { version: 1, lists: [{ key: '1:00000000000000aa', latest: { id: 'bulk_1', status: 'done', startedAt: now, finishedAt: now,
+          timeoutSec: 45, delaySec: 0, cap: 200, items: [{ url: 'https://a.test/', status: 'done', detections: [{ name: filler.slice(0, 90), category: 'antibot', confidence: 90 }] }] } }] },
         scrapfly_history: JSON.stringify({ items: [
           { id: 'h1', url: 'https://a.test/', hostname: 'a.test', title: 'A', timestamp: now, detections: [], detectionCount: 0, categories: [] },
           { id: 'h2', url: 'https://b.test/', hostname: 'b.test', title: 'B', timestamp: now - 1000, detections: [], detectionCount: 0, categories: [] }] })
@@ -108,13 +111,13 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       await boot();
       await openData();
       await page.$eval('#storageTotalText', el => el.closest('.data-card-head').click());
-      await page.waitForFunction(() => document.querySelectorAll('#storageRows .storage-row').length === 8, null, { polling: 250 });
+      await page.waitForFunction(() => document.querySelectorAll('#storageRows .storage-row').length === 9, null, { polling: 250 });
       const rows = () => page.$$eval('#storageRows .storage-row', items => Object.fromEntries(items.map(item => [item.dataset.storage, {
         text: item.querySelector('.storage-row-size').textContent, clear: !!item.querySelector('[data-clear]'), disabled: item.querySelector('[data-clear]') ? item.querySelector('[data-clear]').disabled : null }])));
       const exact = () => page.evaluate(() => SettingsUI.readStorageSizes());
       let overview = await rows();
-      assert.deepEqual(Object.keys(overview), ['cache', 'captures', 'history', 'rules', 'updates', 'settings', 'logs', 'other']);
-      for (const id of ['cache', 'captures', 'history', 'updates', 'logs']) assert.equal(overview[id].clear && !overview[id].disabled, true, `${id} can be cleared: ${JSON.stringify(overview[id])} stored=${JSON.stringify(Object.keys(await get(['scrapfly_pending_updates', 'scrapfly_update_errors', 'scrapfly_incompatible_updates'])))}`);
+      assert.deepEqual(Object.keys(overview), ['cache', 'captures', 'history', 'bulk', 'rules', 'updates', 'settings', 'logs', 'other']);
+      for (const id of ['cache', 'captures', 'history', 'bulk', 'updates', 'logs']) assert.equal(overview[id].clear && !overview[id].disabled, true, `${id} can be cleared: ${JSON.stringify(overview[id])} stored=${JSON.stringify(Object.keys(await get(['scrapfly_pending_updates', 'scrapfly_update_errors', 'scrapfly_incompatible_updates'])))}`);
       for (const id of ['rules', 'settings', 'other']) assert.equal(overview[id].clear, false, `${id} has no Clear button`);
       let summary = await exact();
       assert.ok(summary.rows.find(row => row.id === 'cache').bytes > 8000, 'the cache holds what was seeded');
@@ -142,6 +145,14 @@ const sleep = (ms) => new Promise(r => setTimeout(r, ms));
       const captures = (await get(['scrapfly_advanced_history'])).scrapfly_advanced_history;
       assert.equal(Object.values(captures || {}).flat().length, 0, 'the captures are gone');
       assert.ok((await get(['scrapfly_collected_logs'])).scrapfly_collected_logs, 'the logs are still there');
+      // Bulk runs
+      await page.$eval('[data-clear="bulk"]', el => el.click());
+      await page.waitForSelector('.notification-confirm');
+      assert.match(await page.$eval('.notification-confirm', el => el.textContent), /Bulk scan runs/);
+      await confirmDialog();
+      await page.waitForFunction(() => document.querySelector('[data-storage="bulk"] [data-clear]').disabled, null, { polling: 250 });
+      assert.equal((await get(['scrapfly_bulk_runs'])).scrapfly_bulk_runs, undefined, 'the Bulk runs are gone');
+      assert.ok((await get(['scrapfly_history'])).scrapfly_history, 'History is still there');
       // Logs
       await page.$eval('[data-clear="logs"]', el => el.click());
       await confirmDialog();

@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "Cronologia"
   },
+  "storageBulkRuns": {
+    "message": "Esecuzioni dell'analisi in blocco"
+  },
   "storageRules": {
     "message": "Regole e categorie"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "Acquisizioni degli strumenti eliminate"
+  },
+  "storageClearBulkTitle": {
+    "message": "Cancella le esecuzioni dell'analisi in blocco"
+  },
+  "storageClearBulkMessage": {
+    "message": "Le esecuzioni completate dell'analisi in blocco, conservate per confrontarle con l'esecuzione successiva di un elenco, vengono eliminate. Cronologia, regole e impostazioni non vengono toccate."
+  },
+  "storageBulkCleared": {
+    "message": "Esecuzioni dell'analisi in blocco cancellate"
   },
   "storageClearFailed": {
     "message": "Impossibile svuotarlo. Riprova."
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "Analizza di nuovo le pagine non riuscite"
   },
+  "bulkRunAgain": {
+    "message": "Esegui di nuovo"
+  },
   "bulkFilterLabel": {
     "message": "Mostra",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "Stato di errore (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Cambiate dall'esecuzione precedente"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Solo {0}"
   },
   "bulkCopyLines": {
     "message": "Copia come righe"
+  },
+  "bulkCompareExport": {
+    "message": "Confronta con un'esportazione…"
   },
   "bulkFilterNone": {
     "message": "Nessuna pagina corrisponde a questo filtro."
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "Indirizzo"
+  },
+  "bulkColPrevious": {
+    "message": "Rispetto all'esecuzione precedente"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Invariata"
+  },
+  "bulkPrevNew": {
+    "message": "Non presente nell'esecuzione precedente"
   },
   "bulkStatusWaiting": {
     "message": "In attesa"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "{0} di {1} completate"
   },
+  "bulkStoredFmt": {
+    "message": "Risultati dell'esecuzione del {0}"
+  },
   "bulkCountsFmt": {
     "message": "Fatte: {0} · Con protezioni: {1} · Non riuscite: {2} · Saltate: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Altre righe escluse: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Confrontata con l'esecuzione del {0}. Pagine cambiate: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "La cronologia è in pausa: le pagine vengono analizzate ma non registrate."
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "Impossibile leggere il file."
+  },
+  "bulkErrCompareFile": {
+    "message": "Questo file non è un'esportazione JSON dell'analisi in blocco."
   },
   "bulkEmpty": {
     "message": "Incolla degli indirizzi o carica un file, poi scegli Avvia."

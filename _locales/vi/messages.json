@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "Lịch sử"
   },
+  "storageBulkRuns": {
+    "message": "Các lần quét hàng loạt"
+  },
   "storageRules": {
     "message": "Quy tắc và danh mục"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "Đã xóa bản ghi của công cụ"
+  },
+  "storageClearBulkTitle": {
+    "message": "Xóa các lần quét hàng loạt"
+  },
+  "storageClearBulkMessage": {
+    "message": "Các lần quét hàng loạt đã xong được giữ lại để so sánh với lần chạy tiếp theo của một danh sách sẽ bị xóa. Lịch sử, quy tắc và cài đặt không bị ảnh hưởng."
+  },
+  "storageBulkCleared": {
+    "message": "Đã xóa các lần quét hàng loạt"
   },
   "storageClearFailed": {
     "message": "Không thể xóa. Hãy thử lại."
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "Quét lại các trang thất bại"
   },
+  "bulkRunAgain": {
+    "message": "Chạy lại"
+  },
   "bulkFilterLabel": {
     "message": "Hiển thị",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "Trạng thái lỗi (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Thay đổi so với lần chạy trước"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Chỉ {0}"
   },
   "bulkCopyLines": {
     "message": "Sao chép theo dòng"
+  },
+  "bulkCompareExport": {
+    "message": "So sánh với một tệp xuất…"
   },
   "bulkFilterNone": {
     "message": "Không có trang nào khớp với bộ lọc này."
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "Địa chỉ"
+  },
+  "bulkColPrevious": {
+    "message": "So với lần chạy trước"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Không đổi"
+  },
+  "bulkPrevNew": {
+    "message": "Không có trong lần chạy trước"
   },
   "bulkStatusWaiting": {
     "message": "Đang chờ"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "Đã xong {0}/{1}"
   },
+  "bulkStoredFmt": {
+    "message": "Kết quả của lần chạy lúc {0}"
+  },
   "bulkCountsFmt": {
     "message": "Xong: {0} · Có bảo vệ: {1} · Thất bại: {2} · Bỏ qua: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Các dòng khác bị bỏ ra: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Đã so sánh với lần chạy lúc {0}. Số trang thay đổi: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Lịch sử đang tạm dừng: các trang vẫn được quét nhưng không được ghi lại."
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "Không đọc được tệp."
+  },
+  "bulkErrCompareFile": {
+    "message": "Tệp này không phải tệp JSON xuất từ quét hàng loạt."
   },
   "bulkEmpty": {
     "message": "Dán địa chỉ hoặc tải lên một tệp, rồi chọn Bắt đầu."

@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "Historik"
   },
+  "storageBulkRuns": {
+    "message": "Massskanningskörningar"
+  },
   "storageRules": {
     "message": "Regler och kategorier"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "Verktygsinsamlingarna togs bort"
+  },
+  "storageClearBulkTitle": {
+    "message": "Rensa massskanningskörningarna"
+  },
+  "storageClearBulkMessage": {
+    "message": "De avslutade massskanningskörningarna som sparas för att jämföras med nästa körning av en lista tas bort. Historik, regler och inställningar påverkas inte."
+  },
+  "storageBulkCleared": {
+    "message": "Massskanningskörningarna rensades"
   },
   "storageClearFailed": {
     "message": "Det gick inte att rensa. Försök igen."
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "Skanna om sidorna som misslyckades"
   },
+  "bulkRunAgain": {
+    "message": "Kör igen"
+  },
   "bulkFilterLabel": {
     "message": "Visa",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "Felstatus (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Ändrade sedan föregående körning"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Bara {0}"
   },
   "bulkCopyLines": {
     "message": "Kopiera som rader"
+  },
+  "bulkCompareExport": {
+    "message": "Jämför med en export…"
   },
   "bulkFilterNone": {
     "message": "Ingen sida matchar det här filtret."
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "Adress"
+  },
+  "bulkColPrevious": {
+    "message": "Jämfört med föregående körning"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Oförändrad"
+  },
+  "bulkPrevNew": {
+    "message": "Fanns inte i föregående körning"
   },
   "bulkStatusWaiting": {
     "message": "Väntar"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "{0} av {1} klara"
   },
+  "bulkStoredFmt": {
+    "message": "Resultat av körningen från {0}"
+  },
   "bulkCountsFmt": {
     "message": "Klara: {0} · Med skydd: {1} · Misslyckade: {2} · Överhoppade: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Andra utelämnade rader: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Jämförd med körningen från {0}. Ändrade sidor: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Historiken är pausad: sidorna skannas men sparas inte."
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "Det gick inte att läsa filen."
+  },
+  "bulkErrCompareFile": {
+    "message": "Den här filen är inte en JSON-export från massskanningen."
   },
   "bulkEmpty": {
     "message": "Klistra in adresser eller ladda upp en fil och välj sedan Starta."

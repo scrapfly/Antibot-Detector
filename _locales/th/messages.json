@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "ประวัติ"
   },
+  "storageBulkRuns": {
+    "message": "รอบการสแกนหลายหน้า"
+  },
   "storageRules": {
     "message": "กฎและหมวดหมู่"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "ลบข้อมูลที่จับจากเครื่องมือแล้ว"
+  },
+  "storageClearBulkTitle": {
+    "message": "ล้างรอบการสแกนหลายหน้า"
+  },
+  "storageClearBulkMessage": {
+    "message": "รอบการสแกนหลายหน้าที่เสร็จแล้วซึ่งเก็บไว้เพื่อเปรียบเทียบกับรอบถัดไปของรายการจะถูกลบ ประวัติ กฎ และการตั้งค่าจะไม่ถูกแตะต้อง"
+  },
+  "storageBulkCleared": {
+    "message": "ล้างรอบการสแกนหลายหน้าแล้ว"
   },
   "storageClearFailed": {
     "message": "ล้างไม่สำเร็จ ลองอีกครั้ง"
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "สแกนหน้าที่ไม่สำเร็จอีกครั้ง"
   },
+  "bulkRunAgain": {
+    "message": "เรียกใช้อีกครั้ง"
+  },
   "bulkFilterLabel": {
     "message": "แสดง",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "สถานะข้อผิดพลาด (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "เปลี่ยนไปจากรอบก่อนหน้า"
+  },
   "bulkFilterOnlyFmt": {
     "message": "เฉพาะ {0}"
   },
   "bulkCopyLines": {
     "message": "คัดลอกเป็นบรรทัด"
+  },
+  "bulkCompareExport": {
+    "message": "เปรียบเทียบกับไฟล์ที่ส่งออก…"
   },
   "bulkFilterNone": {
     "message": "ไม่มีหน้าที่ตรงกับตัวกรองนี้"
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "ที่อยู่"
+  },
+  "bulkColPrevious": {
+    "message": "เทียบกับรอบก่อนหน้า"
+  },
+  "bulkPrevUnchanged": {
+    "message": "ไม่เปลี่ยนแปลง"
+  },
+  "bulkPrevNew": {
+    "message": "ไม่มีในรอบก่อนหน้า"
   },
   "bulkStatusWaiting": {
     "message": "รออยู่"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "เสร็จ {0} จาก {1}"
   },
+  "bulkStoredFmt": {
+    "message": "ผลของรอบเมื่อ {0}"
+  },
   "bulkCountsFmt": {
     "message": "เสร็จ: {0} · มีการป้องกัน: {1} · ไม่สำเร็จ: {2} · ข้าม: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "บรรทัดอื่นที่ไม่รวม: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "เปรียบเทียบกับรอบเมื่อ {0} หน้าที่เปลี่ยน: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "ประวัติหยุดชั่วคราวอยู่ หน้าจะถูกสแกนแต่ไม่ถูกบันทึก"
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "อ่านไฟล์ไม่ได้"
+  },
+  "bulkErrCompareFile": {
+    "message": "ไฟล์นี้ไม่ใช่ไฟล์ JSON ที่ส่งออกจากการสแกนหลายหน้า"
   },
   "bulkEmpty": {
     "message": "วางที่อยู่หรืออัปโหลดไฟล์ แล้วเลือกเริ่ม"

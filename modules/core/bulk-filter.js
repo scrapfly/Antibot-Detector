@@ -1,7 +1,8 @@
 /**
  * Bulk scan results filter. Pure (no browser APIs): the page and the tests share it.
  *
- *   FILTERS        'all', 'found', 'clear', 'problem', 'httpError'; and one per protection, written forProtection(name)
+ *   FILTERS        'all', 'found', 'clear', 'problem', 'httpError', 'changed' (changed since the run it is compared with:
+ *                  the context's `compare`, BulkScan.diff's result); and one per protection, written forProtection(name)
  *                  ('protection:Cloudflare'), which the page lists from the run's protection totals
  *   matches()      whether one page of a run belongs to a filter
  *   apply()        a copy of the run that holds only the pages of a filter, so the table and the exports show the same pages
@@ -14,7 +15,7 @@
   const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
   const HttpStatus = root.HttpStatus || (typeof require === 'function' ? require('./http-status.js') : undefined);
 
-  const FILTERS = Object.freeze(['all', 'found', 'clear', 'problem', 'httpError']);
+  const FILTERS = Object.freeze(['all', 'found', 'clear', 'problem', 'httpError', 'changed']);
   const PROTECTION = 'protection:';
   const MAX_NAME = 200;
 
@@ -46,9 +47,11 @@
    * 'found': scanned, with at least one protection. 'clear': scanned, none found. 'problem': failed or skipped. 'httpError':
    * scanned, and the page answered 4xx or 5xx (a page whose status is not known is not one of them). A protection's filter:
    * scanned, and that protection was found on the page.
+   * 'changed': the page changed since the run it is compared with, or that run did not have it (`context.compare`, the result of
+   * BulkScan.diff; with no comparison no page matches).
    * A page still waiting or being scanned has no outcome yet, so only 'all' holds it.
    */
-  function matches(item, filter) {
+  function matches(item, filter, context) {
     if (!item || typeof item !== 'object') return false;
     const chosen = normalize(filter);
     const protection = protectionOf(chosen);
@@ -61,13 +64,19 @@
       case 'clear': return item.status === 'done' && !hasDetections(item);
       case 'problem': return item.status === 'failed' || item.status === 'skipped';
       case 'httpError': return item.status === 'done' && !!HttpStatus && HttpStatus.isError(item.httpStatus);
+      case 'changed': {
+        const compare = context && context.compare;
+        const BulkScan = root.BulkScan || (typeof require === 'function' ? require('./bulk-scan.js') : undefined);
+        const entry = compare && BulkScan ? BulkScan.diffOf(compare, item) : null;
+        return !!(entry && entry.changed);
+      }
       default: return true;
     }
   }
 
-  function apply(run, filter) {
+  function apply(run, filter, context) {
     if (!run || !Array.isArray(run.items) || normalize(filter) === 'all') return run;
-    return { ...run, items: run.items.filter(item => matches(item, filter)) };
+    return { ...run, items: run.items.filter(item => matches(item, filter, context)) };
   }
 
   const api = { FILTERS, matches, apply, normalize, forProtection, protectionOf };

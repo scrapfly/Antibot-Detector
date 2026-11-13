@@ -48,6 +48,7 @@ importScripts(
     './modules/core/history-policy.js',
     './modules/core/history-export.js',
     './modules/core/bulk-scan.js',
+    './modules/core/bulk-runs.js',
     './background/history-recorder.js',
     './background/notification-clicks.js',
     './modules/core/webhook-body.js',

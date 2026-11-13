@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "Riwayat"
   },
+  "storageBulkRuns": {
+    "message": "Proses pindai massal"
+  },
   "storageRules": {
     "message": "Aturan dan kategori"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "Rekaman alat dihapus"
+  },
+  "storageClearBulkTitle": {
+    "message": "Hapus proses pindai massal"
+  },
+  "storageClearBulkMessage": {
+    "message": "Proses pindai massal yang sudah selesai dan disimpan untuk dibandingkan dengan proses berikutnya dari sebuah daftar akan dihapus. Riwayat, aturan, dan pengaturan tidak tersentuh."
+  },
+  "storageBulkCleared": {
+    "message": "Proses pindai massal dihapus"
   },
   "storageClearFailed": {
     "message": "Tidak dapat menghapus. Coba lagi."
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "Pindai ulang halaman yang gagal"
   },
+  "bulkRunAgain": {
+    "message": "Jalankan lagi"
+  },
   "bulkFilterLabel": {
     "message": "Tampilkan",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "Status galat (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Berubah sejak proses sebelumnya"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Hanya {0}"
   },
   "bulkCopyLines": {
     "message": "Salin sebagai baris"
+  },
+  "bulkCompareExport": {
+    "message": "Bandingkan dengan ekspor…"
   },
   "bulkFilterNone": {
     "message": "Tidak ada halaman yang cocok dengan filter ini."
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "Alamat"
+  },
+  "bulkColPrevious": {
+    "message": "Dibanding proses sebelumnya"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Tidak berubah"
+  },
+  "bulkPrevNew": {
+    "message": "Tidak ada di proses sebelumnya"
   },
   "bulkStatusWaiting": {
     "message": "Menunggu"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "{0} dari {1} selesai"
   },
+  "bulkStoredFmt": {
+    "message": "Hasil proses tanggal {0}"
+  },
   "bulkCountsFmt": {
     "message": "Selesai: {0} · Dengan perlindungan: {1} · Gagal: {2} · Dilewati: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Baris lain yang tidak diikutkan: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Dibandingkan dengan proses tanggal {0}. Halaman berubah: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Riwayat sedang dijeda: halaman dipindai tetapi tidak dicatat."
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "File tidak dapat dibaca."
+  },
+  "bulkErrCompareFile": {
+    "message": "File ini bukan ekspor JSON pindai massal."
   },
   "bulkEmpty": {
     "message": "Tempel alamat atau unggah file, lalu pilih Mulai."
