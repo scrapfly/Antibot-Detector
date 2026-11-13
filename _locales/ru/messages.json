@@ -6293,6 +6293,72 @@
   "statsOpenInHistoryFmt": {
     "message": "Открыть {0} в Истории"
   },
+  "statsSectionSite": {
+    "message": "Сайт"
+  },
+  "statsSiteReport": {
+    "message": "Отчёт по сайту"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Отчёт по сайту: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Страницы: {0} · Сканирования: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Также сохранён как: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Все сохранённые сканирования этого сайта, независимо от периода. Адреса с www и без него считаются одним сайтом."
+  },
+  "statsSiteProtections": {
+    "message": "Защиты на этом сайте"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Впервые замечен"
+  },
+  "statsScansColumn": {
+    "message": "Сканирования"
+  },
+  "statsSiteTimeline": {
+    "message": "Хронология"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Показаны последние {0} из {1} сканирований."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "найдена"
+  },
+  "statsSiteNotFound": {
+    "message": "не найдена"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP-статусы"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP-статус"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Сканирования без известного статуса: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Страницы, на которых изменились защиты"
+  },
+  "statsSiteNoChanges": {
+    "message": "Ни одно сохранённое сканирование этого сайта не изменило защиты."
+  },
+  "statsSiteNoProtections": {
+    "message": "В сохранённых сканированиях этого сайта защиты не найдены."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Нет сохранённых сканирований {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Показать в Истории"
+  },
   "historyCompare": {
     "message": "Сравнить с…"
   },

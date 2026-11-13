@@ -6293,6 +6293,72 @@
   "statsOpenInHistoryFmt": {
     "message": "{0} को इतिहास में खोलें"
   },
+  "statsSectionSite": {
+    "message": "साइट"
+  },
+  "statsSiteReport": {
+    "message": "साइट रिपोर्ट"
+  },
+  "statsSiteReportForFmt": {
+    "message": "साइट रिपोर्ट: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "पेज: {0} · स्कैन: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "इस नाम से भी सहेजा गया: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "इस साइट का हर सहेजा गया स्कैन, तारीख़ की अवधि चाहे जो हो। www वाले और बिना www वाले पते एक ही साइट गिने जाते हैं।"
+  },
+  "statsSiteProtections": {
+    "message": "इस साइट पर सुरक्षा उपाय"
+  },
+  "statsFirstSeenColumn": {
+    "message": "पहली बार दिखा"
+  },
+  "statsScansColumn": {
+    "message": "स्कैन"
+  },
+  "statsSiteTimeline": {
+    "message": "समयरेखा"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "{1} में से नवीनतम {0} स्कैन दिखाए जा रहे हैं।"
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "मिला"
+  },
+  "statsSiteNotFound": {
+    "message": "नहीं मिला"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP स्थितियाँ"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP स्थिति"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "बिना ज्ञात स्थिति वाले स्कैन: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "वे पेज जिनके सुरक्षा उपाय बदले"
+  },
+  "statsSiteNoChanges": {
+    "message": "इस साइट के किसी सहेजे गए स्कैन ने अपने सुरक्षा उपाय नहीं बदले।"
+  },
+  "statsSiteNoProtections": {
+    "message": "इस साइट के सहेजे गए स्कैन में कोई सुरक्षा उपाय नहीं मिला।"
+  },
+  "statsSiteEmptyFmt": {
+    "message": "{0} का कोई सहेजा गया स्कैन नहीं है।"
+  },
+  "statsSiteOpenHistory": {
+    "message": "इतिहास में दिखाएँ"
+  },
   "historyCompare": {
     "message": "इससे तुलना करें…"
   },

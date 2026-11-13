@@ -6293,6 +6293,72 @@
   "statsOpenInHistoryFmt": {
     "message": "Ouvrir {0} dans l’Historique"
   },
+  "statsSectionSite": {
+    "message": "Site"
+  },
+  "statsSiteReport": {
+    "message": "Rapport du site"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Rapport du site : {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Pages : {0} · Analyses : {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Aussi enregistré sous : {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Toutes les analyses enregistrées de ce site, quelle que soit la période. Les adresses avec et sans www comptent comme un seul site."
+  },
+  "statsSiteProtections": {
+    "message": "Protections de ce site"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Vu pour la première fois"
+  },
+  "statsScansColumn": {
+    "message": "Analyses"
+  },
+  "statsSiteTimeline": {
+    "message": "Chronologie"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Affichage des {0} dernières analyses sur {1}."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1} : {2}"
+  },
+  "statsSiteFound": {
+    "message": "trouvée"
+  },
+  "statsSiteNotFound": {
+    "message": "non trouvée"
+  },
+  "statsSiteStatuses": {
+    "message": "Statuts HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "Statut HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Analyses sans statut connu : {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Pages dont les protections ont changé"
+  },
+  "statsSiteNoChanges": {
+    "message": "Aucune analyse enregistrée de ce site n'a changé de protections."
+  },
+  "statsSiteNoProtections": {
+    "message": "Aucune protection trouvée dans les analyses enregistrées de ce site."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Aucune analyse enregistrée pour {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Voir dans l’Historique"
+  },
   "historyCompare": {
     "message": "Comparer avec…"
   },

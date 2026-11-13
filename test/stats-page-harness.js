@@ -89,8 +89,8 @@ function clock() {
 }
 
 // The shared scripts of the page the harness runs for real (the rest of ../../ is stubbed: logger, i18n, tooltip)
-const SHARED_SCRIPTS = ['../../modules/core/storage-manager.js', '../../modules/core/categories.js', '../../modules/core/capture-retention.js', '../../modules/advanced/captcha-vendors.js',
-  '../../modules/advanced/vendor-registry.js', '../../utils/format-utils.js'];
+const SHARED_SCRIPTS = ['../../modules/core/storage-manager.js', '../../modules/core/categories.js', '../../modules/core/http-status.js', '../../modules/core/history-filter.js',
+  '../../modules/core/site-report.js', '../../modules/core/capture-retention.js', '../../modules/advanced/captcha-vendors.js', '../../modules/advanced/vendor-registry.js', '../../utils/format-utils.js'];
 
 /** Scripts of the page that this harness runs for real, in the order stats.html lists them. */
 function pageScripts() {
@@ -102,11 +102,11 @@ function pageScripts() {
 const RENDERERS = ['bars', 'stacked', 'heatmap', 'calendar', 'rank', 'segments', 'sparkline'];
 
 /**
- * options: { preferences (extra storage), download (fn), now, language }
+ * options: { preferences (extra storage), download (fn), save (fn), now, language, search (the page address's query, '?site=...'), dir }
  * Returns the DOM, the vm context and helpers. `await init()` has already run when it resolves.
  */
 async function createPage(items, options = {}) {
-  const { preferences = {}, download = async () => ({ filename: 'test.json' }) } = options;
+  const { preferences = {}, download = async () => ({ filename: 'test.json' }), save = async (content, filename) => ({ filename }) } = options;
   let now = options.now === undefined ? NOW : options.now, contentWidth = 600;
   const ids = new Map(), all = [];
   // A small HTML parser: the page code relies on the tree (parents, chip counts inside buttons)
@@ -138,11 +138,11 @@ async function createPage(items, options = {}) {
   ids.get('statsDomainSearch').value = '';
   const listeners = {};
   let init;
-  const changes = [], writes = [], chartCalls = [], downloads = [], timers = clock();
+  const changes = [], writes = [], chartCalls = [], downloads = [], saves = [], opened = [], timers = clock();
   const stored = { scrapfly_history: JSON.stringify({ items }), ...preferences };
   const body = { style: { props: {}, setProperty(k, v) { this.props[k] = v; }, removeProperty(k) { delete this.props[k]; } } };
   const document = {
-    documentElement: { dir: 'ltr' }, body, hidden: false,
+    documentElement: { dir: options.dir || 'ltr' }, body, hidden: false,
     getElementById: id => { assert.ok(ids.has(id), 'Missing ID: ' + id); return ids.get(id); },
     querySelectorAll: selector => {
       const match = selector.match(/^\[data-([\w-]+)\]$/);
@@ -166,28 +166,28 @@ async function createPage(items, options = {}) {
   for (const key of RENDERERS) stubs[key] = (...args) => { args[0].replaceChildren(); chartCalls.push({ key, args }); };
   stubs.niceScale = max => ({ max: Math.max(4, Math.ceil(max)), step: 1 });
   const context = vm.createContext({ document, Node, Intl, URL, Date: Clock, console, JSON, Math, Number, String, Array, Object, Set, Map, RegExp, Promise, Error,
-    window: { innerWidth: 1000, innerHeight: 800, addEventListener() {}, Intl }, location: { reload() { context.reloaded = true; } },
+    window: { innerWidth: 1000, innerHeight: 800, addEventListener() {}, Intl }, location: { search: options.search || '', reload() { context.reloaded = true; } }, URLSearchParams,
     requestAnimationFrame: fn => fn(), cancelAnimationFrame() {}, Logger: { storage() {}, error() {}, warn() {} },
     setTimeout: timers.setTimeout, clearTimeout: timers.clearTimeout, setInterval: timers.setInterval, clearInterval: timers.clearInterval,
     ResizeObserver: class { constructor(callback) { observers.push(callback); } observe() {} },
-    chrome: { storage: { local: { get: async () => ({ ...stored }), set: async data => { Object.assign(stored, data); writes.push(data); } }, onChanged: { addListener: callback => changes.push(callback) } },
+    chrome: { runtime: { getURL: path => 'chrome-extension://test/' + path }, tabs: { create: data => { opened.push(data.url); return Promise.resolve({}); } }, storage: { local: { get: async () => ({ ...stored }), set: async data => { Object.assign(stored, data); writes.push(data); } }, onChanged: { addListener: callback => changes.push(callback) } },
       i18n: { getUILanguage: () => options.language || 'en', getMessage: key => messages[key] && messages[key].message } },
-    I18n: { _overrideLocale: null, loadOverride: async () => {}, apply() {}, dir: () => 'ltr',
+    I18n: { _overrideLocale: null, loadOverride: async () => {}, apply() {}, dir: () => options.dir || 'ltr',
       tr: (key, fallback) => messages[key] ? messages[key].message : fallback,
       format: (key, ...args) => messages[key] ? args.reduce((s, arg, i) => s.split('{' + i + '}').join(String(arg)), messages[key].message) : null },
     StatsCharts: stubs,
     navigator: options.clipboard ? { clipboard: { writeText: options.clipboard } } : undefined,
-    StatsExport: { download: async (...args) => { downloads.push(args); return download(...args); },
+    StatsExport: { download: async (...args) => { downloads.push(args); return download(...args); }, save: async (...args) => { saves.push(args); return save(...args); },
       summary: (items, o) => 'SUMMARY ' + items.length + ' ' + o.days } });
   const local = pageScripts().filter(f => f.startsWith('sections/stats/') && !/history-stats|rule-stats|tools-stats/.test(f));
-  for (const file of ['modules/core/storage-manager.js', 'modules/core/categories.js', 'modules/core/capture-retention.js', 'modules/advanced/captcha-vendors.js', 'modules/advanced/vendor-registry.js', 'utils/format-utils.js', 'sections/stats/history-stats.js', 'sections/stats/rule-stats.js', 'sections/stats/tools-stats.js', ...local]) {
+  for (const file of ['modules/core/storage-manager.js', 'modules/core/categories.js', 'modules/core/http-status.js', 'modules/core/history-filter.js', 'modules/core/site-report.js', 'modules/core/capture-retention.js', 'modules/advanced/captcha-vendors.js', 'modules/advanced/vendor-registry.js', 'utils/format-utils.js', 'sections/stats/history-stats.js', 'sections/stats/rule-stats.js', 'sections/stats/tools-stats.js', ...local]) {
     vm.runInContext(read(file), context, { filename: file });
   }
   await init();
   const settle = () => new Promise(resolve => setImmediate(resolve));
   const byData = (key, value) => all.find(node => node.dataset[camel(key)] === String(value));
   const page = {
-    ids, context, stored, writes, chartCalls, downloads, changes, timers, listeners, settle, flatten, textOf, all, body,
+    ids, context, stored, writes, chartCalls, downloads, saves, opened, changes, timers, listeners, settle, flatten, textOf, all, body,
     button: byData,
     id: id => ids.get(id),
     text: id => textOf(ids.get(id)),
@@ -200,7 +200,7 @@ async function createPage(items, options = {}) {
     chip: key => page.click('category', key),
     key: (node, key, extra = {}) => node.events.keydown({ key, preventDefault() {}, ...extra }),
     rows: id => flatten(ids.get(id)).filter(node => node.scope === 'row'),
-    visiblePanel: () => ['overview', 'protections', 'domains', 'evidence', 'activity', 'rules', 'tools'].filter(key => !ids.get('stats-panel-' + key).hidden),
+    visiblePanel: () => ['overview', 'protections', 'domains', 'evidence', 'activity', 'rules', 'tools', 'site'].filter(key => !ids.get('stats-panel-' + key).hidden),
     /** Fires a storage change and lets the (fake) debounce and the load finish. */
     async storage(change, patch) {
       Object.assign(stored, patch);

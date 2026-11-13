@@ -6293,6 +6293,72 @@
   "statsOpenInHistoryFmt": {
     "message": "فتح {0} في السجل"
   },
+  "statsSectionSite": {
+    "message": "الموقع"
+  },
+  "statsSiteReport": {
+    "message": "تقرير الموقع"
+  },
+  "statsSiteReportForFmt": {
+    "message": "تقرير الموقع: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "الصفحات: {0} · الفحوصات: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "محفوظ أيضًا باسم: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "كل فحص محفوظ لهذا الموقع، أيًّا كان النطاق الزمني. العناوين مع www وبدونها تُعدّ موقعًا واحدًا."
+  },
+  "statsSiteProtections": {
+    "message": "وسائل الحماية في هذا الموقع"
+  },
+  "statsFirstSeenColumn": {
+    "message": "أول ظهور"
+  },
+  "statsScansColumn": {
+    "message": "الفحوصات"
+  },
+  "statsSiteTimeline": {
+    "message": "الخط الزمني"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "عرض أحدث {0} من {1} فحصًا."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}، {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "موجودة"
+  },
+  "statsSiteNotFound": {
+    "message": "غير موجودة"
+  },
+  "statsSiteStatuses": {
+    "message": "حالات HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "حالة HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "فحوصات بلا حالة معروفة: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "الصفحات التي تغيّرت حماياتها"
+  },
+  "statsSiteNoChanges": {
+    "message": "لم يغيّر أي فحص محفوظ لهذا الموقع حماياته."
+  },
+  "statsSiteNoProtections": {
+    "message": "لم يُعثر على أي حماية في الفحوصات المحفوظة لهذا الموقع."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "لا توجد فحوصات محفوظة لـ {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "عرض في السجل"
+  },
   "historyCompare": {
     "message": "مقارنة مع…"
   },

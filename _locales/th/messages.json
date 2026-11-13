@@ -6293,6 +6293,72 @@
   "statsOpenInHistoryFmt": {
     "message": "เปิด {0} ในประวัติ"
   },
+  "statsSectionSite": {
+    "message": "ไซต์"
+  },
+  "statsSiteReport": {
+    "message": "รายงานไซต์"
+  },
+  "statsSiteReportForFmt": {
+    "message": "รายงานไซต์: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "หน้า: {0} · การสแกน: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "บันทึกในชื่ออื่นด้วย: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "การสแกนที่บันทึกไว้ทั้งหมดของไซต์นี้ ไม่ว่าจะเลือกช่วงวันที่ใด ที่อยู่ที่มีและไม่มี www นับเป็นไซต์เดียวกัน"
+  },
+  "statsSiteProtections": {
+    "message": "ระบบป้องกันบนไซต์นี้"
+  },
+  "statsFirstSeenColumn": {
+    "message": "พบครั้งแรก"
+  },
+  "statsScansColumn": {
+    "message": "การสแกน"
+  },
+  "statsSiteTimeline": {
+    "message": "ไทม์ไลน์"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "แสดงการสแกนล่าสุด {0} จาก {1} ครั้ง"
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "พบ"
+  },
+  "statsSiteNotFound": {
+    "message": "ไม่พบ"
+  },
+  "statsSiteStatuses": {
+    "message": "สถานะ HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "สถานะ HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "การสแกนที่ไม่ทราบสถานะ: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "หน้าที่ระบบป้องกันเปลี่ยนไป"
+  },
+  "statsSiteNoChanges": {
+    "message": "ไม่มีการสแกนที่บันทึกไว้ของไซต์นี้ที่ระบบป้องกันเปลี่ยนไป"
+  },
+  "statsSiteNoProtections": {
+    "message": "ไม่พบระบบป้องกันในการสแกนที่บันทึกไว้ของไซต์นี้"
+  },
+  "statsSiteEmptyFmt": {
+    "message": "ไม่มีการสแกนที่บันทึกไว้ของ {0}"
+  },
+  "statsSiteOpenHistory": {
+    "message": "แสดงในประวัติ"
+  },
   "historyCompare": {
     "message": "เปรียบเทียบกับ…"
   },

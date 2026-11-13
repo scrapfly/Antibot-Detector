@@ -10,28 +10,32 @@ const domainRows = () => Array.from({ length: 70 }, (_, i) => {
   return entry(host, 0, i < 10 ? [['hCaptcha', 'captcha']] : i < 40 ? [['Cloudflare', 'antibot']] : []);
 });
 
-test('opening a site from the Overview clears stale Domains filters, so the site is found', async () => {
+test('opening a site from its report clears stale Domains filters, so the site is found', async () => {
   const ui = await createPage(domainRows());
   ui.section('domains');
   ui.click('difficulty', 'Medium');
   assert.equal(ui.rows('statsDomainTable').length, 30, 'only the Medium domains show');
   ui.section('overview');
   const rows = ui.id('statsHardest').children;
+  const host = textOf(rows[0].children[0]);
   rows[0].events.click();
-  assert.equal(ui.id('statsDomainSearch').value, textOf(rows[0].children[0]));
-  assert.equal(ui.rows('statsDomainTable').length, 1, 'the clicked site shows although the Medium chip was on');
+  assert.deepEqual(ui.visiblePanel(), ['site'], 'a hardest site opens its report');
+  ui.id('statsSiteBack').events.click();
+  assert.deepEqual(ui.visiblePanel(), ['domains']);
+  assert.equal(ui.id('statsDomainSearch').value, host);
+  assert.equal(ui.rows('statsDomainTable').length, 1, 'the site shows although the Medium chip was on');
   assert.equal(ui.button('difficulty', 'Medium').attributes['aria-pressed'], 'false');
 });
 
-test('a hardest-site row opens its domain with Enter and with Space, and is announced as a link', async () => {
+test('a hardest-site row opens its site report with Enter and with Space, and is announced as a link', async () => {
   const ui = await createPage(domainRows());
   const rows = ui.id('statsHardest').children;
   assert.equal(rows[0].attributes.role, 'link');
   ui.key(rows[0], ' ');
-  assert.deepEqual(ui.visiblePanel(), ['domains']);
+  assert.deepEqual(ui.visiblePanel(), ['site']);
   ui.section('overview');
   ui.key(ui.id('statsHardest').children[0], 'Enter');
-  assert.deepEqual(ui.visiblePanel(), ['domains']);
+  assert.deepEqual(ui.visiblePanel(), ['site']);
 });
 
 test('headline names follow their own direction, so a Latin name keeps its start in Arabic', async () => {

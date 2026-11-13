@@ -6849,6 +6849,94 @@
     "message": "Open {0} in History",
     "description": "Statistics → Domains and Protection changes: hover text of a site's name, which opens the History tab (in a new tab) narrowed to that site. {0} = the site's host name"
   },
+  "statsSectionSite": {
+    "message": "Site",
+    "description": "Statistics: tab of one site's report, shown once a site is opened (from Domains, Hardest sites or History → ⋯ → Site report)"
+  },
+  "statsSiteReport": {
+    "message": "Site report",
+    "description": "Statistics → Domains: column of the button that opens a site's report; History → entry ⋯ menu: opens the Statistics page on that site's report"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Site report: {0}",
+    "description": "Statistics: hover text of a Domains row's button and of a Hardest sites row, and the heading of the exported report. {0} = the site's host name"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Pages: {0} · Scans: {1} · {2}",
+    "description": "Statistics → Site: line under the site's name. {0} = number of pages (paths) of the site, {1} = number of saved scans, {2} = dates of the oldest and newest scan"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Also saved as: {0}",
+    "description": "Statistics → Site: the other spellings of the site's host the scans were saved under. {0} = a list of host names (www.shop.example)"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Every saved scan of this site, whatever the date range. Addresses with and without www count as one site.",
+    "description": "Statistics → Site: note under the site's name. The report ignores the date range; www.shop.example and shop.example are one site"
+  },
+  "statsSiteProtections": {
+    "message": "Protections on this site",
+    "description": "Statistics → Site: heading of the table of every protection found on the site's saved scans"
+  },
+  "statsFirstSeenColumn": {
+    "message": "First seen",
+    "description": "Statistics → Site: column with the date a protection was first found on the site"
+  },
+  "statsScansColumn": {
+    "message": "Scans",
+    "description": "Statistics → Site: column with a number of saved scans (History entries)"
+  },
+  "statsSiteTimeline": {
+    "message": "Timeline",
+    "description": "Statistics → Site: heading of the grid of protections (rows) by scan date (columns)"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Showing the latest {0} of {1} scans.",
+    "description": "Statistics → Site → Timeline: note when the site has more scans than the grid shows. {0} = scans shown, {1} = all scans of the site"
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}",
+    "description": "Statistics → Site → Timeline: hover and screen-reader text of one cell. {0} = protection name, {1} = date and time of the scan, {2} = its confidence (95%), 'found' or 'not found'"
+  },
+  "statsSiteFound": {
+    "message": "found",
+    "description": "Statistics → Site → Timeline: a protection found on a scan with no confidence score ({2} of the cell text); lower case"
+  },
+  "statsSiteNotFound": {
+    "message": "not found",
+    "description": "Statistics → Site → Timeline: a protection not found on that scan ({2} of the cell text); lower case"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP statuses",
+    "description": "Statistics → Site: heading of the table of HTTP status codes the site's pages answered with"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP status",
+    "description": "Statistics → Site: column with an HTTP status code (200, 403)"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Scans without a known status: {0}",
+    "description": "Statistics → Site: scans that have no HTTP status (saved before version 3.1.9, or not reported by the browser). {0} = number"
+  },
+  "statsSiteChanges": {
+    "message": "Pages whose protections changed",
+    "description": "Statistics → Site: heading of the list of scans History marked Changed (protections added or removed since the page's earlier scan)"
+  },
+  "statsSiteNoChanges": {
+    "message": "No saved scan of this site changed its protections.",
+    "description": "Statistics → Site: shown when none of the site's scans is marked Changed"
+  },
+  "statsSiteNoProtections": {
+    "message": "No protection found in this site's saved scans.",
+    "description": "Statistics → Site: shown when the site's saved scans found no protection (in the categories shown)"
+  },
+  "statsSiteEmptyFmt": {
+    "message": "No saved scans of {0}.",
+    "description": "Statistics → Site: shown when History has no scan of the site. {0} = the site's host name"
+  },
+  "statsSiteOpenHistory": {
+    "message": "Show in History",
+    "description": "Statistics → Site: button that opens History (in a new tab) narrowed to the site"
+  },
   "historyCompare": {
     "message": "Compare with…",
     "description": "History entry menu: opens a dialog that compares this saved scan with another saved scan of the same page"

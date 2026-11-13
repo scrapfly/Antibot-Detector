@@ -44,6 +44,7 @@
           <button type="button" class="stats-section-btn" id="stats-tab-activity" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-activity" data-section="activity"><span data-i18n="statsSectionActivity">Activity</span></button>
           <button type="button" class="stats-section-btn" id="stats-tab-rules" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-rules" data-section="rules"><span data-i18n="statsSectionRules">Rules</span></button>
           <button type="button" class="stats-section-btn" id="stats-tab-tools" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-tools" data-section="tools" hidden><span data-i18n="statsSectionTools">Tools</span></button>
+          <button type="button" class="stats-section-btn" id="stats-tab-site" role="tab" tabindex="-1" aria-selected="false" aria-controls="stats-panel-site" data-section="site" hidden><span data-i18n="statsSectionSite">Site</span></button>
         </nav>
       </div>
       <div class="stats-range" role="group" aria-label="Time range" data-i18n-aria-label="statsRangeLabel">
@@ -255,6 +256,30 @@
           <section class="stats-card stats-card--wide"><h3 data-i18n="statsToolsSavedCaptures">Saved captures</h3><div class="stats-table-wrap" id="statsCaptureTable"></div><div class="stats-table-footer" id="statsCaptureFooter"><span id="statsCaptureCount"></span><button type="button" class="stats-table-more" id="statsCaptureMore" data-i18n="statsTableMore" hidden>Show more</button></div></section>
         </div>
       </section>
+
+      <section class="stats-panel" id="stats-panel-site" role="tabpanel" aria-labelledby="stats-tab-site" tabindex="0" hidden>
+        <h2 class="stats-sr-only" data-i18n="statsSiteReport">Site report</h2>
+        <div class="stats-grid">
+          <section class="stats-card stats-card--wide stats-site-card">
+            <div class="stats-card-head">
+              <div class="stats-site-title"><h3 class="stats-site-host" id="statsSiteHost" dir="ltr"></h3><p class="stats-card-note" id="statsSiteSummary"></p><p class="stats-card-note" id="statsSiteAlso" hidden></p></div>
+              <div class="stats-site-actions">
+                <button type="button" class="stats-btn" id="statsSiteHistory" data-i18n="statsSiteOpenHistory">Show in History</button>
+                <button type="button" class="stats-btn" id="statsSiteExportMd" data-i18n="statsExportMarkdown">Export Markdown</button>
+                <button type="button" class="stats-btn" id="statsSiteExportJson" data-i18n="statsExportJSON">Export JSON</button>
+                <button type="button" class="stats-link-btn" id="statsSiteBack" data-i18n="statsAllDomainsLink">All domains</button>
+              </div>
+            </div>
+            <p class="stats-card-sub" data-i18n="statsSiteAllDatesNote">Every saved scan of this site, whatever the date range. Addresses with and without www count as one site.</p>
+            <p class="stats-card-note" data-i18n="statsExportPrivacy">Exports contain domains and detection summaries, not cookies, page contents or URL parameters.</p>
+          </section>
+          <p class="stats-none stats-site-empty" id="statsSiteEmpty" hidden></p>
+          <section class="stats-card stats-card--wide" data-site-part><h3 data-i18n="statsSiteProtections">Protections on this site</h3><div class="stats-table-wrap" id="statsSiteProtectionTable"></div></section>
+          <section class="stats-card stats-card--wide" data-site-part><div class="stats-card-head"><h3 data-i18n="statsSiteTimeline">Timeline</h3><span class="stats-card-meta" id="statsSiteTimelineMeta"></span></div><div class="stats-table-wrap stats-site-timeline" id="statsSiteTimeline"></div><p class="stats-card-note" id="statsSiteTimelineLimit" hidden></p></section>
+          <section class="stats-card stats-card--span-5" data-site-part><h3 data-i18n="statsSiteStatuses">HTTP statuses</h3><div class="stats-table-wrap" id="statsSiteStatusTable"></div><p class="stats-card-note" id="statsSiteStatusUnknown" hidden></p></section>
+          <section class="stats-card stats-card--span-7" data-site-part><h3 data-i18n="statsSiteChanges">Pages whose protections changed</h3><div class="stats-table-wrap" id="statsSiteChangeTable"></div><div class="stats-table-footer" id="statsSiteChangeFooter"><span id="statsSiteChangeCount"></span><button type="button" class="stats-table-more" id="statsSiteChangeMore" data-i18n="statsTableMore" hidden>Show more</button></div></section>
+        </div>
+      </section>
     </div>
   </main>
   <footer class="stats-footer"><span data-i18n="poweredBy">Powered by</span> <a href="https://scrapfly.io" target="_blank" rel="noopener noreferrer">Scrapfly</a></footer>
@@ -268,6 +293,9 @@
   <script src="../../modules/core/rule-i18n.js"></script>
   <script src="../../modules/ui/tooltip.js"></script>
   <script src="../../modules/core/categories.js"></script>
+  <script src="../../modules/core/http-status.js"></script>
+  <script src="../../modules/core/history-filter.js"></script>
+  <script src="../../modules/core/site-report.js"></script>
   <script src="../../modules/core/capture-retention.js"></script>
   <script src="../../utils/format-utils.js"></script>
   <script src="../../utils/detection-utils.js"></script>
@@ -284,6 +312,7 @@
   <script src="stats-evidence.js"></script>
   <script src="stats-activity.js"></script>
   <script src="stats-rules.js"></script>
+  <script src="stats-site.js"></script>
   <script src="stats.js"></script>
 </body>
 </html>

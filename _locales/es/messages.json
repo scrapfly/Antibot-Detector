@@ -6295,6 +6295,72 @@
   "statsOpenInHistoryFmt": {
     "message": "Abrir {0} en el Historial"
   },
+  "statsSectionSite": {
+    "message": "Sitio"
+  },
+  "statsSiteReport": {
+    "message": "Informe del sitio"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Informe del sitio: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Páginas: {0} · Escaneos: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "También guardado como: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Todos los escaneos guardados de este sitio, sea cual sea el rango de fechas. Las direcciones con y sin www cuentan como un solo sitio."
+  },
+  "statsSiteProtections": {
+    "message": "Protecciones en este sitio"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Primera vez visto"
+  },
+  "statsScansColumn": {
+    "message": "Escaneos"
+  },
+  "statsSiteTimeline": {
+    "message": "Cronología"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Se muestran los últimos {0} de {1} escaneos."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "encontrada"
+  },
+  "statsSiteNotFound": {
+    "message": "no encontrada"
+  },
+  "statsSiteStatuses": {
+    "message": "Estados HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "Estado HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Escaneos sin estado conocido: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Páginas cuyas protecciones cambiaron"
+  },
+  "statsSiteNoChanges": {
+    "message": "Ningún escaneo guardado de este sitio cambió sus protecciones."
+  },
+  "statsSiteNoProtections": {
+    "message": "No se encontró ninguna protección en los escaneos guardados de este sitio."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "No hay escaneos guardados de {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Ver en el Historial"
+  },
   "historyCompare": {
     "message": "Comparar con…"
   },

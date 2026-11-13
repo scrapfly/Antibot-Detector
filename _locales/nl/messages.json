@@ -6293,6 +6293,72 @@
   "statsOpenInHistoryFmt": {
     "message": "{0} openen in Geschiedenis"
   },
+  "statsSectionSite": {
+    "message": "Site"
+  },
+  "statsSiteReport": {
+    "message": "Siterapport"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Siterapport: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Pagina's: {0} · Scans: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Ook opgeslagen als: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Alle opgeslagen scans van deze site, ongeacht het datumbereik. Adressen met en zonder www tellen als één site."
+  },
+  "statsSiteProtections": {
+    "message": "Beveiligingen op deze site"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Eerst gezien"
+  },
+  "statsScansColumn": {
+    "message": "Scans"
+  },
+  "statsSiteTimeline": {
+    "message": "Tijdlijn"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "De laatste {0} van {1} scans worden getoond."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "gevonden"
+  },
+  "statsSiteNotFound": {
+    "message": "niet gevonden"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP-statussen"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP-status"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Scans zonder bekende status: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Pagina's waarvan de beveiligingen veranderden"
+  },
+  "statsSiteNoChanges": {
+    "message": "Geen enkele opgeslagen scan van deze site heeft zijn beveiligingen gewijzigd."
+  },
+  "statsSiteNoProtections": {
+    "message": "Geen beveiliging gevonden in de opgeslagen scans van deze site."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Geen opgeslagen scans van {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Tonen in Geschiedenis"
+  },
   "historyCompare": {
     "message": "Vergelijken met…"
   },

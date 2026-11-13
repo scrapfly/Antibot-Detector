@@ -6293,6 +6293,72 @@
   "statsOpenInHistoryFmt": {
     "message": "{0} im Verlauf öffnen"
   },
+  "statsSectionSite": {
+    "message": "Website"
+  },
+  "statsSiteReport": {
+    "message": "Website-Bericht"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Website-Bericht: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Seiten: {0} · Scans: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Auch gespeichert als: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Alle gespeicherten Scans dieser Website, unabhängig vom Zeitraum. Adressen mit und ohne www zählen als eine Website."
+  },
+  "statsSiteProtections": {
+    "message": "Schutzmaßnahmen dieser Website"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Zuerst gesehen"
+  },
+  "statsScansColumn": {
+    "message": "Scans"
+  },
+  "statsSiteTimeline": {
+    "message": "Zeitachse"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Die letzten {0} von {1} Scans werden angezeigt."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "gefunden"
+  },
+  "statsSiteNotFound": {
+    "message": "nicht gefunden"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP-Status"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP-Status"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Scans ohne bekannten Status: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Seiten mit geänderten Schutzmaßnahmen"
+  },
+  "statsSiteNoChanges": {
+    "message": "Kein gespeicherter Scan dieser Website hat seine Schutzmaßnahmen geändert."
+  },
+  "statsSiteNoProtections": {
+    "message": "In den gespeicherten Scans dieser Website wurde kein Schutz gefunden."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Keine gespeicherten Scans von {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Im Verlauf anzeigen"
+  },
   "historyCompare": {
     "message": "Vergleichen mit…"
   },

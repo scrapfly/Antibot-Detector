@@ -6293,6 +6293,72 @@
   "statsOpenInHistoryFmt": {
     "message": "Mở {0} trong Lịch sử"
   },
+  "statsSectionSite": {
+    "message": "Trang web"
+  },
+  "statsSiteReport": {
+    "message": "Báo cáo trang web"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Báo cáo trang web: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Trang: {0} · Lượt quét: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Cũng được lưu dưới tên: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Mọi lượt quét đã lưu của trang web này, bất kể khoảng thời gian. Địa chỉ có và không có www được tính là một trang web."
+  },
+  "statsSiteProtections": {
+    "message": "Biện pháp bảo vệ trên trang web này"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Lần thấy đầu tiên"
+  },
+  "statsScansColumn": {
+    "message": "Lượt quét"
+  },
+  "statsSiteTimeline": {
+    "message": "Dòng thời gian"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Đang hiển thị {0} lượt quét gần nhất trong {1}."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "đã phát hiện"
+  },
+  "statsSiteNotFound": {
+    "message": "không phát hiện"
+  },
+  "statsSiteStatuses": {
+    "message": "Trạng thái HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "Trạng thái HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Lượt quét không rõ trạng thái: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Các trang có biện pháp bảo vệ thay đổi"
+  },
+  "statsSiteNoChanges": {
+    "message": "Không có lượt quét đã lưu nào của trang web này thay đổi biện pháp bảo vệ."
+  },
+  "statsSiteNoProtections": {
+    "message": "Không tìm thấy biện pháp bảo vệ nào trong các lượt quét đã lưu của trang web này."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Không có lượt quét đã lưu nào của {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Hiện trong Lịch sử"
+  },
   "historyCompare": {
     "message": "So sánh với…"
   },

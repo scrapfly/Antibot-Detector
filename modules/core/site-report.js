@@ -349,5 +349,7 @@
 
   const api = { TIMELINE_LIMIT, siteOf, hostOf, entryHost, entriesOf, timeOf, pathOf, build, confidenceText, toJSON, toMarkdown, filename };
   root.SiteReport = api;
+  // The page's scripts name it as a plain global: a page has one (self is globalThis), a test sandbox may not
+  if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.SiteReport = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

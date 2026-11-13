@@ -6293,6 +6293,72 @@
   "statsOpenInHistoryFmt": {
     "message": "기록에서 {0} 열기"
   },
+  "statsSectionSite": {
+    "message": "사이트"
+  },
+  "statsSiteReport": {
+    "message": "사이트 보고서"
+  },
+  "statsSiteReportForFmt": {
+    "message": "사이트 보고서: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "페이지: {0} · 스캔: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "다른 이름으로도 저장됨: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "날짜 범위와 관계없이 이 사이트의 저장된 모든 스캔입니다. www가 있는 주소와 없는 주소는 한 사이트로 셉니다."
+  },
+  "statsSiteProtections": {
+    "message": "이 사이트의 보호"
+  },
+  "statsFirstSeenColumn": {
+    "message": "처음 확인"
+  },
+  "statsScansColumn": {
+    "message": "스캔"
+  },
+  "statsSiteTimeline": {
+    "message": "타임라인"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "스캔 {1}개 중 최신 {0}개를 표시합니다."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "발견됨"
+  },
+  "statsSiteNotFound": {
+    "message": "발견되지 않음"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP 상태"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP 상태"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "상태를 알 수 없는 스캔: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "보호가 바뀐 페이지"
+  },
+  "statsSiteNoChanges": {
+    "message": "이 사이트의 저장된 스캔 중 보호가 바뀐 것은 없습니다."
+  },
+  "statsSiteNoProtections": {
+    "message": "이 사이트의 저장된 스캔에서 보호를 찾지 못했습니다."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "{0}의 저장된 스캔이 없습니다."
+  },
+  "statsSiteOpenHistory": {
+    "message": "기록에서 보기"
+  },
   "historyCompare": {
     "message": "다른 스캔과 비교…"
   },
