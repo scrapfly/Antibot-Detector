@@ -9,11 +9,17 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ### Added
 
+- Statistics: a Site report shows one site over time: every protection with first and last seen, a scan timeline, HTTP statuses and the pages that changed.
+- History entry ⋯ menu and each Statistics → Domains row open that site's report, which exports as Markdown or JSON.
 - Bulk scan: a list scanned before shows what changed on each page since the previous run, with a filter and the changes in every export.
 - Bulk scan: compare a run with an earlier Bulk JSON export.
 - Bulk scan: Run again scans the same list with the same limits and wait.
 - Bulk scan: the last finished run is still shown after the browser restarts, with its exports; Settings → Data lists kept runs with Clear.
 - Bulk scan: the other columns of an uploaded CSV come back beside the results and in every export.
+
+### Changed
+
+- Statistics: a row in Hardest sites now opens that site's report instead of filtering the Domains table.
 
 ### Fixed
 
