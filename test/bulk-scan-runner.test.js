@@ -572,3 +572,23 @@ test('"Scan the pages still waiting" keeps the run\'s wait unless the page sends
   await w.Runner.stop();
   await finished(w);
 });
+
+test('the keepalive is renewed after the wait between pages, just before each page opens (a long wait plus a long time limit outlasted it)', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: [] }, 'https://b.example/': { results: [] }, 'https://c.example/': { results: [] } } });
+  clocked(w);
+  const events = [];
+  const keepalive = w.ctx.workerKeepaliveManager;
+  const startOperation = keepalive.startOperation;
+  keepalive.startOperation = (id, info) => { events.push('renew'); return startOperation(id, info); };
+  const wait = w.Runner._waitBetween.bind(w.Runner);
+  w.Runner._waitBetween = (ms) => { events.push('wait'); return wait(ms); };
+  const create = w.ctx.chrome.tabs.create;
+  w.ctx.chrome.tabs.create = (options) => { events.push('tab'); return create(options); };
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/', 'https://c.example/'], delaySec: 60 });
+  await finished(w);
+  assert.equal(w.stored().status, 'done');
+  // Between the end of each wait and the tab it led to, the keepalive was renewed: the 120 s a page may take start then
+  const sinceWait = events.join(' ').split('wait').slice(1);
+  assert.equal(sinceWait.length, 2, events.join(' '));
+  for (const part of sinceWait) assert.match(part, /renew\s+tab/, events.join(' '));
+});

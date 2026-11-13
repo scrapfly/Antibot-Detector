@@ -206,6 +206,9 @@ const BulkScanRunner = {
             if (this._run !== run || run.status !== 'running') continue;
             // Woken early (paused and resumed at once): the rest of the wait first
             if (BulkScan.waitBefore(run, Date.now()) > this.WAIT_SLACK_MS) continue;
+            // Renewed again after the wait: the keepalive drops an operation after two minutes, and a wait of up to 60 s
+            // followed by a page of up to 120 s would outlast the renewal at the top of the loop (the worker went idle mid-page)
+            this._renewKeepalive();
             await this._scanOne(run, index);
         }
     },
