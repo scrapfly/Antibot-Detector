@@ -382,7 +382,7 @@
  },
  "detect-f5": {
   "asm-support-id": {
-   "source": "document.write('The requested URL was rejected. Your support ID is: 14563908526311840187');"
+   "page": "<html><head><title>Request Rejected</title></head><body>The requested URL was rejected. Please consult with your administrator.<br><br>Your support ID is: 14563908526311840187<br><br><a href='javascript:history.back();'>[Go Back]</a></body></html>"
   },
   "bigip-server-cookie": {
    "cookie": [
@@ -679,10 +679,10 @@
    ]
   },
   "sucuri-block-id": {
-   "source": "var reason='Block ID: XSS027';"
+   "page": "<tr><td>Block ID:</td><td><span>XSS027</span></td></tr>"
   },
   "sucuri-block-title": {
-   "source": "document.title='Sucuri WebSite Firewall - Access Denied';"
+   "page": "<title>Sucuri WebSite Firewall - Access Denied</title>"
   },
   "sucuri-cache-header": {
    "header": [
@@ -1040,10 +1040,10 @@
    ]
   },
   "radware-cloudwebsec-reference": {
-   "source": "window.location.href = 'https://CloudWebSec.radware.com/block';"
+   "page": "<a href=\"mailto:CloudWebSec@radware.com?Subject=Security Page - Case Number 7215549023418861\">CloudWebSec@radware.com</a>"
   },
   "radware-block-message": {
-   "source": "document.title = 'Unauthorized Request Blocked';"
+   "page": "<title>Unauthorized Request Blocked</title>"
   },
   "radware-rdwr-server": {
    "header": [

@@ -254,6 +254,25 @@ test('the extension switched off: nothing is judged and nothing remembered (its 
   assert.deepEqual(w.session.data, {}, 'nothing stored');
 });
 
+test('a prerendered page shown on a skipped site is remembered; one on a scanned site, or with the extension off, is not', async () => {
+  const w = captureWorld();
+  await w.load(1, 'https://shop.example/', 'doc-1');
+  // Chrome prerendered the next page under the tab (a request of its own frame, never the tab's page), then showed it
+  vm.runInContext("activatePrerenderedPage(1, 'https://skipped.example/account', 'doc-pre')", w.context);
+  await flush();
+  assert.equal(await w.pages.has(1, 'doc-pre'), true, 'its capture was refused: a scan of it in place would be incomplete');
+  w.setSettings({ detection: { scanMode: 'blocklist', blacklistedDomains: [] } }); // the site turned back on while it stays
+  assert.equal(await w.pages.has(1, 'doc-pre'), true);
+  vm.runInContext("activatePrerenderedPage(1, 'https://shop.example/next', 'doc-pre-2')", w.context);
+  await flush();
+  assert.equal(await w.pages.has(1, 'doc-pre-2'), false);
+  const off = captureWorld();
+  vm.runInContext('cachedEnabledState = { value: false, timestamp: Date.now() }', off.context);
+  vm.runInContext("activatePrerenderedPage(2, 'https://skipped.example/', 'doc-off')", off.context);
+  await flush();
+  assert.equal(await off.pages.has(2, 'doc-off'), false);
+});
+
 test('the page of a closed tab is forgotten, through the tab clean-up the worker runs', () => {
   const source = read('background/tab-events.js');
   const removed = source.slice(source.indexOf('chrome.tabs.onRemoved.addListener'), source.indexOf('chrome.tabs.onUpdated.addListener'));

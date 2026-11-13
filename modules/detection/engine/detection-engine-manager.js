@@ -24,6 +24,10 @@ class DetectionEngineManager {
     // A revision this far ahead of the clock was stamped by a clock that has since been set back (see bumpRulesRevision)
     static RULES_REV_CLOCK_SKEW_MS = 60 * 1000;
     static patternCache = new PatternCache(500);
+    // A content rule scoped to "page" reads the HTML of a document with fewer elements than this (a block or challenge page has
+    // a few dozen), at most PAGE_SOURCE_MAX_CHARS of it: an ordinary page collects nothing for it (demContentRuleIsPage)
+    static PAGE_SOURCE_MAX_ELEMENTS = 300;
+    static PAGE_SOURCE_MAX_CHARS = 50000;
 
     constructor() {
         this.detectionData = null;
@@ -364,6 +368,26 @@ class DetectionEngineManager {
     needsPageBodies() {
         return demNeedsPageBodies.apply(this, arguments);
     }
+    needsPageSource() {
+        return demNeedsPageSource.apply(this, arguments);
+    }
+
+    /**
+     * The HTML of a small page (head and title included) for content rules scoped to "page": '' when the document has
+     * PAGE_SOURCE_MAX_ELEMENTS elements or more, counted with a walk that stops there, so a large page is never serialised.
+     */
+    readPageSource() {
+        const root = document.documentElement;
+        if (!root) return '';
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT, null);
+        let count = 1;
+        while (walker.nextNode()) {
+            count += 1;
+            if (count >= DetectionEngineManager.PAGE_SOURCE_MAX_ELEMENTS) return '';
+        }
+        const html = String(root.outerHTML || '');
+        return html.length > DetectionEngineManager.PAGE_SOURCE_MAX_CHARS ? html.slice(0, DetectionEngineManager.PAGE_SOURCE_MAX_CHARS) : html;
+    }
     extractCookies() {
         return demExtractCookies.apply(this, arguments);
     }
@@ -405,6 +429,8 @@ class DetectionEngineManager {
         // The page's text (and, in extractExternalContent, the stylesheets' text) is read only by a content rule that is not
         // limited to scripts; every bundled content rule is
         const needsBodies = this.needsPageBodies();
+        // A small page's own HTML, for content rules scoped to "page" (the bundled block-page rules)
+        const needsSource = this.needsPageSource();
 
         let externalContent = [];
         if (needsExternal) {
@@ -422,6 +448,7 @@ class DetectionEngineManager {
 
         // Smart lazy data collection
         let cachedPageHTML = null;
+        let cachedPageSource = null;
         let cachedCookies = null;
         let cachedContent = null;
         let cachedDOM = null;
@@ -509,6 +536,21 @@ class DetectionEngineManager {
             });
         } else {
             Logger.debug('DETECTION', 'Skipped HTML: no content rule reads the page text');
+        }
+
+        if (needsSource) {
+            const engine = this;
+            Object.defineProperty(pageData, 'pageSource', {
+                get() {
+                    if (cachedPageSource === null) {
+                        cachedPageSource = engine.readPageSource();
+                        Logger.debug('DETECTION', cachedPageSource ? `Small page HTML: ${Math.round(cachedPageSource.length / 1024)} KB` : 'Small page HTML: not a small page');
+                    }
+                    return cachedPageSource;
+                },
+                set(value) { cachedPageSource = value; },
+                enumerable: true
+            });
         }
 
         this.detectionData = pageData;
@@ -710,6 +752,8 @@ class DetectionEngineManager {
 
     runDetectorRules(detector, pageData, options = {}) {
         const { url, content = [], dom, cookies = [], headers = {}, pageHTML = '', externalContent = [], allCookies = [], responseCookies = [] } = pageData;
+        // A small page's HTML (content rules scoped to "page"); anything but a text, as from an older content script, is none
+        const pageSource = typeof pageData.pageSource === 'string' ? pageData.pageSource : '';
         const matches = [];
 
         // allCookies includes HttpOnly cookies from chrome.cookies API
@@ -818,7 +862,7 @@ class DetectionEngineManager {
         // Check content patterns
         const contentPatterns = detector.detection?.content;
 
-        if (contentPatterns && (pageHTML || content.length > 0 || externalContent.length > 0)) {
+        if (contentPatterns && (pageHTML || pageSource || content.length > 0 || externalContent.length > 0)) {
             // One lowercased copy of each text (a script, a fetched resource, the page's HTML) for the whole scan: detectOnPage
             // passes its map, so 7.7 MB of scripts are lowercased once rather than once per case-insensitive rule
             const lowerTexts = options && options.lowerTexts instanceof Map ? options.lowerTexts : new Map();
@@ -844,12 +888,19 @@ class DetectionEngineManager {
                 // Both the declarative scope and the editor's legacy flag restrict
                 // source references to scripts, never page prose or CSS resources.
                 const checkScripts = contentPattern.scope === 'scripts' || contentPattern.checkScripts === true;
-
+                // "page": the HTML of a small page only (a block page's own text), never its scripts or a larger page (the test
+                // demContentRuleIsPage makes; written out here, as checkScripts is, for contexts that load the matcher alone)
+                const checkPageSource = !checkScripts && contentPattern.scope === 'page';
 
                 let found = false;
                 let foundIn = '';
 
-                if (!checkScripts) {
+                if (checkPageSource) {
+                    if (this.matchPattern(pageSource, patternText, matchOptions, preparedFor(pageSource, matchOptions))) {
+                        found = true;
+                        foundIn = 'page content';
+                    }
+                } else if (!checkScripts) {
                     // No restrictions = check entire page HTML + external content (default behavior)
                     if (this.matchPattern(pageHTML, patternText, matchOptions, preparedFor(pageHTML, matchOptions))) {
                         found = true;
@@ -1461,7 +1512,7 @@ class DetectionEngineManager {
         }
 
         const detections = [];
-        const { url = '', content = [], dom = [], cookies = [], headers = {}, requestHeaders = {}, pageHTML = '', externalContent = [], jsHooks = [], payload, payloads, responses = [], networkUrls = [], allCookies = [], responseCookies = [] } = pageData;
+        const { url = '', content = [], dom = [], cookies = [], headers = {}, requestHeaders = {}, pageHTML = '', pageSource = '', externalContent = [], jsHooks = [], payload, payloads, responses = [], networkUrls = [], allCookies = [], responseCookies = [] } = pageData;
 
         const cookiesToMatch = allCookies.length > 0 ? allCookies : cookies;
 
@@ -1471,7 +1522,7 @@ class DetectionEngineManager {
         this.lastStats = {
             scripts: content.length, dom: dom.length,
             cookies: cookiesToMatch.length, headers: Object.keys(headers).length,
-            html: pageHTML.length, resources: externalContent.length,
+            html: pageHTML.length + (typeof pageSource === 'string' ? pageSource.length : 0), resources: externalContent.length,
             requests: networkUrls.length, payloads: Array.isArray(payloads) ? payloads.length : 0,
             responses: Array.isArray(responses) ? responses.length : 0
         };
@@ -1502,7 +1553,7 @@ class DetectionEngineManager {
                 sliceStart = Date.now();
             }
             // requestHeaders: request-scope header rules read them (they were dropped here before)
-            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, externalContent, payload, payloads, responses, networkUrls, allCookies, responseCookies }, { groupElements: true, lowerTexts });
+            const detection = this.runDetector(detector, { url, content, dom, cookies, headers, requestHeaders, pageHTML, pageSource, externalContent, payload, payloads, responses, networkUrls, allCookies, responseCookies }, { groupElements: true, lowerTexts });
             if (detection.detected || detection.partial) {
                 const detectionObj = {
                     ...detection,
@@ -1863,7 +1914,9 @@ class DetectionEngineManager {
                     url: storedData.url,
                     cacheScope: storedData.cacheScope,
                     // The page's HTTP status recorded with this result (none in one saved before 3.1.8)
-                    httpStatus: storedData.httpStatus
+                    httpStatus: storedData.httpStatus,
+                    // What the scan looked at (none in one saved before 3.1.9)
+                    scanFacts: storedData.scanFacts
                 };
             }
         } catch (error) {
@@ -2032,6 +2085,9 @@ class DetectionEngineManager {
                 cacheScope: cacheScope,
                 // The page's HTTP status (pageHttpStatus in header-capture.js): a cache hit shows the one saved with the result it reuses
                 ...(Number.isInteger(pageData.httpStatus) ? { httpStatus: pageData.httpStatus } : {}),
+                // What the scan looked at (ScanReport.facts): on a site with the JS hooks off, the hooks did not run
+                ...(pageData.scanFacts && typeof pageData.scanFacts === 'object'
+                    ? { scanFacts: hooksOff ? { ...pageData.scanFacts, hooks: 'off' } : pageData.scanFacts } : {}),
                 ...(hooksOff ? { hooksOff: true } : {}),
                 // Absent means revision 0, as in what 3.1.2 saved
                 ...(savedRev > 0 ? { rulesRev: savedRev } : {}),
@@ -2226,7 +2282,10 @@ class DetectionEngineManager {
         Logger.debug('SCAN', `Page load (${triggerSource}) tab ${tabId}`);
         // A prerendered page just shown: its load sent no request in this tab, so what the tab captured (requests,
         // bodies, headers, cookies) is still the page shown before, maybe another site. It is not this page's evidence
-        if (triggerSource === 'prerender_activation' && typeof forgetTabRequests === 'function') {
+        // Already done when the page was shown (PRERENDER_SHOWN, header-capture.js activatePrerenderedPage): cleared again, the
+        // page's own load and what it sent since would go
+        const shownHandled = typeof prerenderShownHandled === 'function' && prerenderShownHandled(tabId, sender.documentId);
+        if (triggerSource === 'prerender_activation' && !shownHandled && typeof forgetTabRequests === 'function') {
             if (typeof noteTabLeaving === 'function') noteTabLeaving(tabId, sender.documentId);
             forgetTabRequests(tabId);
         }
@@ -2303,7 +2362,8 @@ class DetectionEngineManager {
                 timestamp: storedData.timestamp,
                 cacheScope: storedData.cacheScope,
                 favicon: storedData.favicon,
-                httpStatus: storedData.httpStatus
+                httpStatus: storedData.httpStatus,
+                scanFacts: storedData.scanFacts
             }).catch(() => {});
 
             // Notify content script to disable monitoring (cache hit)

@@ -29,6 +29,23 @@ const SCRAPFLY_ALLOWED_MAIN_MESSAGE_TYPES = new Set(SCRAPFLY_PROTOCOL.TO_ISOLATE
 
 var scrapflyBridgeToken = scrapflyBridgeToken || createScrapflyBridgeToken();
 
+// While Chrome prerenders the page (speculation rules, the address bar), the worker turns its reports away: they are held
+// until the page is shown, then sent after the notice that it is (modules/core/prerender-outbox.js)
+var workerOutbox = workerOutbox || PrerenderOutbox.create({
+    document,
+    send: (message) => chrome.runtime.sendMessage(message),
+    shownMessage: () => ({ type: WorkerMessages.PRERENDER_SHOWN, url: window.location.href }),
+    // What a page reporting a great deal while hidden may lose first; its completions are kept
+    sparable: [BRIDGE_TYPES.JS_HOOK_DETECTION_BATCH, BRIDGE_TYPES.RESPONSE_BODY, BRIDGE_TYPES.HOOK_FAILURE_REPORT]
+});
+// What the hook batcher and the completion relays send through: the outbox, with the extension's own context check
+var workerChrome = workerChrome || {
+    runtime: {
+        get id() { return chrome.runtime?.id; },
+        sendMessage: (message) => workerOutbox.send(message)
+    }
+};
+
 function createScrapflyBridgeToken() {
     try {
         const bytes = new Uint32Array(4);
@@ -313,7 +330,8 @@ function onPageLoaded(callback) {
  */
 function whenPageShown(start) {
     if (document.prerendering) {
-        document.addEventListener('prerenderingchange', () => { pageShownAfterPrerender = true; start(); }, { once: true });
+        // After the held hook and window reports went out (workerOutbox), so the scan that starts has them
+        workerOutbox.whenShown(() => { pageShownAfterPrerender = true; start(); });
     } else {
         start();
     }
@@ -782,7 +800,7 @@ function waitForUtilsAndInitialize() {
 // Don't clear cache here -- PAGE_LOAD_NOTIFICATION handles it
 
 // Create hook batcher using DetectionEngineManager
-const hookBatcher = DetectionEngineManager.createHookBatcher(chrome);
+const hookBatcher = DetectionEngineManager.createHookBatcher(workerChrome);
 
 // Listen for JS Hook detections from MAIN world script
 // Delegate to DetectionEngineManager.handleHookMessage()
@@ -816,7 +834,7 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
     // Forward hook failure reports from HookResilienceManager
     if (data.type === BRIDGE_TYPES.HOOK_FAILURE_REPORT) {
         try {
-            chrome.runtime.sendMessage({
+            workerOutbox.send({
                 type: BRIDGE_TYPES.HOOK_FAILURE_REPORT,
                 target: data.target,
                 failureType: data.failureType,
@@ -832,7 +850,7 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
     // Forward window property detections from WindowPropertyTracker
     if (data.type === BRIDGE_TYPES.WINDOW_DETECTIONS) {
         try {
-            chrome.runtime.sendMessage({
+            workerOutbox.send({
                 type: BRIDGE_TYPES.WINDOW_DETECTIONS,
                 detections: data.detections,
                 timestamp: data.timestamp
@@ -866,7 +884,7 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
     // what they show to this page's result
     if (data.type === BRIDGE_TYPES.RESPONSE_BODY) {
         try {
-            chrome.runtime.sendMessage({
+            workerOutbox.send({
                 type: BRIDGE_TYPES.RESPONSE_BODY,
                 url: data.url,
                 method: data.method,
@@ -918,7 +936,7 @@ window.addEventListener(SCRAPFLY_MAIN_TO_ISOLATED_EVENT, (event) => {
     }
 
     // handleHookMessage manages completion with retry
-    DetectionEngineManager.handleHookMessage({ source: window, data }, chrome, hookBatcher, { cacheHit: cacheHitEarlyExit });
+    DetectionEngineManager.handleHookMessage({ source: window, data }, workerChrome, hookBatcher, { cacheHit: cacheHitEarlyExit });
 }, true);
 
 // Install hooks at document_start before page scripts; no async operations before installJSHooks()

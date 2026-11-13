@@ -4,10 +4,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-// Detection → Clear Cache removed the tab's response headers, cookies and requests along with the saved result, so
+// Detection → Clear cache removed the tab's response headers, cookies and requests along with the saved result, so
 // the scan that followed without a reload (the popup asking again) stored a poorer result than the first one.
 
-test('Clear Cache drops the saved result and keeps the tab\'s network capture', async () => {
+test('Clear cache drops the saved result and keeps the tab\'s network capture', async () => {
   const stores = Object.fromEntries(['headersStore', 'requestHeadersStore', 'responseCookiesStore', 'payloadStore', 'networkUrlsStore', 'responseStore']
     .map(name => [name, new Map([[7, [{ url: 'https://shop.example/' }]]])]));
   const cleared = [];

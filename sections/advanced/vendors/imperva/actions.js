@@ -26,7 +26,7 @@ ImpervaAdvanced.prototype.checkCookies = async function() {
             } else if (hasReese84 || hasUtmvc) {
                 protectionLevel = 'Standard';
             } else if (incapSes.length > 0) {
-                protectionLevel = 'Basic (Session)';
+                protectionLevel = 'Basic (session)';
             }
 
             Logger.network('[IMPERVA] Protection Level:', protectionLevel);
@@ -45,10 +45,10 @@ ImpervaAdvanced.prototype.checkCookies = async function() {
                 'None': tr('advCommonNone', 'None'),
                 'Advanced (reese84 + utmvc)': tr('advImpervaLevelAdvanced', 'Advanced (reese84 + utmvc)'),
                 'Standard': tr('advCommonStandard', 'Standard'),
-                'Basic (Session)': tr('advImpervaLevelBasicSession', 'Basic (Session)')
+                'Basic (session)': tr('advImpervaLevelBasicSession', 'Basic (session)')
             }[protectionLevel] || protectionLevel;
             this.showCookieResults({ vendor: 'Imperva', expected: ['reese84', '___utmvc', 'incap_ses_*', 'nlbi_*', 'visid_incap_*'], cookies,
-                facts: [{ label: tr('advCommonProtectionLevel', 'Protection Level:'), value: levelText }] });
+                facts: [{ label: tr('advCommonProtectionLevel', 'Protection level:'), value: levelText }] });
         } catch (error) {
             Logger.error('NETWORK', '[IMPERVA] Failed to check cookies:', error);
             NotificationHelper.error(ImpervaAdvanced.fmt('advCommonFailedCheckCookiesFmt', 'Failed to check cookies: {0}', error.message));

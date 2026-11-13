@@ -137,13 +137,13 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 - **検出結果をアップロード**: 共有リンクを取得します（既定は dpaste.com。[共有リンク](#共有リンク)を参照）
 - **キャッシュをクリア**: 次回の読み込み時にそのページを再分析します
 - **コピー**: メニューから、アップロードで共有されるものと同じ概要、チケットやチャットに貼れる Markdown の表、サイトとその保護を 1 行にしたもの、または JSON を選べます（これらには Cookie 値やヘッダー値は含まれません）。ページをもう一度リクエストするコードを、curl コマンド、Python (requests)、Node.js (fetch) で選ぶこともできます。このブラウザーの User-Agent、Accept-Language、client hints と、ページが送信するすべての Cookie（HttpOnly を含む）が入ります。このコードには Cookie の値とクエリ文字列付きのページのアドレスが含まれるため、他の人に見せないでください
-- **このドメインをブロック**: 拡張機能がそのドメインを分析しないようにします
+- **このサイトをスキップ**: 拡張機能がそのサイトを分析しないようにします
 
 ### 履歴
 
-検出があったすべてのページが、保護と難易度とともに記録されます。検索（アクセント記号は無視されます）、検索ボックスの下のチップ（ピン留め、変化あり、カテゴリ、または組み合わせ。シグナルの組み合わせが一致したページ）による絞り込み、エントリを開いて詳細を確認、JSON エクスポートのインポート、JSON、CSV、プレーンテキスト、Markdown でのエクスポートができます。エクスポートでは、事前に保護、期間、サイト、ピン留めしたページを選べます。エントリの **⋯** メニューからは、ピン留め（履歴の整理で削除されなくなります）、メモの追加、ページを開く、今すぐ再分析、Markdown としてコピーができます。保護の変化を知らせる通知をクリックすると、そのページが開きます。**変化あり** の印は、直近の分析と保護の内容が異なるページを示します。**設定 → データ → 統計を開く** で、履歴から端末内で集計した統計ページ（アクティビティ、保護、ドメイン、信頼度、シグナル、組み合わせ、ルール、高度なツール）が開きます。
+検出があったすべてのページが、保護と難易度とともに記録されます。検索（アクセント記号は無視されます）、検索ボックスの下のチップ（ピン留め、変化あり、カテゴリ、または組み合わせ。シグナルの組み合わせが一致したページ）による絞り込み、エントリを開いて詳細を確認、JSON エクスポートのインポート、JSON、CSV、プレーンテキスト、Markdown でのエクスポートができます。エクスポートでは、事前に保護、期間、サイト、ピン留めしたページを選べます。エントリの **⋯** メニューからは、ピン留め（履歴の整理で削除されなくなります）、メモの追加、ページを開く、今すぐ再分析、Markdown としてコピーができます。保護の変化を知らせる通知をクリックすると、そのページが開きます。**変化あり** の印は、直近の分析と保護の内容が異なるページを示します。各カードには、ページが応答した HTTP ステータスが表示され（4xx は黄色、5xx は赤）、**⋯** メニューの **エラーステータスのページのみ** でそれらのページだけを表示できます。**設定 → データ → 統計を開く** で、履歴から端末内で集計した統計ページ（アクティビティ、保護、ドメイン、信頼度、シグナル、組み合わせ、ルール、高度なツール）が開きます。
 
-履歴の **その他の操作**（⋯）メニューにある **一括スキャン** は、ページの一覧を代わりに分析します。アドレスまたは https のサイトマップを貼り付けるか、.txt や .csv ファイルをアップロードすると、各ページがバックグラウンドのタブで 1 つずつ、あなたの Cookie を使った実際の訪問として開かれます。分析するページ数とページごとの制限時間を選べ、実行の一時停止と停止ができ（ポップアップを閉じても続行します）、エラーになったページの再スキャンや、表の CSV、JSON、Markdown でのエクスポートもできます。完了したページは通常の分析を経るため、履歴に記録され（一時停止中を除く）、Webhook にも送られます。集計には、最も多くのページで見つかった保護を示す **最も多く確認された保護** の行も加わります。サイトマップからは同じサイトのページだけが追加され、**設定 → 検出** でスキップしているサイトは除外されます。
+履歴の **その他の操作**（⋯）メニューにある **一括スキャン** は、ページの一覧を代わりに分析します。アドレスまたは https のサイトマップを貼り付けるか、.txt や .csv ファイルをアップロードすると、各ページがバックグラウンドのタブで 1 つずつ、あなたの Cookie を使った実際の訪問として開かれます。分析するページ数、ページごとの制限時間、ページ間の待機時間を選べ、実行の一時停止と停止ができ（ポップアップを閉じても続行します）、エラーになったページの再スキャン、エラーステータスのページや特定の保護があるページだけの表示、表の CSV、JSON、Markdown でのエクスポートもできます。完了したページは通常の分析を経るため、履歴に記録され（一時停止中を除く）、Webhook にも送られます。集計には、最も多くのページで見つかった保護を示す **最も多く確認された保護** の行も加わります。サイトマップからは同じサイトのページだけが追加され、**設定 → 検出** でスキップしているサイトは除外されます。
 
 ### ルール
 
@@ -157,21 +157,21 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 | 保護 | ツール |
 | --- | --- |
-| Akamai Bot Manager | Check Cookies · Analyze Scripts · Extract Sensor Information · Start Capturing |
-| AWS WAF | Check Cookies · Analyze Scripts |
-| Cloudflare Bot Management | Check Cookies · Analyze Scripts |
-| Cloudflare Turnstile | Extract SiteKey · Analyze Scripts |
-| DataDome | Check Cookies · Analyze Scripts |
-| FunCaptcha (Arkose Labs) | Extract Public Key · Analyze Scripts · Start Capturing |
-| GeeTest | Check Version · Analyze Scripts |
-| Google reCAPTCHA | Obtain Selector · Extract SiteKey · reCAPTCHA callback · Start Capturing |
-| hCaptcha | Extract SiteKey · Check Version · Analyze Scripts · Start Capturing |
-| Incapsula (Imperva) | Check Cookies · Analyze Scripts · Start Capturing |
-| Shape Security | Check Version · Check Cookies · Analyze Scripts · Start Capturing |
-| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
+| Akamai Bot Manager | Check cookies · Analyze scripts · Extract sensor information · Start capturing |
+| AWS WAF | Check cookies · Analyze scripts |
+| Cloudflare Bot Management | Check cookies · Analyze scripts |
+| Cloudflare Turnstile | Extract site key · Analyze scripts |
+| DataDome | Check cookies · Analyze scripts |
+| FunCaptcha (Arkose Labs) | Extract public key · Analyze scripts · Start capturing |
+| GeeTest | Check version · Analyze scripts |
+| Google reCAPTCHA | Obtain selector · Extract site key · reCAPTCHA callback · Start capturing |
+| hCaptcha | Extract site key · Check version · Analyze scripts · Start capturing |
+| Incapsula (Imperva) | Check cookies · Analyze scripts · Start capturing |
+| Shape Security | Check version · Check cookies · Analyze scripts · Start capturing |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract site key · Analyze scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
-結果とキャプチャは **詳細 → 履歴** に 30 分間保存され、サイト、プロバイダー、ツールで絞り込み、再度開き、エクスポートできます。
+結果とキャプチャは **詳細 → キャプチャ** に 30 分間保存され、サイト、プロバイダー、ツールで絞り込み、再度開き、エクスポートできます。
 
 ### 設定
 

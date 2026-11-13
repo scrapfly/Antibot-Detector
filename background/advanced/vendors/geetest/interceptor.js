@@ -58,7 +58,7 @@ async function handleGeetestCheckVersion(message, sender, sendResponse) {
             await showNotification(tabId, {
                 module: 'Geetest',
                 type: 'loading',
-                title: pageText('advGeetestDetectingVersion', 'Detecting Geetest Version...'),
+                title: pageText('advGeetestDetectingVersion', 'Detecting Geetest version...'),
                 message: pageText('advGeetestReloadCheckVersion', 'Reloading page to check version'),
                 duration: 5000
             }).catch(() => {});
@@ -277,7 +277,7 @@ async function handleGeetestAnalyzeScripts(message, sender, sendResponse) {
             await showNotification(tabId, {
                 module: 'Geetest',
                 type: 'loading',
-                title: pageText('advGeetestAnalyzingScripts', 'Analyzing Scripts...'),
+                title: pageText('advGeetestAnalyzingScripts', 'Analyzing scripts...'),
                 message: pageText('advGeetestReloadExtractScripts', 'Reloading page to extract scripts'),
                 duration: 5000
             }).catch(() => {});

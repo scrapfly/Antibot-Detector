@@ -6,7 +6,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 // What a screen reader is told on the Detection tab. A search or a chip that leaves fewer results, a page turned, a scan that
-// ends in a card ("Nothing Detected", "Scan failed") all changed the screen and nothing else: the no-match message toggles
+// ends in a card ("Nothing detected", "Scan failed") all changed the screen and nothing else: the no-match message toggles
 // `hidden`, the footer text is plain, the cards swap. One persistent status region (role="status", polite) carries the count
 // or the card's title. It sits outside every state card, which are display:none most of the time: a live region that appears
 // together with its text is not reliably read.
@@ -41,7 +41,7 @@ function fixture() {
   const nodes = { '.page-input': input, '.total-pages': total, '.pagination-info': info,
     '.pagination-btn-prev, .pagination-prev': prev, '.pagination-btn-next, .pagination-next': next };
   container.querySelector = selector => nodes[selector] || null;
-  // The Nothing Detected / failed / interrupted card
+  // The Nothing detected / failed / interrupted card
   const title = element(), description = element(), card = element();
   const emptyState = element();
   emptyState.querySelector = selector => ({ '.state-card-title': title, '.state-card-description': description, '.state-card': card })[selector] || null;
@@ -111,7 +111,7 @@ test('a scan that ends in a card is read out by the card\'s title; the next scan
   assert.equal(status.textContent, 'Scan failed', 'heard again');
   detection.showAnalyzingState();
   detection.showEmptyState({});
-  assert.equal(status.textContent, 'Nothing Detected');
+  assert.equal(status.textContent, 'Nothing detected');
   detection.showEmptyState({ outcome: 'unscanned' });
   assert.equal(status.textContent, 'No completed scan');
   detection.showEmptyState({ outcome: 'interrupted' });

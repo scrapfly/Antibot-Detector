@@ -102,12 +102,12 @@ SettingsUI.clearStoragePart = async function(part) {
             await chrome.storage.local.remove([...StorageOverview.GROUPS.find(group => group.id === 'updates').keys]);
             NotificationHelper.success(text('storageUpdatesCleared', 'Pending rule updates cleared'));
         } else if (part === 'logs') {
-            if (!await confirm(text('clearLogsTitle', 'Clear Logs'), text('clearLogsMessage', 'Are you sure you want to clear all collected logs? This action cannot be undone.'))) return;
+            if (!await confirm(text('clearLogsTitle', 'Clear logs'), text('clearLogsMessage', 'Are you sure you want to clear all collected logs? This action cannot be undone.'))) return;
             if (!await ask({ type: WorkerMessages.LOG_COLLECTOR_CLEAR })) throw new Error('The worker did not clear the logs');
             NotificationHelper.success(text('logsCleared', 'Logs cleared'));
         } else if (part === 'history') {
             // The History tab's own question and answer: the same words, and clearHistory() for the rest
-            if (!await confirm(text('dialogClearHistoryTitle', 'Clear History'), text('dialogClearHistoryMessage', 'Are you sure you want to clear all history? This action cannot be undone.'), text('buttonClearAll', 'Clear All'))) return;
+            if (!await confirm(text('dialogClearHistoryTitle', 'Clear History'), text('dialogClearHistoryMessage', 'Are you sure you want to clear all history? This action cannot be undone.'), text('buttonClearAll', 'Clear all'))) return;
             const history = window.popupInstance && window.popupInstance.history;
             if (!history || typeof history.clearHistory !== 'function') throw new Error('History is not loaded');
             await history.clearHistory();

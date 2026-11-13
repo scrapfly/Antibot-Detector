@@ -282,7 +282,7 @@
     "message": "Результати з’являться тут, коли будуть готові."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Видалити з чорного списку"
+    "message": "Видалити зі списку"
   },
   "statDetections": {
     "message": "Виявлення"
@@ -537,7 +537,7 @@
     "message": "Інструменти"
   },
   "advancedSubtabHistory": {
-    "message": "Історія"
+    "message": "Захоплення"
   },
   "advancedFilterSite": {
     "message": "Сайт"
@@ -711,10 +711,10 @@
     "message": "Дні"
   },
   "blacklistedDomains": {
-    "message": "Домени в чорному списку"
+    "message": "Пропущені сайти"
   },
   "blacklistedDomainsDesc": {
-    "message": "Домени, для яких виявлення повністю пропускається"
+    "message": "На цих сайтах виявлення ніколи не запускається. Кожен запис — точне ім’я хоста: його піддомени й далі скануються."
   },
   "jsApiEvents": {
     "message": "Події JS API"
@@ -842,7 +842,7 @@
     "message": "Очистити кеш"
   },
   "clearCacheConfirmMsg": {
-    "message": "Це видалить кешовані дані виявлення для цього домену й запустить новий аналіз."
+    "message": "Збережений результат виявлення для цієї сторінки буде видалено (за області кешу «Домен» або «Шлях» він може стосуватися й інших сторінок). Сторінку буде проскановано знову, коли ви її перезавантажите."
   },
   "clearCacheConfirmBtn": {
     "message": "Очистити кеш"
@@ -860,28 +860,28 @@
     "message": "Недійсний домен"
   },
   "addBlacklistTitle": {
-    "message": "Додати до чорного списку"
+    "message": "Пропускати цей сайт"
   },
   "addBlacklistMsgFmt": {
-    "message": "Домен «{0}» буде виключено з усіх майбутніх виявлень. Ви можете видалити його пізніше в налаштуваннях."
+    "message": "Сайт «{0}» більше не скануватиметься. Скасувати це можна в Налаштування → Виявлення → Сайти для сканування."
   },
   "addBlacklistBtn": {
-    "message": "Додати до чорного списку"
+    "message": "Пропускати цей сайт"
   },
   "alreadyBlacklistedFmt": {
-    "message": "Домен «{0}» уже в чорному списку"
+    "message": "Сайт «{0}» уже пропускається"
   },
   "addedToBlacklistFmt": {
-    "message": "Домен «{0}» додано до чорного списку"
+    "message": "Сайт «{0}» додано до пропущених"
   },
   "failedAddBlacklistFmt": {
-    "message": "Не вдалося додати до чорного списку: {0}"
+    "message": "Не вдалося додати сайт до пропущених: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "Домен «{0}» видалено з чорного списку"
+    "message": "Сайт «{0}» вилучено з пропущених"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Не вдалося видалити з чорного списку: {0}"
+    "message": "Не вдалося вилучити сайт із пропущених: {0}"
   },
   "historyNoDetections": {
     "message": "Немає виявлень"
@@ -914,10 +914,10 @@
     "message": "Не вдалося очистити кеш"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "Домен «{0}» додано до чорного списку"
+    "message": "Сайт «{0}» додано до пропущених"
   },
   "notificationBlacklistFailed": {
-    "message": "Не вдалося додати до чорного списку"
+    "message": "Не вдалося додати сайт до пропущених"
   },
   "notificationHistoryItemDeleted": {
     "message": "Запис історії видалено"
@@ -989,7 +989,7 @@
     "message": "Не вдалося отримати URL поточної сторінки"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} уже в чорному списку"
+    "message": "{0} уже пропускається"
   },
   "failedAddDomainFmt": {
     "message": "Не вдалося додати домен: {0}"
@@ -1418,7 +1418,7 @@
     "message": "Налаштування кешу"
   },
   "settingsCardSkipDomains": {
-    "message": "Пропущені домени"
+    "message": "Пропускати ці сайти"
   },
   "settingsAddCurrentPage": {
     "message": "Додати поточну сторінку"
@@ -1517,13 +1517,13 @@
     "message": "Приклад використання"
   },
   "detectionDisabledForDomain": {
-    "message": "Виявлення вимкнено для цього домену"
+    "message": "Виявлення призупинено: ви пропускаєте цей сайт"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Видалити з чорного списку"
+    "message": "Знову сканувати цей сайт"
   },
   "detectionBlacklistHint": {
-    "message": "Або перейдіть у Налаштування → Виявлення → Домени в чорному списку, щоб керувати ними."
+    "message": "Або перейдіть у Налаштування → Виявлення → Сайти для сканування, щоб керувати списком."
   },
   "detectionNoDetectionsDesc": {
     "message": "На цій сторінці не знайдено відповідних сигналів антибот-систем, CAPTCHA чи зняття відбитків."
@@ -1541,7 +1541,7 @@
     "message": "Не вдалося прочитати налаштування — операцію скасовано"
   },
   "failedRemoveBlacklist": {
-    "message": "Не вдалося видалити з чорного списку"
+    "message": "Не вдалося вилучити сайт із пропущених"
   },
   "pasteConfirmTitle": {
     "message": "Надіслати виявлення?"
@@ -1562,7 +1562,7 @@
     "message": "Копіювати огляд"
   },
   "detectionTitleBlockDomain": {
-    "message": "Заблокувати цей домен"
+    "message": "Пропускати цей сайт"
   },
   "detectionStatSite": {
     "message": "Сайт"
@@ -1589,7 +1589,7 @@
     "message": "з"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Цей домен у чорному списку"
+    "message": "Цей сайт пропускається"
   },
   "detectionModalConfidence": {
     "message": "Впевненість"
@@ -1858,7 +1858,7 @@
     "message": "Підтримувані системи захисту"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Переглянути історію захоплень ({0})"
+    "message": "Переглянути захоплення ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "Хуки JavaScript"
@@ -1978,7 +1978,7 @@
     "message": "Сторінок: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} із {1} виявлень · {2}%"
+    "message": "Виявлень: {0} із {1} · {2}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Виявлень: {0} · Днів: {1}"
@@ -3100,7 +3100,7 @@
     "message": "Ні"
   },
   "advHcaptchaNoHistory": {
-    "message": "Історії захоплень ще немає"
+    "message": "Захоплень ще немає"
   },
   "advHcaptchaNotAvailable": {
     "message": "Н/д"
@@ -3289,10 +3289,10 @@
     "message": "Н/д"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "Історію захоплень {0} очищено"
+    "message": "Захоплення {0} очищено"
   },
   "advPanelFailedClearHistory": {
-    "message": "Не вдалося очистити історію"
+    "message": "Не вдалося очистити захоплення"
   },
   "rulesUiNewDetectorName": {
     "message": "Новий детектор"
@@ -3550,16 +3550,16 @@
     "message": "Помилка: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "У чорному списку немає доменів"
+    "message": "Немає пропущених сайтів"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Немає доменів, що відповідають запиту"
+    "message": "Немає сайтів, що відповідають запиту"
   },
   "settingsUiChecking": {
     "message": "Перевірка..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "Ліміт історії має бути від 0 (без обмежень) до 10000"
+    "message": "Ліміт історії має бути цілим числом від 0 до 10000 (за 0 зберігається до 1000 записів)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "Тривалість кешу має бути від 1 до {0} ({1})"
@@ -3643,7 +3643,7 @@
     "message": "Спрацьовує, коли виконується будь-яка з цих умов ({0})."
   },
   "combinationSentenceAtLeastFmt": {
-    "message": "Спрацьовує, коли виконано умов: щонайменше {0} із {1}."
+    "message": "Спрацьовує, коли виконано мінімальну кількість умов: {0} із {1}."
   },
   "combinationSentenceConfidenceFmt": {
     "message": "Впевненість: {0}%."
@@ -4153,7 +4153,7 @@
     "message": "Значення"
   },
   "advCommonCharsFmt": {
-    "message": "{0} симв."
+    "message": "символів: {0}"
   },
   "advCookiePath": {
     "message": "Шлях"
@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "Код HTTP-статусу, яким сторінка відповіла під час сканування. Помилка (4xx або 5xx) часто означає, що запит заблокували або надіслали на перевірку."
   },
+  "detectionFactsTitle": {
+    "message": "Що перевірено"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Файли cookie: {0} · Скрипти: {1} · Запити: {2} · Заголовки: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS-хуки: завершено"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS-хуки: зупинено за лімітом часу"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS-хуки: вимкнено для цього сайту"
+  },
   "tipCacheExpires": {
     "message": "Спливає"
   },
@@ -4535,7 +4550,7 @@
     "message": "Перевірити"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Це правило збігається на сторінках: {1} із {0} збережених"
+    "message": "Збережених сторінок, де збігається це правило: {1} із {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "Сторінки: {0} із {1}"
@@ -5559,7 +5574,7 @@
     "message": "Лише змінені сторінки"
   },
   "historyExportCountFmt": {
-    "message": "Буде експортовано {0} із {1} записів"
+    "message": "Буде експортовано записів: {0} із {1}"
   },
   "historyExportNone": {
     "message": "Немає записів, що відповідають цим фільтрам"
@@ -5596,6 +5611,12 @@
   },
   "historyFilterCombinations": {
     "message": "Комбінації"
+  },
+  "historyFilterHttpError": {
+    "message": "Код помилки"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Лише сторінки з кодом помилки (4xx, 5xx)"
   },
   "historyNoResults": {
     "message": "Немає записів, що відповідають пошуку чи фільтрам."
@@ -6209,6 +6230,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Сканувати цю сторінку знову: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Відкрити розширення: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Пошук на відкритій вкладці: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Перехід між записами історії: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Закрити діалогове вікно: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Сторінка перезавантажується, тож усе збирається з самого початку."
   },
@@ -6581,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Ліміт часу на сторінку, у секундах"
   },
+  "bulkDelayLabel": {
+    "message": "Пауза між сторінками, у секундах"
+  },
   "bulkStart": {
     "message": "Запустити"
   },
@@ -6618,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Зі збоєм або пропущені",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Код помилки (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Лише {0}"
   },
   "bulkCopyLines": {
     "message": "Копіювати рядками"
@@ -6773,6 +6815,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Зміни налаштувань ще не збережено. Зберегти їх перед закриттям?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Зміни налаштувань ще не збережено. Зберегти їх перед застосуванням нових налаштувань?"
+  },
   "historySortLabel": {
     "message": "Сортування історії"
   },
@@ -6790,5 +6835,47 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Один рядок"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Лише сторінки блокування та перевірки"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Шукати в усьому HTML, разом із заголовком, лише на невеликих сторінках, як-от сторінка блокування файрвола. Більші сторінки не переглядаються"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Які сторінки мають один спільний збережений результат. Домен: усі сторінки сайту. Шлях: та сама адреса за будь-якого запиту. Повна URL-адреса: лише точно та сама адреса."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Додає дату сканування кожної сторінки до експорту CSV, звичайного тексту й Markdown. Експорт JSON містить її завжди."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Записує сторінку в історію й тоді, коли її результат береться з кешу, а не з нового сканування."
+  },
+  "detectionStrongToggle": {
+    "message": "Сильні (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Низька складність: звичайний трафік зазвичай пропускає, а запити з реалістичними заголовками та cookie часто проходять."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Середня складність: прості HTTP-клієнти часто отримують перевірку; справжній браузер з узгодженими налаштуваннями зазвичай проходить."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Висока складність: обійти важко. Перевіряє браузер, його поведінку та мережу, з якої він приходить, і блокує прості HTTP-клієнти."
+  },
+  "detectionModalWebsite": {
+    "message": "Сайт"
+  },
+  "detectionModalEditRule": {
+    "message": "Редагувати правило"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Копіювати докази"
+  },
+  "detectionModalDocs": {
+    "message": "Посібник із виявлення"
   }
 }

@@ -4,7 +4,7 @@
         this.recordStructuredResult('displaySiteKeysModal', keys);
         const K = BaseAdvancedModule;
         const cards = keys.map(key => K.kitCard(
-            K.kitField(this._txt('advCommonSiteKey', 'Site Key'), key.sitekey, { wrap: true })
+            K.kitField(this._txt('advCommonSiteKey', 'Site key'), key.sitekey, { wrap: true })
             + K.kitField(this._txt('advCommonPage', 'Page'), key.pageUrl, { mono: false, wrap: true })
         )).join('');
         this.openKitModal({
@@ -12,7 +12,7 @@
             subtitle: keys.length === 1 ? keys[0].sitekey : String(keys.length),
             iconSvg: TurnstileAdvanced.KEY_ICON,
             body: cards,
-            copiedMessage: this._txt('advCloudflareSiteKeyCopied', 'Site Key copied')
+            copiedMessage: this._txt('advCloudflareSiteKeyCopied', 'Site key copied')
         });
 
     }

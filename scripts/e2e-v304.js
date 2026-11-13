@@ -459,7 +459,7 @@ const SEED = [
     const summary = await page.$eval('#ruleLiveTestResults .rule-check-summary-text', el => el.textContent.trim());
     assert.match(summary, /^The rule matches 127\.0\.0\.1 \(confidence \d+%\)$/, summary);
     const notes = await page.$$eval('#ruleLiveTestResults .rule-check-note', els => els.map(el => el.textContent.trim()));
-    assert.ok(notes.some(n => /^Read \d+ scripts, \d+ elements, \d+ cookies and \d+ requests\.$/.test(n)), notes.join(' | '));
+    assert.ok(notes.some(n => /^Read from the page\. Scripts: \d+ · elements: \d+ · cookies: \d+ · requests: \d+\.$/.test(n)), notes.join(' | '));
     assert.ok(notes.some(n => /needs a real scan/.test(n)), 'the note explains the marks');
     assert.ok(!(await page.$eval('#ruleLiveTestResults', el => el.innerText)).includes('SECRET_KEY_VALUE'), 'no page value is shown');
     // Nothing came of it: no saved result, no History entry for the site

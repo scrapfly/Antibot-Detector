@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-// Analyze Scripts → Export Code: every vendor offers it, and the shared
+// Analyze scripts → Export code: every vendor offers it, and the shared
 // script-URL generator writes code that runs outside the extension.
 
 const read = file => fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
@@ -15,7 +15,7 @@ function dialog() {
   return context.window.AdvancedCodeDialog;
 }
 
-test('every Analyze Scripts result offers Export Code', () => {
+test('every Analyze scripts result offers Export code', () => {
   // URL-only results use the shared window, whose footer opens the shared generator
   for (const vendor of ['awswaf', 'cloudflare', 'datadome', 'funcaptcha', 'hcaptcha', 'turnstile']) {
     const view = read(`sections/advanced/vendors/${vendor}/view.js`);
@@ -25,7 +25,7 @@ test('every Analyze Scripts result offers Export Code', () => {
   assert.match(read('sections/advanced/components/script-results.js'), /AdvancedCodeDialog\.openScriptUrls\(this, name, scripts\)/);
   // Results with more than URLs keep their own generators
   for (const vendor of ['imperva', 'shapesecurity']) {
-    assert.match(read(`sections/advanced/vendors/${vendor}/view.js`), /\('advCommonExportCode', 'Export Code'\)/, vendor);
+    assert.match(read(`sections/advanced/vendors/${vendor}/view.js`), /\('advCommonExportCode', 'Export code'\)/, vendor);
   }
 });
 

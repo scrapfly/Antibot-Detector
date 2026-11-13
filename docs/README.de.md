@@ -137,13 +137,13 @@ Die auf der aktuellen Seite gefundenen Schutzmaßnahmen, jeweils mit Konfidenz, 
 - **Erkennungen hochladen**, um einen teilbaren Link zu erhalten (standardmäßig dpaste.com; siehe [Links zum Teilen](#links-zum-teilen))
 - **Cache leeren**, damit die Seite beim nächsten Laden erneut gescannt wird
 - **Kopieren**, ein Menü: dieselbe Zusammenfassung, die der Upload teilt, eine Markdown-Tabelle für ein Ticket oder einen Chat, eine Zeile mit der Website und ihren Schutzmaßnahmen oder JSON (keines davon enthält Cookie- oder Header-Werte); oder Code, der die Seite erneut abruft, als curl-Befehl, Python (requests) oder Node.js (fetch), mit User-Agent, Accept-Language und Client Hints dieses Browsers und allen Cookies, die die Seite sendet, auch den HttpOnly-Cookies. Dieser Code enthält die Cookie-Werte und die Adresse der Seite mit ihrem Query-String; geben Sie ihn daher nicht weiter
-- **Diese Domain blockieren**, damit die Erweiterung sie nicht mehr scannt
+- **Diese Site überspringen**, damit die Erweiterung sie nicht mehr scannt
 
 ### Verlauf
 
-Jede Seite, auf der es Erkennungen gab, mit ihren Schutzmaßnahmen und ihrer Schwierigkeit. Durchsuchen Sie ihn (Akzente werden ignoriert), grenzen Sie ihn mit den Chips unter dem Suchfeld ein (Angeheftet, Geändert, eine Kategorie oder Kombinationen, also Seiten, auf denen eine Signalkombination gegriffen hat), öffnen Sie einen Eintrag für Details, importieren Sie einen JSON-Export und exportieren Sie ihn als JSON, CSV, reinen Text oder Markdown, wobei Sie zuvor Schutzmaßnahmen, Zeitraum, Website und angeheftete Seiten wählen. Über das Menü **⋯** eines Eintrags können Sie ihn anheften (er bleibt erhalten, wenn der Verlauf bereinigt wird), eine Notiz hinzufügen, die Seite öffnen, sie jetzt erneut scannen oder als Markdown kopieren. Ein Klick auf eine Benachrichtigung über geänderte Schutzmaßnahmen öffnet diese Seite. Die Markierung **Geändert** kennzeichnet eine Seite, deren Schutzmaßnahmen sich von ihrem letzten Scan unterscheiden. **Einstellungen → Daten → Statistiken öffnen** öffnet eine Statistikseite (Aktivität, Schutzmaßnahmen, Domains, Konfidenz, Signale, Kombinationen, Regeln und erweiterte Werkzeuge), die lokal aus Ihrem Verlauf berechnet wird.
+Jede Seite, auf der es Erkennungen gab, mit ihren Schutzmaßnahmen und ihrer Schwierigkeit. Durchsuchen Sie ihn (Akzente werden ignoriert), grenzen Sie ihn mit den Chips unter dem Suchfeld ein (Angeheftet, Geändert, eine Kategorie oder Kombinationen, also Seiten, auf denen eine Signalkombination gegriffen hat), öffnen Sie einen Eintrag für Details, importieren Sie einen JSON-Export und exportieren Sie ihn als JSON, CSV, reinen Text oder Markdown, wobei Sie zuvor Schutzmaßnahmen, Zeitraum, Website und angeheftete Seiten wählen. Über das Menü **⋯** eines Eintrags können Sie ihn anheften (er bleibt erhalten, wenn der Verlauf bereinigt wird), eine Notiz hinzufügen, die Seite öffnen, sie jetzt erneut scannen oder als Markdown kopieren. Ein Klick auf eine Benachrichtigung über geänderte Schutzmaßnahmen öffnet diese Seite. Die Markierung **Geändert** kennzeichnet eine Seite, deren Schutzmaßnahmen sich von ihrem letzten Scan unterscheiden. Jede Karte zeigt den HTTP-Status, mit dem die Seite geantwortet hat (gelb bei 4xx, rot bei 5xx), und **Nur Seiten mit Fehlerstatus** im Menü **⋯** zeigt nur diese Seiten. **Einstellungen → Daten → Statistiken öffnen** öffnet eine Statistikseite (Aktivität, Schutzmaßnahmen, Domains, Konfidenz, Signale, Kombinationen, Regeln und erweiterte Werkzeuge), die lokal aus Ihrem Verlauf berechnet wird.
 
-**Massenscan** im Menü **Weitere Aktionen** (⋯) des Verlaufs scannt eine Liste von Seiten für Sie: Fügen Sie Adressen oder eine https-Sitemap ein oder laden Sie eine .txt- oder .csv-Datei hoch, und jede Seite wird nacheinander in einem Hintergrund-Tab geöffnet, wie ein echter Besuch mit Ihren Cookies. Wählen Sie, wie viele Seiten gescannt werden und welches Zeitlimit pro Seite gilt, pausieren oder stoppen Sie den Lauf (er läuft weiter, auch wenn Sie das Popup schließen), scannen Sie fehlgeschlagene Seiten erneut und exportieren Sie die Tabelle als CSV, JSON oder Markdown. Fertige Seiten durchlaufen den normalen Scan, werden also im Verlauf erfasst (sofern er nicht pausiert ist) und an Ihren Webhook gesendet, und die Summen erhalten eine Zeile **Am häufigsten gesehen** mit den Schutzmaßnahmen, die auf den meisten Seiten gefunden wurden. Eine Sitemap fügt nur Seiten ihrer eigenen Website hinzu, und Websites, die Sie unter **Einstellungen → Erkennung** überspringen, bleiben außen vor.
+**Massenscan** im Menü **Weitere Aktionen** (⋯) des Verlaufs scannt eine Liste von Seiten für Sie: Fügen Sie Adressen oder eine https-Sitemap ein oder laden Sie eine .txt- oder .csv-Datei hoch, und jede Seite wird nacheinander in einem Hintergrund-Tab geöffnet, wie ein echter Besuch mit Ihren Cookies. Wählen Sie, wie viele Seiten gescannt werden, welches Zeitlimit pro Seite gilt und wie lange zwischen zwei Seiten gewartet wird, pausieren oder stoppen Sie den Lauf (er läuft weiter, auch wenn Sie das Popup schließen), scannen Sie fehlgeschlagene Seiten erneut, zeigen Sie nur die Seiten mit Fehlerstatus oder mit einem bestimmten Schutz und exportieren Sie die Tabelle als CSV, JSON oder Markdown. Fertige Seiten durchlaufen den normalen Scan, werden also im Verlauf erfasst (sofern er nicht pausiert ist) und an Ihren Webhook gesendet, und die Summen erhalten eine Zeile **Am häufigsten gesehen** mit den Schutzmaßnahmen, die auf den meisten Seiten gefunden wurden. Eine Sitemap fügt nur Seiten ihrer eigenen Website hinzu, und Websites, die Sie unter **Einstellungen → Erkennung** überspringen, bleiben außen vor.
 
 ### Regeln
 
@@ -157,21 +157,21 @@ Praktische Werkzeuge für die Schutzmaßnahmen, die eine Seite einsetzt. Eine Sc
 
 | Schutzmaßnahme | Werkzeuge |
 | --- | --- |
-| Akamai Bot Manager | Check Cookies · Analyze Scripts · Extract Sensor Information · Start Capturing |
-| AWS WAF | Check Cookies · Analyze Scripts |
-| Cloudflare Bot Management | Check Cookies · Analyze Scripts |
-| Cloudflare Turnstile | Extract SiteKey · Analyze Scripts |
-| DataDome | Check Cookies · Analyze Scripts |
-| FunCaptcha (Arkose Labs) | Extract Public Key · Analyze Scripts · Start Capturing |
-| GeeTest | Check Version · Analyze Scripts |
-| Google reCAPTCHA | Obtain Selector · Extract SiteKey · reCAPTCHA callback · Start Capturing |
-| hCaptcha | Extract SiteKey · Check Version · Analyze Scripts · Start Capturing |
-| Incapsula (Imperva) | Check Cookies · Analyze Scripts · Start Capturing |
-| Shape Security | Check Version · Check Cookies · Analyze Scripts · Start Capturing |
-| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
+| Akamai Bot Manager | Check cookies · Analyze scripts · Extract sensor information · Start capturing |
+| AWS WAF | Check cookies · Analyze scripts |
+| Cloudflare Bot Management | Check cookies · Analyze scripts |
+| Cloudflare Turnstile | Extract site key · Analyze scripts |
+| DataDome | Check cookies · Analyze scripts |
+| FunCaptcha (Arkose Labs) | Extract public key · Analyze scripts · Start capturing |
+| GeeTest | Check version · Analyze scripts |
+| Google reCAPTCHA | Obtain selector · Extract site key · reCAPTCHA callback · Start capturing |
+| hCaptcha | Extract site key · Check version · Analyze scripts · Start capturing |
+| Incapsula (Imperva) | Check cookies · Analyze scripts · Start capturing |
+| Shape Security | Check version · Check cookies · Analyze scripts · Start capturing |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract site key · Analyze scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
-Ergebnisse und Mitschnitte werden 30 Minuten lang unter **Erweitert → Verlauf** aufbewahrt, wo Sie sie nach Website, Anbieter und Werkzeug filtern, erneut öffnen und exportieren können.
+Ergebnisse und Mitschnitte werden 30 Minuten lang unter **Erweitert → Erfassungen** aufbewahrt, wo Sie sie nach Website, Anbieter und Werkzeug filtern, erneut öffnen und exportieren können.
 
 ### Einstellungen
 

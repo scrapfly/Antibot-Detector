@@ -771,3 +771,50 @@ test('an entry dated far ahead (a clock that was wrong) is no recent visit, so a
   assert.strictEqual(w.items().length, 2);
   assert.strictEqual(await w.sw.HistoryRecorder.shouldSaveToHistory('https://clock.example/', s, w.sw.chrome), false, 'while a real recent one still blocks');
 });
+
+// ---- The page's HTTP status (3.1.9): kept on the entry its scan made, never carried to a scan that did not know it
+
+const saveWithStatus = (w, url, detections, httpStatus, settings = {}, extra = {}) => {
+  const host = new URL(url).hostname;
+  if (!w.tabs.has(1)) w.tabs.set(1, { id: 1, url, title: host, incognito: false });
+  return w.sw.HistoryRecorder.saveDetectionToHistory(1, { url, hostname: host, title: host, ...(httpStatus === undefined ? {} : { httpStatus }) },
+    detections, w.sw.chrome, { source: 'test', ...extra, historySettings: { historyEnabled: true, historyLimit: 0, preventDuplicates: false, ...settings } });
+};
+
+test('an entry keeps the HTTP status its scan saw; an unknown or invalid one is left out', async () => {
+  const w = makeWorld();
+  await saveWithStatus(w, 'https://blocked.example/', [antibot('Cloudflare')], 403);
+  await saveWithStatus(w, 'https://plain.example/', [antibot('Cloudflare')], undefined);
+  await saveWithStatus(w, 'https://odd.example/', [antibot('Cloudflare')], 304);
+  const byHost = Object.fromEntries(w.items().map(i => [i.hostname, i]));
+  assert.strictEqual(byHost['blocked.example'].httpStatus, 403);
+  assert.ok(!('httpStatus' in byHost['plain.example']), 'a scan with no status leaves the field out');
+  assert.ok(!('httpStatus' in byHost['odd.example']), 'a 304 says nothing about the page');
+});
+
+test('an entry updated in place takes the new scan\'s status, drops the old one when the new scan has none, and a cached result keeps the scan\'s', async () => {
+  const w = makeWorld();
+  const dup = { preventDuplicates: true, duplicateAction: 'update', duplicateScope: 'full_url', duplicateDuration: 1, duplicateUnit: 'hours' };
+  await saveWithStatus(w, 'https://a.example/', [antibot('Cloudflare')], 503, dup);
+  w.advance(60000);
+  await saveWithStatus(w, 'https://a.example/', [antibot('Cloudflare')], 200, dup);
+  assert.strictEqual(w.items().length, 1);
+  assert.strictEqual(w.items()[0].httpStatus, 200);
+  w.advance(60000);
+  await saveWithStatus(w, 'https://a.example/', [antibot('Cloudflare')], 403, dup, { fromCache: true });
+  assert.strictEqual(w.items()[0].httpStatus, 200, 'a cached result never replaces what the scan saw');
+  w.advance(60000);
+  await saveWithStatus(w, 'https://a.example/', [antibot('Cloudflare')], undefined, dup);
+  assert.ok(!('httpStatus' in w.items()[0]), 'the earlier scan\'s status does not stay beside a new scan');
+});
+
+test('a watch check records the status its page answered with; a check with none keeps the entry\'s unless it brings a new scan', async () => {
+  const w = watchWorld([watched('a', { httpStatus: 200 }), watched('b', { httpStatus: 200 }), watched('c', { httpStatus: 403 })], { historyChangeAlerts: 'off' });
+  await w.sw.HistoryRecorder.applyWatchResult('a', [antibot('Cloudflare')], w.sw.chrome, START, { httpStatus: 429 });
+  await w.sw.HistoryRecorder.applyWatchResult('b', [antibot('Cloudflare')], w.sw.chrome, START);
+  await w.sw.HistoryRecorder.applyWatchResult('c', [antibot('DataDome')], w.sw.chrome, START);
+  const byId = Object.fromEntries(w.items().map(i => [i.id, i]));
+  assert.strictEqual(byId.a.httpStatus, 429, 'unchanged protections, a new answer');
+  assert.strictEqual(byId.b.httpStatus, 200, 'nothing new known: the entry keeps its scan and its status');
+  assert.ok(!('httpStatus' in byId.c), 'a changed page takes the new scan, and that scan did not know its status');
+});

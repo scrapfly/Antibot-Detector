@@ -64,14 +64,15 @@ test('a name and a category reader can be passed in (the popup uses its own)', (
 });
 
 test('chips are normalised: unknown categories and non-booleans are ignored, duplicates collapse', () => {
-  assert.deepStrictEqual(F.normalizeChips(undefined), { pinned: false, changed: false, combinations: false, categories: [] });
-  assert.deepStrictEqual(F.normalizeChips({ pinned: 'yes', changed: 1, combinations: 'true', categories: ['captcha', 'captcha', 'other', 7] }), { pinned: false, changed: false, combinations: false, categories: ['captcha'] });
+  assert.deepStrictEqual(F.normalizeChips(undefined), { pinned: false, changed: false, combinations: false, httpError: false, categories: [] });
+  assert.deepStrictEqual(F.normalizeChips({ pinned: 'yes', changed: 1, combinations: 'true', httpError: 'on', categories: ['captcha', 'captcha', 'other', 7] }), { pinned: false, changed: false, combinations: false, httpError: false, categories: ['captcha'] });
   assert.strictEqual(F.isActive({}), false);
   assert.strictEqual(F.isActive({ categories: ['other'] }), false);
   assert.strictEqual(F.isActive({ categories: ['captcha'] }), true);
   assert.strictEqual(F.isActive({ pinned: true }), true);
   assert.strictEqual(F.isActive({ combinations: true }), true);
-  assert.deepStrictEqual(F.FLAGS, ['pinned', 'changed', 'combinations'], 'the on/off chips, in the order of the row');
+  assert.strictEqual(F.isActive({ httpError: true }), true);
+  assert.deepStrictEqual(F.FLAGS, ['pinned', 'changed', 'combinations', 'httpError'], 'the on/off chips, in the order of the row');
 });
 
 test('detections saved in either shape are read: a name and category on the detection or under detector', () => {
@@ -82,15 +83,15 @@ test('detections saved in either shape are read: a name and category on the dete
   assert.deepStrictEqual(ids(F.filter([nested], { chips: { categories: ['antibot'] } })), ['n']);
 });
 
-test('the chip row of the History tab has one chip for Pinned, one for Changed, one for every category in the category order, and Combinations last', () => {
+test('the chip row of the History tab has one chip for Pinned, one for Changed, one for every category in the category order, Combinations, and Error status (shown only while on)', () => {
   const fs = require('node:fs');
   const path = require('node:path');
   const Categories = require('../modules/core/categories.js');
   const html = fs.readFileSync(path.join(__dirname, '../sections/history/history.html'), 'utf8');
   const row = html.slice(html.indexOf('id="historyFilters"'), html.indexOf('<!-- Toolbar'));
-  const chips = [...row.matchAll(/<button[^>]*class="history-filter-chip[^"]*"[^>]*data-filter="([a-z]+)"([^>]*)>([\s\S]*?)<\/button>/g)]
+  const chips = [...row.matchAll(/<button[^>]*class="history-filter-chip[^"]*"[^>]*data-filter="([A-Za-z]+)"([^>]*)>([\s\S]*?)<\/button>/g)]
     .map(match => ({ filter: match[1], category: (match[2].match(/data-category="([a-z]+)"/) || [])[1], label: (match[3].match(/data-i18n="([A-Za-z]+)"/) || [])[1] }));
-  assert.deepStrictEqual(chips.map(chip => chip.filter), ['pinned', 'changed', ...Categories.KEYS, 'combinations']);
+  assert.deepStrictEqual(chips.map(chip => chip.filter), ['pinned', 'changed', ...Categories.KEYS, 'combinations', 'httpError']);
   for (const key of Categories.KEYS) {
     const chip = chips.find(entry => entry.filter === key);
     assert.strictEqual(chip.category, key, `${key} carries its category for the icon and the colour`);
@@ -316,4 +317,27 @@ test('a query with no letter in it (only combining marks, with or without spaces
   }
   assert.deepStrictEqual(ids(F.filter(pages, { query: '   ' })).length, pages.length, 'an empty search still keeps everything');
   assert.strictEqual(finds('сло́во', 'ло́'), true, 'a mark with its letter is searched as written');
+});
+
+test('Error status keeps the pages that answered 4xx or 5xx; one with no known status (saved before 3.1.9) is not one of them', () => {
+  const pages = [
+    item('ok', 'https://ok.example/', [det('Cloudflare', 'Anti-Bot')], { httpStatus: 200 }),
+    item('forbidden', 'https://forbidden.example/', [det('Cloudflare', 'Anti-Bot')], { httpStatus: 403 }),
+    item('down', 'https://down.example/', [], { httpStatus: 503, pinned: true }),
+    item('old', 'https://old.example/', [det('Cloudflare', 'Anti-Bot')]),
+    item('junk', 'https://junk.example/', [], { httpStatus: '500' })
+  ];
+  assert.deepStrictEqual(ids(F.filter(pages, { chips: { httpError: true } })), ['forbidden', 'down']);
+  assert.deepStrictEqual(ids(F.filter(pages, { chips: { httpError: true, pinned: true } })), ['down'], 'combined with the other chips by AND');
+  assert.deepStrictEqual(ids(F.filter(pages, { chips: { httpError: true, categories: ['antibot'] } })), ['forbidden']);
+  assert.strictEqual(F.isHttpError(null), false);
+});
+
+test('the Error status chip is hidden until it is on, and the toolbar menu turns it on and off', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const html = fs.readFileSync(path.join(__dirname, '../sections/history/history.html'), 'utf8');
+  assert.match(html, /<button type="button" class="history-filter-chip history-filter-chip--http" data-filter="httpError" aria-pressed="false" hidden>[\s\S]*?data-i18n="historyFilterHttpError">Error status</);
+  const menu = html.slice(html.indexOf('id="historyMenu"'), html.indexOf('id="historyItemMenu"'));
+  assert.match(menu, /<button id="historyHttpErrorsBtn" class="history-menu-item history-menu-check" role="menuitemcheckbox" aria-checked="false">[\s\S]*?data-i18n="historyFilterHttpErrorMenu">Only pages with an error status \(4xx, 5xx\)</);
 });

@@ -258,7 +258,7 @@ DetectionUI.applyEmptyStateCopy = function(options = {}) {
         const titleFallback = options.outcome === 'unsupported' ? 'This page cannot be scanned'
           : options.outcome === 'failed' ? 'Scan failed'
           : options.outcome === 'interrupted' ? 'Scan interrupted'
-          : options.noCache ? 'No completed scan' : 'Nothing Detected';
+          : options.noCache ? 'No completed scan' : 'Nothing detected';
         emptyStateTitle.setAttribute('data-i18n', titleKey);
         emptyStateTitle.textContent = tr(titleKey, titleFallback);
       }
@@ -298,7 +298,7 @@ DetectionUI.applyDisabledStateCopy = function() {
 
     if (title) {
       title.setAttribute('data-i18n', 'detectionDisabledTitle');
-      title.textContent = tr('detectionDisabledTitle', 'Detection Disabled');
+      title.textContent = tr('detectionDisabledTitle', 'Detection disabled');
     }
     if (desc) {
       desc.setAttribute('data-i18n', 'detectionDisabledDesc');
@@ -310,7 +310,7 @@ DetectionUI.applyDisabledStateCopy = function() {
     }
     if (blacklistBtn) {
       blacklistBtn.setAttribute('data-i18n-title', 'detectionDomainBlacklistedTitle');
-      const titleText = tr('detectionDomainBlacklistedTitle', 'This domain is blacklisted');
+      const titleText = tr('detectionDomainBlacklistedTitle', 'This site is skipped');
       blacklistBtn.setAttribute('title', titleText);
     }
 };
@@ -333,7 +333,7 @@ DetectionUI.syncHooksOffNote = async function() {
       if (badge) {
         const key = off ? 'hooksOffBadge' : 'detectionBadgeNoFingerprint';
         badge.setAttribute('data-i18n', key);
-        badge.textContent = tr(key, off ? 'Fingerprinting not checked' : '✓ No Fingerprinting');
+        badge.textContent = tr(key, off ? 'Fingerprinting not checked' : '✓ No fingerprinting');
         badge.classList.toggle('state-card-badge--off', off);
       }
       const description = document.querySelector('#emptyState .state-card-description');
@@ -368,9 +368,12 @@ DetectionUI.setNoteText = function(note, text, title = '') {
     note.hidden = !text;
 };
 
-/** "From a scan of /login, 3h ago": the result shown was found on another page of the site (the Domain cache scope). */
+/**
+ * "From a scan of /login, 3h ago": the result shown was found on another page of the site (the Domain cache scope). The path is
+ * isolated (FSI ... PDI) so it keeps its own direction inside a right-to-left line, and the time goes inside the sentence.
+ */
 DetectionUI.otherPageText = function(other) {
-    return FormatUtils.t('detectionFromPageFmt', 'From a scan of {0}, {1}', other.path, FormatUtils.getTimeAgo(other.at));
+    return FormatUtils.t('detectionFromPageFmt', 'From a scan of {0}, {1}', `\u2068${other.path}\u2069`, FormatUtils.getTimeAgo(other.at, { inline: true }));
 };
 
 /** The hover text of that line: the other page's whole address and the scan's date. */
@@ -402,7 +405,7 @@ DetectionUI.syncCheckedNote = async function(scan) {
       text = DetectionUI.otherPageText(other);
       title = DetectionUI.otherPageTitle(other);
     } else if (at > 0) {
-      text = FormatUtils.t('historyWatchCheckedFmt', 'Last checked {0}', FormatUtils.getTimeAgo(at));
+      text = FormatUtils.t('historyWatchCheckedFmt', 'Last checked {0}', FormatUtils.getTimeAgo(at, { inline: true }));
       title = FormatUtils.formatDateTime(at);
     }
     const span = note.querySelector('.detection-note-text');
@@ -414,6 +417,70 @@ DetectionUI.syncCheckedNote = async function(scan) {
     const sep = note.querySelector('.detection-note-sep');
     if (sep) sep.hidden = !text;
     note.hidden = false;
+};
+
+/** How the JS hooks of a scan ended, as the worker saves it (ScanReport.facts, storeDetection), and the line that says it. */
+DetectionUI.HOOKS_OUTCOMES = Object.freeze({
+    done: ['detectionFactsHooksDone', 'JS hooks: finished'],
+    timeout: ['detectionFactsHooksTimeout', 'JS hooks: stopped at the time limit'],
+    off: ['detectionFactsHooksOff', 'JS hooks: off for this site']
+});
+
+/**
+ * What a scan looked at, as text: "Cookies: 12 · Scripts: 31 · Requests: 200 · Headers: 18" and "JS hooks: finished". Null for a
+ * result with no facts (saved before 3.1.9) or with facts this version does not read.
+ * @param {object} facts - the result's scanFacts
+ * @returns {{counts: string, hooks: string}|null}
+ */
+DetectionUI.scanFactsText = function(facts) {
+    if (!facts || typeof facts !== 'object') return null;
+    const keys = ['cookies', 'scripts', 'requests', 'headers'];
+    if (!keys.every(key => Number.isInteger(facts[key]) && facts[key] >= 0)) return null;
+    const counts = FormatUtils.t('detectionFactsCountsFmt', 'Cookies: {0} · Scripts: {1} · Requests: {2} · Headers: {3}',
+      ...keys.map(key => String(facts[key])));
+    const outcome = Object.prototype.hasOwnProperty.call(DetectionUI.HOOKS_OUTCOMES, facts.hooks) ? DetectionUI.HOOKS_OUTCOMES[facts.hooks] : null;
+    return { counts, hooks: outcome ? FormatUtils.t(outcome[0], outcome[1]) : '' };
+};
+
+/**
+ * What was checked, from the result shown: the square at the end of the Cache row and the lines it opens (results), and the
+ * line under the all-clear card (a scan that found nothing). Both hidden for a result with no facts.
+ * @param {object|null} meta - the result's cache metadata
+ * @param {'results'|'clean'|null} where - which state shows them; null hides both
+ */
+DetectionUI.syncScanFacts = function(meta, where) {
+    const text = where ? DetectionUI.scanFactsText(meta && meta.scanFacts) : null;
+    const toggle = document.querySelector('#scanFactsToggle');
+    const panel = document.querySelector('#scanFactsPanel');
+    const clean = document.querySelector('#emptyFactsNote');
+    const inResults = !!text && where === 'results';
+    if (toggle) {
+      if (toggle.dataset && toggle.dataset.bound !== 'true') {
+        toggle.dataset.bound = 'true';
+        toggle.addEventListener('click', () => {
+          const open = toggle.getAttribute('aria-expanded') !== 'true';
+          toggle.setAttribute('aria-expanded', String(open));
+          const target = document.querySelector('#scanFactsPanel');
+          if (target) target.hidden = !open;
+        });
+      }
+      toggle.hidden = !inResults;
+      if (!inResults) toggle.setAttribute('aria-expanded', 'false');
+    }
+    if (panel) {
+      if (inResults) {
+        const counts = panel.querySelector('[data-facts="counts"]');
+        const hooks = panel.querySelector('[data-facts="hooks"]');
+        if (counts) counts.textContent = text.counts;
+        if (hooks) { hooks.textContent = text.hooks; hooks.hidden = !text.hooks; }
+      }
+      panel.hidden = !inResults || !toggle || toggle.getAttribute('aria-expanded') !== 'true';
+    }
+    if (clean) {
+      const shown = !!text && where === 'clean';
+      clean.textContent = shown ? [text.counts, text.hooks].filter(Boolean).join(' · ') : '';
+      clean.hidden = !shown;
+    }
 };
 
 /**
@@ -558,6 +625,8 @@ DetectionUI.showEmptyState = function(options = {}) {
     // A scan that found nothing keeps the all-clear card, with a quiet line under it: when it ran (or which other page of the site
     // it ran on) and Scan again now. Its result is cached for days, so a reload shows the same card
     DetectionUI.syncCheckedNote.call(this, this.scanOutcome === 'complete' ? (options.scan || {}) : null);
+    // What that scan looked at, under the card (nothing for a result saved before 3.1.9)
+    DetectionUI.syncScanFacts.call(this, options.scan || null, this.scanOutcome === 'complete' && options.scan ? 'clean' : null);
 
     if (emptyStateFooter) {
       emptyStateFooter.style.display = options.showBadges === false ? 'none' : 'flex';
@@ -720,6 +789,8 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     // Under the site's name: the results were found on another page of the site (the Domain cache scope)
     DetectionUI.syncSourceNote.call(this, options.cacheMetadata || null);
     DetectionUI.syncHooksOffNote.call(this);
+    // What was checked: the counts and how the JS hooks ended, folded at the end of the Cache row
+    DetectionUI.syncScanFacts.call(this, options.cacheMetadata || null, 'results');
 
     // Update stats
     this.updateStats(detections);
@@ -979,7 +1050,7 @@ DetectionUI.updateCacheInfo = function() {
       const rows = [];
       if (meta && meta.timestamp) rows.push({ label: tr('tipCachedAt', 'Saved'), value: FormatUtils.formatDateTime(meta.timestamp) });
       if (meta && meta.expiry) rows.push({ label: tr('tipCacheExpires', 'Expires'), value: FormatUtils.formatDateTime(meta.expiry) });
-      FormatUtils.setTip(tile, `${tr('statCacheScope', 'Cache Scope')}: ${scopeNames[key]}`, scopeHints[key], rows);
+      FormatUtils.setTip(tile, FormatUtils.labelValue(tr('statCacheScope', 'Cache scope'), scopeNames[key]), scopeHints[key], rows);
     };
     if (meta && meta.cacheScope) {
       showScope(meta.cacheScope);
@@ -1796,9 +1867,9 @@ DetectionUI.getMethodBadges = function(matches) {
     return badges.join('');
 };
 
-/** Whether the search box or a category chip narrows the list. */
+/** Whether the search box, its Strong toggle or a category chip narrows the list. */
 DetectionUI.isFiltering = function() {
-    return !!this.searchQuery || (!!this.activeChips && DetectionFilter.isActive(this.activeChips));
+    return !!this.searchQuery || this.strongOnly === true || (!!this.activeChips && DetectionFilter.isActive(this.activeChips));
 };
 
 /**
@@ -1811,6 +1882,7 @@ DetectionUI.getFilteredResults = function() {
     const filtered = DetectionFilter.filter(this.currentResults, {
       query: this.searchQuery,
       chips: this.activeChips,
+      strong: this.strongOnly === true,
       firedOf: detection => HistoryFilter.firedCombinations([detection]),
       categoryOf: detection => Categories.keyOf(detection),
       // The search finds the name, the category and the description, in English and in the UI language
@@ -1849,8 +1921,10 @@ DetectionUI.handleSearch = function(query) {
  * The search or a chip changed: lay the list out again with what they leave, or the whole list when they leave nothing out
  * (both in the Settings order: clearing showed the results unsorted, fingerprints first), and show the chips' state and,
  * when nothing is left, the way back.
+ * @param {{keepPage?: boolean}} [options] - keepPage: the same list drawn again (back on the tab, the same page checked again)
+ *   stays on the page that was shown; a search or a chip starts at page 1
  */
-DetectionUI.applyFilters = function() {
+DetectionUI.applyFilters = function({ keepPage = false } = {}) {
     const itemsToShow = DetectionUI.isFiltering.call(this)
       ? this.getFilteredResults()
       : this.sortDetectionsByCategory(this.currentResults || []);
@@ -1860,7 +1934,7 @@ DetectionUI.applyFilters = function() {
 
     // Update pagination with filtered results
     if (this.paginationManager) {
-      this.paginationManager.setItems(itemsToShow);
+      this.paginationManager.setItems(itemsToShow, { keepPage });
     }
     DetectionUI.syncFilterUi.call(this, itemsToShow.length);
 };
@@ -1872,9 +1946,16 @@ DetectionUI.toggleFilterChip = function(key) {
     DetectionUI.applyFilters.call(this);
 };
 
-/** Back to every result: every chip off and the search emptied. */
+/** The Strong toggle inside the search box: only the results with strong evidence (80% or more), or every one again. */
+DetectionUI.toggleStrongFilter = function() {
+    this.strongOnly = this.strongOnly !== true;
+    DetectionUI.applyFilters.call(this);
+};
+
+/** Back to every result: every chip and the Strong toggle off, and the search emptied. */
 DetectionUI.clearFilters = function() {
     this.activeChips = DetectionFilter.normalizeChips();
+    this.strongOnly = false;
     this.searchQuery = '';
     const input = typeof document !== 'undefined' ? document.querySelector('#detectionSearch') : null;
     if (input) input.value = '';
@@ -1891,6 +1972,8 @@ DetectionUI.clearFilters = function() {
  */
 DetectionUI.syncFilterChips = function() {
     if (typeof document === 'undefined') return;
+    const strong = document.querySelector('#detectionStrongToggle');
+    if (strong) strong.setAttribute('aria-pressed', this.strongOnly === true ? 'true' : 'false');
     const row = document.querySelector('#detectionFilters');
     if (!row) return;
     const chips = DetectionFilter.normalizeChips(this.activeChips);

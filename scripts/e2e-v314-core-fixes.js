@@ -4,7 +4,7 @@
  *
  *   Rules that cannot be read   the stored rules are text that is not JSON: the popup says so once (the built-in rules are in
  *                               use and rule changes are not saved), a rule switched off in the Rules tab goes back and is not
- *                               saved, the stored text stays as it is, and an import with Replace All writes the rules again;
+ *                               saved, the stored text stays as it is, and an import with Replace all writes the rules again;
  *                               the popup opened after that says nothing, and the worker reads the repaired rules
  *   Cache scope back to Domain  pages of one site scanned under "Full URL", then the scope set back to "Domain" as Settings
  *                               sets it: the results saved under "Full URL" are gone, and another page of the site gets a scan of
@@ -48,7 +48,7 @@ const PROBE = {
   detection: { content: [{ id: 'v314-core-marker', text: MARKER, confidence: 90, standalone: true, description: 'marker' }] }
 };
 const SAD_RULES = 'S3CR3T-RULE-TEXT is not json';
-const RULES_HINT = 'The stored rules could not be read: the built-in rules are in use and rule changes are not saved. To replace the stored rules, import a rules file in the Rules tab and choose Replace All.';
+const RULES_HINT = 'The stored rules could not be read: the built-in rules are in use and rule changes are not saved. To replace the stored rules, import a rules file in the Rules tab and choose Replace all.';
 const TOGGLE_FAILED = 'Could not save the change. Try again.';
 
 const results = [];
@@ -118,7 +118,7 @@ async function scenario(name, fn) {
   await W(() => { UpdateManager.runAutoUpdate = async () => ({ testOnly: true }); });
 
   // ===============================================================================================
-  await scenario('Rules that cannot be read: the popup says so once, a switch is not saved over them, and Replace All repairs them', async () => {
+  await scenario('Rules that cannot be read: the popup says so once, a switch is not saved over them, and Replace all repairs them', async () => {
     await setStored({ scrapfly_detectors: SAD_RULES });
     const popup = await popupFor();
     const said = await until(async () => { const list = await toasts(popup); return list.includes(RULES_HINT) ? list : null; }, 10000, 'the rules notice');
@@ -135,7 +135,7 @@ async function scenario(name, fn) {
     await sleep(1000);
     assert.equal(await rawStored('scrapfly_detectors'), SAD_RULES, 'the stored rules are what they were: nothing was written over them');
 
-    // Import with Replace All: the person replaces them
+    // Import with Replace all: the person replaces them
     const imported = await popup.evaluate((probe) => window.popupInstance.detectorManager.importDetectors({ detectors: { antibot: { [probe.id]: probe } } }, false), PROBE);
     assert.equal(imported, true);
     const stored = await rawStored('scrapfly_detectors');

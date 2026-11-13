@@ -97,7 +97,7 @@ test('at least N, NOT rows and method rows read in plain words', () => {
   assert.deepStrictEqual(CC.foundRows(not.tree).absent.map(i => i.id), ['session'], 'absent as required');
   assert.deepStrictEqual(CC.foundRows(min.tree).found.map(i => i.id), ['sdk', 'widget']);
   const html = CC.renderHtml(cards, { methodLabel: label });
-  assert.match(html, /class="match-combo-row is-absent"[\s\S]*?class="match-combo-not">Not present:<\/span> Session cookie/);
+  assert.match(html, /class="match-combo-row is-absent"[\s\S]*?class="match-combo-not">Not present<\/span>: Session cookie/);
   assert.match(html, /aria-label="Not present"/);
   assert.match(html, />Any DOM pattern</);
 });

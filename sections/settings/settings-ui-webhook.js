@@ -76,6 +76,8 @@ SettingsUI.renderWebhookHeadersUI = function() {
         const index = parseInt(btn.getAttribute('data-index'));
         this.settings.webhook.webhookHeaders.splice(index, 1);
         this.renderWebhookHeadersUI();
+        // The keyboard stays in the list: the next header, the one before, or Add header when none is left
+        SettingsUI.focusAfterRemove(container.querySelectorAll('.remove-webhook-header-btn'), index, document.querySelector('#addWebhookHeaderBtn'));
       });
     });
 
@@ -759,7 +761,7 @@ SettingsUI.openWebhookVariablesHelp = async function() {
               <code class="webhook-var-chip webhook-var-chip--static">${this.escapeHtml(v.token)}</code>
               <span class="webhook-vars-desc">${this.escapeHtml(SettingsUI._whTr(v.descKey, v.desc))}</span>
             </div>
-            <span class="webhook-vars-example" title="${FormatUtils.escapeAttr(example.slice(0, 400))}"><span class="webhook-vars-example-label">${exampleLabel}:</span> ${this.escapeHtml(example)}</span>
+            <span class="webhook-vars-example" title="${FormatUtils.escapeAttr(example.slice(0, 400))}">${FormatUtils.labelValueHtml(`<span class="webhook-vars-example-label">${exampleLabel}</span>`, this.escapeHtml(example))}</span>
           </div>
           <button type="button" class="webhook-vars-copy" data-token="${FormatUtils.escapeAttr(v.token)}" title="${copyLabel}" aria-label="${copyLabel}">
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" stroke="currentColor" stroke-width="2"/></svg>
@@ -798,12 +800,8 @@ SettingsUI.openWebhookVariablesHelp = async function() {
       if (e.target === overlay || e.target.closest('.webhook-vars-close')) { close(); return; }
       const copy = e.target.closest('.webhook-vars-copy');
       if (!copy) return;
-      try {
-        await navigator.clipboard.writeText(copy.dataset.token);
-        NotificationHelper.micro(SettingsUI._whTr('copiedNotification', 'Copied'));
-      } catch (error) {
-        Logger.warn('UI', 'Copy webhook variable failed', { error: error.message });
-      }
+      // Says Copied, or that the browser refused the copy (a silent failure looked like a copy that worked)
+      await FormatUtils.copyToClipboard(copy.dataset.token);
     });
     SettingsUI._closeWebhookVariablesHelp = close;
     if (typeof ModalFocus !== 'undefined' && card) {

@@ -173,7 +173,7 @@ async function scenario(name, fn) {
     await page.setInputFiles('#importRulesFile', file);
     const toast = await until(async () => (await toasts(page)).find(t => /Failed to import/i.test(t.text)), 15000, 'the error toast');
     assert.match(toast.type, /notification-error/);
-    assert.equal(await page.$('.notification-btn-confirm'), null, 'no Merge / Replace All question for a file that is not read');
+    assert.equal(await page.$('.notification-btn-confirm'), null, 'no Merge / Replace all question for a file that is not read');
     assert.equal(await has(page, big.id), false);
     assert.equal(await page.$eval('#importRulesFile', el => el.value), '', 'the file input is reset');
     await page.close();

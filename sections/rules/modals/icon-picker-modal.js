@@ -94,7 +94,7 @@ Rules.prototype.openIconPicker = function() {
       <div class="icon-picker-backdrop rule-modal-backdrop"></div>
       <div class="icon-picker-content rule-modal-content" role="dialog" aria-modal="true" aria-labelledby="iconPickerTitle">
         <div class="icon-picker-header rule-modal-header">
-          <h2 id="iconPickerTitle">${_tr('iconPickerTitle', 'Choose Icon')}</h2>
+          <h2 id="iconPickerTitle">${_tr('iconPickerTitle', 'Choose icon')}</h2>
           ${CloseButton.html({ className: 'icon-picker-close' })}
         </div>
         <div class="icon-picker-search">
@@ -118,7 +118,7 @@ Rules.prototype.openIconPicker = function() {
         <div class="icon-picker-footer rule-modal-footer">
           <button id="uploadCustomIcon" class="icon-picker-upload-btn" type="button">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            ${_tr('iconPickerUploadCustom', 'Upload Custom')}
+            ${_tr('iconPickerUploadCustom', 'Upload custom')}
           </button>
           <button id="cancelIconPicker" class="icon-picker-cancel-btn rule-btn rule-btn-cancel" type="button">
             ${_tr('btnCancel', 'Cancel')}

@@ -68,7 +68,7 @@ Advanced.prototype.renderAdvancedInterface = async function() {
               <h3>${esc(_atr('advancedToolsHeading', 'Capture tools'))}</h3>
               <p>${esc(_atr('advancedToolsSubtitle', 'Choose a protection to open its tools.'))}</p>
             </div>
-            <button type="button" class="advanced-help-btn" id="showAdvancedHelp" title="${attr(_atr('advancedToolsLearnMore', 'Learn about Advanced Tools'))}" aria-label="${attr(_atr('advancedToolsLearnMore', 'Learn about Advanced Tools'))}">
+            <button type="button" class="advanced-help-btn" id="showAdvancedHelp" title="${attr(_atr('advancedToolsLearnMore', 'Learn about the advanced tools'))}" aria-label="${attr(_atr('advancedToolsLearnMore', 'Learn about the advanced tools'))}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4M12 16h.01"/></svg>
             </button>
           </div>
@@ -117,10 +117,12 @@ Advanced.prototype.renderAdvancedInterface = async function() {
       await this.updateCaptureCountBadge();
 
       if (noTools) {
+        // A protection asked for from Detection that has no tools here: the empty state says why
+        Advanced.takeRequestedTools();
         await this.setupNoToolsHistoryLink();
       } else {
         this.setupDetectionToolsListeners();
-        await this.openOnlyProtection();
+        await this.openRequestedOrOnlyProtection();
       }
       Logger.debug('UI', '[Advanced] renderAdvancedInterface complete!');
 
@@ -139,7 +141,7 @@ Advanced.prototype.renderAdvancedInterface = async function() {
       if (noAdvancedState) {
         noAdvancedState.style.display = 'flex';
         const _etr = (key, fb) => (typeof I18n !== 'undefined' && I18n.get(key)) || fb;
-        noAdvancedState.innerHTML = `<div style="padding: 20px; text-align: center; color: #ef4444;"><strong>${FormatUtils.escapeHtml(_etr('advPanelErrorLoadingTools', 'Error loading Advanced tools'))}</strong><br>${FormatUtils.escapeHtml(_etr('advPanelCheckConsole', 'Check console for details'))}</div>`;
+        noAdvancedState.innerHTML = `<div style="padding: 20px; text-align: center; color: #ef4444;"><strong>${FormatUtils.escapeHtml(_etr('advPanelErrorLoadingTools', 'Error loading advanced tools'))}</strong><br>${FormatUtils.escapeHtml(_etr('advPanelCheckConsole', 'Check console for details'))}</div>`;
       }
     }
   };
@@ -253,7 +255,7 @@ Advanced.prototype.setupNoToolsHistoryLink = async function() {
         return;
       }
       const label = (typeof I18n !== 'undefined' && I18n.format('advancedToolsOpenHistoryFmt', total))
-        || `View capture history (${total})`;
+        || `View captures (${total})`;
       button.textContent = label;
       button.hidden = false;
       button.onclick = () => {
@@ -372,6 +374,20 @@ Advanced.prototype.openOnlyProtection = async function() {
   };
 
 /**
+ * The tools of the protection asked for from the Detection details dialog (Open tools), on the Tools sub-tab, with focus on
+ * them since the person asked; else the usual view (openOnlyProtection). A protection Advanced does not list is not opened.
+ * @returns {Promise<boolean>} whether tools were opened
+ */
+Advanced.prototype.openRequestedOrOnlyProtection = async function() {
+    const requested = Advanced.takeRequestedTools();
+    const tools = this.availableDetectionTools || [];
+    if (!requested || !tools.some(({ detection }) => detection.detector?.id === requested)) return this.openOnlyProtection();
+    document.querySelector('.captcha-tools-section')?.classList.toggle('is-single', tools.length === 1);
+    if (document.querySelector('#advancedContent')?.classList.contains('is-captures-view')) await this.switchAdvancedTab('tools');
+    return this.loadSelectedDetectionTools(requested);
+  };
+
+/**
  * Open a protection's tools directly from its card.
  * @param {string} detectorId
  * @param {{auto?: boolean}} [options] - auto: opened for the person (one protection), so focus is not moved
@@ -417,7 +433,7 @@ Advanced.prototype.loadSelectedDetectionTools = async function(detectorId, optio
     } catch (error) {
       Logger.error('UI', '[Advanced] Could not open tools:', error);
       this.clearDetectionToolsPanel();
-      NotificationHelper.error(FormatUtils.t('advPanelErrorLoadingTools', 'Error loading Advanced tools'));
+      NotificationHelper.error(FormatUtils.t('advPanelErrorLoadingTools', 'Error loading advanced tools'));
       return false;
     } finally {
       this.isLoadingTool = false;

@@ -38,7 +38,7 @@ class AdvancedModuleHistory {
                                 <path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3Z"/>
                             </svg>
                         </div>
-                        <h3>${((typeof I18n !== 'undefined' && I18n.get('advCapturedDataSection')) || 'Captured Data')}</h3>
+                        <h3>${((typeof I18n !== 'undefined' && I18n.get('advCapturedDataSection')) || 'Captured data')}</h3>
                     </div>
                     <div class="header-right">
                         <span class="history-count">${BaseAdvancedModule._fmt('advPanelCaptureCountFmt', `Captures: ${history.length}`, history.length)}</span>
@@ -91,7 +91,7 @@ class AdvancedModuleHistory {
                         </svg>
                     </div>
                     <h4 class="empty-capture-title">${((typeof I18n !== 'undefined' && I18n.get('advNoCapturesYet')) || 'No captures yet')}</h4>
-                    <p class="empty-capture-text">${((typeof I18n !== 'undefined' && I18n.format('advNoCapturesHintFmt', this.displayName)) || `Click "Start Capturing" above to begin capturing ${this.displayName} data`)}</p>
+                    <p class="empty-capture-text">${((typeof I18n !== 'undefined' && I18n.format('advNoCapturesHintFmt', this.displayName)) || `Click "Start capturing" above to begin capturing ${this.displayName} data`)}</p>
                 </div>
             </div>
         `;
@@ -298,9 +298,9 @@ class AdvancedModuleHistory {
 
     displayCaptureDetailsModal(captureId, detailsContent, { copyData } = {}) {
         const _tCD = (typeof I18n !== 'undefined') ? I18n : null;
-        // "Copy All Data" sits in the window's footer, like the other Advanced windows
+        // "Copy all data" sits in the window's footer, like the other Advanced windows
         const actions = copyData === undefined ? [] : [{
-            label: (_tCD && _tCD.get('btnCopyAllData')) || 'Copy All Data',
+            label: (_tCD && _tCD.get('btnCopyAllData')) || 'Copy all data',
             primary: true,
             iconSvg: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>',
             onClick: () => AdvancedUtils.copyToClipboard(JSON.stringify(copyData, null, 2), null, {
@@ -310,7 +310,7 @@ class AdvancedModuleHistory {
         // detailsContent is pre-sanitized by renderCaptureDetailsContent(); its
         // data-copy values copy on click (kit binding)
         return this.openKitModal({
-            title: (_tCD && _tCD.get('advCaptureDetails')) || 'Capture Details',
+            title: (_tCD && _tCD.get('advCaptureDetails')) || 'Capture details',
             iconSvg: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19,3H14.82C14.4,1.84 13.3,1 12,1C10.7,1 9.6,1.84 9.18,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M12,3A1,1 0 0,1 13,4A1,1 0 0,1 12,5A1,1 0 0,1 11,4A1,1 0 0,1 12,3Z"/></svg>',
             body: detailsContent,
             actions,
@@ -346,9 +346,9 @@ class AdvancedModuleHistory {
     async clearCaptureHistory() {
         const _tCH = (typeof I18n !== 'undefined') ? I18n : null;
         const confirmed = await this.showConfirmationModal(
-            (_tCH && _tCH.get('advConfirmClearAllTitle')) || 'Clear All Captured Data?',
+            (_tCH && _tCH.get('advConfirmClearAllTitle')) || 'Clear all captured data?',
             (_tCH && _tCH.get('advConfirmClearAllMsg')) || 'This will permanently delete all captured data for this module. This action cannot be undone.',
-            (_tCH && _tCH.get('btnClearData')) || 'Clear Data',
+            (_tCH && _tCH.get('btnClearData')) || 'Clear data',
             (_tCH && _tCH.get('btnCancel')) || 'Cancel'
         );
 
@@ -360,10 +360,10 @@ class AdvancedModuleHistory {
             await AdvancedHistoryStore.clear(this.moduleName);
 
             await this.renderCapturedDataSection();
-            NotificationHelper.success(BaseAdvancedModule._fmt('advPanelHistoryClearedFmt', `${this.displayName} capture history cleared`, this.displayName));
+            NotificationHelper.success(BaseAdvancedModule._fmt('advPanelHistoryClearedFmt', `${this.displayName} captures cleared`, this.displayName));
         } catch (error) {
             Logger.error('UI', `[${this.moduleName}] Failed to clear history:`, error);
-            NotificationHelper.error(BaseAdvancedModule._tr('advPanelFailedClearHistory', 'Failed to clear history'));
+            NotificationHelper.error(BaseAdvancedModule._tr('advPanelFailedClearHistory', 'Failed to clear captures'));
         }
     }
 

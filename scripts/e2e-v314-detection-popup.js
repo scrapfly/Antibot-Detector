@@ -18,6 +18,9 @@
  *                   Chinese)
  *   HTTP status     (3.1.8) the tile beside Cache shows the page's status: 403 amber, 503 red, 200 after a 301; a cache hit keeps
  *                   the saved one; a result without one hides the tile
+ *   Strong toggle   (3.1.9) inside the search box, keeps the results at 80% or more, ANDs with the chips, off with Clear filters
+ *   Details dialog  (3.1.9) what the difficulty means, the vendor's website, its docs page in the interface language, Open tools
+ *                   opens the Advanced tab on that protection's tools
  *
  * A local site shows one marker per protection and probe detectors recognize them, so the scans are real.
  * The popup is opened as a page; its active tab is the local site's (chrome.tabs.query is told so), as in the other suites.
@@ -375,7 +378,7 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
-  await scenario('Detection live region: a page with no protection says "Nothing Detected"; in Spanish and Arabic it reads what the footer shows', async () => {
+  await scenario('Detection live region: a page with no protection says "Nothing detected"; in Spanish and Arabic it reads what the footer shows', async () => {
     const clean = `${origin}/p?n=clean-${uniq()}`;
     const site = await ctx.newPage();
     site.on('pageerror', (e) => pageErrors.push(`site: ${e.message}`));
@@ -384,8 +387,8 @@ async function scenario(name, fn) {
     const found = await scanned(`lang-${uniq()}`, ALL);
     try {
       let popup = await popupFor(tab);
-      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing Detected for a page with no protection');
-      assert.equal(await popup.$eval('#emptyState .state-card-title', el => el.textContent.trim()), 'Nothing Detected');
+      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing detected for a page with no protection');
+      assert.equal(await popup.$eval('#emptyState .state-card-title', el => el.textContent.trim()), 'Nothing detected');
       await popup.close();
       for (const code of ['es', 'ar']) {
         const messages = locale(code);
@@ -725,7 +728,7 @@ async function scenario(name, fn) {
       await resultsShown(popup, 1);
       const line = () => popup.$eval('#detectionSourceNote', el => ({ hidden: el.hidden, text: el.querySelector('.detection-note-text').textContent, title: el.querySelector('.detection-note-text').title }));
       const shown = await until(async () => { const l = await line(); return !l.hidden && l; }, 10000, 'the line under the site\'s name');
-      assert.match(shown.text, new RegExp(`^From a scan of /p/home-${token}, `), shown.text);
+      assert.match(shown.text, new RegExp(`^From a scan of \\u2068/p/home-${token}\\u2069, `), shown.text); // the path isolated (FSI...PDI)
       assert.ok(shown.title.startsWith(home), 'the whole address on hover');
       assert.equal(await popup.$eval('#detectionChangeNote', el => el.hidden), true, 'no change line for another page\'s results');
       // Scan again now scans this page: its own result, and the line goes
@@ -757,14 +760,14 @@ async function scenario(name, fn) {
       await until(() => cacheStamp(url), 25000, 'the saved clean result');
       const tab = await until(() => tabOf(url), 5000, 'the tab');
       popup = await popupFor(tab);
-      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing Detected');
+      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing detected');
       const note = await until(() => popup.$eval('#emptyCheckedNote', el => !el.hidden && el.offsetParent !== null && el.querySelector('.detection-note-text').textContent), 5000, 'the Last checked line');
       assert.match(note, /^Last checked /, note);
       assert.equal(await popup.$eval('#checkedRescanBtn', el => el.textContent.trim()), say('historyScanAgain'));
       const before = await cacheStamp(url);
       await popup.$eval('#checkedRescanBtn', el => el.click());
       await until(async () => (await cacheStamp(url)) > before, 30000, 'a fresh scan of the clean page');
-      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing Detected again');
+      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing detected again');
       console.log(`      "${note}"`);
     } finally {
       if (popup) await popup.close();
@@ -797,7 +800,7 @@ async function scenario(name, fn) {
         actions: [...el.querySelectorAll('[data-change-action]')].filter(n => !n.hidden).map(n => n.dataset.changeAction)
       }));
       const shown = await until(async () => { const l = await line(); return !l.hidden && l; }, 10000, 'the change line');
-      assert.match(shown.text, /^Changed since .+: \+V314 Captcha Probe −V314 Bot Probe$/, shown.text);
+      assert.match(shown.text, /^Changed since .+: \u2068\+V314 Captcha Probe\u2069 \u2068−V314 Bot Probe\u2069$/, shown.text); // each name isolated
       assert.deepEqual(shown.actions, ['compare', 'watch']);
       assert.equal(await popup.$eval('#detectionSourceNote', el => el.hidden), true, 'this page\'s own results');
       console.log(`      "${shown.text}"`);
@@ -828,6 +831,112 @@ async function scenario(name, fn) {
       if (popup) await popup.close();
       await site.close();
       await patchSettings({ history: { historyEnabled: true } });
+    }
+  });
+
+  // ===============================================================================================
+  await scenario('Strong toggle (3.1.9): inside the search box, it keeps the results at 80% or more and ANDs with the chips; Clear filters turns it off', async () => {
+    const { page: site, tab } = await scanned(`strong-${uniq()}`, ALL);
+    const popup = await popupFor(tab);
+    try {
+      await resultsShown(popup, 3);
+      const toggle = '#detectionStrongToggle';
+      assert.equal(await popup.$eval(toggle, el => el.textContent.trim()), say('detectionStrongToggle'));
+      const placed = await popup.evaluate(() => {
+        const button = document.querySelector('#detectionStrongToggle').getBoundingClientRect();
+        const field = document.querySelector('#detectionSearch').getBoundingClientRect();
+        return { inside: button.left >= field.left && button.right <= field.right && button.top >= field.top && button.bottom <= field.bottom,
+          chips: document.querySelectorAll('#detectionFilters .history-filter-chip').length,
+          inRow: !!document.querySelector('#detectionStrongToggle').closest('#detectionFilters') };
+      });
+      assert.deepEqual(placed, { inside: true, chips: 4, inRow: false }, 'inside the search field, not a fifth chip');
+      // The probes all score 90%: the fingerprint one is made weak for this check
+      await popup.evaluate(() => {
+        const d = window.popupInstance.detection;
+        d.currentResults.find(r => r.detector.name === 'V314 Fingerprint Probe').confidence = 40;
+        d.applyFilters ? d.applyFilters() : DetectionUI.applyFilters.call(d);
+      });
+      await popup.$eval(toggle, el => el.click());
+      assert.equal(await popup.$eval(toggle, el => el.getAttribute('aria-pressed')), 'true');
+      assert.deepEqual((await listed(popup)).sort(), ['V314 Bot Probe', 'V314 Captcha Probe']);
+      await popup.$eval('#detectionFilters .history-filter-chip[data-filter="captcha"]', el => el.click());
+      assert.deepEqual(await listed(popup), ['V314 Captcha Probe'], 'with a chip: AND');
+      await popup.$eval('#detectionFilters .history-filter-chip[data-filter="captcha"]', el => el.click());
+      await popup.$eval('#detectionFilters .history-filter-chip[data-filter="fingerprint"]', el => el.click());
+      assert.deepEqual(await listed(popup), [], 'only the weak fingerprint: nothing');
+      assert.equal(await popup.$eval('#detectionNoResults', el => el.hidden), false, 'the way back is offered');
+      await popup.$eval('#detectionClearFilters', el => el.click());
+      assert.equal(await popup.$eval(toggle, el => el.getAttribute('aria-pressed')), 'false', 'Clear filters turns it off');
+      assert.equal((await listed(popup)).length, 3);
+      // Keyboard: it is a button in the tab order
+      await popup.focus(toggle);
+      await popup.keyboard.press('Enter');
+      assert.equal(await popup.$eval(toggle, el => el.getAttribute('aria-pressed')), 'true');
+    } finally {
+      await popup.close();
+      await site.close();
+    }
+  });
+
+  // ===============================================================================================
+  await scenario('Details dialog (3.1.9): what the difficulty means, the vendor\'s website, its docs page in the interface language, Open tools to its Advanced tools', async () => {
+    const cloudflare = JSON.parse(fs.readFileSync(path.join(REPO, 'detectors', 'antibot', 'detect-cloudflare.json'), 'utf8').replace(/^\uFEFF/, ''));
+    const { page: site, tab } = await scanned(`about-${uniq()}`, '&b=1');
+    let popup = await popupFor(tab);
+    const open = (p) => p.evaluate(() => {
+      const d = window.popupInstance.detection;
+      const shown = [{ detector: { id: 'detect-cloudflare', name: 'Cloudflare Bot Management' }, category: 'Anti-Bot', confidence: 95,
+        matches: [{ type: 'cookie', pattern: '^__cf_bm$', value: '__cf_bm', confidence: 85 }] }];
+      d.currentResults = shown;
+      d.paginationManager.setItems(shown);
+      window.popupInstance.advanced.cachedDetectionResults = shown;
+      d.openDetectionModal(0);
+    });
+    const about = (p) => p.evaluate(() => {
+      const visible = (sel) => { const el = document.querySelector(sel); return !!el && !el.hidden && el.offsetParent !== null; };
+      return {
+        note: visible('#detectionModalDifficultyNote') ? document.querySelector('#detectionModalDifficultyNote').textContent : null,
+        website: visible('#detectionModalWebsite') ? document.querySelector('#detectionModalWebsite').href : null,
+        docs: visible('#detectionModalDocs') ? document.querySelector('#detectionModalDocs').href : null,
+        tools: visible('#detectionModalOpenTools'),
+        target: document.querySelector('#detectionModalWebsite').target
+      };
+    });
+    try {
+      await resultsShown(popup, 1);
+      await open(popup);
+      await popup.waitForSelector('#detectionModalOpenTools', { state: 'visible', timeout: 10000 });
+      const shown = await about(popup);
+      assert.equal(shown.note, say(`detectionModalDifficulty${cloudflare.difficulty}`), 'what its difficulty means');
+      assert.equal(shown.website, new URL(cloudflare.website).href, 'the website from the detector\'s data');
+      assert.equal(shown.docs, 'https://github.com/scrapfly/Antibot-Detector/blob/main/docs/antibots/cloudflare.md');
+      assert.equal(shown.target, '_blank', 'opens in a new tab');
+      assert.equal(shown.tools, true);
+      assert.ok(fs.existsSync(path.join(REPO, 'docs', 'antibots', 'cloudflare.md')));
+
+      // Open tools: the dialog closes, the Advanced tab opens on Cloudflare's tools, focus on them
+      await popup.$eval('#detectionModalOpenTools', el => el.click());
+      await popup.waitForFunction(() => window.popupInstance.currentTab === 'advanced'
+        && document.querySelector('#detectionToolsPanel') && document.querySelector('#detectionToolsPanel').style.display === 'block', null, { polling: 250, timeout: 20000 });
+      assert.equal(await popup.$eval('#detectionDetailModal', el => el.style.display), 'none', 'the dialog closed');
+      assert.equal(await popup.evaluate(() => window.popupInstance.advanced.selectedDetection), 'detect-cloudflare');
+      assert.match(await popup.$eval('#compactDetectionName', el => el.textContent), /Cloudflare/);
+      await popup.close();
+
+      // Spanish: the Spanish docs page and the Spanish explanation
+      await W(() => chrome.storage.local.set({ scrapfly_language_override: 'es' }));
+      popup = await popupFor(tab);
+      await resultsShown(popup, 1);
+      await open(popup);
+      await popup.waitForSelector('#detectionModalDocs', { state: 'visible', timeout: 10000 });
+      const es = await about(popup);
+      assert.equal(es.docs, 'https://github.com/scrapfly/Antibot-Detector/blob/main/docs/antibots/es/cloudflare.md');
+      assert.equal(es.note, say(`detectionModalDifficulty${cloudflare.difficulty}`, locale('es')));
+      assert.ok(fs.existsSync(path.join(REPO, 'docs', 'antibots', 'es', 'cloudflare.md')));
+    } finally {
+      await W(() => chrome.storage.local.set({ scrapfly_language_override: 'en' }));
+      await popup.close();
+      await site.close();
     }
   });
 

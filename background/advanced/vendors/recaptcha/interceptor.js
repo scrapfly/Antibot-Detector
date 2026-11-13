@@ -10,7 +10,7 @@ function recaptchaNoticeSteps() {
     return [
         pageText('pageNoticeRecaptchaStepReload', 'Reload this page'),
         pageText('pageNoticeRecaptchaStepSolve', 'Solve or click the reCAPTCHA'),
-        pageText('pageNoticeRecaptchaStepWait', 'Wait for "Capture Completed"')
+        pageText('pageNoticeRecaptchaStepWait', 'Wait for "Capture completed"')
     ];
 }
 
@@ -108,7 +108,7 @@ async function reCaptchaStartCapture(tabId) {
         if (typeof showCaptureStarted === 'function') {
             await showCaptureStarted(tabId, {
                 module: 'reCAPTCHA',
-                title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'reCAPTCHA'),
+                title: pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'reCAPTCHA'),
                 message: pageText('pageNoticeRecaptchaReloadAndSolve', 'Reload the page and solve a reCAPTCHA challenge to begin monitoring'),
                 steps: recaptchaNoticeSteps(),
                 activeStep: 1,
@@ -121,7 +121,7 @@ async function reCaptchaStartCapture(tabId) {
             await showNotification(tabId, {
                 type: 'capture',
                 module: 'reCAPTCHA',
-                title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'reCAPTCHA'),
+                title: pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'reCAPTCHA'),
                 message: pageText('pageNoticeRecaptchaReloadAndSolve', 'Reload the page and solve a reCAPTCHA challenge to begin monitoring'),
                 steps: recaptchaNoticeSteps(),
                 activeStep: 1,
@@ -140,7 +140,7 @@ async function reCaptchaStartCapture(tabId) {
                     showNotification(tabId, {
                         type: 'loading',
                         module: 'reCAPTCHA',
-                        title: pageText('pageNoticePageLoading', 'Page Loading'),
+                        title: pageText('pageNoticePageLoading', 'Page loading'),
                         message: pageText('pageNoticeWaitForLoad', 'Please wait for the page to fully load...'),
                         steps: recaptchaNoticeSteps(),
                         activeStep: 1,
@@ -171,7 +171,7 @@ async function reCaptchaStartCapture(tabId) {
                             showNotification(tabId, {
                                 type: 'warning',
                                 module: 'reCAPTCHA',
-                                title: pageText('pageNoticeRecaptchaPageReady', 'Page Ready'),
+                                title: pageText('pageNoticeRecaptchaPageReady', 'Page ready'),
                                 message: pageText('pageNoticeRecaptchaSolveNow', 'Now solve the reCAPTCHA challenge to capture data'),
                                 steps: recaptchaNoticeSteps(),
                                 activeStep: 2,
@@ -262,7 +262,7 @@ async function reCaptchaStartCapture(tabId) {
                         module: 'reCAPTCHA',
                         steps: recaptchaNoticeSteps(),
                         activeStep: 4,
-                        title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                        title: pageText('pageNoticeCaptureCompleted', 'Capture completed'),
                         message: pageText('pageNoticeRecaptchaDecodedFmt', 'Requests captured and decoded: {0}', capturedResults.length),
                         duration: 5000
                     }).catch(err => Logger.error('NETWORK', '[reCAPTCHA] Failed to show completion notification:', err));
@@ -460,7 +460,7 @@ function handleRecaptchaRequest(details) {
                             module: 'reCAPTCHA',
                             steps: recaptchaNoticeSteps(),
                             activeStep: 4,
-                            title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                            title: pageText('pageNoticeCaptureCompleted', 'Capture completed'),
                             message: pageText('pageNoticeRecaptchaDecodedFmt', 'Requests captured and decoded: {0}', results.length),
                             duration: 3000
                         }).catch(err => Logger.error('NETWORK', '[reCAPTCHA] Failed to show notification:', err));
@@ -715,7 +715,7 @@ async function reCaptchaStopCapture(tabId) {
                 module: 'reCAPTCHA',
                 steps: recaptchaNoticeSteps(),
                 activeStep: 4,
-                title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                title: pageText('pageNoticeCaptureCompleted', 'Capture completed'),
                 message: capturedResults.length > 0
                     ? pageText('pageNoticeRecaptchaDecodedFmt', 'Requests captured and decoded: {0}', capturedResults.length)
                     : pageText('pageNoticeRecaptchaNoRequests', 'No reCAPTCHA requests captured'),
@@ -781,7 +781,7 @@ function reCaptchaHandleCaptureTabUpdate(tabId, changeInfo, tab, chrome) {
             showNotification(tabId, {
                 type: 'warning',
                 module: 'reCAPTCHA',
-                title: pageText('pageNoticeRecaptchaPageReady', 'Page Ready'),
+                title: pageText('pageNoticeRecaptchaPageReady', 'Page ready'),
                 message: pageText('pageNoticeRecaptchaTriggerNow', 'Now trigger or click the reCAPTCHA'),
                 steps: recaptchaNoticeSteps(),
                 activeStep: 2,

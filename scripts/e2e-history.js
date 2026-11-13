@@ -670,9 +670,9 @@ async function scenario(name, fn) {
 
       await showsExactly(['f1', 'f2', 'f3', 'f4'], 'everything at first');
       assert.equal(await page.$eval('#historyFilters', el => el.hidden), false, 'the chips show once History has entries');
-      assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip', els => els.map(el => el.textContent.trim().replace(/\s+/g, ' '))), ['Pinned', 'Changed', 'Anti-bot', 'Captcha', 'Fingerprint', 'Combinations']);
+      assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip:not([hidden])', els => els.map(el => el.textContent.trim().replace(/\s+/g, ' '))), ['Pinned', 'Changed', 'Anti-bot', 'Captcha', 'Fingerprint', 'Combinations']);
       assert.equal(await page.$$eval('#historyFilters .category-icon svg', els => els.length), 3, 'the category chips carry their icons');
-      assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip', els => els.map(el => {
+      assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip:not([hidden])', els => els.map(el => {
         const icon = el.querySelector('.history-filter-icon svg');
         const box = icon && icon.getBoundingClientRect();
         return [el.dataset.filter, !!icon && box.width > 0 && box.height > 0];
@@ -1310,7 +1310,7 @@ async function scenario(name, fn) {
       let out = await exportVia(page, { pinnedOnly: true });
       assert.match(out.file, /^scrapfly-history-\d{4}-\d{2}-\d{2}\.csv$/);
       const lines = out.text.trim().split('\r\n');
-      assert.equal(lines[0], 'url,hostname,title,protection,category,confidence,difficulty,pinned,note');
+      assert.equal(lines[0], 'url,hostname,title,protection,category,confidence,difficulty,pinned,note,http_status');
       assert.equal(lines.length, 3, 'two pinned entries, one detection each');
       assert.ok(lines[1].includes('"a ""quoted"", note"'), lines[1]);
       assert.ok(!/\d{4}-\d{2}-\d{2}T/.test(out.text), 'no timestamps');
@@ -1437,7 +1437,7 @@ async function scenario(name, fn) {
     const csv = all.find(d => /\.csv$/.test(d.name));
     assert.ok(csv, 'a CSV backup was written');
     // The file starts with the byte-order mark, so Excel reads it as UTF-8
-    assert.equal(fs.readFileSync(csv.file, 'utf8').split('\r\n')[0], '\uFEFFurl,hostname,title,protection,category,confidence,difficulty,pinned,note');
+    assert.equal(fs.readFileSync(csv.file, 'utf8').split('\r\n')[0], '\uFEFFurl,hostname,title,protection,category,confidence,difficulty,pinned,note,http_status');
     await resetSettings();
   });
 

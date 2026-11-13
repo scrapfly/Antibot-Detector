@@ -282,7 +282,7 @@
     "message": "Kết quả sẽ xuất hiện tại đây khi sẵn sàng."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Xóa khỏi danh sách chặn"
+    "message": "Xóa khỏi danh sách"
   },
   "statDetections": {
     "message": "Phát hiện"
@@ -537,7 +537,7 @@
     "message": "Công cụ"
   },
   "advancedSubtabHistory": {
-    "message": "Lịch sử"
+    "message": "Bản ghi"
   },
   "advancedFilterSite": {
     "message": "Trang web"
@@ -711,10 +711,10 @@
     "message": "Ngày"
   },
   "blacklistedDomains": {
-    "message": "Tên miền trong danh sách chặn"
+    "message": "Trang web bỏ qua"
   },
   "blacklistedDomainsDesc": {
-    "message": "Các tên miền sẽ bị bỏ qua hoàn toàn khi phát hiện"
+    "message": "Tính năng phát hiện không bao giờ chạy trên các trang web này. Mỗi mục là một tên máy chủ chính xác: tên miền phụ của nó vẫn được quét."
   },
   "jsApiEvents": {
     "message": "Sự kiện JS API"
@@ -842,7 +842,7 @@
     "message": "Xóa bộ nhớ đệm"
   },
   "clearCacheConfirmMsg": {
-    "message": "Thao tác này sẽ xóa dữ liệu phát hiện trong bộ nhớ đệm của tên miền này và kích hoạt phân tích mới."
+    "message": "Thao tác này xóa kết quả phát hiện đã lưu của trang này (với phạm vi bộ nhớ đệm Tên miền hoặc Đường dẫn, kết quả đó có thể áp dụng cho cả trang khác). Trang sẽ được quét lại khi bạn tải lại trang."
   },
   "clearCacheConfirmBtn": {
     "message": "Xóa bộ nhớ đệm"
@@ -860,28 +860,28 @@
     "message": "Tên miền không hợp lệ"
   },
   "addBlacklistTitle": {
-    "message": "Thêm vào danh sách chặn"
+    "message": "Bỏ qua trang web này"
   },
   "addBlacklistMsgFmt": {
-    "message": "Tên miền \"{0}\" sẽ bị loại khỏi mọi lần phát hiện sau này. Bạn có thể xóa tên miền này sau trong Cài đặt."
+    "message": "\"{0}\" sẽ không được quét nữa kể từ bây giờ. Bạn có thể hoàn tác trong Cài đặt → Phát hiện → Trang web cần quét."
   },
   "addBlacklistBtn": {
-    "message": "Thêm vào danh sách chặn"
+    "message": "Bỏ qua trang web này"
   },
   "alreadyBlacklistedFmt": {
-    "message": "Tên miền \"{0}\" đã có trong danh sách chặn"
+    "message": "\"{0}\" đã được bỏ qua"
   },
   "addedToBlacklistFmt": {
-    "message": "Đã thêm \"{0}\" vào danh sách chặn"
+    "message": "Đã thêm \"{0}\" vào các trang web bỏ qua"
   },
   "failedAddBlacklistFmt": {
-    "message": "Không thể thêm vào danh sách chặn: {0}"
+    "message": "Không thể bỏ qua trang web này: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "Đã xóa \"{0}\" khỏi danh sách chặn"
+    "message": "Đã xóa \"{0}\" khỏi các trang web bỏ qua"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Không thể xóa khỏi danh sách chặn: {0}"
+    "message": "Không thể xóa trang web khỏi các trang web bỏ qua: {0}"
   },
   "historyNoDetections": {
     "message": "Không có phát hiện"
@@ -914,10 +914,10 @@
     "message": "Không thể xóa bộ nhớ đệm"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "Đã thêm \"{0}\" vào danh sách chặn"
+    "message": "Đã thêm \"{0}\" vào các trang web bỏ qua"
   },
   "notificationBlacklistFailed": {
-    "message": "Không thể thêm vào danh sách chặn"
+    "message": "Không thể bỏ qua trang web này"
   },
   "notificationHistoryItemDeleted": {
     "message": "Đã xóa mục lịch sử"
@@ -989,7 +989,7 @@
     "message": "Không thể lấy URL của trang hiện tại"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} đã có trong danh sách chặn"
+    "message": "{0} đã được bỏ qua"
   },
   "failedAddDomainFmt": {
     "message": "Không thể thêm tên miền: {0}"
@@ -1418,7 +1418,7 @@
     "message": "Cài đặt bộ nhớ đệm"
   },
   "settingsCardSkipDomains": {
-    "message": "Bỏ qua tên miền"
+    "message": "Bỏ qua các trang web này"
   },
   "settingsAddCurrentPage": {
     "message": "Thêm trang hiện tại"
@@ -1517,13 +1517,13 @@
     "message": "Ví dụ sử dụng"
   },
   "detectionDisabledForDomain": {
-    "message": "Đã tắt phát hiện cho tên miền này"
+    "message": "Đã tạm dừng phát hiện: bạn bỏ qua trang web này"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Xóa khỏi danh sách chặn"
+    "message": "Quét lại trang web này"
   },
   "detectionBlacklistHint": {
-    "message": "Hoặc vào Cài đặt → Phát hiện → Tên miền trong danh sách chặn để quản lý."
+    "message": "Hoặc vào Cài đặt → Phát hiện → Trang web cần quét để quản lý danh sách."
   },
   "detectionNoDetectionsDesc": {
     "message": "Không tìm thấy tín hiệu anti-bot, CAPTCHA hoặc thu thập dấu vân tay nào khớp trên trang này."
@@ -1541,7 +1541,7 @@
     "message": "Không thể đọc cài đặt — đã hủy thao tác"
   },
   "failedRemoveBlacklist": {
-    "message": "Không thể xóa khỏi danh sách chặn"
+    "message": "Không thể xóa trang web khỏi các trang web bỏ qua"
   },
   "pasteConfirmTitle": {
     "message": "Tải lên các phát hiện?"
@@ -1562,7 +1562,7 @@
     "message": "Sao chép tổng quan"
   },
   "detectionTitleBlockDomain": {
-    "message": "Chặn tên miền này"
+    "message": "Bỏ qua trang web này"
   },
   "detectionStatSite": {
     "message": "Trang web"
@@ -1589,7 +1589,7 @@
     "message": "trên"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Tên miền này nằm trong danh sách chặn"
+    "message": "Trang web này bị bỏ qua"
   },
   "detectionModalConfidence": {
     "message": "Độ tin cậy"
@@ -1799,7 +1799,7 @@
     "message": "Mở công cụ"
   },
   "advancedToolsLearnMore": {
-    "message": "Tìm hiểu về Công cụ nâng cao"
+    "message": "Tìm hiểu về công cụ nâng cao"
   },
   "advancedToolsChange": {
     "message": "Thay đổi"
@@ -1858,7 +1858,7 @@
     "message": "Biện pháp bảo vệ được hỗ trợ"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Xem lịch sử bản ghi ({0})"
+    "message": "Xem bản ghi ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript hook"
@@ -2899,7 +2899,7 @@
     "message": "Nâng cao (reese84 + utmvc)"
   },
   "advImpervaLevelBasicSession": {
-    "message": "Cơ bản (Phiên)"
+    "message": "Cơ bản (phiên)"
   },
   "advImpervaNoticeReloadToMonitor": {
     "message": "Tải lại trang để bắt đầu theo dõi các yêu cầu và cookie của Imperva"
@@ -3055,7 +3055,7 @@
     "message": "Yêu cầu ghi"
   },
   "advShapeCookieAndHeaders": {
-    "message": "Cookie + Header"
+    "message": "Cookie + header"
   },
   "advShapeNoticeReloadToMonitor": {
     "message": "Tải lại trang để bắt đầu theo dõi header và cookie của Shape Security"
@@ -3100,7 +3100,7 @@
     "message": "Không"
   },
   "advHcaptchaNoHistory": {
-    "message": "Chưa có lịch sử ghi"
+    "message": "Chưa có bản ghi nào"
   },
   "advHcaptchaNotAvailable": {
     "message": "N/A"
@@ -3145,10 +3145,10 @@
     "message": "Khóa công khai"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
-    "message": "BDA (Mảng dữ liệu trình duyệt)"
+    "message": "BDA (mảng dữ liệu trình duyệt)"
   },
   "advFuncaptchaBlobData": {
     "message": "Dữ liệu Blob"
@@ -3289,10 +3289,10 @@
     "message": "N/A"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "Đã xóa lịch sử bản ghi {0}"
+    "message": "Đã xóa bản ghi {0}"
   },
   "advPanelFailedClearHistory": {
-    "message": "Không thể xóa lịch sử"
+    "message": "Không thể xóa bản ghi"
   },
   "rulesUiNewDetectorName": {
     "message": "Trình phát hiện mới"
@@ -3352,7 +3352,7 @@
     "message": "Phát hiện Cookie là gì?"
   },
   "rulesUiHelpContent": {
-    "message": "Phát hiện Nội dung là gì?"
+    "message": "Phát hiện nội dung là gì?"
   },
   "rulesUiHelpDom": {
     "message": "Phát hiện DOM là gì?"
@@ -3400,7 +3400,7 @@
     "message": "Cài đặt tên"
   },
   "rulesUiNameSettingsConfidenceFmt": {
-    "message": "Cài đặt tên (Độ tin cậy: {0}%)"
+    "message": "Cài đặt tên (độ tin cậy: {0}%)"
   },
   "rulesUiValueSettings": {
     "message": "Cài đặt giá trị"
@@ -3550,16 +3550,16 @@
     "message": "Lỗi: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "Không có tên miền nào trong danh sách chặn"
+    "message": "Không có trang web nào bị bỏ qua"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Không có tên miền nào khớp với tìm kiếm của bạn"
+    "message": "Không có trang web nào khớp với tìm kiếm của bạn"
   },
   "settingsUiChecking": {
     "message": "Đang kiểm tra..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "Giới hạn lịch sử phải nằm trong khoảng 0 (không giới hạn) đến 10000"
+    "message": "Giới hạn lịch sử phải là số nguyên từ 0 đến 10000 (0 giữ tối đa 1.000 mục)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "Thời hạn bộ nhớ đệm phải nằm trong khoảng 1 đến {0} {1}"
@@ -4521,6 +4521,21 @@
   },
   "detectionTipHttpStatus": {
     "message": "Mã trạng thái HTTP mà trang trả về khi được quét. Lỗi (4xx hoặc 5xx) thường có nghĩa là yêu cầu đã bị chặn hoặc bị thử thách."
+  },
+  "detectionFactsTitle": {
+    "message": "Những gì đã được kiểm tra"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookie: {0} · Script: {1} · Yêu cầu: {2} · Header: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS hook: đã xong"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS hook: dừng ở giới hạn thời gian"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS hook: đã tắt cho trang web này"
   },
   "tipCacheExpires": {
     "message": "Hết hạn"
@@ -5597,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Tổ hợp"
   },
+  "historyFilterHttpError": {
+    "message": "Trạng thái lỗi"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Chỉ các trang có trạng thái lỗi (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Không có mục nào khớp với tìm kiếm hoặc bộ lọc của bạn."
   },
@@ -6209,6 +6230,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Quét lại trang này: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Mở tiện ích: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Tìm kiếm trong thẻ đang mở: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Di chuyển giữa các mục lịch sử: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Đóng hộp thoại: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Trang sẽ tải lại để thu thập mọi thứ từ đầu."
   },
@@ -6581,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Giới hạn thời gian mỗi trang, tính bằng giây"
   },
+  "bulkDelayLabel": {
+    "message": "Thời gian chờ giữa các trang, tính bằng giây"
+  },
   "bulkStart": {
     "message": "Bắt đầu"
   },
@@ -6618,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Thất bại hoặc bỏ qua",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Trạng thái lỗi (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Chỉ {0}"
   },
   "bulkCopyLines": {
     "message": "Sao chép theo dòng"
@@ -6773,6 +6815,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Các thay đổi cài đặt chưa được lưu. Lưu trước khi đóng?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Các thay đổi cài đặt chưa được lưu. Lưu trước khi áp dụng cài đặt mới?"
+  },
   "historySortLabel": {
     "message": "Sắp xếp lịch sử"
   },
@@ -6790,5 +6835,47 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Một dòng"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Chỉ trang chặn và trang thử thách"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Tìm trong toàn bộ HTML, kể cả tiêu đề, chỉ ở các trang nhỏ, như trang chặn của tường lửa. Các trang lớn hơn không được tìm"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Những trang dùng chung một kết quả đã lưu. Tên miền: mọi trang của trang web. Đường dẫn: cùng địa chỉ, bất kể truy vấn. URL đầy đủ: chỉ đúng địa chỉ đó."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Thêm ngày quét của từng trang vào tệp xuất CSV, văn bản thuần và Markdown. Tệp xuất JSON luôn có ngày này."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Vẫn ghi trang vào Lịch sử khi kết quả của trang được dùng lại từ bộ nhớ đệm thay vì quét mới."
+  },
+  "detectionStrongToggle": {
+    "message": "Mạnh (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Độ khó thấp: thường cho lưu lượng thông thường đi qua, và các yêu cầu có header và cookie thực tế thường vượt qua được."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Độ khó trung bình: các ứng dụng HTTP đơn giản thường bị thử thách; một trình duyệt thật với cài đặt nhất quán thường vượt qua được."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Độ khó cao: khó vượt qua. Kiểm tra trình duyệt, hành vi của nó và mạng mà nó đến từ đó, đồng thời chặn các ứng dụng HTTP đơn giản."
+  },
+  "detectionModalWebsite": {
+    "message": "Trang web"
+  },
+  "detectionModalEditRule": {
+    "message": "Sửa quy tắc"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Sao chép bằng chứng"
+  },
+  "detectionModalDocs": {
+    "message": "Hướng dẫn phát hiện"
   }
 }

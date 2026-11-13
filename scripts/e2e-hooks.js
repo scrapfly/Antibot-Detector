@@ -224,7 +224,7 @@ const PROBE = {
     }));
     assert.equal(emptyOff.badge, 'Fingerprinting not checked');
     assert.match(emptyOff.description, /JS hooks are off here, so fingerprinting was not checked/);
-    assert.ok(!emptyOff.badges.includes('✓ No Fingerprinting'));
+    assert.ok(!emptyOff.badges.includes('✓ No fingerprinting'));
     if (shotsAt) await popup.screenshot({ path: path.join(shotsAt, 'hooks-off-empty.png') });
     await popup.close(); await cleanOff.page.close();
 
@@ -237,7 +237,7 @@ const PROBE = {
       badge: document.querySelector('#emptyState [data-badge="fingerprint"]').textContent.trim(),
       off: document.querySelector('#emptyState [data-badge="fingerprint"]').classList.contains('state-card-badge--off')
     }));
-    assert.deepEqual(emptyOn, { badge: '✓ No Fingerprinting', off: false });
+    assert.deepEqual(emptyOn, { badge: '✓ No fingerprinting', off: false });
     await popup.close(); await cleanOn.page.close();
     console.log('PASS Nothing detected: a site without hooks says fingerprinting was not checked; any other site keeps "No Fingerprinting"');
 

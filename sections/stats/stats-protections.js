@@ -48,7 +48,7 @@
     cell.setAttribute('data-tip', tr('statsStrongEvidence', 'Strong evidence'));
     cell.setAttribute('data-tip-rows', JSON.stringify(counts));
     // The counts are also read out: the hover tip alone would leave keyboard and screen-reader users without them
-    cell.appendChild(element('span', 'stats-sr-only', ' (' + counts.map(c => c.label + ': ' + c.value).join(', ') + ')'));
+    cell.appendChild(element('span', 'stats-sr-only', ' (' + counts.map(c => FormatUtils.labelValue(c.label, c.value)).join(', ') + ')'));
     return cell;
   }
   function renderProtectionTable(app) {

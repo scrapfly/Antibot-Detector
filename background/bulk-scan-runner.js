@@ -15,22 +15,42 @@
  * no page is scanned while it is off, so the page being scanned goes back to waiting and its tab closes at once, and nothing
  * else opens. Switched on again, the run no longer says why it waits (release) and Resume goes on with it; Resume while the
  * extension is still off leaves it paused.
+ *
+ * "Wait between pages" (the run's delaySec, 0 to 60 s) is a pause after each page visited, inside the keepalive like the rest of
+ * the run. Pause, Stop and switching the extension off end it at once (_interruptWait). It is counted from the end of the last
+ * page (BulkScan.waitBefore), so a run resumed, or continued after the worker started again, waits only what is left of it.
  */
 const BulkScanRunner = {
     STATE_KEY: 'session_bulk_scan',
     OWNER: 'bulk',
     GAP_MS: 600,              // between two pages
+    WAIT_SLACK_MS: 50,        // a wait that ends this close to its time is over (timers are not exact)
     KEEPALIVE_ID: 'bulk-scan',
 
     _run: null,
     _loop: null,
     _token: null,             // the scan in progress (cancel on Stop)
     _wake: null,              // resolves a paused loop
+    _interrupt: null,         // ends the wait between two pages early (pause, stop, switched off)
     _initialized: false,
     _ready: null,             // the stored run, recovered once per worker start
 
     sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    },
+
+    /** The wait between two pages: the runner's sleep, which _interruptWait() ends at once. */
+    _waitBetween(ms) {
+        let done = null;
+        const woken = new Promise(resolve => { done = resolve; });
+        this._interrupt = done;
+        return Promise.race([this.sleep(ms), woken]).finally(() => {
+            if (this._interrupt === done) this._interrupt = null;
+        });
+    },
+
+    _interruptWait() {
+        if (this._interrupt) this._interrupt();
     },
 
     area() {
@@ -98,7 +118,7 @@ const BulkScanRunner = {
     /**
      * A new run. With `continueRun`, a run that was stopped goes on: its waiting pages are scanned and the pages it
      * already finished stay in the list with their results (the run's own state is the source, not the page's copy).
-     * @param {{entries: Array<string|{url: string, reason: string}>, timeoutSec?: number, cap?: number, continueRun?: boolean, retryFailed?: boolean}} request
+     * @param {{entries: Array<string|{url: string, reason: string}>, timeoutSec?: number, delaySec?: number, cap?: number, continueRun?: boolean, retryFailed?: boolean}} request
      * @returns {Promise<{ok: boolean, run?: object, error?: 'busy'|'off'|'empty'|'no_window'}>}
      */
     start(request = {}) {
@@ -116,7 +136,9 @@ const BulkScanRunner = {
         const resumed = request.continueRun === true ? BulkScan.continuation(this._run, { includeFailed: request.retryFailed === true }) : null;
         const entries = resumed ? resumed.entries : (Array.isArray(request.entries) ? request.entries.slice(0, 5000) : []);
         const prepared = BulkScan.prepare(entries, { cap: request.cap, isExcluded: await this.scopeTest() });
-        const run = BulkScan.createRun(prepared, { timeoutSec: request.timeoutSec, cap: request.cap });
+        // A run that goes on keeps its wait between pages unless the page says another
+        const delaySec = request.delaySec !== undefined ? request.delaySec : (resumed && this._run ? this._run.delaySec : undefined);
+        const run = BulkScan.createRun(prepared, { timeoutSec: request.timeoutSec, cap: request.cap, delaySec });
         if (resumed) BulkScan.carryOver(run, resumed);
         if (BulkScan.nextWaiting(run) === -1) {
             // Nothing to scan: the list is shown with its reasons, and the run is over before it began
@@ -177,9 +199,13 @@ const BulkScanRunner = {
                 await this.save();
                 break;
             }
-            if (!first) await this.sleep(this.GAP_MS);
+            // The gap between two pages, or the person's longer wait (what is left of it after a pause or a worker restart)
+            const wait = Math.max(first ? 0 : this.GAP_MS, BulkScan.waitBefore(run, Date.now()));
             first = false;
-            if (run.status !== 'running') continue;
+            if (wait > 0) await this._waitBetween(wait);
+            if (this._run !== run || run.status !== 'running') continue;
+            // Woken early (paused and resumed at once): the rest of the wait first
+            if (BulkScan.waitBefore(run, Date.now()) > this.WAIT_SLACK_MS) continue;
             await this._scanOne(run, index);
         }
     },
@@ -239,7 +265,10 @@ const BulkScanRunner = {
     async pause() {
         await this.ready();
         const changed = BulkScan.pause(this._run);
-        if (changed) await this.save();
+        if (changed) {
+            this._interruptWait();
+            await this.save();
+        }
         return changed;
     },
 
@@ -266,6 +295,7 @@ const BulkScanRunner = {
     async hold(reason = 'off') {
         await this.ready();
         if (!BulkScan.hold(this._run, reason)) return false;
+        this._interruptWait();
         await this.save();
         if (this._token) BackgroundTabScan.cancel(this._token);
         return true;
@@ -282,6 +312,7 @@ const BulkScanRunner = {
     async stop(reason = 'user') {
         await this.ready();
         if (!BulkScan.stop(this._run, reason)) return false;
+        this._interruptWait();
         await this.save();
         if (this._token) BackgroundTabScan.cancel(this._token);
         if (this._wake) this._wake();

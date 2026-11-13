@@ -27,7 +27,7 @@ test('an empty History limit or duplicate duration is refused, with the field\'s
   const SettingsUI = load();
   const limit = SettingsUI.validateSettings.call({}, { history: { historyLimit: NaN } });
   assert.equal(limit.isValid, false);
-  assert.match(limit.errors.join(' '), /History limit must be between 0 \(unlimited\) and 10000/);
+  assert.match(limit.errors.join(' '), /History limit must be a whole number from 0 to 10000 \(0 keeps up to 1,000 entries\)/);
   const duration = SettingsUI.validateSettings.call({}, { duplicatePrevention: { duplicateDuration: NaN } });
   assert.equal(duration.isValid, false);
   assert.match(duration.errors.join(' '), /Duplicate duration must be between 1 and 999/);

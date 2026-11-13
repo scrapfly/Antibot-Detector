@@ -282,7 +282,7 @@
     "message": "Výsledky se tu zobrazí, jakmile budou připraveny."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Odebrat ze seznamu blokovaných"
+    "message": "Odebrat ze seznamu"
   },
   "statDetections": {
     "message": "Detekce"
@@ -537,7 +537,7 @@
     "message": "Nástroje"
   },
   "advancedSubtabHistory": {
-    "message": "Historie"
+    "message": "Zachycení"
   },
   "advancedFilterSite": {
     "message": "Web"
@@ -609,7 +609,7 @@
     "message": "Zobrazeno {0}-{1} z {2}"
   },
   "paginationShowingItems": {
-    "message": "Zobrazeno {0}-{1} z {2} {3}"
+    "message": "{3}: zobrazeno {0}-{1} z {2}"
   },
   "timeUnknown": {
     "message": "Neznámé"
@@ -660,7 +660,7 @@
     "message": "Barvy kategorií"
   },
   "methodSuffixPatterns": {
-    "message": "vzorů"
+    "message": "Vzory"
   },
   "btnSaveRule": {
     "message": "Uložit pravidlo"
@@ -711,10 +711,10 @@
     "message": "Dny"
   },
   "blacklistedDomains": {
-    "message": "Blokované domény"
+    "message": "Přeskakované weby"
   },
   "blacklistedDomainsDesc": {
-    "message": "Domény, na kterých se detekce zcela přeskakuje"
+    "message": "Na těchto webech detekce nikdy neběží. Každá položka je přesný název hostitele: jeho subdomény se dál skenují."
   },
   "jsApiEvents": {
     "message": "Události JS API"
@@ -818,7 +818,7 @@
     "message": "Žádné odpovídající vzory"
   },
   "methodSuffixMatches": {
-    "message": "shod"
+    "message": "Shody"
   },
   "cacheExpiredLabel": {
     "message": "Vypršelo"
@@ -842,7 +842,7 @@
     "message": "Vymazat mezipaměť"
   },
   "clearCacheConfirmMsg": {
-    "message": "Tím se odstraní data detekce uložená v mezipaměti pro tuto doménu a spustí se nová analýza."
+    "message": "Tím se odstraní uložený výsledek detekce pro tuto stránku (při rozsahu mezipaměti Doména nebo Cesta může platit i pro další stránky). Stránka se znovu naskenuje, až ji znovu načtete."
   },
   "clearCacheConfirmBtn": {
     "message": "Vymazat mezipaměť"
@@ -860,28 +860,28 @@
     "message": "Neplatná doména"
   },
   "addBlacklistTitle": {
-    "message": "Přidat na seznam blokovaných"
+    "message": "Přeskakovat tento web"
   },
   "addBlacklistMsgFmt": {
-    "message": "Doména „{0}“ bude vyloučena ze všech budoucích detekcí. Můžete ji později odebrat v Nastavení."
+    "message": "Web „{0}“ se od teď nebude skenovat. Vrátit to můžete v Nastavení → Detekce → Weby ke skenování."
   },
   "addBlacklistBtn": {
-    "message": "Přidat na seznam blokovaných"
+    "message": "Přeskakovat tento web"
   },
   "alreadyBlacklistedFmt": {
-    "message": "Doména „{0}“ už je na seznamu blokovaných"
+    "message": "Web „{0}“ se už přeskakuje"
   },
   "addedToBlacklistFmt": {
-    "message": "Doména „{0}“ přidána na seznam blokovaných"
+    "message": "Web „{0}“ přidán mezi přeskakované weby"
   },
   "failedAddBlacklistFmt": {
-    "message": "Přidání na seznam blokovaných se nezdařilo: {0}"
+    "message": "Web se nepodařilo přidat mezi přeskakované: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "Doména „{0}“ odebrána ze seznamu blokovaných"
+    "message": "Web „{0}“ odebrán z přeskakovaných webů"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Odebrání ze seznamu blokovaných se nezdařilo: {0}"
+    "message": "Web se nepodařilo odebrat z přeskakovaných webů: {0}"
   },
   "historyNoDetections": {
     "message": "Žádné detekce"
@@ -914,10 +914,10 @@
     "message": "Mezipaměť se nepodařilo vymazat"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "Doména „{0}“ přidána na seznam blokovaných"
+    "message": "Web „{0}“ přidán mezi přeskakované weby"
   },
   "notificationBlacklistFailed": {
-    "message": "Přidání na seznam blokovaných se nezdařilo"
+    "message": "Web se nepodařilo přidat mezi přeskakované"
   },
   "notificationHistoryItemDeleted": {
     "message": "Položka historie smazána"
@@ -989,7 +989,7 @@
     "message": "URL aktuální stránky se nepodařilo zjistit"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "Doména už je na seznamu blokovaných: {0}"
+    "message": "{0} se už přeskakuje"
   },
   "failedAddDomainFmt": {
     "message": "Doménu se nepodařilo přidat: {0}"
@@ -1100,7 +1100,7 @@
     "message": "Nahradit"
   },
   "importHistoryModeMessageFmt": {
-    "message": "Importovat položky historie ({0})? Vaše současná historie jich má {1}.<br>Sloučit k ní přidá nové položky. Nahradit ji nejprve smaže."
+    "message": "Položek k importu: {0}. Položek v současné historii: {1}.<br>Sloučit k ní přidá nové položky. Nahradit ji nejprve smaže."
   },
   "clearLogsTitle": {
     "message": "Vymazat protokoly"
@@ -1418,7 +1418,7 @@
     "message": "Nastavení mezipaměti"
   },
   "settingsCardSkipDomains": {
-    "message": "Přeskakované domény"
+    "message": "Přeskakovat tyto weby"
   },
   "settingsAddCurrentPage": {
     "message": "Přidat aktuální stránku"
@@ -1517,13 +1517,13 @@
     "message": "Příklad použití"
   },
   "detectionDisabledForDomain": {
-    "message": "Detekce je pro tuto doménu vypnuta"
+    "message": "Detekce pozastavena: tento web přeskakujete"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Odebrat ze seznamu blokovaných"
+    "message": "Znovu skenovat tento web"
   },
   "detectionBlacklistHint": {
-    "message": "Nebo ji spravujte v Nastavení → Detekce → Blokované domény."
+    "message": "Nebo seznam spravujte v Nastavení → Detekce → Weby ke skenování."
   },
   "detectionNoDetectionsDesc": {
     "message": "Na této stránce nebyly nalezeny žádné odpovídající signály anti-bot, CAPTCHA ani fingerprintingu."
@@ -1541,7 +1541,7 @@
     "message": "Nastavení se nepodařilo načíst — operace zrušena"
   },
   "failedRemoveBlacklist": {
-    "message": "Odebrání ze seznamu blokovaných se nezdařilo"
+    "message": "Web se nepodařilo odebrat z přeskakovaných webů"
   },
   "pasteConfirmTitle": {
     "message": "Nahrát detekce?"
@@ -1562,7 +1562,7 @@
     "message": "Kopírovat přehled"
   },
   "detectionTitleBlockDomain": {
-    "message": "Blokovat tuto doménu"
+    "message": "Přeskakovat tento web"
   },
   "detectionStatSite": {
     "message": "Web"
@@ -1589,7 +1589,7 @@
     "message": "z"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Tato doména je na seznamu blokovaných"
+    "message": "Tento web se přeskakuje"
   },
   "detectionModalConfidence": {
     "message": "Spolehlivost"
@@ -1858,7 +1858,7 @@
     "message": "Podporované ochrany"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Zobrazit historii zachycení ({0})"
+    "message": "Zobrazit zachycení ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScriptové hooky"
@@ -3100,7 +3100,7 @@
     "message": "Ne"
   },
   "advHcaptchaNoHistory": {
-    "message": "Zatím žádná historie zachycení"
+    "message": "Zatím žádná zachycení"
   },
   "advHcaptchaNotAvailable": {
     "message": "N/A"
@@ -3145,7 +3145,7 @@
     "message": "Veřejný klíč"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
     "message": "BDA (pole dat prohlížeče)"
@@ -3289,10 +3289,10 @@
     "message": "N/A"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "Historie zachycení {0} vymazána"
+    "message": "Zachycení {0} vymazána"
   },
   "advPanelFailedClearHistory": {
-    "message": "Historii se nepodařilo vymazat"
+    "message": "Zachycení se nepodařilo vymazat"
   },
   "rulesUiNewDetectorName": {
     "message": "Nový detektor"
@@ -3550,16 +3550,16 @@
     "message": "Chyba: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "Žádné blokované domény"
+    "message": "Žádné přeskakované weby"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Vašemu hledání neodpovídají žádné domény"
+    "message": "Vašemu hledání neodpovídají žádné weby"
   },
   "settingsUiChecking": {
     "message": "Kontrola..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "Limit historie musí být mezi 0 (neomezeno) a 10000"
+    "message": "Limit historie musí být celé číslo od 0 do 10000 (0 uchová nejvýše 1000 položek)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "Doba uložení v mezipaměti musí být mezi 1 a {0}, jednotka: {1}"
@@ -3637,13 +3637,13 @@
     "message": "Spustí se, když je tato podmínka splněna."
   },
   "combinationSentenceAllFmt": {
-    "message": "Spustí se, když jsou splněny všechny podmínky (celkem {0})."
+    "message": "Spustí se, když jsou splněny všechny podmínky (celkem: {0})."
   },
   "combinationSentenceAnyFmt": {
-    "message": "Spustí se, když je splněna kterákoli z těchto podmínek (celkem {0})."
+    "message": "Spustí se, když je splněna kterákoli z těchto podmínek (celkem: {0})."
   },
   "combinationSentenceAtLeastFmt": {
-    "message": "Spustí se, když je splněno alespoň {0} z těchto podmínek (celkem {1})."
+    "message": "Spustí se, když je splněn minimální počet těchto podmínek: {0} z {1}."
   },
   "combinationSentenceConfidenceFmt": {
     "message": "Spolehlivost: {0} %."
@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "Stavový kód HTTP, kterým stránka odpověděla při skenování. Chyba (4xx nebo 5xx) často znamená, že požadavek byl zablokován nebo dostal ověřovací výzvu."
   },
+  "detectionFactsTitle": {
+    "message": "Co bylo zkontrolováno"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookies: {0} · Skripty: {1} · Požadavky: {2} · Hlavičky: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS hooky: dokončeny"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS hooky: zastaveny po vypršení časového limitu"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS hooky: pro tento web vypnuté"
+  },
   "tipCacheExpires": {
     "message": "Vyprší"
   },
@@ -4535,7 +4550,7 @@
     "message": "Ověřit"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Toto pravidlo se shoduje na stránkách: {1} z {0} uložených"
+    "message": "Uložené stránky, na kterých se pravidlo shoduje: {1} z {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "Stránky: {0} z {1}"
@@ -5597,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Kombinace"
   },
+  "historyFilterHttpError": {
+    "message": "Chybový stav"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Jen stránky s chybovým stavem (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Hledání ani filtrům neodpovídá žádná položka."
   },
@@ -6209,6 +6230,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Znovu skenovat tuto stránku: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Otevřít rozšíření: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Hledat v otevřené kartě: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Přecházet mezi záznamy historie: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Zavřít dialog: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Stránka se znovu načte, takže se vše shromáždí od začátku."
   },
@@ -6581,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Časový limit na stránku v sekundách"
   },
+  "bulkDelayLabel": {
+    "message": "Prodleva mezi stránkami v sekundách"
+  },
   "bulkStart": {
     "message": "Spustit"
   },
@@ -6619,6 +6655,12 @@
     "message": "Selhaly nebo přeskočeny",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "Chybový stav (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Pouze {0}"
+  },
   "bulkCopyLines": {
     "message": "Kopírovat jako řádky"
   },
@@ -6626,7 +6668,7 @@
     "message": "Tomuto filtru neodpovídá žádná stránka."
   },
   "bulkShowingFmt": {
-    "message": "Zobrazeno {0} z {1} stránek. Exporty obsahují jen tyto.",
+    "message": "Zobrazené stránky: {0} z {1}. Exporty obsahují jen tyto.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
@@ -6773,6 +6815,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Změny nastavení ještě nejsou uloženy. Uložit je před zavřením?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Změny nastavení ještě nejsou uloženy. Uložit je před použitím nového nastavení?"
+  },
   "historySortLabel": {
     "message": "Řazení historie"
   },
@@ -6790,5 +6835,47 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Jeden řádek"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Jen blokovací a ověřovací stránky"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Prohledá celé HTML včetně titulku, ale jen u malých stránek, jako je blokovací stránka firewallu. Větší stránky se neprohledávají"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Které stránky sdílejí jeden uložený výsledek. Doména: každá stránka webu. Cesta: stejná adresa bez ohledu na dotaz. Celá URL: jen přesně stejná adresa."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Přidá datum skenování každé stránky do exportů CSV, prostého textu a Markdownu. Exporty JSON ho obsahují vždy."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Zapíše stránku do historie i tehdy, když se její výsledek místo nového skenování použije z mezipaměti."
+  },
+  "detectionStrongToggle": {
+    "message": "Silné (≥80 %)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Nízká obtížnost: běžný provoz obvykle propustí a požadavky s realistickými hlavičkami a cookies často projdou."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Střední obtížnost: prosté HTTP klienty často podrobí výzvě; skutečný prohlížeč s konzistentním nastavením obvykle projde."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Vysoká obtížnost: těžko se obchází. Kontroluje prohlížeč, jeho chování i síť, ze které přichází, a prosté HTTP klienty blokuje."
+  },
+  "detectionModalWebsite": {
+    "message": "Web"
+  },
+  "detectionModalEditRule": {
+    "message": "Upravit pravidlo"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Kopírovat důkazy"
+  },
+  "detectionModalDocs": {
+    "message": "Průvodce detekcí"
   }
 }

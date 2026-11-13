@@ -121,3 +121,14 @@ test('an open details dialog follows its protection into the new results, or clo
   assert.equal(DetectionUI.refreshOpenDetectionModal.call(detection, key), false);
   assert.equal(closed, 1);
 });
+
+test('the list drawn again through the search and the chips can keep its page; a search or a chip starts at page 1', () => {
+  const { context, detection } = fixture();
+  const DetectionUI = vm.runInContext('DetectionUI', context);
+  DetectionUI.applyFilters.call(detection);
+  detection.paginationManager.goToPage(2);
+  DetectionUI.applyFilters.call(detection, { keepPage: true });
+  assert.equal(detection.paginationManager.currentPage, 2, 'back on the tab: same page');
+  DetectionUI.applyFilters.call(detection);
+  assert.equal(detection.paginationManager.currentPage, 1, 'a search or a chip: the top of the new list');
+});

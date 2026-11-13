@@ -12,7 +12,7 @@ Sucuri 是一家网站安全公司，其云 WAF 和 CDN 位于网站前面，用
 
 ## 如何判断网站使用了 Sucuri WAF
 
-这些特征由扩展自身针对 `detect-sucuri` 的检测规则生成（规则版本 2.1.0，最后更新于 2026-10-16）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
+这些特征由扩展自身针对 `detect-sucuri` 的检测规则生成（规则版本 2.2.0，最后更新于 2026-11-12）。单个特征只是一种迹象：置信度表示扩展在看到该特征时有多大把握。标记为“仅作佐证”的特征本身不计入判断，因为其他产品也可能产生它们。
 
 ### Cookie
 
@@ -39,7 +39,7 @@ Sucuri 是一家网站安全公司，其云 WAF 和 CDN 位于网站前面，用
 
 | 特征 | 置信度 | 含义 |
 | --- | --- | --- |
-| `Sucuri WebSite Firewall - Access Denied` | 30% (仅作佐证) | Sucuri block page title |
+| `Sucuri Web ?Site Firewall - (?:CloudProxy - )?Access Denied\|Access Denied - Sucuri Web ?Site Firewall` | 30% (仅作佐证) | Sucuri block page title |
 | `Block ID:` | 20% (仅作佐证) | Block ID label on the Sucuri block page |
 | `sucuri_cloudproxy_js` | 10% | Sucuri CloudProxy JS challenge variable |
 

@@ -2,18 +2,18 @@
 /**
  * Every Advanced tool in the real extension (unpacked in Chromium), the way the popup uses it: a local page per protection is
  * detected by the extension's own detectors, the Advanced tab offers that protection's tools for the tab, and each action that
- * can run offline is run and its result read: Check Cookies, Check Version, Extract Site Key / Public Key / Sensor, Obtain
- * selector, callbacks, Analyze Scripts (from what the page loaded, and from a reload), Start and Stop Capturing with the reload
- * that feeds them, the result windows, their Export Code dialogs, Scrape with Scrapfly, and what reaches Advanced → History.
+ * can run offline is run and its result read: Check cookies, Check version, Extract site key / Public key / Sensor, Obtain
+ * selector, callbacks, Analyze scripts (from what the page loaded, and from a reload), Start and Stop capturing with the reload
+ * that feeds them, the result windows, their Export code dialogs, Scrape with Scrapfly, and what reaches Advanced → History.
  *
- *   Part A  the 16 CAPTCHA vendors described as data (Extract Site Key where the vendor has a key, Analyze Scripts)
+ *   Part A  the 16 CAPTCHA vendors described as data (Extract site key where the vendor has a key, Analyze scripts)
  *   Part B  the 11 tools with their own module: akamai, awswaf, cloudflare, datadome, funcaptcha, geetest, hcaptcha, imperva,
  *           recaptcha, shapesecurity, turnstile
  *   Part C  the Advanced tab itself: several protections on one page, no protection, a protection below the minimum,
  *           Advanced → History (cards by vendor, filters, details, copy, delete, export, clear)
  *
  * Offline: every name outside this machine resolves to nothing (so no request leaves it); the extension still sees each request,
- * which is what detection and Analyze Scripts read. What needs a vendor's own backend is printed as SKIP with the reason, never
+ * which is what detection and Analyze scripts read. What needs a vendor's own backend is printed as SKIP with the reason, never
  * tested against a stand-in. The popup is a tab here, pointed at the test page's tab (chrome.tabs.query answers with it, as
  * scripts/e2e-popup-guards.js does); window.close is counted instead of closing it, since the real popup closes after Start
  * Capturing so the person can reload.
@@ -160,9 +160,9 @@ const BESPOKE = [
 ];
 
 /**
- * The 16 CAPTCHA vendors described as data (modules/advanced/captcha-vendors.js). `key` is the site key Extract Site Key must
+ * The 16 CAPTCHA vendors described as data (modules/advanced/captcha-vendors.js). `key` is the site key Extract site key must
  * find (absent: the vendor has none, or only for a deployment this page is not); `analyze` is every [classification, url] the
- * vendor's Analyze Scripts lists for the page. Addresses and embeds are those of test/captcha-vendors.test.js.
+ * vendor's Analyze scripts lists for the page. Addresses and embeds are those of test/captcha-vendors.test.js.
  */
 const GENERIC = [
   { id: 'prosopo', detectorId: 'detect-prosopo', name: 'Prosopo Procaptcha',
@@ -243,7 +243,7 @@ const GENERIC = [
   { id: 'altcha', detectorId: 'detect-altcha', name: 'ALTCHA',
     dom: [{ tag: 'altcha-widget', attrs: { challenge: `https://sentinel.shop.example/v1/challenge?apiKey=${ALTCHA_KEY}`, auto: 'onload' } }],
     scripts: ['https://cdn.jsdelivr.net/npm/altcha@1.2.0/dist/altcha.min.js'],
-    // Cloud (named: its request is what the detector and Analyze Scripts read) and a Sentinel on its owner's host (answered by
+    // Cloud (named: its request is what the detector and Analyze scripts read) and a Sentinel on its owner's host (answered by
     // the suite, so Resource Timing lists it: that is where the key is read)
     requests: [{ url: `https://eu.altcha.org/v1/challenge?apiKey=${ALTCHA_KEY}` }, { url: `https://sentinel.shop.example/v1/challenge?apiKey=${ALTCHA_KEY}`, answered: true }],
     key: ALTCHA_KEY,
@@ -355,7 +355,7 @@ const VARIANTS = [
   // Shape v2: the same loader, without the runtime global v1 has (its own script path, so the server answers it differently)
   { ...shape, id: 'shapesecurity-v2', title: 'Shape Security v2 probe', scripts: shape.scripts.map(src => src.replace('/ssx/', '/ssx2/')), stubs: {} },
   // The scripts and requests of these two come only from the second load on: the first one is a page with nothing to list, so
-  // Analyze Scripts has to reload it (the cookie that detects the protection is there from the start)
+  // Analyze scripts has to reload it (the cookie that detects the protection is there from the start)
   { ...byId('datadome'), id: 'datadome-late', title: 'DataDome late probe', late: true },
   { ...byId('cloudflare'), id: 'cloudflare-late', title: 'Cloudflare late probe', late: true },
   // The same for a CAPTCHA described as data: its widget markup alone detects it (60%), the script and the requests come with the second load
@@ -513,7 +513,7 @@ async function main() {
         if (info && info.active) { if (callback) { callback([target]); return undefined; } return Promise.resolve([target]); }
         return query(info, callback);
       };
-      // The real popup closes after Start Capturing; here it is counted
+      // The real popup closes after Start capturing; here it is counted
       window.__closed = 0;
       window.close = () => { window.__closed++; };
     }, tab);
@@ -565,7 +565,7 @@ async function main() {
     if (!button) throw new Error(`no footer button "${text}"`);
     button.click();
   }, label);
-  /** The Export Code dialog (script parsing code generator): what it offers; then switches language and closes. */
+  /** The Export code dialog (script parsing code generator): what it offers; then switches language and closes. */
   async function codeDialog(popup, { mustContain = [], minLanguages = 2 } = {}) {
     await wait(popup, () => !!document.querySelector('.advanced-code-dialog textarea'), null, 15000);
     const first = await popup.evaluate(() => ({
@@ -707,20 +707,20 @@ async function main() {
     await until(() => t.popup.evaluate(() => window.__copied.length), 5000, `a click on ${String(value).slice(0, 40)} to copy it`);
     assert.equal((await t.popup.evaluate(() => window.__copied))[0], value, 'a click copies the value it shows');
   }
-  /** Check Cookies: the window, the cookies it lists, what it says about them, and a History entry. */
-  const cookiesAction = (spec, { title, found, names, facts = [] }) => ['Check Cookies lists the page\'s cookies and saves the result', async t => {
+  /** Check cookies: the window, the cookies it lists, what it says about them, and a History entry. */
+  const cookiesAction = (spec, { title, found, names, facts = [] }) => ['Check cookies lists the page\'s cookies and saves the result', async t => {
     const before = await t.count(spec.id);
     await t.click(`${spec.id}CheckCookies`);
     const modal = await t.modal();
     assert.equal(modal.title, title);
-    assert.match(modal.text, new RegExp(`Found ${found} cookies`));
+    assert.match(modal.text, new RegExp(`Cookies found: ${found}`));
     for (const name of names) assert.ok(modal.cookies.includes(name), `${name} among ${modal.cookies.join(', ')}`);
     for (const fact of facts) assert.ok(modal.text.includes(fact), `${fact} in the window`);
     await t.closeModal();
     await t.saved(spec.id, before);
   }];
-  /** Analyze Scripts from what the page already loaded: every expected address with its classification; Export Code. */
-  const scriptsAction = (spec, toolId, { title, labels = {}, exact = false, export: exportCode = true }) => ['Analyze Scripts lists the vendor\'s scripts of the loaded page, with Export Code', async t => {
+  /** Analyze scripts from what the page already loaded: every expected address with its classification; Export code. */
+  const scriptsAction = (spec, toolId, { title, labels = {}, exact = false, export: exportCode = true }) => ['Analyze scripts lists the vendor\'s scripts of the loaded page, with Export code', async t => {
     const before = await t.count(spec.id);
     await t.click(toolId);
     const modal = await t.modal();
@@ -731,15 +731,15 @@ async function main() {
     if (exact) assert.equal(modal.rows.length, expected.length, `only the vendor's own requests: ${JSON.stringify(modal.rows.map(row => row.url))}`);
     await copyByClick(t, expected[0][1]);
     if (exportCode) {
-      await footer(t.popup, 'Export Code');
+      await footer(t.popup, 'Export code');
       const dialog = await codeDialog(t.popup, { mustContain: [expected[0][1]] });
-      assert.equal(dialog.title, 'Export Code');
+      assert.equal(dialog.title, 'Export code');
     }
     await t.closeModal();
     await t.saved(spec.id, before);
   }];
-  /** Extract Site Key / Public Key: the window shows the key; it is saved. */
-  const siteKeyAction = (spec, toolId, { title, key }) => ['Extract Site Key shows the key of the page and saves the result', async t => {
+  /** Extract site key / Public key: the window shows the key; it is saved. */
+  const siteKeyAction = (spec, toolId, { title, key }) => ['Extract site key shows the key of the page and saves the result', async t => {
     const before = await t.count(spec.id);
     await t.click(toolId);
     const modal = await t.modal();
@@ -756,11 +756,11 @@ async function main() {
     await t.popup.evaluate(() => { window.__closed = 0; });
     await t.click(id);
     await wait(t.popup, card => document.querySelector(`#${card}`).getAttribute('aria-pressed') === 'true', id, 20000);
-    assert.equal(await t.popup.$eval(`#${id} .advanced-tool-label`, el => el.textContent.trim()), 'Stop Capturing');
-    await until(() => t.popup.evaluate(() => window.__closed > 0), 5000, 'the popup closing after Start Capturing');
+    assert.equal(await t.popup.$eval(`#${id} .advanced-tool-label`, el => el.textContent.trim()), 'Stop capturing');
+    await until(() => t.popup.evaluate(() => window.__closed > 0), 5000, 'the popup closing after Start capturing');
   }
   const stopLabelBack = (t, spec) => wait(t.popup, card => document.querySelector(`#${card}`).getAttribute('aria-pressed') === 'false'
-    && document.querySelector(`#${card} .advanced-tool-label`).textContent.trim() === 'Start Capturing', `${spec.id}StartCapture`, 30000);
+    && document.querySelector(`#${card} .advanced-tool-label`).textContent.trim() === 'Start capturing', `${spec.id}StartCapture`, 30000);
   /** Start, reload (the user's), wait for the capture entry; returns the saved entry. */
   async function captureFlow(t, spec, { reloads = 1 } = {}) {
     const before = await t.count(spec.id);
@@ -772,11 +772,11 @@ async function main() {
     return latest;
   }
   /**
-   * The tool's own Captured Data list under its cards. It is drawn when a capture ends while the popup is open, which is how this
-   * suite keeps it (the real popup closes after Start Capturing). It lists this site's captures, a click opens one, and Clear asks
+   * The tool's own Captured data list under its cards. It is drawn when a capture ends while the popup is open, which is how this
+   * suite keeps it (the real popup closes after Start capturing). It lists this site's captures, a click opens one, and Clear asks
    * first and empties this tool only. A new capture follows, so Advanced → History still holds one of this tool's for its scenarios.
    */
-  const capturedDataAction = spec => ['Captured Data under the tools lists the captures, opens one, and Clear asks first and empties this tool only', async t => {
+  const capturedDataAction = spec => ['Captured data under the tools lists the captures, opens one, and Clear asks first and empties this tool only', async t => {
     const id = spec.id;
     const clearButton = `#clear${id.charAt(0).toUpperCase()}${id.slice(1)}History`;
     const section = () => t.popup.evaluate(moduleId => {
@@ -788,12 +788,12 @@ async function main() {
     const stored = (await t.entries(id)).length;
     assert.ok(stored >= 1, 'the capture scenario before this one saved something');
     // Every fixture is 127.0.0.1, so the list of this site holds all of this tool's captures
-    const shown = await until(async () => { const view = await section(); return view && view.count === `Captures: ${stored}` ? view : null; }, 20000, `the Captured Data section counting ${stored}`);
+    const shown = await until(async () => { const view = await section(); return view && view.count === `Captures: ${stored}` ? view : null; }, 20000, `the Captured data section counting ${stored}`);
     assert.ok(shown.cards >= 1 && shown.clear, JSON.stringify(shown));
     // A click on one opens its details
     await t.popup.evaluate(moduleId => document.querySelector(`#${moduleId}HistoryList .capture-card[data-capture-id]`).click(), id);
     const modal = await t.modal();
-    assert.equal(modal.title, 'Capture Details');
+    assert.equal(modal.title, 'Capture details');
     assert.ok(modal.text.trim().length > 20, `details: ${modal.text.slice(0, 80)}`);
     await t.closeModal();
     // Clear asks first: Cancel loses nothing
@@ -803,7 +803,7 @@ async function main() {
     await t.popup.$eval('.notification-confirm[data-open="true"] .notification-btn-cancel', el => el.click());
     await wait(t.popup, () => !document.querySelector('.notification-confirm[data-open="true"]'), null, 8000);
     assert.equal((await t.entries(id)).length, stored, 'Cancel keeps the captures');
-    // Clear Data empties this tool's captures and nothing else
+    // Clear data empties this tool's captures and nothing else
     const othersOf = () => t.popup.evaluate(async moduleId => Object.entries(await AdvancedHistoryStore.load()).filter(([key]) => key !== moduleId)
       .reduce((sum, [, list]) => sum + list.length, 0), id);
     const others = await othersOf();
@@ -812,12 +812,12 @@ async function main() {
     await t.popup.$eval('.notification-confirm[data-open="true"] .notification-btn-confirm', el => el.click());
     await until(async () => (await t.entries(id)).length === 0, 10000, `${id}'s captures to be cleared`);
     assert.equal(await othersOf(), others, 'the other tools keep their captures');
-    await until(async () => { const view = await section(); return view && view.empty && !view.clear ? view : null; }, 10000, 'the empty Captured Data state');
+    await until(async () => { const view = await section(); return view && view.empty && !view.clear ? view : null; }, 10000, 'the empty Captured data state');
     // The next capture lands again
     await captureFlow(t, spec);
   }];
   /** Start, then Stop with nothing captured: the card is back, nothing saved, the worker says it is not capturing. */
-  const stopAction = spec => ['Stop Capturing ends a capture that has seen nothing, and saves nothing', async t => {
+  const stopAction = spec => ['Stop capturing ends a capture that has seen nothing, and saves nothing', async t => {
     const before = await t.count(spec.id);
     await startCapture(t, spec);
     await t.click(`${spec.id}StartCapture`);
@@ -850,10 +850,10 @@ async function main() {
   }
 
   // The reload path every CAPTCHA described as data shares: nothing of the vendor loaded yet (the page names it only in its markup),
-  // so Analyze Scripts asks the worker to watch the tab, reloads it, and shows what the reload loaded
+  // so Analyze scripts asks the worker to watch the tab, reloads it, and shows what the reload loaded
   const altcha = byId('altcha');
   await protection(altcha, [
-    ['Analyze Scripts of a page with nothing loaded yet reloads it and lists what the reload loaded', async t => {
+    ['Analyze scripts of a page with nothing loaded yet reloads it and lists what the reload loaded', async t => {
       const key = new URL(t.url).pathname + new URL(t.url).search;
       assert.equal(loads[key], 1, 'one load so far');
       const before = await t.count('altcha');
@@ -867,7 +867,7 @@ async function main() {
     }]
   ], { variant: 'altcha-late', ...ctxSetup(altcha) });
 
-  // The documented Cloud embed names its key in the widget's own attribute: Extract Site Key finds it before any challenge request exists
+  // The documented Cloud embed names its key in the widget's own attribute: Extract site key finds it before any challenge request exists
   await protection(altcha, [
     siteKeyAction(altcha, 'altchaExtractSiteKey', { title: 'ALTCHA site key', key: ALTCHA_CLOUD_KEY })
   ], { variant: 'altcha-cloud', ...ctxSetup(altcha) });
@@ -879,37 +879,37 @@ async function main() {
   const akamai = byId('akamai');
   await protection(akamai, [
     toolsAction(akamai),
-    cookiesAction(akamai, { title: 'Akamai Cookies', found: '3/12', names: ['_abck', 'bm_sz', 'ak_bmsc'], facts: ['Protection Level', 'Standard'] }),
-    ['Analyze Scripts reloads the page and lists its sensor script, pixel challenge and endpoints, with Export Code', async t => {
+    cookiesAction(akamai, { title: 'Akamai Cookies', found: '3/12', names: ['_abck', 'bm_sz', 'ak_bmsc'], facts: ['Protection level', 'Standard'] }),
+    ['Analyze scripts reloads the page and lists its sensor script, pixel challenge and endpoints, with Export code', async t => {
       const before = await t.count('akamai');
       await t.click('akamaiAnalyzeContent');
       const modal = await t.modal();
-      assert.equal(modal.title, 'Akamai Analysis');
+      assert.equal(modal.title, 'Akamai analysis');
       assert.match(modal.subtitle, /^Found [1-9]\d* relevant script\(s\)$/);
       assert.ok(modal.copies.includes(`${t.origin}/Xk3-aB/9f2e7c1d`), `the sensor script among ${modal.copies.join(', ')}`);
       assert.ok(modal.copies.includes('bazadebezolkohpepadr="123456789"'), 'the pixel variable');
       assert.ok(modal.copies.includes(`${t.origin}/akam/13/26dcf39b`), 'the pixel script');
-      await footer(t.popup, 'Export Code');
+      await footer(t.popup, 'Export code');
       const dialog = await codeDialog(t.popup);
-      assert.equal(dialog.title, 'Script Parsing Code Generator');
-      assert.ok(dialog.types.includes('All Types'), dialog.types.join(', '));
+      assert.equal(dialog.title, 'Script parsing code generator');
+      assert.ok(dialog.types.includes('All types'), dialog.types.join(', '));
       await t.closeModal();
       await t.saved('akamai', before);
     }],
-    ['Extract Sensor Information deletes the cookies, reloads, and shows the sensor the page sent', async t => {
+    ['Extract sensor information deletes the cookies, reloads, and shows the sensor the page sent', async t => {
       const before = await t.count('akamai');
       await t.click('akamaiExtractSensor');
       const modal = await t.modal(60000);
-      assert.equal(modal.title, 'Extracted Sensor Information');
+      assert.equal(modal.title, 'Extracted sensor information');
       assert.ok(modal.copies.some(value => value === AKAMAI_SENSOR), `the sensor among ${modal.copies.map(value => value.slice(0, 40)).join(' | ')}`);
-      assert.ok(modal.buttons.includes('Copy All Data as JSON'), modal.buttons.join(', '));
-      await footer(t.popup, 'Copy All Data as JSON');
-      await until(() => t.popup.evaluate(() => window.__copied.length), 5000, 'Copy All Data as JSON');
+      assert.ok(modal.buttons.includes('Copy all data as JSON'), modal.buttons.join(', '));
+      await footer(t.popup, 'Copy all data as JSON');
+      await until(() => t.popup.evaluate(() => window.__copied.length), 5000, 'Copy all data as JSON');
       assert.ok(JSON.parse((await t.popup.evaluate(() => window.__copied))[0]).sensorData === AKAMAI_SENSOR);
       await t.closeModal();
       await t.saved('akamai', before);
     }],
-    ['Start Capturing, the reload, and the capture lands in Advanced → History', async t => {
+    ['Start capturing, the reload, and the capture lands in Advanced → History', async t => {
       const saved = await captureFlow(t, akamai);
       const data = saved.captureData || saved.data;
       assert.equal(data.abckCookie, true, JSON.stringify(data).slice(0, 200));
@@ -917,7 +917,7 @@ async function main() {
     }],
     capturedDataAction(akamai),
     stopAction(akamai),
-    ['Start Capturing deletes the _abck cookie only once the worker has armed the capture', async t => {
+    ['Start capturing deletes the _abck cookie only once the worker has armed the capture', async t => {
       const cookie = () => W(async url => (await chrome.cookies.get({ url, name: '_abck' }))?.value ?? null, t.url);
       // The Stop scenario before this one left the cookie deleted (nothing reloaded the page): the page gives it on each load
       await t.reloadPage();
@@ -950,13 +950,13 @@ async function main() {
   await protection(cloudflare, [
     toolsAction(cloudflare),
     cookiesAction(cloudflare, { title: 'Cloudflare Cookies', found: '2/5', names: ['__cf_bm', 'cf_clearance'] }),
-    ['Analyze Scripts of a page that already loaded them lists them and deletes no cookie', async t => {
+    ['Analyze scripts of a page that already loaded them lists them and deletes no cookie', async t => {
       const before = await t.count('cloudflare');
       await t.click('cloudflareAnalyzeScripts');
       const modal = await t.modal();
       assert.equal(modal.title, 'Cloudflare Scripts (2)');
       for (const [type, url] of cloudflare.analyze) assert.ok(modal.rows.some(row => row.type === type && row.url === (url.startsWith('/') ? `${t.origin}${url}` : url)), `${type} among ${JSON.stringify(modal.rows)}`);
-      await footer(t.popup, 'Export Code');
+      await footer(t.popup, 'Export code');
       await codeDialog(t.popup);
       await t.closeModal();
       await t.saved('cloudflare', before);
@@ -967,7 +967,7 @@ async function main() {
   ]);
   // The reload path: nothing to list on the first load, so the cookie that clears the challenge is deleted and the page reloaded
   await protection(cloudflare, [
-    ['Analyze Scripts of a page with nothing loaded yet deletes cf_clearance, reloads, and lists what the reload loaded', async t => {
+    ['Analyze scripts of a page with nothing loaded yet deletes cf_clearance, reloads, and lists what the reload loaded', async t => {
       const key = new URL(t.url).pathname + new URL(t.url).search;
       assert.equal(loads[key], 1, 'one load so far');
       await t.click('cloudflareAnalyzeScripts');
@@ -988,7 +988,7 @@ async function main() {
     scrapflyAction(datadome)
   ]);
   await protection(datadome, [
-    ['Analyze Scripts of a page with nothing loaded yet reloads it and lists what the reload loaded', async t => {
+    ['Analyze scripts of a page with nothing loaded yet reloads it and lists what the reload loaded', async t => {
       const key = new URL(t.url).pathname + new URL(t.url).search;
       await t.click('datadomeAnalyzeScripts');
       const modal = await t.modal(60000);
@@ -1004,7 +1004,7 @@ async function main() {
     toolsAction(funcaptcha),
     siteKeyAction(funcaptcha, 'funcaptchaExtractSiteKey', { title: 'FunCaptcha site key', key: ARKOSE_KEY }),
     scriptsAction(funcaptcha, 'funcaptchaAnalyzeScripts', { title: n => `FunCaptcha Scripts (${n})`, labels: { api: 'api.js' } }),
-    ['Start Capturing, the reload that posts the session, and the capture lands in Advanced → History', async t => {
+    ['Start capturing, the reload that posts the session, and the capture lands in Advanced → History', async t => {
       const saved = await captureFlow(t, funcaptcha);
       const data = saved.captureData || saved.data;
       assert.equal(data.publicKey, ARKOSE_KEY, JSON.stringify(data).slice(0, 240));
@@ -1020,19 +1020,19 @@ async function main() {
   const geetest = byId('geetest');
   await protection(geetest, [
     toolsAction(geetest),
-    ['Check Version reloads the page and says which version it found', async t => {
+    ['Check version reloads the page and says which version it found', async t => {
       await t.click('geetestVersion');
       await until(async () => (await toasts(t.popup)).find(text => /Detected: Geetest V4/.test(text)), 60000, 'the version notification');
     }],
-    ['Analyze Scripts lists what GeeTest left in the page, with Export Parsing Code', async t => {
+    ['Analyze scripts lists what GeeTest left in the page, with Export parsing code', async t => {
       const before = await t.count('geetest');
       await t.click('geetestAnalyze');
       const modal = await t.modal();
       assert.match(modal.title, /^Geetest Scripts \(\d+\)$/);
       assert.ok(modal.copies.includes(GEETEST_ID) || modal.text.includes(GEETEST_ID), `the captchaId among ${modal.text.slice(0, 200)}`);
-      await footer(t.popup, 'Export Parsing Code');
+      await footer(t.popup, 'Export parsing code');
       const dialog = await codeDialog(t.popup, { mustContain: ['initGeetest4'], minLanguages: 1 });
-      assert.equal(dialog.title, 'Export Parsing Code');
+      assert.equal(dialog.title, 'Export parsing code');
       await t.closeModal();
       await t.saved('geetest', before);
     }],
@@ -1045,18 +1045,18 @@ async function main() {
     toolsAction(hcaptcha),
     siteKeyAction(hcaptcha, 'hcaptchaExtractSiteKey', { title: 'hCaptcha site key', key: HCAPTCHA_KEY }),
     scriptsAction(hcaptcha, 'hcaptchaAnalyzeScripts', { title: n => `hCaptcha Scripts (${n})`, labels: { api: 'api.js', config: 'checksiteconfig' } }),
-    ['Check Version reloads the page and shows the version, the site key and the page the widget asked about', async t => {
+    ['Check version reloads the page and shows the version, the site key and the page the widget asked about', async t => {
       const before = await t.count('hcaptcha');
       await t.click('hcaptchaCheckVersion');
       const modal = await t.modal(60000);
-      assert.equal(modal.title, 'hCaptcha Version');
+      assert.equal(modal.title, 'hCaptcha version');
       assert.ok(modal.copies.includes('05219f0822161da4c4a6f3aed6bf6d6fae1ba8e1'), `the version among ${modal.copies.join(', ')}`);
       assert.ok(modal.copies.includes(HCAPTCHA_KEY), 'the site key');
-      assert.match(modal.text, /Enterprise Mode\s+No/);
+      assert.match(modal.text, /Enterprise mode\s+No/);
       await t.closeModal();
       await t.saved('hcaptcha', before);
     }],
-    ['Start Capturing, the reload, and the capture (version, site key, website) lands in Advanced → History', async t => {
+    ['Start capturing, the reload, and the capture (version, site key, website) lands in Advanced → History', async t => {
       const saved = await captureFlow(t, hcaptcha);
       const data = saved.captureData || saved.data;
       assert.equal(data.websiteKey, HCAPTCHA_KEY, JSON.stringify(data).slice(0, 240));
@@ -1067,30 +1067,30 @@ async function main() {
     stopAction(hcaptcha),
     scrapflyAction(hcaptcha)
   ]);
-  skip('hcaptcha › Enterprise mode from the checksiteconfig answer (Check Version, Start Capturing)',
+  skip('hcaptcha › Enterprise mode from the checksiteconfig answer (Check version, Start capturing)',
     'needs hCaptcha\'s own checksiteconfig response (its custom_theme feature); offline the worker\'s request to it fails, and the capture finishes on the address alone');
 
   // ---- Imperva ------------------------------------------------------------------------------------------------------------------
   const imperva = byId('imperva');
   await protection(imperva, [
     toolsAction(imperva),
-    cookiesAction(imperva, { title: 'Imperva Cookies', found: '5/5', names: ['reese84', '___utmvc', 'incap_ses_315_2405640', 'nlbi_2405640', 'visid_incap_2405640'], facts: ['Protection Level'] }),
-    ['Analyze Scripts reads the Reese84 and UTMVC scripts the page loaded, with Export Code', async t => {
+    cookiesAction(imperva, { title: 'Imperva Cookies', found: '5/5', names: ['reese84', '___utmvc', 'incap_ses_315_2405640', 'nlbi_2405640', 'visid_incap_2405640'], facts: ['Protection level'] }),
+    ['Analyze scripts reads the Reese84 and UTMVC scripts the page loaded, with Export code', async t => {
       const before = await t.count('imperva');
       await t.click('impervaAnalyzeScripts');
       const modal = await t.modal();
-      assert.equal(modal.title, 'Imperva Analysis');
+      assert.equal(modal.title, 'Imperva analysis');
       assert.ok(modal.copies.includes(`${t.origin}/Thine-Wert/987`), `the Reese84 script among ${modal.copies.join(', ')}`);
       assert.ok(modal.copies.includes(`${t.origin}/_Incapsula_Resource?SWKMTFSR=1&e=0.1234`), 'the UTMVC script');
       assert.ok(modal.copies.includes(`${t.origin}/Thine-Wert/987?d=127.0.0.1`), 'the sensor URL (?d=<host>)');
-      await footer(t.popup, 'Export Code');
+      await footer(t.popup, 'Export code');
       const dialog = await codeDialog(t.popup);
-      assert.equal(dialog.title, 'Script Parsing Code Generator');
-      assert.ok(dialog.types.includes('All Types'), dialog.types.join(', '));
+      assert.equal(dialog.title, 'Script parsing code generator');
+      assert.ok(dialog.types.includes('All types'), dialog.types.join(', '));
       await t.closeModal();
       await t.saved('imperva', before);
     }],
-    ['Start Capturing, the reload, and the capture (cookies the page set) lands in Advanced → History', async t => {
+    ['Start capturing, the reload, and the capture (cookies the page set) lands in Advanced → History', async t => {
       const saved = await captureFlow(t, imperva);
       const data = saved.captureData || saved.data;
       assert.equal(data.requiresReese84, true, JSON.stringify(data).slice(0, 240));
@@ -1101,7 +1101,7 @@ async function main() {
     stopAction(imperva),
     scrapflyAction(imperva)
   ]);
-  skip('imperva › Analyze Scripts after a reload (extraction of the challenge payloads)', 'covered by scripts/e2e-v313-advanced.js (real webRequest bodies of Reese84\'s sensor); the loaded-page path above is the popup\'s first answer');
+  skip('imperva › Analyze scripts after a reload (extraction of the challenge payloads)', 'covered by scripts/e2e-v313-advanced.js (real webRequest bodies of Reese84\'s sensor); the loaded-page path above is the popup\'s first answer');
 
   // ---- reCAPTCHA ----------------------------------------------------------------------------------------------------------------
   const recaptcha = byId('recaptcha');
@@ -1110,7 +1110,7 @@ async function main() {
     ['Obtain selector clicks the widget on the page and shows how', async t => {
       await t.click('recaptchaClick');
       const modal = await t.modal();
-      assert.equal(modal.title, 'Selector Detection');
+      assert.equal(modal.title, 'Selector detection');
       assert.ok(modal.copies.includes('.g-recaptcha') && modal.copies.includes('direct-click'), `method and selector among ${modal.copies.join(', ')}`);
       assert.equal(await t.page.evaluate(() => window.__rcClicks), 1, 'the widget on the page was clicked once');
       await t.closeModal();
@@ -1120,12 +1120,12 @@ async function main() {
       const before = await t.count('recaptcha');
       await t.click('recaptchaCallback');
       const modal = await t.modal();
-      assert.equal(modal.title, 'reCAPTCHA Callbacks');
+      assert.equal(modal.title, 'reCAPTCHA callbacks');
       assert.ok(modal.copies.includes('onSolved'), `the callback among ${modal.copies.join(', ')}`);
       await t.closeModal();
       await t.saved('recaptcha', before);
     }],
-    ['Start Capturing, the reload that makes the anchor and reload requests, and the capture lands in Advanced → History', async t => {
+    ['Start capturing, the reload that makes the anchor and reload requests, and the capture lands in Advanced → History', async t => {
       const saved = await captureFlow(t, recaptcha);
       const data = saved.captureData || saved.data;
       assert.equal(data.siteKey, RECAPTCHA_KEY, JSON.stringify(data).slice(0, 240));
@@ -1135,36 +1135,36 @@ async function main() {
     stopAction(recaptcha),
     scrapflyAction(recaptcha)
   ]);
-  skip('recaptcha › Start Capturing with a solved challenge (v3 score, session cookie, Enterprise flags)', 'needs Google\'s real anchor and reload traffic: the capture decodes their protobuf; offline only a hand-built request is available');
+  skip('recaptcha › Start capturing with a solved challenge (v3 score, session cookie, Enterprise flags)', 'needs Google\'s real anchor and reload traffic: the capture decodes their protobuf; offline only a hand-built request is available');
 
   // ---- Shape Security -----------------------------------------------------------------------------------------------------------
   const shapeSecurity = byId('shapesecurity');
   await protection(shapeSecurity, [
     toolsAction(shapeSecurity),
-    ['Check Version finds the v1 runtime global', async t => {
+    ['Check version finds the v1 runtime global', async t => {
       await t.click('shapesecurityCheckVersion');
       const modal = await t.modal();
-      assert.equal(modal.title, 'Shape Security Version');
+      assert.equal(modal.title, 'Shape Security version');
       assert.match(modal.text, /V1/);
       assert.match(modal.text, /Cookie/);
       await t.closeModal();
     }],
     cookiesAction(shapeSecurity, { title: 'Shape Security Cookies', found: '1/1', names: ['AbCd1234'] }),
-    ['Analyze Scripts lists Shape\'s loaders of the loaded page, with Export Code', async t => {
+    ['Analyze scripts lists Shape\'s loaders of the loaded page, with Export code', async t => {
       const before = await t.count('shapesecurity');
       await t.click('shapesecurityAnalyzeScripts');
       const modal = await t.modal();
-      assert.equal(modal.title, 'Shape Security Analysis');
+      assert.equal(modal.title, 'Shape Security analysis');
       assert.ok(modal.copies.includes(`${t.origin}/ssx/ssx.mod.js?seed=${SHAPE_SEED}`), `the seed script among ${modal.copies.join(', ')}`);
-      assert.match(modal.text, /Seed Scripts\s+1/);
-      assert.match(modal.text, /Init\.js Scripts\s+1/);
-      await footer(t.popup, 'Export Code');
+      assert.match(modal.text, /Seed scripts\s+1/);
+      assert.match(modal.text, /Init\.js scripts\s+1/);
+      await footer(t.popup, 'Export code');
       const dialog = await codeDialog(t.popup);
-      assert.equal(dialog.title, 'Script Parsing Code Generator');
+      assert.equal(dialog.title, 'Script parsing code generator');
       await t.closeModal();
       await t.saved('shapesecurity', before);
     }],
-    ['Start Capturing, the reload, and the cookie (v1: no headers needed) lands in Advanced → History', async t => {
+    ['Start capturing, the reload, and the cookie (v1: no headers needed) lands in Advanced → History', async t => {
       const saved = await captureFlow(t, shapeSecurity);
       const data = saved.captureData || saved.data;
       assert.equal(data.cookie && data.cookie.name, 'AbCd1234', JSON.stringify(data).slice(0, 240));
@@ -1175,15 +1175,15 @@ async function main() {
     scrapflyAction(shapeSecurity)
   ]);
   await protection(shapeSecurity, [
-    ['v2: Check Version finds Shape\'s loader without the runtime global', async t => {
+    ['v2: Check version finds Shape\'s loader without the runtime global', async t => {
       await t.click('shapesecurityCheckVersion');
       const modal = await t.modal();
-      assert.equal(modal.title, 'Shape Security Version');
+      assert.equal(modal.title, 'Shape Security version');
       assert.match(modal.text, /V2/);
-      assert.match(modal.text, /Cookie \+ Headers/);
+      assert.match(modal.text, /Cookie \+ headers/);
       await t.closeModal();
     }],
-    ['v2: Start Capturing needs the cookie and the signed request, and saves both', async t => {
+    ['v2: Start capturing needs the cookie and the signed request, and saves both', async t => {
       const saved = await captureFlow(t, shapeSecurity);
       const data = saved.captureData || saved.data;
       assert.equal(data.version, 'v2', JSON.stringify(data).slice(0, 240));
@@ -1196,7 +1196,7 @@ async function main() {
   const turnstile = byId('turnstile');
   await protection(turnstile, [
     toolsAction(turnstile),
-    ['Extract Site Key shows the key of the widget and saves the result', async t => {
+    ['Extract site key shows the key of the widget and saves the result', async t => {
       const before = await t.count('turnstile');
       await t.click('turnstileExtractSiteKey');
       const modal = await t.modal();
@@ -1347,7 +1347,7 @@ async function main() {
           const shown = await popup.evaluate(async () => ({ text: document.querySelector('#advancedNoToolsHistoryBtn').textContent.trim(),
             total: Object.values(await AdvancedHistoryStore.load()).reduce((sum, list) => sum + list.filter(item => item && item.id && item.timestamp).length, 0) }));
           assert.ok(shown.total >= 10, `captures saved by the sessions above: ${shown.total}`);
-          assert.equal(shown.text, `View capture history (${shown.total})`);
+          assert.equal(shown.text, `View captures (${shown.total})`);
           await popup.$eval('#advancedNoToolsHistoryBtn', el => el.click());
           await wait(popup, () => document.querySelector('#capturesPanel').classList.contains('active'), null, 10000);
         });

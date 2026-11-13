@@ -25,6 +25,7 @@
     'GET_DETECTORS',            // the content script asks for the detector definitions
     'CHECK_CACHE_EARLY',        // the content script asks whether a cached result exists before collecting
     'CACHE_HIT_EARLY_EXIT',     // the content script stopped early because of a cached result
+    'PRERENDER_SHOWN',          // a page Chrome prerendered is now the tab's page: the worker takes what it kept of its load
     'REQUEST_DETECTION',        // the popup (or the worker's own tab events) asks for a scan of a tab
     'GET_DETECTION_DATA',       // the popup asks for a tab's result
     'RESCAN_TAB',               // the Detection tab's Scan again: clear the tab's saved result and reload it ({ tabId }); the answer's `outcome` says what happened

@@ -271,8 +271,8 @@ class BaseAdvancedModule {
         btn.classList.toggle('capturing', this.isCapturing);
         btn.setAttribute('aria-pressed', String(this.isCapturing));
         if (label) label.textContent = this.isCapturing
-            ? BaseAdvancedModule._tr('btnStopCapturing', 'Stop Capturing')
-            : BaseAdvancedModule._tr('btnStartCapturing', 'Start Capturing');
+            ? BaseAdvancedModule._tr('btnStopCapturing', 'Stop capturing')
+            : BaseAdvancedModule._tr('btnStartCapturing', 'Start capturing');
         if (hint) hint.textContent = this.getToolHint('capture', this.isCapturing);
         if (icon) icon.innerHTML = BaseAdvancedModule.toolIcon(this.isCapturing ? 'stop' : 'capture');
     }

@@ -244,6 +244,7 @@ class Utils {
       responseCookies: pageData.responseCookies,
       requestHeaders: pageData.requestHeaders,
       pageHTML: pageData.pageHTML,
+      pageSource: pageData.pageSource,
       collectMs: pageData.collectMs
     };
   }

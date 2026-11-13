@@ -396,21 +396,8 @@ SettingsUI._openLanguagePicker = function() {
 SettingsUI._settleUnsavedBeforeReload = async function() {
   const owner = typeof window !== 'undefined' && window.popupInstance ? window.popupInstance.settings : null;
   if (!owner || !owner.settingsBaseline || !SettingsUI.hasUnsavedChanges(owner)) return true;
-  if (typeof NotificationHelper === 'undefined' || typeof NotificationHelper.choose !== 'function') return true;
   const tr = (key, fallback) => ((typeof I18n !== 'undefined') && I18n.get(key)) || fallback;
-  const answer = await NotificationHelper.choose({
-    title: tr('settingsLanguageUnsavedTitle', 'Unsaved settings'),
-    message: tr('settingsLanguageUnsavedMessage', 'Changing the language reloads the extension. Save your changes to the settings first?'),
-    cancelText: tr('btnCancel', 'Cancel'),
-    tone: 'warning',
-    actions: [
-      { value: 'discard', text: tr('ruleEditorDiscardConfirm', 'Discard') },
-      { value: 'save', text: tr('btnSave', 'Save'), primary: true }
-    ],
-    defaultValue: 'save'
-  });
-  if (answer === 'save') return SettingsUI.saveFormBeforeReload(owner);
-  return answer === 'discard';
+  return SettingsUI.settleUnsavedChanges(owner, tr('settingsLanguageUnsavedMessage', 'Changing the language reloads the extension. Save your changes to the settings first?'));
 };
 
 /** The language choice saved now ('auto' when none): an import shows a language only when it is another one. */
@@ -440,20 +427,6 @@ SettingsUI.hasUnsavedChanges = function(owner) {
     return JSON.stringify(copy);
   };
   return comparable(owner.settings) !== comparable(owner.settingsBaseline);
-};
-
-/** "Save" before the language change: the form's values, checked as the Save button checks them. */
-SettingsUI.saveFormBeforeReload = async function(owner) {
-  const fromForm = owner.getSettingsFromUI();
-  const validation = owner.validateSettings(fromForm);
-  if (!validation.isValid) {
-    const message = ((typeof I18n !== 'undefined') && I18n.format && I18n.format('invalidSettingsFmt', validation.errors.join(', ')))
-      || `Invalid settings: ${validation.errors.join(', ')}`;
-    NotificationHelper.error(message);
-    return false;
-  }
-  owner.settings = owner.deepMerge(owner.settings, fromForm);
-  return (await owner.saveSettings({ notify: false })) !== false;
 };
 
 SettingsUI._applyLanguageChoice = async function(choice, { persist = true } = {}) {

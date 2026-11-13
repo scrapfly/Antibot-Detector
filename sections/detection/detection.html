@@ -45,19 +45,19 @@
             <circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/>
           </svg>
         </span>
-        <h3 class="state-card-title" data-scan-mode-show="blocklist" data-i18n="detectionDisabledForDomain">Detection disabled for this domain</h3>
+        <h3 class="state-card-title" data-scan-mode-show="blocklist" data-i18n="detectionDisabledForDomain">Detection paused: you skip this site</h3>
         <h3 class="state-card-title" data-scan-mode-show="allowlist" data-i18n="detectionNotOnList" hidden>Detection paused: this site is not on your list</h3>
       </div>
       <div class="detection-pause-site">
         <p id="blacklistDomain" class="blacklist-domain-text"></p>
       </div>
       <button id="removeFromBlacklistBtn" class="state-card-enable-btn remove-blacklist-btn" type="button" data-scan-mode-show="blocklist">
-        <span data-i18n="detectionRemoveFromBlacklistBtn">Remove from Blacklist</span>
+        <span data-i18n="detectionRemoveFromBlacklistBtn">Scan this site again</span>
       </button>
       <button id="allowSiteBtn" class="state-card-enable-btn remove-blacklist-btn" type="button" data-scan-mode-show="allowlist" hidden>
         <span data-i18n="detectionAllowSiteBtn">Scan this site</span>
       </button>
-      <p class="blacklist-hint" data-scan-mode-show="blocklist" data-i18n="detectionBlacklistHint">Or go to Settings → Detection → Blacklisted Domains to manage.</p>
+      <p class="blacklist-hint" data-scan-mode-show="blocklist" data-i18n="detectionBlacklistHint">Or go to Settings → Detection → Sites to scan to manage the list.</p>
       <p class="blacklist-hint" data-scan-mode-show="allowlist" data-i18n="detectionAllowlistHint" hidden>Or go to Settings → Detection → Sites to scan to manage the list.</p>
     </div>
   </div>
@@ -68,17 +68,19 @@
       <div class="state-card-icon">
         <img src="icons/icon128.png" alt="Scrapfly" width="64" height="64" class="state-card-logo">
       </div>
-      <h3 class="state-card-title" data-i18n="detectionEmptyTitle">Nothing Detected</h3>
+      <h3 class="state-card-title" data-i18n="detectionEmptyTitle">Nothing detected</h3>
       <p class="state-card-description" data-i18n="detectionNoDetectionsDesc">No matching antibot, CAPTCHA, or fingerprinting signals were found on this page.</p>
       <!-- A page with no completed scan (none yet, a failed or an interrupted one): one click scans it again -->
       <button id="emptyRescanBtn" class="state-card-enable-btn" type="button" data-i18n="historyScanAgain" hidden>Scan again now</button>
       <div class="state-card-badges">
         <span class="state-card-badge" data-i18n="detectionBadgeNoCaptchas">✓ No CAPTCHAs</span>
-        <span class="state-card-badge" data-i18n="detectionBadgeNoAntibot">✓ No Anti-Bot</span>
-        <span class="state-card-badge" data-badge="fingerprint" data-i18n="detectionBadgeNoFingerprint">✓ No Fingerprinting</span>
+        <span class="state-card-badge" data-i18n="detectionBadgeNoAntibot">✓ No anti-bot</span>
+        <span class="state-card-badge" data-badge="fingerprint" data-i18n="detectionBadgeNoFingerprint">✓ No fingerprinting</span>
       </div>
       <!-- A scan that found nothing: when it ran (or the other page of the site it ran on, under the Domain cache scope), and one
            click to scan this page again. The result is cached for days, so reloading the page shows the same card -->
+      <!-- What the scan looked at: counts and how the JS hooks ended (none for a result saved before 3.1.9) -->
+      <p id="emptyFactsNote" class="state-card-checked state-card-facts" dir="auto" hidden></p>
       <p id="emptyCheckedNote" class="state-card-checked" hidden>
         <span class="detection-note-text"></span>
         <span class="detection-note-action"><span class="detection-note-sep" aria-hidden="true">·</span> <button id="checkedRescanBtn" class="detection-link-btn" type="button" data-i18n="historyScanAgain">Scan again now</button></span>
@@ -121,7 +123,7 @@
               <path d="M21 12a9 9 0 1 1-9-9c2.5 0 4.7 1 6.4 2.6L21 8"/><path d="M21 3v5h-5"/><circle cx="12" cy="12" r="2.5"/>
             </svg>
           </button>
-          <button id="clearCacheBtn" class="url-action-btn clear-cache-btn" title="Clear Cache" data-i18n-title="detectionTitleClearCache">
+          <button id="clearCacheBtn" class="url-action-btn clear-cache-btn" title="Clear cache" data-i18n-title="detectionTitleClearCache">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 6h18"/>
               <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -135,7 +137,7 @@
               <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" fill="currentColor"/>
             </svg>
           </button>
-          <button id="addToBlacklistBtn" class="url-action-btn blacklist-btn" title="Block this domain" data-i18n-title="detectionTitleBlockDomain">
+          <button id="addToBlacklistBtn" class="url-action-btn blacklist-btn" title="Skip this site" data-i18n-title="detectionTitleBlockDomain">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <circle cx="12" cy="12" r="10"/>
               <path d="M4.93 4.93l14.14 14.14"/>
@@ -231,6 +233,15 @@
             <div class="stat-value-inline" id="httpStatusValue">-</div>
           </div>
         </div>
+        <!-- What was checked: opens the counts and how the JS hooks ended under this row. Hidden for a result saved before 3.1.9 -->
+        <button type="button" id="scanFactsToggle" class="scan-facts-toggle" aria-expanded="false" aria-controls="scanFactsPanel" hidden title="What was checked" aria-label="What was checked" data-i18n-title="detectionFactsTitle" data-i18n-aria-label="detectionFactsTitle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1 1 2-2M3.5 12l1 1 2-2M3.5 18l1 1 2-2"/></svg>
+        </button>
+      </div>
+      <div id="scanFactsPanel" class="scan-facts-panel" role="region" aria-labelledby="scanFactsTitle" hidden>
+        <p id="scanFactsTitle" class="scan-facts-title" data-i18n="detectionFactsTitle">What was checked</p>
+        <p class="scan-facts-line" data-facts="counts" dir="auto"></p>
+        <p class="scan-facts-line" data-facts="hooks" dir="auto"></p>
       </div>
 
       <!-- What History says changed on this page since its earlier scan, with Compare scans and Watch for changes. Read from
@@ -245,7 +256,9 @@
 
       <!-- Search sits in the summary card, under the stats -->
       <div class="search-container detection-search">
-        <input type="text" id="detectionSearch" class="search-input" placeholder="Search detections..." data-i18n-placeholder="detectionSearchPlaceholder" aria-label="Search detections..." data-i18n-aria-label="detectionSearchPlaceholder">
+        <input type="text" id="detectionSearch" class="search-input" aria-keyshortcuts="/" placeholder="Search detections..." data-i18n-placeholder="detectionSearchPlaceholder" aria-label="Search detections..." data-i18n-aria-label="detectionSearchPlaceholder">
+        <!-- Inside the search field, at its end: only the results with strong evidence (80% or more). Not a chip, so the row below keeps four -->
+        <button type="button" id="detectionStrongToggle" class="detection-strong-toggle" aria-pressed="false" data-i18n="detectionStrongToggle">Strong (≥80%)</button>
         <!-- Filter chips under the search: one per category (any of the chosen ones, combined with the search with AND) -->
         <div id="detectionFilters" class="detection-filters" role="group" aria-label="Filter detections" data-i18n-aria-label="detectionFiltersLabel">
           <button type="button" class="history-filter-chip" data-filter="antibot" data-category="antibot" aria-pressed="false">
@@ -308,15 +321,15 @@
             <path d="M12 3v8"/><path d="M6.3 7.2a8 8 0 1 0 11.4 0"/>
           </svg>
         </span>
-        <h3 class="state-card-title" data-i18n="detectionDisabledTitle">Detection Disabled</h3>
+        <h3 class="state-card-title" data-i18n="detectionDisabledTitle">Detection disabled</h3>
       </div>
       <p class="state-card-description" data-i18n="detectionDisabledDesc">Security detection is currently turned off.</p>
       <button id="enableDetectionBtn" class="state-card-enable-btn" type="button" data-i18n="detectionEnableBtn">Enable detection</button>
-      <button id="disabledBlacklistBtn" class="state-card-blacklist-btn" type="button" title="This domain is blacklisted" data-i18n-title="detectionDomainBlacklistedTitle">
+      <button id="disabledBlacklistBtn" class="state-card-blacklist-btn" type="button" title="This site is skipped" data-i18n-title="detectionDomainBlacklistedTitle">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C7.58,4 4,7.58 4,12C4,16.42 7.58,20 12,20C16.42,20 20,16.42 20,12C20,7.58 16.42,4 12,4M16.95,5.63L18.37,7.05L7.05,18.37L5.63,16.95L16.95,5.63Z"/>
         </svg>
-        <span data-i18n="detectionRemoveFromBlacklistBtn">Remove from Blacklist</span>
+        <span data-i18n="detectionRemoveFromBlacklistBtn">Scan this site again</span>
       </button>
     </div>
   </div>
@@ -329,7 +342,7 @@
         <div class="detection-modal-title-group">
           <div class="detection-modal-icon" id="detectionModalIcon"></div>
           <div class="detection-modal-title-info">
-            <h3 id="detectionModalName">Detection Name</h3>
+            <h3 id="detectionModalName">Detection name</h3>
             <div id="detectionModalCategories" class="detection-modal-categories"></div>
           </div>
         </div>
@@ -392,6 +405,17 @@
             <h4 data-i18n="detectionModalDescription">Description</h4>
           </div>
           <p id="detectionModalDescription" class="detection-modal-description" data-i18n="detectionModalNoDescription">No description available.</p>
+          <!-- What the difficulty level means for this protection -->
+          <p id="detectionModalDifficultyNote" class="detection-modal-difficulty-note" dir="auto" hidden></p>
+          <!-- The vendor's site and the protection's page in the docs (from the detector's data; official detectors only), and its Advanced tools -->
+          <div id="detectionModalLinks" class="detection-modal-links" hidden>
+            <a id="detectionModalWebsite" class="detection-modal-link" hidden><span data-i18n="detectionModalWebsite">Website</span><svg class="detection-modal-link-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+            <a id="detectionModalDocs" class="detection-modal-link" hidden><span data-i18n="detectionModalDocs">Detection guide</span><svg class="detection-modal-link-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+            <button type="button" id="detectionModalOpenTools" class="detection-modal-link detection-modal-link--tools" hidden><span data-i18n="advancedToolsLoadTools">Open tools</span></button>
+            <!-- This protection's rule in the Rules editor (a rule that is loaded), and this one detection as Markdown: names and patterns, no values -->
+            <button type="button" id="detectionModalEditRule" class="detection-modal-link" hidden><span data-i18n="detectionModalEditRule">Edit rule</span></button>
+            <button type="button" id="detectionModalCopyEvidence" class="detection-modal-link"><span data-i18n="detectionModalCopyEvidence">Copy evidence</span></button>
+          </div>
         </div>
         <div class="detection-modal-section" id="detectionModalCombinationsSection" hidden>
           <div class="detection-modal-section-header">
@@ -402,7 +426,7 @@
         </div>
         <div class="detection-modal-section detection-modal-section--methods">
           <div class="detection-modal-section-header">
-            <h4 data-i18n="detectionModalDetectionMethods">Detection Methods</h4>
+            <h4 data-i18n="detectionModalDetectionMethods">Detection methods</h4>
           </div>
           <div id="detectionModalMethods" class="detection-modal-methods-list">
             <span class="badge" data-i18n="detectionModalNoMethodsDetected">No methods detected</span>

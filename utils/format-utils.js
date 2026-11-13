@@ -118,19 +118,69 @@ class FormatUtils {
   }
 
   /**
+   * A label and its value as the UI language joins them: "Pages: 12", "Pages : 12" (French, narrow no-break space),
+   * "页面：12" (full-width colon). English without a language loaded.
+   * @param {string} label
+   * @param {*} value
+   * @returns {string}
+   */
+  static labelValue(label, value) {
+    return FormatUtils.t('labelValueFmt', '{0}: {1}', label, value);
+  }
+
+  /**
+   * labelValue() for markup: the label and the value are HTML already (escaped by the caller), only the
+   * language's own pattern around them is escaped here.
+   * @param {string} labelHtml
+   * @param {string} valueHtml
+   * @returns {string}
+   */
+  static labelValueHtml(labelHtml, valueHtml) {
+    const pattern = (typeof I18n !== 'undefined' && I18n && typeof I18n.get === 'function' && I18n.get('labelValueFmt')) || '{0}: {1}';
+    return String(pattern).split(/(\{[01]\})/).map(part => (part === '{0}' ? labelHtml : part === '{1}' ? valueHtml : FormatUtils.escapeHtml(part))).join('');
+  }
+
+  /**
+   * A number with the decimal mark of the UI language ("1,5" in German), Latin digits and no thousands separator
+   * (which would read as a decimal mark in another language). The plain number when no language is loaded.
+   * @param {number} value
+   * @param {{minimumFractionDigits?: number, maximumFractionDigits?: number}} [options]
+   * @returns {string}
+   */
+  static formatNumber(value, { minimumFractionDigits = 0, maximumFractionDigits = 0 } = {}) {
+    const number = Number(value);
+    const max = Math.max(minimumFractionDigits, maximumFractionDigits);
+    const locale = FormatUtils.uiLocale();
+    if (locale && typeof Intl !== 'undefined' && typeof Intl.NumberFormat === 'function') {
+      try {
+        return new Intl.NumberFormat(locale, { minimumFractionDigits, maximumFractionDigits: max, useGrouping: false, numberingSystem: 'latn' }).format(number);
+      } catch (_) { /* the plain number below */ }
+    }
+    const fixed = number.toFixed(max);
+    // Drop the zeros beyond the minimum, as Intl does
+    if (max > minimumFractionDigits && fixed.includes('.')) {
+      const [whole, fraction] = fixed.split('.');
+      const kept = fraction.replace(/0+$/, '').padEnd(minimumFractionDigits, '0');
+      return kept ? `${whole}.${kept}` : whole;
+    }
+    return fixed;
+  }
+
+  /**
    * Format a relative time in the UI language with Intl.RelativeTimeFormat
    * ("3h ago", "hace 3 h", "3時間前"). Returns null when Intl or the UI locale
    * is unavailable, or the locale is rejected, so the caller can fall back.
    * @param {number} value - Signed amount (negative = in the past)
    * @param {string} unit - Intl unit ('second', 'minute', 'hour', 'day', ...)
    * @param {string} [style='narrow'] - 'long' | 'short' | 'narrow'
+   * @param {string} [numeric='always'] - 'auto' gives the language's own word where it has one (0 seconds: "now", "jetzt")
    * @returns {string|null}
    */
-  static formatRelative(value, unit, style = 'narrow') {
+  static formatRelative(value, unit, style = 'narrow', numeric = 'always') {
     const locale = FormatUtils.uiLocale();
     if (!locale || typeof Intl === 'undefined' || typeof Intl.RelativeTimeFormat !== 'function') return null;
     try {
-      return new Intl.RelativeTimeFormat(locale, { numeric: 'always', style }).format(value, unit);
+      return new Intl.RelativeTimeFormat(locale, { numeric, style }).format(value, unit);
     } catch (_) {
       return null;
     }
@@ -185,11 +235,16 @@ class FormatUtils {
    * Format timestamp as "X time ago" (e.g., "3h ago", "2d ago"), in the UI
    * language via Intl.RelativeTimeFormat when available.
    * @param {number} timestamp - Unix timestamp in milliseconds
+   * @param {{inline?: boolean}} [options] - inline: the time goes inside a sentence ("Last checked {0}"), where the
+   *   stand-alone "Just now" reads wrong ("Last checked Just now"): a moment ago is the language's own word for now instead
+   *   ("Last checked now", "Zuletzt geprüft jetzt"), "just now" with no language loaded
    * @returns {string} Human-readable time ago string
    */
-  static getTimeAgo(timestamp) {
+  static getTimeAgo(timestamp, { inline = false } = {}) {
     const t = (typeof I18n !== 'undefined') ? I18n : null;
-    const get = (key, fallback) => (t && t.get(key)) || fallback;
+    const get = (key, fallback) => (key === 'timeJustNow' && inline
+      ? FormatUtils.formatRelative(0, 'second', 'narrow', 'auto') || 'just now'
+      : (t && t.get(key)) || fallback);
     const fmt = (key, fallback, n, unit) => FormatUtils.formatRelative(-n, unit)
       || (t && t.format(key, n)) || fallback;
 
@@ -361,10 +416,12 @@ class FormatUtils {
     watch: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
     pin: '<svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17v5" fill="none"/><path d="M9 3h6l-1 6 3 3v2H7v-2l3-3z"/></svg>',
     changed: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></svg>',
-    combination: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg>'
+    combination: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="12" r="5.5"/><circle cx="15" cy="12" r="5.5"/></svg>',
+    // An HTTP error status (History's Error status filter): a circle with an exclamation mark
+    status: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.5h.01"/></svg>'
   });
 
-  /** One of UI_ICONS ('pin', 'changed', 'watch', 'combination'), or '' for an unknown name. */
+  /** One of UI_ICONS ('pin', 'changed', 'watch', 'combination', 'status'), or '' for an unknown name. */
   static uiIconSvg(name) {
     return FormatUtils.UI_ICONS[name] || '';
   }

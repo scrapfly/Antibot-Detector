@@ -151,7 +151,7 @@ const stored = (m, timestamp, extra) => ({ m, c: { timestamp, data: {}, ...extra
 test('ToolsStats.compute counts live captures and sets expired ones apart', () => {
   const captures = caps([
     stored('akamai', NOW - 5 * MIN, { expiresAt: NOW + 25 * MIN, url: 'https://a.example/x' }),
-    stored('akamai', NOW - 20 * MIN, { expiresAt: NOW + 9 * MIN, hostname: 'b.example', data: { tool: 't', label: 'Analyze Scripts' } }),
+    stored('akamai', NOW - 20 * MIN, { expiresAt: NOW + 9 * MIN, hostname: 'b.example', data: { tool: 't', label: 'Analyze scripts' } }),
     stored('awswaf', NOW - 29 * MIN, { expiresAt: NOW + MIN }),
     stored('awswaf', NOW - 40 * MIN, { expiresAt: NOW - 10 * MIN }),
     stored('akamai', NOW - 41 * MIN, { expiresAt: NOW }),
@@ -162,14 +162,14 @@ test('ToolsStats.compute counts live captures and sets expired ones apart', () =
   assert.equal(t.total, 4, 'live: two Akamai with an expiry, one AWS WAF, and one Akamai with no expiry; the future one is not saved yet');
   assert.equal(t.stale, 2, 'expired at or before now');
   assert.equal(t.expiringSoon, 2, 'within ten minutes: 9 and 1 minutes left');
-  assert.deepEqual(t.live.map((c) => [c.name, c.hostname, c.tool]), [['Akamai Bot Manager', '', ''], ['Akamai Bot Manager', 'a.example', ''], ['Akamai Bot Manager', 'b.example', 'Analyze Scripts'], ['AWS WAF', '', '']],
+  assert.deepEqual(t.live.map((c) => [c.name, c.hostname, c.tool]), [['Akamai Bot Manager', '', ''], ['Akamai Bot Manager', 'a.example', ''], ['Akamai Bot Manager', 'b.example', 'Analyze scripts'], ['AWS WAF', '', '']],
     'newest first');
   assert.deepEqual(t.live.map((c) => c.timestamp), [NOW - MIN, NOW - 5 * MIN, NOW - 20 * MIN, NOW - 29 * MIN]);
   assert.deepEqual(Object.keys(t.live[0]), ['module', 'name', 'tool', 'hostname', 'timestamp', 'expiresAt']);
   assert.equal(t.live[0].expiresAt, null, 'a capture with no expiry is live and says so');
   assert.equal(t.live[1].expiresAt, NOW + 25 * MIN);
   assert.deepEqual(t.byModule.map((m) => [m.name, m.count]), [['Akamai Bot Manager', 3], ['AWS WAF', 1]], 'by vendor over live captures only');
-  assert.deepEqual(t.byTool.map((x) => [x.capture, x.label, x.count]), [[true, '', 3], [false, 'Analyze Scripts', 1]]);
+  assert.deepEqual(t.byTool.map((x) => [x.capture, x.label, x.count]), [[true, '', 3], [false, 'Analyze scripts', 1]]);
   assert.equal([...t.perDay.values()].reduce((a, b) => a + b, 0), 4);
 });
 

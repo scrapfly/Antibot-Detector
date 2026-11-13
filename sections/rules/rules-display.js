@@ -278,7 +278,7 @@ Rules.prototype.renderDetectorsPage = function(detectors) {
       `${_tr('ruleFieldVersion', 'Version')} ${detector.version || '1.0'}${authorText ? ` \u00b7 ${authorText}` : ''}`,
       official ? _tr('tipOfficialDetector', 'Official Scrapfly detector') : _tr('tipCustomDetector', 'Custom detector'),
       [
-        { label: _tr('ruleSectionDetectionMethods', 'Detection Methods'), value: String(methodLists.length) },
+        { label: _tr('ruleSectionDetectionMethods', 'Detection methods'), value: String(methodLists.length) },
         { label: _tr('tipPatterns', 'Patterns'), value: String(patternCount) },
         ...(comboCount ? [{ label: _tr('ruleSectionCombinations', 'Combinations'), value: String(comboCount) }] : [])
       ]);

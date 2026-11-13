@@ -32,7 +32,7 @@ AkamaiAdvanced.prototype.checkCookies = async function() {
                 'Basic': tr('advAkamaiLevelBasic', 'Basic'),
                 'None': tr('advCommonNone', 'None')
             }[protectionLevel] || protectionLevel;
-            const facts = [{ label: tr('advCommonProtectionLevel', 'Protection Level:'), value: levelText }];
+            const facts = [{ label: tr('advCommonProtectionLevel', 'Protection level:'), value: levelText }];
             if (abck) {
                 facts.push({ label: tr('advAkamaiAbckLevelLabel', '_abck level:'),
                     value: abck.value.includes('~0~') ? tr('advAkamaiLevelEasy', 'Easy') : tr('advCommonStandard', 'Standard') });
@@ -73,37 +73,37 @@ AkamaiAdvanced.prototype.displayAnalysisModal = function(analysis) {
         // What the page asks a client to solve
         let level = '';
         if (analysis.isEasyMode) level = K.kitChip(tr('advAkamaiLevelEasy', 'Easy'), 'green');
-        else if (analysis.requiresPixel) level = K.kitChip(tr('advAkamaiPixelChallenge', 'Pixel Challenge'), 'red');
-        else if (analysis.requiresSecCpt) level = K.kitChip(tr('advAkamaiSecCptChallenge', 'sec_cpt Challenge'), 'red');
-        else if (analysis.requiresSbsd) level = K.kitChip(tr('advAkamaiSbsdChallenge', 'SBSD Challenge'), 'red');
+        else if (analysis.requiresPixel) level = K.kitChip(tr('advAkamaiPixelChallenge', 'Pixel challenge'), 'red');
+        else if (analysis.requiresSecCpt) level = K.kitChip(tr('advAkamaiSecCptChallenge', 'sec_cpt challenge'), 'red');
+        else if (analysis.requiresSbsd) level = K.kitChip(tr('advAkamaiSbsdChallenge', 'SBSD challenge'), 'red');
         else if (hasAkamaiCookies) level = K.kitChip(tr('advCommonStandard', 'Standard'), 'blue');
 
         const summary = K.kitFacts([
-            { label: label('advCommonTotalScripts', 'Total Scripts:'), value: analysis.scriptCount },
-            { label: label('advAkamaiScriptsLabel', 'Akamai Scripts:'), value: akamaiCount },
-            { label: label('advCommonProtectionLevel', 'Protection Level:'), value: level, html: true }
+            { label: label('advCommonTotalScripts', 'Total scripts:'), value: analysis.scriptCount },
+            { label: label('advAkamaiScriptsLabel', 'Akamai scripts:'), value: akamaiCount },
+            { label: label('advCommonProtectionLevel', 'Protection level:'), value: level, html: true }
         ]);
         const scriptUrl = label('advCommonScriptUrl', 'Script URL:');
-        const sensorScript = K.kitSection(tr('advAkamaiSensorDataUrlScript', 'Sensor Data URL Script'),
+        const sensorScript = K.kitSection(tr('advAkamaiSensorDataUrlScript', 'Sensor data URL script'),
             K.kitField(scriptUrl, analysis.akamaiScriptPath, { wrap: true }));
-        const pixelFields = K.kitField(label('advAkamaiPixelHtmlVar', 'Pixel HTML Variable:'), analysis.pixelHtmlVar ? `bazadebezolkohpepadr="${analysis.pixelHtmlVar}"` : '', { wrap: true })
+        const pixelFields = K.kitField(label('advAkamaiPixelHtmlVar', 'Pixel HTML variable:'), analysis.pixelHtmlVar ? `bazadebezolkohpepadr="${analysis.pixelHtmlVar}"` : '', { wrap: true })
             + K.kitField(scriptUrl, analysis.pixelScriptUrls?.scriptUrl, { wrap: true })
             + K.kitField(label('advAkamaiPostUrl', 'POST URL:'), analysis.pixelScriptUrls?.postUrl, { wrap: true })
-            + K.kitField(label('advAkamaiPixelScriptVar', 'Pixel Script Variable:'), analysis.pixelScriptVar, { wrap: true });
-        const pixel = pixelFields ? K.kitSection(tr('advAkamaiPixelChallenge', 'Pixel Challenge'), K.kitCard(pixelFields)) : '';
-        const sbsd = K.kitSection(tr('advAkamaiSbsdScriptUrl', 'SBSD Script URL'),
+            + K.kitField(label('advAkamaiPixelScriptVar', 'Pixel script variable:'), analysis.pixelScriptVar, { wrap: true });
+        const pixel = pixelFields ? K.kitSection(tr('advAkamaiPixelChallenge', 'Pixel challenge'), K.kitCard(pixelFields)) : '';
+        const sbsd = K.kitSection(tr('advAkamaiSbsdScriptUrl', 'SBSD script URL'),
             sbsdUrls.map(url => K.kitField(scriptUrl, url, { wrap: true })).join(''), sbsdUrls.length > 1 ? sbsdUrls.length : '');
-        const endpoints = K.kitSection(tr('advAkamaiSensorDataUrls', 'Sensor Data URLs'),
-            sensorUrls.map((url, idx) => K.kitField(`${tr('advAkamaiEndpoint', 'Akamai Endpoint')} ${idx + 1}`, url, { wrap: true })).join(''), sensorUrls.length || '');
+        const endpoints = K.kitSection(tr('advAkamaiSensorDataUrls', 'Sensor data URLs'),
+            sensorUrls.map((url, idx) => K.kitField(`${tr('advAkamaiEndpoint', 'Akamai endpoint')} ${idx + 1}`, url, { wrap: true })).join(''), sensorUrls.length || '');
 
         this.openKitModal({
-            title: tr('advAkamaiAnalysisTitle', 'Akamai Analysis'),
+            title: tr('advAkamaiAnalysisTitle', 'Akamai analysis'),
             subtitle: fmt('advCommonFoundScriptsFmt', 'Found {0} relevant script(s)', akamaiCount),
             iconSvg: AkamaiAdvanced.CODE_ICON,
             body: summary + sensorScript + pixel + sbsd + endpoints,
             copiedMessage: tr('advCommonUrlCopied', 'URL copied'),
             actions: [{
-                label: tr('advCommonExportCode', 'Export Code'),
+                label: tr('advCommonExportCode', 'Export code'),
                 primary: true,
                 iconSvg: AkamaiAdvanced.CODE_ICON,
                 onClick: () => {
@@ -132,7 +132,7 @@ AkamaiAdvanced.prototype.showScriptParsingModal = function(scripts, sensorDataUr
             sbsd: scripts.filter(s => s.categories.includes('sbsd')),
             sensorUrl: sensorDataUrls.map(url => ({ type: 'sensor-url', src: url, url, categories: ['sensor-url'] }))
         };
-        const types = [{ id: 'all', label: tr('advCommonAllTypes', 'All Types') }];
+        const types = [{ id: 'all', label: tr('advCommonAllTypes', 'All types') }];
         if (scriptCategories.pixel.length) types.push({ id: 'pixel', label: 'Pixel' });
         if (scriptCategories.sensor.length || scriptCategories.sensorUrl.length) types.push({ id: 'sensor', label: tr('advAkamaiTypeSensor', 'Sensor') });
         if (scriptCategories.sbsd.length) types.push({ id: 'sbsd', label: 'SBSD' });
@@ -145,7 +145,7 @@ AkamaiAdvanced.prototype.showScriptParsingModal = function(scripts, sensorDataUr
             go: tr('advCodeDescGoQuery', 'Go with net/http and goquery')
         };
         return AdvancedCodeDialog.open(this, {
-            title: tr('advCommonCodeGenTitle', 'Script Parsing Code Generator'), types,
+            title: tr('advCommonCodeGenTitle', 'Script parsing code generator'), types,
             getCodes: type => this.generateScriptParsingCode(type === 'all' ? scriptCategories : {
                 pixel: type === 'pixel' ? scriptCategories.pixel : [],
                 sensor: type === 'sensor' ? scriptCategories.sensor : [],
@@ -176,22 +176,22 @@ AkamaiAdvanced.prototype.displaySensorDataModal = function(data) {
         const count = (n) => { try { return n.toLocaleString(uiLocale); } catch (_) { return String(n); } };
 
         const payloads = (sensorData
-            ? K.kitCode(fmt('advAkamaiSensorDataCharsFmt', 'Sensor Data ({0} chars)', count(sensorData.length)), sensorData)
+            ? K.kitCode(fmt('advAkamaiSensorDataCharsFmt', 'Sensor data ({0} chars)', count(sensorData.length)), sensorData)
             : K.kitNote(tr('advAkamaiNoSensorData', 'No sensor data captured')))
-            + K.kitCode(fmt('advAkamaiSbsdDataCharsFmt', 'SBSD Data ({0} chars)', count(sbsdData.length)), sbsdData);
-        const urlFields = K.kitField(tr('advAkamaiSensorScriptUrl', 'Sensor Script URL'), sensorScriptUrl, { wrap: true })
-            + K.kitField(tr('advAkamaiSbsdScriptUrl', 'SBSD Script URL'), sbsdScriptUrl, { wrap: true });
+            + K.kitCode(fmt('advAkamaiSbsdDataCharsFmt', 'SBSD data ({0} chars)', count(sbsdData.length)), sbsdData);
+        const urlFields = K.kitField(tr('advAkamaiSensorScriptUrl', 'Sensor script URL'), sensorScriptUrl, { wrap: true })
+            + K.kitField(tr('advAkamaiSbsdScriptUrl', 'SBSD script URL'), sbsdScriptUrl, { wrap: true });
         let host = '';
         try { host = this.tabInfo?.url ? new URL(this.tabInfo.url).hostname : ''; } catch (_) { host = ''; }
 
         this.openKitModal({
-            title: tr('advAkamaiExtractedSensorTitle', 'Extracted Sensor Information'),
+            title: tr('advAkamaiExtractedSensorTitle', 'Extracted sensor information'),
             subtitle: host,
             iconSvg: AkamaiAdvanced.SENSOR_ICON,
             body: payloads + (urlFields ? K.kitCard(urlFields) : ''),
             copiedMessage: tr('copiedNotification', 'Copied'),
             actions: [{
-                label: tr('advAkamaiCopyAllJson', 'Copy All Data as JSON'),
+                label: tr('advAkamaiCopyAllJson', 'Copy all data as JSON'),
                 primary: true,
                 iconSvg: AkamaiAdvanced.COPY_ICON,
                 onClick: (button) => {
@@ -220,22 +220,22 @@ AkamaiAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
                 id: 'akamaiCheckCookies', tone: 'green',
-                label: AkamaiAdvanced.tr('btnCheckCookies', 'Check Cookies'),
+                label: AkamaiAdvanced.tr('btnCheckCookies', 'Check cookies'),
                 iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M9,8A1.5,1.5 0 0,1 10.5,9.5A1.5,1.5 0 0,1 9,11A1.5,1.5 0 0,1 7.5,9.5A1.5,1.5 0 0,1 9,8M16.5,9.5A1.5,1.5 0 0,1 15,11A1.5,1.5 0 0,1 13.5,9.5A1.5,1.5 0 0,1 15,8A1.5,1.5 0 0,1 16.5,9.5M9,15A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 9,18A1.5,1.5 0 0,1 7.5,16.5A1.5,1.5 0 0,1 9,15M15,14A1.5,1.5 0 0,1 16.5,15.5A1.5,1.5 0 0,1 15,17A1.5,1.5 0 0,1 13.5,15.5A1.5,1.5 0 0,1 15,14Z"/></svg>'
             },
             {
                 id: 'akamaiAnalyzeContent', tone: 'blue',
-                label: AkamaiAdvanced.tr('btnAnalyzeScripts', 'Analyze Scripts'),
+                label: AkamaiAdvanced.tr('btnAnalyzeScripts', 'Analyze scripts'),
                 iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M14.6,16.6L19.2,12L14.6,7.4L16,6L22,12L16,18L14.6,16.6M9.4,16.6L4.8,12L9.4,7.4L8,6L2,12L8,18L9.4,16.6Z"/></svg>'
             },
             {
                 id: 'akamaiStartCapture', tone: 'red', kind: 'capture',
-                label: AkamaiAdvanced.tr('btnStartCapturing', 'Start Capturing'),
+                label: AkamaiAdvanced.tr('btnStartCapturing', 'Start capturing'),
                 iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/></svg>'
             },
             {
                 id: 'akamaiExtractSensor', tone: 'purple',
-                label: AkamaiAdvanced.tr('advAkamaiExtractSensorBtn', 'Extract Sensor Information'),
+                label: AkamaiAdvanced.tr('advAkamaiExtractSensorBtn', 'Extract sensor information'),
                 iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M22,21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z"/></svg>'
             }
         ]);
@@ -294,7 +294,7 @@ AkamaiAdvanced.prototype.renderCaptureHistoryItems = function(items) {
                                 <span class="capture-time">${timeAgo}</span>
                             </div>
                             <div class="capture-type-row">
-                                <span class="capture-type-label">${tr('advAkamaiAbckLevel', 'ABCK Level')}</span>
+                                <span class="capture-type-label">${tr('advAkamaiAbckLevel', 'ABCK level')}</span>
                                 <span class="capture-type-value" style="color: ${captureData.abckCookieLevel === 'easy' ? 'var(--success)' : 'var(--text-primary)'};">${captureData.abckCookieLevel === 'easy' ? tr('advAkamaiLevelEasy', 'Easy') : tr('advCommonStandard', 'Standard')}</span>
                             </div>
                             ${captureData.akamaiVersion ? `
@@ -337,22 +337,22 @@ AkamaiAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
         try { when = new Date(capture.timestamp).toLocaleString(uiLocale); } catch (_) { when = new Date(capture.timestamp).toLocaleString(); }
         const easy = data.abckCookieLevel === 'easy';
         const challenges = [
-            data.requiresSbsd ? tr('advAkamaiSbsdChallenge', 'SBSD Challenge') : '',
-            data.requiresSecCpt ? tr('advAkamaiSecCptChallenge', 'sec_cpt Challenge') : '',
-            data.requiresPixel ? tr('advAkamaiPixelChallenge', 'Pixel Challenge') : ''
+            data.requiresSbsd ? tr('advAkamaiSbsdChallenge', 'SBSD challenge') : '',
+            data.requiresSecCpt ? tr('advAkamaiSecCptChallenge', 'sec_cpt challenge') : '',
+            data.requiresPixel ? tr('advAkamaiPixelChallenge', 'Pixel challenge') : ''
         ].filter(Boolean);
 
         const facts = K.kitFacts([
-            { label: tr('advAkamaiAbckCookie', 'ABCK Cookie'), html: true,
+            { label: tr('advAkamaiAbckCookie', 'ABCK cookie'), html: true,
                 value: data.abckCookie ? K.kitChip(tr('advCommonFound', 'Found'), 'green') : K.kitChip(tr('advCommonNotFound', 'Not found'), 'neutral') },
-            data.abckCookie ? { label: tr('advAkamaiAbckLevel', 'ABCK Level'), html: true,
+            data.abckCookie ? { label: tr('advAkamaiAbckLevel', 'ABCK level'), html: true,
                 value: K.kitChip(easy ? tr('advAkamaiLevelEasy', 'Easy') : tr('advCommonStandard', 'Standard'), easy ? 'green' : 'blue') } : null,
             { label: tr('advCommonCaptured', 'Captured'), value: when }
         ]);
-        const fields = K.kitField(tr('advAkamaiVersionLabel', 'Akamai Version'), data.akamaiVersion)
+        const fields = K.kitField(tr('advAkamaiVersionLabel', 'Akamai version'), data.akamaiVersion)
             + K.kitField(tr('advCommonPage', 'Page'), capture.url, { mono: false, wrap: true });
         const required = challenges.length
-            ? K.kitSection(tr('advAkamaiChallengeRequirements', 'Challenge Requirements'),
+            ? K.kitSection(tr('advAkamaiChallengeRequirements', 'Challenge requirements'),
                 `<div class="adv-kit-chips">${challenges.map(name => K.kitChip(name, 'red')).join('')}</div>`)
             : '';
         return facts + (fields ? K.kitCard(fields) : '') + required;

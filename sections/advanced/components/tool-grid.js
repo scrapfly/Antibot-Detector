@@ -107,7 +107,7 @@ class AdvancedToolGrid {
             const capture = action === 'capture';
             const stopping = capture && this.isCapturing;
             const kind = capture ? 'capture' : 'default';
-            const label = stopping ? BaseAdvancedModule._tr('btnStopCapturing', 'Stop Capturing') : tool.label;
+            const label = stopping ? BaseAdvancedModule._tr('btnStopCapturing', 'Stop capturing') : tool.label;
             const hint = tool.hint || this.getToolHint(action, stopping);
             return `
                 <button type="button" class="advanced-tool-card${stopping ? ' capturing' : ''}" id="${FormatUtils.escapeAttr(tool.id)}" data-tool-kind="${kind}" data-tool-action="${action}"${capture ? ` aria-pressed="${Boolean(stopping)}"` : ''}>

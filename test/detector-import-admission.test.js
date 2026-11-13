@@ -4,7 +4,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 global.Logger = new Proxy({}, { get: () => () => {} });
 global.DetectionUtils = require('../utils/detection-utils.js');
-global.chrome = { runtime: { getManifest: () => ({ version: '2.8.8' }) } }; // the first engine that reads response bodies: some packaged rules need it
+// This build's version: the packaged rules need recent engines (2.8.8 reads response bodies, 3.1.9 small pages' HTML)
+const BUILD_VERSION = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'manifest.json'), 'utf8')).version;
+global.chrome = { runtime: { getManifest: () => ({ version: BUILD_VERSION }) } };
 const DetectorManager = require('../modules/detection/rules/detector-manager.js');
 const DetectorSchema = require('../modules/detection/rules/detector-schema.js');
 const vm = require('node:vm');
@@ -185,7 +187,7 @@ const WHERE = {
   'a payload URL pattern': (p) => ({ payload: [{ id: 'r', text: 'x', urlPattern: p, urlRegex: true }] })
 };
 
-test('a rule whose regex the editor would refuse is not imported, wherever it holds it: Merge names it, Replace All refuses the file', async () => {
+test('a rule whose regex the editor would refuse is not imported, wherever it holds it: Merge names it, Replace all refuses the file', async () => {
   for (const [where, build] of Object.entries(WHERE)) {
     for (const pattern of REFUSED_REGEXES) {
       const file = { detectors: { antibot: { 'detect-fine': definition('detect-fine', { name: 'Fine one' }), 'detect-refused': definition('detect-refused', { name: 'Refused one', detection: build(pattern) }) } } };
@@ -229,7 +231,7 @@ test('a rule with more patterns than the limit, or a text longer than it, is lef
   assert.deepEqual(dm.lastImportSkipped, ['Too many', 'Longer text', 'Long note']);
   assert.ok(dm.detectors.antibot['detect-at-limit'] && dm.detectors.antibot['detect-text-at-limit']);
   const strict = manager();
-  assert.equal(await strict.importDetectors(file, false), false, 'Replace All needs every rule valid');
+  assert.equal(await strict.importDetectors(file, false), false, 'Replace all needs every rule valid');
 });
 
 test('a file with more rules, or more patterns, than the limits is not a rules file: refused whole, in Merge as well', async () => {
@@ -291,7 +293,7 @@ test('Rules -> Import refuses a file over the size limit without reading it, and
   const big = importHandler({ size: DetectorSchema.IMPORT_LIMITS.fileBytes + 1 });
   await big.run();
   assert.equal(big.calls.read, 0, 'never read');
-  assert.equal(big.calls.mode, 0, 'no Merge or Replace All question about it');
+  assert.equal(big.calls.mode, 0, 'no Merge or Replace all question about it');
   assert.equal(big.calls.errors.length, 1);
   assert.deepEqual(big.calls.imported, []);
   assert.equal(big.event.target.value, '');

@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-// Analyze Scripts classifiers: host-anchored, so a first-party path or a
+// Analyze scripts classifiers: host-anchored, so a first-party path or a
 // look-alike host never counts as the vendor.
 
 function classifier(vendor, name) {
@@ -60,7 +60,7 @@ const cases = {
 };
 
 for (const [vendor, [name, hits, misses]] of Object.entries(cases)) {
-  test(`${vendor}: Analyze Scripts lists the vendor's requests and nothing else`, () => {
+  test(`${vendor}: Analyze scripts lists the vendor's requests and nothing else`, () => {
     const classify = classifier(vendor, name);
     assert.equal(typeof classify, 'function');
     for (const [url, type] of Object.entries(hits)) assert.equal(classify(url), type, url);

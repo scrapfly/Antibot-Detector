@@ -43,7 +43,7 @@ function load({ messages = {}, ready = Promise.resolve() } = {}) {
 
 test('pageText resolves through I18n, with placeholders', () => {
   const { context } = load({ messages: { pageNoticeMonitoringStartedFmt: 'Monitorización de {0} iniciada' } });
-  const value = context.pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Akamai');
+  const value = context.pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'Akamai');
   assert.strictEqual(context.resolvePageText(value), 'Monitorización de Akamai iniciada');
 });
 
@@ -67,7 +67,7 @@ test('showNotification translates only after the language has loaded', async () 
   const messages = {};
   const { context, injected } = load({ messages, ready });
   const shown = context.showNotification(1, {
-    title: context.pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+    title: context.pageText('pageNoticeCaptureCompleted', 'Capture completed'),
     message: 'raw text'
   });
   // The override arrives while the notice is waiting for it

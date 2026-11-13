@@ -137,13 +137,13 @@ Las protecciones encontradas en la página actual, cada una con su confianza, su
 - **Subir detecciones** para obtener un enlace para compartir (dpaste.com por defecto; consulta [Enlaces para compartir](#enlaces-para-compartir))
 - **Vaciar caché**, para que la página se analice de nuevo en su próxima carga
 - **Copiar**, un menú: el mismo resumen que comparte la subida, una tabla Markdown para un ticket o un chat, una línea con el sitio y sus protecciones, o JSON (ninguno de estos incluye valores de cookies ni de cabeceras); o código que vuelve a pedir la página, como comando curl, Python (requests) o Node.js (fetch), con el User-Agent, el Accept-Language y las client hints de este navegador y todas las cookies que envía la página, también las HttpOnly. El código sí incluye los valores de las cookies y la dirección de la página con su query string, así que mantenlo en privado
-- **Bloquear este dominio**, para que la extensión deje de analizarlo
+- **Omitir este sitio**, para que la extensión deje de analizarlo
 
 ### Historial
 
-Cada página que tuvo detecciones, con sus protecciones y su dificultad. Busca en él (los acentos se ignoran), redúcelo con los chips bajo el cuadro de búsqueda (Fijadas, Cambiada, una categoría o Combinaciones, las páginas donde coincidió una combinación de señales), abre una entrada para ver sus detalles, importa una exportación JSON y expórtalo como JSON, CSV, texto plano o Markdown, eligiendo antes las protecciones, el periodo, el sitio y las páginas fijadas. Desde el menú **⋯** de una entrada puedes fijarla (se conserva cuando se limpia el Historial), añadir una nota, abrir la página, analizarla de nuevo ahora o copiarla como Markdown. Al hacer clic en una notificación de protecciones cambiadas se abre esa página. La marca **Cambiada** señala una página cuyas protecciones difieren de su último análisis. **Ajustes → Datos → Abrir estadísticas** abre una página de estadísticas (actividad, protecciones, dominios, confianza, señales, combinaciones, reglas y herramientas avanzadas) calculada en local a partir de tu historial.
+Cada página que tuvo detecciones, con sus protecciones y su dificultad. Busca en él (los acentos se ignoran), redúcelo con los chips bajo el cuadro de búsqueda (Fijadas, Cambiada, una categoría o Combinaciones, las páginas donde coincidió una combinación de señales), abre una entrada para ver sus detalles, importa una exportación JSON y expórtalo como JSON, CSV, texto plano o Markdown, eligiendo antes las protecciones, el periodo, el sitio y las páginas fijadas. Desde el menú **⋯** de una entrada puedes fijarla (se conserva cuando se limpia el Historial), añadir una nota, abrir la página, analizarla de nuevo ahora o copiarla como Markdown. Al hacer clic en una notificación de protecciones cambiadas se abre esa página. La marca **Cambiada** señala una página cuyas protecciones difieren de su último análisis. Cada tarjeta muestra el estado HTTP con el que respondió la página (ámbar para 4xx, rojo para 5xx), y **Solo páginas con estado de error**, en el menú **⋯**, deja solo esas páginas. **Ajustes → Datos → Abrir estadísticas** abre una página de estadísticas (actividad, protecciones, dominios, confianza, señales, combinaciones, reglas y herramientas avanzadas) calculada en local a partir de tu historial.
 
-**Análisis masivo**, en el menú **Más acciones** (⋯) del Historial, analiza por ti una lista de páginas: pega direcciones o un sitemap https, o sube un archivo .txt o .csv, y cada página se abre en una pestaña en segundo plano, de una en una, como una visita real con tus cookies. Elige cuántas páginas analizar y el límite de tiempo por página, pausa o detén la ejecución (sigue aunque cierres el popup), vuelve a analizar las páginas con error y exporta la tabla como CSV, JSON o Markdown. Las páginas terminadas pasan por el análisis normal, así que se registran en el Historial (salvo que esté en pausa) y se envían a tu webhook, y los totales añaden una línea **Más vistas** con las protecciones encontradas en más páginas. Un sitemap solo añade páginas de su propio sitio, y los sitios que omites en **Ajustes → Detección** se dejan fuera.
+**Análisis masivo**, en el menú **Más acciones** (⋯) del Historial, analiza por ti una lista de páginas: pega direcciones o un sitemap https, o sube un archivo .txt o .csv, y cada página se abre en una pestaña en segundo plano, de una en una, como una visita real con tus cookies. Elige cuántas páginas analizar, el límite de tiempo por página y cuánto esperar entre páginas, pausa o detén la ejecución (sigue aunque cierres el popup), vuelve a analizar las páginas con error, muestra solo las páginas con estado de error o con una protección concreta y exporta la tabla como CSV, JSON o Markdown. Las páginas terminadas pasan por el análisis normal, así que se registran en el Historial (salvo que esté en pausa) y se envían a tu webhook, y los totales añaden una línea **Más vistas** con las protecciones encontradas en más páginas. Un sitemap solo añade páginas de su propio sitio, y los sitios que omites en **Ajustes → Detección** se dejan fuera.
 
 ### Reglas
 
@@ -157,21 +157,21 @@ Herramientas prácticas para las protecciones que usa una página. Una protecci�
 
 | Protección | Herramientas |
 | --- | --- |
-| Akamai Bot Manager | Check Cookies · Analyze Scripts · Extract Sensor Information · Start Capturing |
-| AWS WAF | Check Cookies · Analyze Scripts |
-| Cloudflare Bot Management | Check Cookies · Analyze Scripts |
-| Cloudflare Turnstile | Extract SiteKey · Analyze Scripts |
-| DataDome | Check Cookies · Analyze Scripts |
-| FunCaptcha (Arkose Labs) | Extract Public Key · Analyze Scripts · Start Capturing |
-| GeeTest | Check Version · Analyze Scripts |
-| Google reCAPTCHA | Obtain Selector · Extract SiteKey · reCAPTCHA callback · Start Capturing |
-| hCaptcha | Extract SiteKey · Check Version · Analyze Scripts · Start Capturing |
-| Incapsula (Imperva) | Check Cookies · Analyze Scripts · Start Capturing |
-| Shape Security | Check Version · Check Cookies · Analyze Scripts · Start Capturing |
-| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
+| Akamai Bot Manager | Check cookies · Analyze scripts · Extract sensor information · Start capturing |
+| AWS WAF | Check cookies · Analyze scripts |
+| Cloudflare Bot Management | Check cookies · Analyze scripts |
+| Cloudflare Turnstile | Extract site key · Analyze scripts |
+| DataDome | Check cookies · Analyze scripts |
+| FunCaptcha (Arkose Labs) | Extract public key · Analyze scripts · Start capturing |
+| GeeTest | Check version · Analyze scripts |
+| Google reCAPTCHA | Obtain selector · Extract site key · reCAPTCHA callback · Start capturing |
+| hCaptcha | Extract site key · Check version · Analyze scripts · Start capturing |
+| Incapsula (Imperva) | Check cookies · Analyze scripts · Start capturing |
+| Shape Security | Check version · Check cookies · Analyze scripts · Start capturing |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract site key · Analyze scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
-Los resultados y las capturas se guardan 30 minutos en **Avanzado → Historial**, donde puedes filtrarlos por sitio, proveedor y herramienta, abrirlos de nuevo y exportarlos.
+Los resultados y las capturas se guardan 30 minutos en **Avanzado → Capturas**, donde puedes filtrarlos por sitio, proveedor y herramienta, abrirlos de nuevo y exportarlos.
 
 ### Ajustes
 

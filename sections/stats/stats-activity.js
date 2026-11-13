@@ -40,7 +40,7 @@
     const { d } = app, s = d.stats;
     const from = d.firstSeen.oldestTs === null ? null : HistoryStats.dayKey(d.firstSeen.oldestTs);
     const facts = HistoryStats.activityFacts(s, from ? { from } : {});
-    const pages = n => tr('statsKpiPages', 'Pages saved') + ': ' + num(n);
+    const pages = n => FormatUtils.labelValue(tr('statsKpiPages', 'Pages saved'), num(n));
     byId('statsActivityFacts').replaceChildren(
       fact(tr('statsBusiestDay', 'Busiest day'), facts.busiest ? U.dayLabel(facts.busiest.date, true) : '–', facts.busiest ? pages(facts.busiest.entries) : ''),
       fact(tr('statsLongestStreak', 'Longest streak'), facts.longestStreak ? U.days(facts.longestStreak) : '–'),

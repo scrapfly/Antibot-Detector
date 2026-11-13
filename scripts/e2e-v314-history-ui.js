@@ -332,7 +332,7 @@ const RICH = [
       const names = await page.$$eval('#historyModalContent .history-modal-detection-header', els => els.map(el => el.getAttribute('aria-label')));
       assert.deepEqual(names, ['Cloudflare, Anti-bot, 95%', 'hCaptcha, Captcha, 80%', 'Canvas Fingerprint, Fingerprint, 40%']);
       for (const name of names) assert.equal(await page.getByRole('button', { name, exact: true }).count(), 1, name);
-      assert.equal(await page.getByRole('button', { name: 'Detection Methods' }).count(), 0, 'no more identical "Detection methods" buttons');
+      assert.equal(await page.getByRole('button', { name: 'Detection methods' }).count(), 0, 'no more identical "Detection methods" buttons');
       const detailsTree = await page.locator('#historyDetailModal').ariaSnapshot();
       console.log(detailsTree.split('\n').slice(0, 24).map(line => `      | ${line}`).join('\n'));
     } finally { await page.close(); }

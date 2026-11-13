@@ -282,7 +282,7 @@
     "message": "Les résultats s’afficheront ici une fois prêts."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Retirer de la liste noire"
+    "message": "Retirer de la liste"
   },
   "statDetections": {
     "message": "Détections"
@@ -537,7 +537,7 @@
     "message": "Outils"
   },
   "advancedSubtabHistory": {
-    "message": "Historique"
+    "message": "Captures"
   },
   "advancedFilterSite": {
     "message": "Site"
@@ -711,10 +711,10 @@
     "message": "Jours"
   },
   "blacklistedDomains": {
-    "message": "Domaines en liste noire"
+    "message": "Sites ignorés"
   },
   "blacklistedDomainsDesc": {
-    "message": "Domaines pour lesquels la détection est complètement ignorée"
+    "message": "La détection ne s’exécute jamais sur ces sites. Chaque entrée est un nom d’hôte exact : ses sous-domaines restent analysés."
   },
   "jsApiEvents": {
     "message": "Événements JS API"
@@ -842,7 +842,7 @@
     "message": "Vider le cache"
   },
   "clearCacheConfirmMsg": {
-    "message": "Cela supprimera les données de détection mises en cache pour ce domaine et déclenchera une nouvelle analyse."
+    "message": "Cela supprime le résultat de détection enregistré pour cette page (avec la portée du cache Domaine ou Chemin, il peut aussi couvrir d’autres pages). La page est de nouveau analysée quand vous la rechargez."
   },
   "clearCacheConfirmBtn": {
     "message": "Vider le cache"
@@ -860,28 +860,28 @@
     "message": "Domaine invalide"
   },
   "addBlacklistTitle": {
-    "message": "Ajouter à la liste noire"
+    "message": "Ignorer ce site"
   },
   "addBlacklistMsgFmt": {
-    "message": "Le domaine « {0} » sera exclu de toutes les détections futures. Vous pourrez le retirer plus tard dans les Paramètres."
+    "message": "« {0} » ne sera plus analysé à partir de maintenant. Vous pouvez annuler cela dans Paramètres → Détection → Sites à analyser."
   },
   "addBlacklistBtn": {
-    "message": "Ajouter à la liste noire"
+    "message": "Ignorer ce site"
   },
   "alreadyBlacklistedFmt": {
-    "message": "Le domaine « {0} » est déjà sur la liste noire"
+    "message": "« {0} » est déjà ignoré"
   },
   "addedToBlacklistFmt": {
-    "message": "« {0} » ajouté à la liste noire"
+    "message": "« {0} » ajouté aux sites ignorés"
   },
   "failedAddBlacklistFmt": {
-    "message": "Échec de l'ajout à la liste noire : {0}"
+    "message": "Impossible d’ignorer ce site : {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "« {0} » retiré de la liste noire"
+    "message": "« {0} » retiré des sites ignorés"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Échec du retrait de la liste noire : {0}"
+    "message": "Impossible de retirer le site des sites ignorés : {0}"
   },
   "historyNoDetections": {
     "message": "Aucune détection"
@@ -914,10 +914,10 @@
     "message": "Échec du vidage du cache"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "« {0} » ajouté à la liste noire"
+    "message": "« {0} » ajouté aux sites ignorés"
   },
   "notificationBlacklistFailed": {
-    "message": "Échec de l'ajout à la liste noire"
+    "message": "Impossible d’ignorer ce site"
   },
   "notificationHistoryItemDeleted": {
     "message": "Élément d'historique supprimé"
@@ -989,7 +989,7 @@
     "message": "Impossible de récupérer l'URL de la page actuelle"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} est déjà sur la liste noire"
+    "message": "{0} est déjà ignoré"
   },
   "failedAddDomainFmt": {
     "message": "Échec de l'ajout du domaine : {0}"
@@ -1043,7 +1043,7 @@
     "message": "Erreur de lecture du fichier : {0}"
   },
   "detectorsUpdatedFmt": {
-    "message": "{0} détecteurs mis à jour"
+    "message": "Détecteurs mis à jour : {0}"
   },
   "detectorDeletedFmt": {
     "message": "« {0} » supprimé"
@@ -1100,7 +1100,7 @@
     "message": "Remplacer"
   },
   "importHistoryModeMessageFmt": {
-    "message": "Importer {0} éléments d'historique ? Votre historique actuel en contient {1}.<br>« Fusionner » y ajoute les nouveaux éléments. « Remplacer » le supprime d'abord."
+    "message": "Éléments à importer : {0}. Éléments dans votre historique actuel : {1}.<br>« Fusionner » y ajoute les nouveaux éléments. « Remplacer » le supprime d'abord."
   },
   "clearLogsTitle": {
     "message": "Vider les journaux"
@@ -1178,7 +1178,7 @@
     "message": "Échec de la suppression des captures"
   },
   "settingsCardWebhookIntegration": {
-    "message": "Intégration Webhook"
+    "message": "Intégration webhook"
   },
   "settingsEnableWebhook": {
     "message": "Activer le webhook"
@@ -1418,7 +1418,7 @@
     "message": "Paramètres du cache"
   },
   "settingsCardSkipDomains": {
-    "message": "Domaines ignorés"
+    "message": "Ignorer ces sites"
   },
   "settingsAddCurrentPage": {
     "message": "Ajouter la page actuelle"
@@ -1517,13 +1517,13 @@
     "message": "Exemple d'utilisation"
   },
   "detectionDisabledForDomain": {
-    "message": "Détection désactivée pour ce domaine"
+    "message": "Détection en pause : vous ignorez ce site"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Retirer de la liste noire"
+    "message": "Analyser de nouveau ce site"
   },
   "detectionBlacklistHint": {
-    "message": "Ou allez dans Paramètres → Détection → Domaines sur liste noire pour les gérer."
+    "message": "Ou allez dans Paramètres → Détection → Sites à analyser pour gérer la liste."
   },
   "detectionNoDetectionsDesc": {
     "message": "Aucun signal anti-bot, CAPTCHA ou d'empreinte correspondant n'a été trouvé sur cette page."
@@ -1541,7 +1541,7 @@
     "message": "Impossible de lire les paramètres — opération annulée"
   },
   "failedRemoveBlacklist": {
-    "message": "Échec de la suppression de la liste noire"
+    "message": "Impossible de retirer le site des sites ignorés"
   },
   "pasteConfirmTitle": {
     "message": "Téléverser les détections ?"
@@ -1562,7 +1562,7 @@
     "message": "Copier l'aperçu"
   },
   "detectionTitleBlockDomain": {
-    "message": "Bloquer ce domaine"
+    "message": "Ignorer ce site"
   },
   "detectionStatSite": {
     "message": "Site"
@@ -1589,7 +1589,7 @@
     "message": "sur"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Ce domaine est sur la liste noire"
+    "message": "Ce site est ignoré"
   },
   "detectionModalConfidence": {
     "message": "Confiance"
@@ -1858,7 +1858,7 @@
     "message": "Protections prises en charge"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Voir l’historique des captures ({0})"
+    "message": "Voir les captures ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "Intercepteurs JavaScript"
@@ -1978,7 +1978,7 @@
     "message": "Pages : {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} sur {1} détections · {2}%"
+    "message": "Détections : {0} sur {1} · {2}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Détections : {0} · Jours : {1}"
@@ -2011,7 +2011,7 @@
     "message": "Suppression des détecteurs personnalisés..."
   },
   "customDetectorsClearedFmt": {
-    "message": "{0} détecteurs personnalisés supprimés"
+    "message": "Détecteurs personnalisés supprimés : {0}"
   },
   "noCustomDetectorsToClear": {
     "message": "Aucun détecteur personnalisé à effacer"
@@ -3100,7 +3100,7 @@
     "message": "Non"
   },
   "advHcaptchaNoHistory": {
-    "message": "Aucun historique de capture pour l'instant"
+    "message": "Aucune capture pour l’instant"
   },
   "advHcaptchaNotAvailable": {
     "message": "N/D"
@@ -3130,7 +3130,7 @@
     "message": "Type"
   },
   "advCloudflareSiteKeyCopied": {
-    "message": "Site Key copiée"
+    "message": "Site key copiée"
   },
   "advCloudflareTypeChallenge": {
     "message": "Défi"
@@ -3256,7 +3256,7 @@
     "message": "Copié dans le presse-papiers"
   },
   "advPanelCookiesFoundFmt": {
-    "message": "{0}/{1} cookies trouvés"
+    "message": "Cookies trouvés : {0}/{1}"
   },
   "advPanelScriptsFoundFmt": {
     "message": "Scripts trouvés : {0}"
@@ -3289,10 +3289,10 @@
     "message": "N/D"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "Historique des captures {0} effacé"
+    "message": "Captures {0} effacées"
   },
   "advPanelFailedClearHistory": {
-    "message": "Impossible d'effacer l'historique"
+    "message": "Impossible d’effacer les captures"
   },
   "rulesUiNewDetectorName": {
     "message": "Nouveau détecteur"
@@ -3550,16 +3550,16 @@
     "message": "Erreur : {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "Aucun domaine sur la liste noire"
+    "message": "Aucun site ignoré"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Aucun domaine ne correspond à votre recherche"
+    "message": "Aucun site ne correspond à votre recherche"
   },
   "settingsUiChecking": {
     "message": "Vérification..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "La limite de l'historique doit être comprise entre 0 (illimité) et 10000"
+    "message": "La limite de l’historique doit être un nombre entier de 0 à 10000 (0 conserve jusqu’à 1 000 entrées)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "La durée du cache doit être comprise entre 1 et {0} ({1})"
@@ -4153,7 +4153,7 @@
     "message": "Valeur"
   },
   "advCommonCharsFmt": {
-    "message": "{0} caractères"
+    "message": "caractères : {0}"
   },
   "advCookiePath": {
     "message": "Chemin"
@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "Le code de statut HTTP renvoyé par la page lors de l'analyse. Une erreur (4xx ou 5xx) signifie souvent que la requête a été bloquée ou soumise à un défi."
   },
+  "detectionFactsTitle": {
+    "message": "Ce qui a été vérifié"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookies : {0} · Scripts : {1} · Requêtes : {2} · En-têtes : {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "Intercepteurs JS : terminés"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "Intercepteurs JS : arrêtés à la limite de temps"
+  },
+  "detectionFactsHooksOff": {
+    "message": "Intercepteurs JS : désactivés pour ce site"
+  },
   "tipCacheExpires": {
     "message": "Expire"
   },
@@ -4535,13 +4550,13 @@
     "message": "Vérifier"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Cette règle correspond à {1} pages enregistrées sur {0}"
+    "message": "Pages enregistrées correspondant à cette règle : {1} sur {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{0} sur {1} pages"
+    "message": "Pages : {0} sur {1}"
   },
   "ruleHistoryCheckOtherFmt": {
-    "message": "+{0} autres pages"
+    "message": "Autres pages : +{0}"
   },
   "ruleHistoryCheckNoHistory": {
     "message": "L'Historique est vide : parcourez d'abord quelques pages."
@@ -4550,7 +4565,7 @@
     "message": "Une estimation : l'Historique garde les valeurs trouvées, pas les pages entières."
   },
   "ruleHistoryCheckCombinationFmt": {
-    "message": "se déclenche sur {0} pages"
+    "message": "se déclenche sur des pages : {0}"
   },
   "ruleHistoryCheckEmpty": {
     "message": "Ajoutez des motifs pour les vérifier."
@@ -5006,7 +5021,7 @@
     "message": "Protections vues"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "{0} nouvelles sur cette période"
+    "message": "Nouvelles sur cette période : {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "Total des règles : {0}"
@@ -5180,7 +5195,7 @@
     "message": "Preuves solides"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{0} détections sur {1} obtiennent 80 % ou plus."
+    "message": "Détections à 80 % ou plus : {0} sur {1}."
   },
   "statsUnconfirmed": {
     "message": "Mentionnées, non confirmées"
@@ -5249,7 +5264,7 @@
     "message": "Couverture"
   },
   "statsRulesCoverageFmt": {
-    "message": "{0} règles activées sur {1} ont trouvé une correspondance sur cette période"
+    "message": "Règles activées ayant trouvé une correspondance sur cette période : {0} sur {1}"
   },
   "statsRulesAttention": {
     "message": "À examiner"
@@ -5596,6 +5611,12 @@
   },
   "historyFilterCombinations": {
     "message": "Combinaisons"
+  },
+  "historyFilterHttpError": {
+    "message": "Statut d'erreur"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Uniquement les pages avec un statut d'erreur (4xx, 5xx)"
   },
   "historyNoResults": {
     "message": "Aucune entrée ne correspond à votre recherche ou à vos filtres."
@@ -6209,6 +6230,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Analyser à nouveau cette page : {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Ouvrir l’extension : {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Rechercher dans l’onglet ouvert : {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Passer d’une entrée de l’historique à l’autre : {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Fermer une boîte de dialogue : {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "La page se recharge pour tout recueillir depuis le début."
   },
@@ -6483,7 +6516,7 @@
     "message": "ne se déclenche pas"
   },
   "ruleLiveTestPageFmt": {
-    "message": "Lu : {0} scripts, {1} éléments, {2} cookies et {3} requêtes."
+    "message": "Lu sur la page. Scripts : {0} · éléments : {1} · cookies : {2} · requêtes : {3}."
   },
   "ruleLiveTestNoRequests": {
     "message": "Les requêtes de la page ne sont plus disponibles : les motifs d’URL n’ont été vérifiés que sur son adresse et ses scripts."
@@ -6581,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Délai par page, en secondes"
   },
+  "bulkDelayLabel": {
+    "message": "Attente entre les pages, en secondes"
+  },
   "bulkStart": {
     "message": "Démarrer"
   },
@@ -6619,6 +6655,12 @@
     "message": "En échec ou ignorées",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "Statut d'erreur (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Uniquement {0}"
+  },
   "bulkCopyLines": {
     "message": "Copier en lignes"
   },
@@ -6626,7 +6668,7 @@
     "message": "Aucune page ne correspond à ce filtre."
   },
   "bulkShowingFmt": {
-    "message": "{0} pages sur {1} affichées. Les exports ne contiennent que celles-ci.",
+    "message": "Pages affichées : {0} sur {1}. Les exports ne contiennent que celles-ci.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
@@ -6773,6 +6815,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Vos modifications des paramètres ne sont pas encore enregistrées. Les enregistrer avant de fermer ?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Vos modifications des paramètres ne sont pas encore enregistrées. Les enregistrer avant d’appliquer les nouveaux paramètres ?"
+  },
   "historySortLabel": {
     "message": "Trier l’historique"
   },
@@ -6790,5 +6835,47 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Une ligne"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Pages de blocage et de défi uniquement"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Recherche dans tout le HTML, titre compris, des petites pages uniquement, comme la page de blocage d’un pare-feu. Les pages plus grandes ne sont pas examinées"
+  },
+  "labelValueFmt": {
+    "message": "{0} : {1}"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Les pages qui partagent un même résultat enregistré. Domaine : toutes les pages du site. Chemin : la même adresse, quelle que soit la requête. URL complète : uniquement l’adresse exacte."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Ajoute la date d’analyse de chaque page aux exports CSV, texte brut et Markdown. Les exports JSON l’incluent toujours."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Enregistre aussi une page dans l’historique quand son résultat est réutilisé depuis le cache au lieu d’une nouvelle analyse."
+  },
+  "detectionStrongToggle": {
+    "message": "Solide (≥80 %)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Difficulté faible : laisse généralement passer le trafic ordinaire, et les requêtes aux en-têtes et cookies réalistes passent souvent."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Difficulté moyenne : les clients HTTP simples reçoivent souvent un défi ; un vrai navigateur aux réglages cohérents passe en général."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Difficulté élevée : difficile à franchir. Vérifie le navigateur, son comportement et le réseau d’où il vient, et bloque les clients HTTP simples."
+  },
+  "detectionModalWebsite": {
+    "message": "Site web"
+  },
+  "detectionModalEditRule": {
+    "message": "Modifier la règle"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Copier les preuves"
+  },
+  "detectionModalDocs": {
+    "message": "Guide de détection"
   }
 }

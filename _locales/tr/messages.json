@@ -282,7 +282,7 @@
     "message": "Sonuçlar hazır olduğunda burada görünecek."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Kara listeden kaldır"
+    "message": "Listeden kaldır"
   },
   "statDetections": {
     "message": "Tespitler"
@@ -537,7 +537,7 @@
     "message": "Araçlar"
   },
   "advancedSubtabHistory": {
-    "message": "Geçmiş"
+    "message": "Yakalamalar"
   },
   "advancedFilterSite": {
     "message": "Site"
@@ -711,10 +711,10 @@
     "message": "Gün"
   },
   "blacklistedDomains": {
-    "message": "Kara listedeki alan adları"
+    "message": "Atlanan siteler"
   },
   "blacklistedDomainsDesc": {
-    "message": "Tespitin tamamen atlandığı alan adları"
+    "message": "Bu sitelerde tespit hiç çalışmaz. Her girdi tam bir ana makine adıdır: alt alan adları taranmaya devam eder."
   },
   "jsApiEvents": {
     "message": "JS API olayları"
@@ -842,7 +842,7 @@
     "message": "Önbelleği temizle"
   },
   "clearCacheConfirmMsg": {
-    "message": "Bu alan adının önbelleğe alınmış tespit verileri kaldırılacak ve yeni bir analiz başlatılacak."
+    "message": "Bu işlem bu sayfanın kayıtlı tespit sonucunu kaldırır (Alan adı veya Yol önbellek kapsamında bu sonuç başka sayfaları da kapsayabilir). Sayfa, yeniden yüklediğinizde tekrar taranır."
   },
   "clearCacheConfirmBtn": {
     "message": "Önbelleği temizle"
@@ -860,28 +860,28 @@
     "message": "Geçersiz alan adı"
   },
   "addBlacklistTitle": {
-    "message": "Kara listeye ekle"
+    "message": "Bu siteyi atla"
   },
   "addBlacklistMsgFmt": {
-    "message": "\"{0}\" alan adı gelecekteki tüm tespitlerin dışında tutulacak. Daha sonra Ayarlar'dan kaldırabilirsiniz."
+    "message": "\"{0}\" bundan sonra taranmayacak. Bunu Ayarlar → Tespit → Taranacak siteler bölümünden geri alabilirsiniz."
   },
   "addBlacklistBtn": {
-    "message": "Kara listeye ekle"
+    "message": "Bu siteyi atla"
   },
   "alreadyBlacklistedFmt": {
-    "message": "\"{0}\" alan adı zaten kara listede"
+    "message": "\"{0}\" zaten atlanıyor"
   },
   "addedToBlacklistFmt": {
-    "message": "\"{0}\" kara listeye eklendi"
+    "message": "\"{0}\" atlanan sitelere eklendi"
   },
   "failedAddBlacklistFmt": {
-    "message": "Kara listeye eklenemedi: {0}"
+    "message": "Bu site atlanamadı: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "\"{0}\" kara listeden kaldırıldı"
+    "message": "\"{0}\" atlanan sitelerden kaldırıldı"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Kara listeden kaldırılamadı: {0}"
+    "message": "Site atlanan sitelerden kaldırılamadı: {0}"
   },
   "historyNoDetections": {
     "message": "Tespit yok"
@@ -914,10 +914,10 @@
     "message": "Önbellek temizlenemedi"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "\"{0}\" kara listeye eklendi"
+    "message": "\"{0}\" atlanan sitelere eklendi"
   },
   "notificationBlacklistFailed": {
-    "message": "Kara listeye eklenemedi"
+    "message": "Bu site atlanamadı"
   },
   "notificationHistoryItemDeleted": {
     "message": "Geçmiş öğesi silindi"
@@ -989,7 +989,7 @@
     "message": "Geçerli sayfa URL'si alınamadı"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} zaten kara listede"
+    "message": "{0} zaten atlanıyor"
   },
   "failedAddDomainFmt": {
     "message": "Alan adı eklenemedi: {0}"
@@ -1418,7 +1418,7 @@
     "message": "Önbellek ayarları"
   },
   "settingsCardSkipDomains": {
-    "message": "Atlanan alan adları"
+    "message": "Bu siteleri atla"
   },
   "settingsAddCurrentPage": {
     "message": "Geçerli sayfayı ekle"
@@ -1517,13 +1517,13 @@
     "message": "Kullanım örneği"
   },
   "detectionDisabledForDomain": {
-    "message": "Bu alan adı için tespit devre dışı"
+    "message": "Tespit duraklatıldı: bu siteyi atlıyorsunuz"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Kara listeden kaldır"
+    "message": "Bu siteyi yeniden tara"
   },
   "detectionBlacklistHint": {
-    "message": "Veya yönetmek için Ayarlar → Tespit → Kara listedeki alan adları bölümüne gidin."
+    "message": "Veya listeyi yönetmek için Ayarlar → Tespit → Taranacak siteler bölümüne gidin."
   },
   "detectionNoDetectionsDesc": {
     "message": "Bu sayfada eşleşen anti-bot, CAPTCHA veya parmak izi sinyali bulunamadı."
@@ -1541,7 +1541,7 @@
     "message": "Ayarlar okunamadı — işlem iptal edildi"
   },
   "failedRemoveBlacklist": {
-    "message": "Kara listeden kaldırılamadı"
+    "message": "Site atlanan sitelerden kaldırılamadı"
   },
   "pasteConfirmTitle": {
     "message": "Tespitler yüklensin mi?"
@@ -1562,7 +1562,7 @@
     "message": "Genel bakışı kopyala"
   },
   "detectionTitleBlockDomain": {
-    "message": "Bu alan adını engelle"
+    "message": "Bu siteyi atla"
   },
   "detectionStatSite": {
     "message": "Site"
@@ -1589,7 +1589,7 @@
     "message": "/"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Bu alan adı kara listede"
+    "message": "Bu site atlanıyor"
   },
   "detectionModalConfidence": {
     "message": "Güven"
@@ -1858,7 +1858,7 @@
     "message": "Desteklenen korumalar"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Yakalama geçmişini görüntüle ({0})"
+    "message": "Yakalamaları görüntüle ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript hook'ları"
@@ -2899,7 +2899,7 @@
     "message": "Gelişmiş (reese84 + utmvc)"
   },
   "advImpervaLevelBasicSession": {
-    "message": "Temel (Oturum)"
+    "message": "Temel (oturum)"
   },
   "advImpervaNoticeReloadToMonitor": {
     "message": "Imperva isteklerini ve çerezlerini izlemeye başlamak için sayfayı yeniden yükleyin"
@@ -3100,7 +3100,7 @@
     "message": "Hayır"
   },
   "advHcaptchaNoHistory": {
-    "message": "Henüz yakalama geçmişi yok"
+    "message": "Henüz yakalama yok"
   },
   "advHcaptchaNotAvailable": {
     "message": "Yok"
@@ -3145,10 +3145,10 @@
     "message": "Genel anahtar"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
-    "message": "BDA (Tarayıcı veri dizisi)"
+    "message": "BDA (tarayıcı veri dizisi)"
   },
   "advFuncaptchaBlobData": {
     "message": "Blob verisi"
@@ -3289,10 +3289,10 @@
     "message": "Yok"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "{0} yakalama geçmişi temizlendi"
+    "message": "{0} yakalamaları temizlendi"
   },
   "advPanelFailedClearHistory": {
-    "message": "Geçmiş temizlenemedi"
+    "message": "Yakalamalar temizlenemedi"
   },
   "rulesUiNewDetectorName": {
     "message": "Yeni dedektör"
@@ -3400,7 +3400,7 @@
     "message": "Ad ayarları"
   },
   "rulesUiNameSettingsConfidenceFmt": {
-    "message": "Ad ayarları (Güven: %{0})"
+    "message": "Ad ayarları (güven: %{0})"
   },
   "rulesUiValueSettings": {
     "message": "Değer ayarları"
@@ -3550,16 +3550,16 @@
     "message": "Hata: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "Kara listeye alınmış alan adı yok"
+    "message": "Atlanan site yok"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Aramanızla eşleşen alan adı yok"
+    "message": "Aramanızla eşleşen site yok"
   },
   "settingsUiChecking": {
     "message": "Kontrol ediliyor..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "Geçmiş sınırı 0 (sınırsız) ile 10000 arasında olmalıdır"
+    "message": "Geçmiş sınırı 0 ile 10000 arasında bir tam sayı olmalıdır (0 en fazla 1.000 girdi tutar)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "Önbellek süresi 1 ile {0} {1} arasında olmalıdır"
@@ -4521,6 +4521,21 @@
   },
   "detectionTipHttpStatus": {
     "message": "Sayfanın tarandığında yanıt verdiği HTTP durum kodu. Bir hata (4xx veya 5xx) çoğu zaman isteğin engellendiği ya da doğrulamaya takıldığı anlamına gelir."
+  },
+  "detectionFactsTitle": {
+    "message": "Neler kontrol edildi"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Çerezler: {0} · Komut dosyaları: {1} · İstekler: {2} · Üstbilgiler: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS hook'ları: tamamlandı"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS hook'ları: süre sınırında durduruldu"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS hook'ları: bu site için kapalı"
   },
   "tipCacheExpires": {
     "message": "Sona erer"
@@ -5597,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Kombinasyonlar"
   },
+  "historyFilterHttpError": {
+    "message": "Hata durumu"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Yalnızca hata durumlu sayfalar (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Aramanızla veya filtrelerinizle eşleşen girdi yok."
   },
@@ -6209,6 +6230,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Bu sayfayı yeniden tara: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Uzantıyı aç: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Açık sekmede ara: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Geçmiş kayıtları arasında gezin: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "İletişim kutusunu kapat: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Sayfa yeniden yüklenir, böylece her şey baştan toplanır."
   },
@@ -6581,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Sayfa başına süre sınırı (saniye)"
   },
+  "bulkDelayLabel": {
+    "message": "Sayfalar arası bekleme (saniye)"
+  },
   "bulkStart": {
     "message": "Başlat"
   },
@@ -6618,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Başarısız veya atlanan",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Hata durumu (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Yalnızca {0}"
   },
   "bulkCopyLines": {
     "message": "Satırlar olarak kopyala"
@@ -6773,6 +6815,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Ayarlardaki değişiklikler henüz kaydedilmedi. Kapatmadan önce kaydedilsin mi?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Ayarlardaki değişiklikler henüz kaydedilmedi. Yeni ayarlar uygulanmadan önce kaydedilsin mi?"
+  },
   "historySortLabel": {
     "message": "Geçmişi sırala"
   },
@@ -6790,5 +6835,47 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Tek satır"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Yalnızca engelleme ve doğrulama sayfaları"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Başlık dahil tüm HTML'yi yalnızca küçük sayfalarda arar; örneğin bir güvenlik duvarının engelleme sayfası. Daha büyük sayfalar aranmaz"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Hangi sayfaların tek bir kayıtlı sonucu paylaştığı. Alan adı: sitenin her sayfası. Yol: sorgu ne olursa olsun aynı adres. Tam URL: yalnızca birebir aynı adres."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "CSV, düz metin ve Markdown dışa aktarımlarına her sayfanın tarama tarihini ekler. JSON dışa aktarımları bunu her zaman içerir."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Bir sayfanın sonucu yeni bir tarama yerine önbellekten yeniden kullanıldığında da sayfayı Geçmişe kaydeder."
+  },
+  "detectionStrongToggle": {
+    "message": "Güçlü (≥%80)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Düşük zorluk: sıradan trafiğe genellikle izin verir; gerçekçi başlıklar ve çerezler içeren istekler çoğu zaman geçer."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Orta zorluk: basit HTTP istemcileri sık sık doğrulamaya takılır; tutarlı ayarlara sahip gerçek bir tarayıcı genellikle geçer."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Yüksek zorluk: aşılması zor. Tarayıcıyı, davranışını ve geldiği ağı denetler, basit HTTP istemcilerini engeller."
+  },
+  "detectionModalWebsite": {
+    "message": "Web sitesi"
+  },
+  "detectionModalEditRule": {
+    "message": "Kuralı düzenle"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Kanıtı kopyala"
+  },
+  "detectionModalDocs": {
+    "message": "Tespit rehberi"
   }
 }

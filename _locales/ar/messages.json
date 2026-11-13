@@ -187,7 +187,7 @@
     "message": "تستخدم التواريخ والساعات منطقتك الزمنية المحلية."
   },
   "statsTimelineLimitFmt": {
-    "message": "يتم عرض آخر {0} من الأيام. تشمل الإجماليات والصادرات الفترة المحددة بالكامل."
+    "message": "يتم عرض الأيام الأخيرة فقط (عددها: {0}). تشمل الإجماليات والصادرات الفترة المحددة بالكامل."
   },
   "statsProtectionDetails": {
     "message": "جميع وسائل الحماية"
@@ -226,7 +226,7 @@
     "message": "النطاق"
   },
   "statsTableCountFmt": {
-    "message": "{0} من أصل {1} صفًا"
+    "message": "الصفوف: {0} من {1}"
   },
   "statsTableMore": {
     "message": "عرض المزيد"
@@ -282,7 +282,7 @@
     "message": "ستظهر النتائج هنا عند اكتمال الفحص."
   },
   "actionRemoveFromBlacklist": {
-    "message": "إزالة من القائمة السوداء"
+    "message": "إزالة من القائمة"
   },
   "statDetections": {
     "message": "الكشوفات"
@@ -537,7 +537,7 @@
     "message": "الأدوات"
   },
   "advancedSubtabHistory": {
-    "message": "السجل"
+    "message": "الالتقاطات"
   },
   "advancedFilterSite": {
     "message": "الموقع"
@@ -609,7 +609,7 @@
     "message": "عرض {0}-{1} من {2}"
   },
   "paginationShowingItems": {
-    "message": "عرض {0}-{1} من {2} {3}"
+    "message": "{3}: عرض {0}-{1} من {2}"
   },
   "timeUnknown": {
     "message": "غير معروف"
@@ -660,7 +660,7 @@
     "message": "ألوان الفئات"
   },
   "methodSuffixPatterns": {
-    "message": "أنماط"
+    "message": "الأنماط"
   },
   "btnSaveRule": {
     "message": "حفظ القاعدة"
@@ -711,10 +711,10 @@
     "message": "أيام"
   },
   "blacklistedDomains": {
-    "message": "النطاقات المحظورة"
+    "message": "المواقع المتخطّاة"
   },
   "blacklistedDomainsDesc": {
-    "message": "النطاقات التي يتم فيها تخطي الكشف بالكامل"
+    "message": "لا يعمل الكشف أبدًا على هذه المواقع. كل إدخال هو اسم مضيف مطابق تمامًا: تظل نطاقاته الفرعية تُفحص."
   },
   "jsApiEvents": {
     "message": "أحداث JS API"
@@ -818,7 +818,7 @@
     "message": "لا توجد أنماط مطابقة"
   },
   "methodSuffixMatches": {
-    "message": "تطابقات"
+    "message": "التطابقات"
   },
   "cacheExpiredLabel": {
     "message": "منتهي الصلاحية"
@@ -842,7 +842,7 @@
     "message": "مسح التخزين المؤقت"
   },
   "clearCacheConfirmMsg": {
-    "message": "سيؤدي هذا إلى إزالة بيانات الاكتشاف المخزَّنة مؤقتًا لهذا النطاق وتشغيل تحليل جديد."
+    "message": "سيؤدي هذا إلى إزالة نتيجة الكشف المحفوظة لهذه الصفحة (مع نطاق التخزين المؤقت «النطاق» أو «المسار» قد تشمل صفحات أخرى أيضًا). يُعاد فحص الصفحة عند إعادة تحميلها."
   },
   "clearCacheConfirmBtn": {
     "message": "مسح التخزين المؤقت"
@@ -860,28 +860,28 @@
     "message": "نطاق غير صالح"
   },
   "addBlacklistTitle": {
-    "message": "إضافة إلى القائمة السوداء"
+    "message": "تخطّي هذا الموقع"
   },
   "addBlacklistMsgFmt": {
-    "message": "سيتم استبعاد النطاق \"{0}\" من جميع عمليات الاكتشاف المستقبلية. يمكنك إزالته لاحقًا من الإعدادات."
+    "message": "لن يُفحص \"{0}\" من الآن فصاعدًا. يمكنك التراجع عن ذلك في الإعدادات ← الكشف ← المواقع المراد فحصها."
   },
   "addBlacklistBtn": {
-    "message": "إضافة إلى القائمة السوداء"
+    "message": "تخطّي هذا الموقع"
   },
   "alreadyBlacklistedFmt": {
-    "message": "النطاق \"{0}\" موجود بالفعل في القائمة السوداء"
+    "message": "\"{0}\" متخطّى بالفعل"
   },
   "addedToBlacklistFmt": {
-    "message": "تمت إضافة \"{0}\" إلى القائمة السوداء"
+    "message": "تمت إضافة \"{0}\" إلى المواقع المتخطّاة"
   },
   "failedAddBlacklistFmt": {
-    "message": "تعذَّرت الإضافة إلى القائمة السوداء: {0}"
+    "message": "تعذّر تخطّي هذا الموقع: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "تمت إزالة \"{0}\" من القائمة السوداء"
+    "message": "تمت إزالة \"{0}\" من المواقع المتخطّاة"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "تعذَّرت الإزالة من القائمة السوداء: {0}"
+    "message": "تعذّرت إزالة الموقع من المواقع المتخطّاة: {0}"
   },
   "historyNoDetections": {
     "message": "لا توجد اكتشافات"
@@ -914,10 +914,10 @@
     "message": "تعذَّر مسح التخزين المؤقت"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "تمت إضافة \"{0}\" إلى القائمة السوداء"
+    "message": "تمت إضافة \"{0}\" إلى المواقع المتخطّاة"
   },
   "notificationBlacklistFailed": {
-    "message": "تعذَّرت الإضافة إلى القائمة السوداء"
+    "message": "تعذّر تخطّي هذا الموقع"
   },
   "notificationHistoryItemDeleted": {
     "message": "تم حذف عنصر السجل"
@@ -926,13 +926,13 @@
     "message": "تعذَّر حذف عنصر السجل"
   },
   "notificationHistoryExportedFmt": {
-    "message": "تم تصدير {0} من عناصر السجل"
+    "message": "عناصر السجل المُصدَّرة: {0}"
   },
   "notificationHistoryMergedFmt": {
-    "message": "تم دمج {0} من عناصر السجل الجديدة"
+    "message": "عناصر السجل الجديدة المدمجة: {0}"
   },
   "notificationHistoryReplacedFmt": {
-    "message": "تم استبدال السجل بـ {0} عنصرًا"
+    "message": "تم استبدال السجل، عدد العناصر: {0}"
   },
   "notificationHistoryExportedOne": {
     "message": "تم تصدير عنصر سجل واحد"
@@ -989,7 +989,7 @@
     "message": "تعذَّر الحصول على URL الصفحة الحالية"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} موجود بالفعل في القائمة السوداء"
+    "message": "{0} متخطّى بالفعل"
   },
   "failedAddDomainFmt": {
     "message": "تعذَّرت إضافة النطاق: {0}"
@@ -1043,7 +1043,7 @@
     "message": "خطأ في قراءة الملف: {0}"
   },
   "detectorsUpdatedFmt": {
-    "message": "تم تحديث {0} من الكواشف"
+    "message": "الكواشف المُحدَّثة: {0}"
   },
   "detectorDeletedFmt": {
     "message": "تم حذف \"{0}\""
@@ -1100,7 +1100,7 @@
     "message": "استبدال"
   },
   "importHistoryModeMessageFmt": {
-    "message": "هل تريد استيراد {0} من عناصر السجل؟ يحتوي سجلك الحالي على {1}.<br>«دمج» يضيف العناصر الجديدة إليه، و«استبدال» يحذفه أولًا."
+    "message": "العناصر المراد استيرادها: {0}. العناصر في سجلك الحالي: {1}.<br>«دمج» يضيف العناصر الجديدة إليه، و«استبدال» يحذفه أولًا."
   },
   "clearLogsTitle": {
     "message": "مسح السجلات"
@@ -1136,7 +1136,7 @@
     "message": "لم يُعثر على إصدار منشور من Scrapfly على GitHub."
   },
   "updateErrorRateLimitedFmt": {
-    "message": "يحدّ GitHub من عمليات التحقق من التحديثات. حاول مرة أخرى بعد {0} دقيقة."
+    "message": "يحدّ GitHub من عمليات التحقق من التحديثات. حاول مرة أخرى بعد قليل (الدقائق المتبقية: {0})."
   },
   "errorApplyingUpdates": {
     "message": "خطأ في تطبيق التحديثات"
@@ -1418,7 +1418,7 @@
     "message": "إعدادات التخزين المؤقت"
   },
   "settingsCardSkipDomains": {
-    "message": "تخطي النطاقات"
+    "message": "تخطّي هذه المواقع"
   },
   "settingsAddCurrentPage": {
     "message": "إضافة الصفحة الحالية"
@@ -1517,13 +1517,13 @@
     "message": "مثال على الاستخدام"
   },
   "detectionDisabledForDomain": {
-    "message": "تم تعطيل الاكتشاف لهذا النطاق"
+    "message": "تم إيقاف الكشف مؤقتًا: أنت تتخطّى هذا الموقع"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "إزالة من القائمة السوداء"
+    "message": "فحص هذا الموقع مجددًا"
   },
   "detectionBlacklistHint": {
-    "message": "أو انتقل إلى الإعدادات ← الاكتشاف ← النطاقات المحظورة للإدارة."
+    "message": "أو انتقل إلى الإعدادات ← الكشف ← المواقع المراد فحصها لإدارة القائمة."
   },
   "detectionNoDetectionsDesc": {
     "message": "لم يُعثر على أي إشارات مطابِقة لمكافحة البوتات أو CAPTCHA أو بصمة الجهاز في هذه الصفحة."
@@ -1541,7 +1541,7 @@
     "message": "تعذّر قراءة الإعدادات — تم إلغاء العملية"
   },
   "failedRemoveBlacklist": {
-    "message": "فشل الإزالة من القائمة السوداء"
+    "message": "تعذّرت إزالة الموقع من المواقع المتخطّاة"
   },
   "pasteConfirmTitle": {
     "message": "رفع الاكتشافات؟"
@@ -1562,7 +1562,7 @@
     "message": "نسخ النظرة العامة"
   },
   "detectionTitleBlockDomain": {
-    "message": "حظر هذا النطاق"
+    "message": "تخطّي هذا الموقع"
   },
   "detectionStatSite": {
     "message": "الموقع"
@@ -1589,7 +1589,7 @@
     "message": "من"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "هذا النطاق محظور"
+    "message": "هذا الموقع متخطّى"
   },
   "detectionModalConfidence": {
     "message": "درجة الثقة"
@@ -1858,7 +1858,7 @@
     "message": "أنظمة الحماية المدعومة"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "عرض سجل الالتقاطات ({0})"
+    "message": "عرض الالتقاطات ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "خطافات JavaScript"
@@ -1975,13 +1975,13 @@
     "message": "لا توجد بيانات في هذه الفترة"
   },
   "statsTipPagesFmt": {
-    "message": "{0} صفحة"
+    "message": "الصفحات: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} من {1} اكتشافات · {2}%"
+    "message": "الاكتشافات: {0} من {1} · {2}%"
   },
   "statsTimelineMetaFmt": {
-    "message": "{0} اكتشاف · {1} يوم"
+    "message": "الاكتشافات: {0} · الأيام: {1}"
   },
   "deleteOfficialDetectorNote": {
     "message": "هذا كاشف رسمي من Scrapfly. لن تعيده التحديثات؛ استخدم \"استعادة الكواشف الرسمية\" في القائمة … لاستعادته."
@@ -1990,7 +1990,7 @@
     "message": "استعادة الكواشف الرسمية"
   },
   "officialDetectorsRestoredFmt": {
-    "message": "تمت استعادة {0} من الكواشف الرسمية"
+    "message": "الكواشف الرسمية المستعادة: {0}"
   },
   "failedRestoreOfficialDetectors": {
     "message": "تعذرت استعادة الكواشف الرسمية"
@@ -2011,7 +2011,7 @@
     "message": "جارٍ مسح الكواشف المخصصة..."
   },
   "customDetectorsClearedFmt": {
-    "message": "تمت إزالة {0} من الكواشف المخصصة"
+    "message": "الكواشف المخصصة المُزالة: {0}"
   },
   "noCustomDetectorsToClear": {
     "message": "لا توجد كواشف مخصصة لمسحها"
@@ -3100,7 +3100,7 @@
     "message": "لا"
   },
   "advHcaptchaNoHistory": {
-    "message": "لا يوجد سجل التقاط بعد"
+    "message": "لا توجد التقاطات بعد"
   },
   "advHcaptchaNotAvailable": {
     "message": "غير متاح"
@@ -3256,7 +3256,7 @@
     "message": "تم النسخ إلى الحافظة"
   },
   "advPanelCookiesFoundFmt": {
-    "message": "تم العثور على {0}/{1} من ملفات تعريف الارتباط"
+    "message": "ملفات تعريف الارتباط التي عُثر عليها: {0}/{1}"
   },
   "advPanelScriptsFoundFmt": {
     "message": "السكربتات التي تم العثور عليها: {0}"
@@ -3289,10 +3289,10 @@
     "message": "غير متاح"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "تم مسح سجل التقاطات {0}"
+    "message": "تم مسح التقاطات {0}"
   },
   "advPanelFailedClearHistory": {
-    "message": "تعذَّر مسح السجل"
+    "message": "تعذَّر مسح الالتقاطات"
   },
   "rulesUiNewDetectorName": {
     "message": "كاشف جديد"
@@ -3550,16 +3550,16 @@
     "message": "خطأ: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "لا توجد نطاقات في القائمة السوداء"
+    "message": "لا توجد مواقع متخطّاة"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "لا توجد نطاقات تطابق بحثك"
+    "message": "لا توجد مواقع تطابق بحثك"
   },
   "settingsUiChecking": {
     "message": "جارٍ التحقق..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "يجب أن يكون حد السجل بين 0 (غير محدود) و10000"
+    "message": "يجب أن يكون حد السجل عددًا صحيحًا من 0 إلى 10000 (القيمة 0 تحتفظ بما يصل إلى 1000 إدخال)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "يجب أن تكون مدة التخزين المؤقت بين 1 و{0} ({1})"
@@ -3631,19 +3631,19 @@
     "message": "تحتاج قائمة «واحد مما يلي» في كل خيار إلى نمط يجب أن يوجد."
   },
   "combinationInvalidAtLeastFmt": {
-    "message": "يحتاج «{0} على الأقل» إلى {0} أنماط يجب أن توجد."
+    "message": "يحتاج «{0} على الأقل» إلى أنماط يجب أن توجد (العدد: {0})."
   },
   "combinationSentenceOne": {
     "message": "تعمل عند تحقق هذا الشرط."
   },
   "combinationSentenceAllFmt": {
-    "message": "تعمل عند تحقق الشروط الـ{0} كلها."
+    "message": "تعمل عند تحقق جميع الشروط (عددها: {0})."
   },
   "combinationSentenceAnyFmt": {
-    "message": "تعمل عند تحقق أي شرط من هذه الشروط الـ{0}."
+    "message": "تعمل عند تحقق أي شرط من هذه الشروط (عددها: {0})."
   },
   "combinationSentenceAtLeastFmt": {
-    "message": "تعمل عند تحقق {0} على الأقل من هذه الشروط الـ{1}."
+    "message": "تعمل عند تحقق حد أدنى من هذه الشروط: {0} من {1}."
   },
   "combinationSentenceConfidenceFmt": {
     "message": "الثقة: {0}%."
@@ -3808,7 +3808,7 @@
     "message": "حُفظ"
   },
   "tipConfidenceAverageFmt": {
-    "message": "متوسط {0} اكتشافات، من {1}% إلى {2}%"
+    "message": "متوسط الاكتشافات (عددها: {0})، من {1}% إلى {2}%"
   },
   "tipConfidenceFromCombinations": {
     "message": "من التركيبات المطابقة"
@@ -3832,7 +3832,7 @@
     "message": "حددها {0}"
   },
   "tipDifficultyManyFmt": {
-    "message": "رفعتها {0} أنظمة حماية معًا"
+    "message": "رفعتها عدة أنظمة حماية معًا (عددها: {0})"
   },
   "tipDifficultyNoneCounted": {
     "message": "لم يُعثر على مكافحة روبوتات أو CAPTCHA بنسبة 50% أو أكثر"
@@ -4090,7 +4090,7 @@
     "message": "سيُرفع ملخص اكتشافات هذه الصفحة إلى {0} ({1}). يمكن لأي شخص لديه الرابط عرضه. لا تُضمَّن معاملات عنوان URL ولا قيم ملفات تعريف الارتباط أو الترويسات."
   },
   "shareExpiryDaysFmt": {
-    "message": "يُحذف بعد {0} يومًا"
+    "message": "يُحذف بعد عدد من الأيام: {0}"
   },
   "shareExpiryAfterFmt": {
     "message": "يُحذف بعد {0}"
@@ -4153,7 +4153,7 @@
     "message": "القيمة"
   },
   "advCommonCharsFmt": {
-    "message": "{0} حرفًا"
+    "message": "عدد الأحرف: {0}"
   },
   "advCookiePath": {
     "message": "المسار"
@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "رمز حالة HTTP الذي أجابت به الصفحة عند فحصها. الخطأ (4xx أو 5xx) يعني غالبًا أن الطلب حُظر أو خضع لتحدٍّ."
   },
+  "detectionFactsTitle": {
+    "message": "ما الذي فُحص"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "ملفات تعريف الارتباط: {0} · النصوص البرمجية: {1} · الطلبات: {2} · الترويسات: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "خطافات JS: اكتملت"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "خطافات JS: توقفت عند انتهاء المهلة"
+  },
+  "detectionFactsHooksOff": {
+    "message": "خطافات JS: متوقفة لهذا الموقع"
+  },
   "tipCacheExpires": {
     "message": "تنتهي"
   },
@@ -4535,13 +4550,13 @@
     "message": "تحقق"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "تتطابق هذه القاعدة مع {1} من {0} صفحة محفوظة"
+    "message": "الصفحات المحفوظة التي تطابقها هذه القاعدة: {1} من {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{0} من {1} صفحة"
+    "message": "الصفحات: {0} من {1}"
   },
   "ruleHistoryCheckOtherFmt": {
-    "message": "+{0} صفحات أخرى"
+    "message": "صفحات أخرى: +{0}"
   },
   "ruleHistoryCheckNoHistory": {
     "message": "السجل فارغ: تصفح بعض الصفحات أولًا."
@@ -4550,7 +4565,7 @@
     "message": "تقدير: يحفظ السجل القيم المطابقة، لا الصفحات كاملة."
   },
   "ruleHistoryCheckCombinationFmt": {
-    "message": "تتحقق في {0} صفحة"
+    "message": "تعمل في الصفحات: {0}"
   },
   "ruleHistoryCheckEmpty": {
     "message": "أضف أنماطًا للتحقق منها."
@@ -5006,7 +5021,7 @@
     "message": "وسائل الحماية المرصودة"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "{0} جديدة في هذه الفترة"
+    "message": "جديدة في هذه الفترة: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "إجمالي القواعد: {0}"
@@ -5180,7 +5195,7 @@
     "message": "أدلة قوية"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{0} من أصل {1} اكتشافًا حصلت على 80% أو أكثر."
+    "message": "الاكتشافات التي حصلت على 80% أو أكثر: {0} من {1}."
   },
   "statsUnconfirmed": {
     "message": "مذكورة وغير مؤكدة"
@@ -5213,7 +5228,7 @@
     "message": "كيف تم تحديد كل فئة"
   },
   "statsLiftFmt": {
-    "message": "{0} نقطة"
+    "message": "الفرق بالنقاط: {0}"
   },
   "statsDecidedAvgFmt": {
     "message": "{0}: {1} · المتوسط {2}"
@@ -5249,7 +5264,7 @@
     "message": "التغطية"
   },
   "statsRulesCoverageFmt": {
-    "message": "تطابقت {0} من أصل {1} قاعدة مفعّلة في هذا النطاق"
+    "message": "القواعد المفعّلة التي تطابقت في هذا النطاق: {0} من {1}"
   },
   "statsRulesAttention": {
     "message": "تحتاج إلى انتباه"
@@ -5596,6 +5611,12 @@
   },
   "historyFilterCombinations": {
     "message": "التركيبات"
+  },
+  "historyFilterHttpError": {
+    "message": "حالة خطأ"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "الصفحات ذات حالة الخطأ فقط (⁦4xx, 5xx⁩)"
   },
   "historyNoResults": {
     "message": "لا توجد إدخالات تطابق بحثك أو عوامل التصفية."
@@ -6084,7 +6105,7 @@
     "message": "لم تعد هذه الصفحة تحت المراقبة"
   },
   "historyWatchLimitFmt": {
-    "message": "يمكنك مراقبة {0} صفحة كحد أقصى. أوقف مراقبة إحداها أولًا."
+    "message": "الحد الأقصى للصفحات المراقَبة: {0}. أوقف مراقبة إحداها أولًا."
   },
   "settingsGroupHistoryWatch": {
     "message": "مراقبة الصفحات المثبّتة"
@@ -6099,7 +6120,7 @@
     "message": "افحص الآن"
   },
   "settingsHistoryWatchCountFmt": {
-    "message": "{0} من {1} صفحة تحت المراقبة"
+    "message": "الصفحات تحت المراقبة: {0} من {1}"
   },
   "settingsHistoryWatchNever": {
     "message": "لم يُجرَ أي فحص بعد."
@@ -6208,6 +6229,18 @@
   },
   "settingsShortcutRescanFmt": {
     "message": "إعادة فحص هذه الصفحة: {0}"
+  },
+  "settingsShortcutOpenFmt": {
+    "message": "فتح الإضافة: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "البحث في علامة التبويب المفتوحة: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "التنقل بين إدخالات السجل: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "إغلاق مربع حوار: {0}"
   },
   "settingsShortcutsDesc": {
     "message": "يُعاد تحميل الصفحة، فيُجمع كل شيء من البداية."
@@ -6342,7 +6375,7 @@
     "message": "قيد المراقبة: {0}"
   },
   "historyBulkWatchLimitFmt": {
-    "message": "قيد المراقبة: {0}. لم يُضف: {1} (يمكنك مراقبة {2} صفحة كحد أقصى)."
+    "message": "قيد المراقبة: {0}. لم يُضف: {1} (الحد الأقصى للصفحات المراقَبة: {2})."
   },
   "historyBulkWatchStoppedFmt": {
     "message": "أُوقفت المراقبة: {0}"
@@ -6483,7 +6516,7 @@
     "message": "لا تتحقق"
   },
   "ruleLiveTestPageFmt": {
-    "message": "تمت القراءة: النصوص البرمجية {0}، العناصر {1}، ملفات تعريف الارتباط {2}، الطلبات {3}."
+    "message": "تمت القراءة من الصفحة. النصوص البرمجية: {0} · العناصر: {1} · ملفات تعريف الارتباط: {2} · الطلبات: {3}."
   },
   "ruleLiveTestNoRequests": {
     "message": "الطلبات التي أجرتها الصفحة غير متاحة الآن، لذا فُحصت أنماط URL مقابل عنوانها ونصوصها البرمجية فقط."
@@ -6581,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "المهلة لكل صفحة بالثواني"
   },
+  "bulkDelayLabel": {
+    "message": "الانتظار بين الصفحات بالثواني"
+  },
   "bulkStart": {
     "message": "بدء"
   },
@@ -6619,6 +6655,12 @@
     "message": "فشلت أو تم تخطيها",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "حالة خطأ (⁦4xx, 5xx⁩)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "{0} فقط"
+  },
   "bulkCopyLines": {
     "message": "نسخ كأسطر"
   },
@@ -6626,7 +6668,7 @@
     "message": "لا توجد صفحة تطابق هذا المرشح."
   },
   "bulkShowingFmt": {
-    "message": "يتم عرض {0} من {1} صفحة. تشمل عمليات التصدير هذه الصفحات فقط.",
+    "message": "الصفحات المعروضة: {0} من {1}. تشمل عمليات التصدير هذه الصفحات فقط.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
@@ -6773,6 +6815,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "لم تُحفظ تغييراتك على الإعدادات بعد. هل تريد حفظها قبل الإغلاق؟"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "لم تُحفظ تغييراتك على الإعدادات بعد. هل تريد حفظها قبل تطبيق الإعدادات الجديدة؟"
+  },
   "historySortLabel": {
     "message": "ترتيب السجل"
   },
@@ -6790,5 +6835,47 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "سطر واحد"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "صفحات الحظر والتحدي فقط"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "البحث في كامل HTML، بما فيه العنوان، للصفحات الصغيرة فقط، مثل صفحة الحظر لجدار الحماية. لا يتم البحث في الصفحات الأكبر"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "الصفحات التي تتشارك نتيجة محفوظة واحدة. النطاق: كل صفحات الموقع. المسار: العنوان نفسه أيًّا كان الاستعلام. URL كامل: العنوان المطابق تمامًا فقط."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "يضيف تاريخ فحص كل صفحة إلى تصديرات CSV والنص العادي وMarkdown. تتضمّنه تصديرات JSON دائمًا."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "يسجّل الصفحة في السجل أيضًا عندما يُعاد استخدام نتيجتها من ذاكرة التخزين المؤقت بدلًا من فحص جديد."
+  },
+  "detectionStrongToggle": {
+    "message": "قوية (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "صعوبة منخفضة: عادةً ما تسمح بمرور الحركة العادية، وغالبًا ما تمر الطلبات ذات الترويسات وملفات تعريف الارتباط الواقعية."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "صعوبة متوسطة: غالبًا ما تواجه عملاء HTTP البسيطة تحديًا، بينما يمر عادةً متصفح حقيقي بإعدادات متسقة."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "صعوبة عالية: يصعب تجاوزها. تفحص المتصفح وسلوكه والشبكة التي يأتي منها، وتحظر عملاء HTTP البسيطة."
+  },
+  "detectionModalWebsite": {
+    "message": "الموقع الإلكتروني"
+  },
+  "detectionModalEditRule": {
+    "message": "تعديل القاعدة"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "نسخ الأدلة"
+  },
+  "detectionModalDocs": {
+    "message": "دليل الكشف"
   }
 }

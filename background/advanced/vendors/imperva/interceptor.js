@@ -98,7 +98,7 @@ function impervaStartCapture(tabId, captureUrl) {
     if (typeof showCaptureStarted === 'function') {
         showCaptureStarted(tabId, {
             module: 'Imperva',
-            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Imperva'),
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'Imperva'),
             message: pageText('advImpervaNoticeReloadToMonitor', 'Reload the page to begin monitoring Imperva requests and cookies'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
@@ -108,7 +108,7 @@ function impervaStartCapture(tabId, captureUrl) {
         showNotification(tabId, {
             module: 'Imperva',
             type: 'capture',
-            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Imperva'),
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'Imperva'),
             message: pageText('advImpervaNoticeReloadToMonitor', 'Reload the page to begin monitoring Imperva requests and cookies'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT // Show for 60 seconds (until auto-stop)
         }).catch(err => {
@@ -269,7 +269,7 @@ function impervaStopCapture(tabId) {
             showNotification(tabId, {
                 module: 'Imperva',
                 type: 'success',
-                title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                title: pageText('pageNoticeCaptureCompleted', 'Capture completed'),
                 message: pageText('advImpervaNoticeCapturedItemsFmt', 'Imperva data captured (items: {0})', capturedItems),
                 duration: 5000
             }).catch(err => {
@@ -572,7 +572,7 @@ async function handleImpervaCaptureCompleted(tabId, interceptorData) {
                 await showNotification(tabId, {
                     module: 'Imperva',
                     type: 'success',
-                    title: pageText('advImpervaNoticeCaptureComplete', 'Imperva Capture Complete'),
+                    title: pageText('advImpervaNoticeCaptureComplete', 'Imperva capture complete'),
                     message: pageText('advImpervaNoticeSensorCaptured', 'Sensor data captured successfully'),
                     duration: 3000
                 });

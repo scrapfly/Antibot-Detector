@@ -15,6 +15,8 @@
  *   record(state, entry)     adds an event under the caps (events per cookie, cookies per site, sites)
  *   summarize(events)        the cookie's current life: set at, how many changes, the last one, its expiry, its state
  *   relative(ms, locale)     "4 min. ago" / "in 1 hr." in the person's language (Intl.RelativeTimeFormat)
+ *   describe(events, now, text)   the summary as one line, "set 4 min. ago · changed 3 times · expires in 1 hr.", with the
+ *                            caller's translator (Advanced → Check Cookies and the Detection details dialog)
  *
  * Privacy: the record lives in chrome.storage.session only (memory, gone when the browser closes), never in
  * storage.local, History, backups or diagnostics, and holds a cookie's name, the event, its time, the expiry and the
@@ -268,9 +270,55 @@
     }
   }
 
+  const plainText = (key, fallback, ...args) => String(fallback).replace(/\{(\d+)\}/g, (p, i) => (Number(i) < args.length ? String(args[Number(i)]) : p));
+
+  /**
+   * One cookie's life as a line: "set 4 min. ago · changed 3 times · last change 40 sec. ago · expires in 1 hr.", "removed 1 sec.
+   * ago · set 4 min. ago", '' with nothing recorded. Names times only: the events hold no value.
+   * @param {Array} events  @param {number} now
+   * @param {{t?: Function, locale?: string}} [text] - t: (key, ...args) => the message in the interface language, or '' for the
+   *   English one
+   */
+  function describe(events, now, text = {}) {
+    const t = (key, fallback, ...args) => (typeof text.t === 'function' && text.t(key, ...args)) || plainText(key, fallback, ...args);
+    const ago = (time) => relative(time - now, text.locale);
+    const s = summarize(events);
+    if (s.state === 'none') return '';
+    const parts = [];
+    if (s.state !== 'live') {
+      parts.push(s.state === 'expired'
+        ? t('advCookieTimelineExpiredFmt', 'expired {0}', ago(s.endedAt))
+        : t('advCookieTimelineRemovedFmt', 'removed {0}', ago(s.endedAt)));
+    }
+    if (s.setAt !== null) parts.push(t('advCookieTimelineSetFmt', 'set {0}', ago(s.setAt)));
+    if (s.changes === 1) parts.push(t('advCookieTimelineChangedOnce', 'changed once'));
+    else if (s.changes > 1) parts.push(t('advCookieTimelineChangedFmt', 'changed {0} times', s.changes));
+    if (s.lastChangeAt !== null) parts.push(t('advCookieTimelineLastChangeFmt', 'last change {0}', ago(s.lastChangeAt)));
+    if (s.state === 'live') {
+      parts.push(s.expiresAt !== null
+        ? t('advCookieTimelineExpiresFmt', 'expires {0}', relative(s.expiresAt - now, text.locale))
+        : t('advCookieTimelineSession', 'session cookie'));
+    }
+    return parts.join(' · ');
+  }
+
+  /**
+   * The events of the cookie a match names, from a site's record ({ keyOf(name, domain): events[] }): the same name under
+   * several domains gives the one whose last event is the newest. Null when none was recorded.
+   */
+  function eventsFor(cookies, name) {
+    let best = null;
+    for (const [key, events] of Object.entries(cookies || {})) {
+      if (nameOf(key) !== name || !Array.isArray(events) || !events.length) continue;
+      const last = Number(events[events.length - 1].t) || 0;
+      if (!best || last > best.last) best = { events, last };
+    }
+    return best ? best.events : null;
+  }
+
   const api = Object.freeze({
     STORAGE_KEY, DEFAULT_STORE_ID, LIMITS, EVENTS,
-    siteOf, keyOf, nameOf, cookieRules, matcher, marker, classify, emptyState, record, forSite, summarize, relative
+    siteOf, keyOf, nameOf, cookieRules, matcher, marker, classify, emptyState, record, forSite, summarize, relative, describe, eventsFor
   });
   root.CookieTimeline = api;
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.CookieTimeline = api;

@@ -83,7 +83,7 @@
     U.setText('kpiDetectors', num(t.uniqueDetectors));
     U.fillDelta(byId('kpiDetectorsDelta'), prev ? delta(sum.protections, prev.protections) : null);
     const extra = [];
-    if (d.ranged && d.newProtections.length) extra.push(fmt('statsKpiProtectionsNewFmt', '{0} new this period', num(d.newProtections.length)));
+    if (d.ranged && d.newProtections.length) extra.push(fmt('statsKpiProtectionsNewFmt', 'New this period: {0}', num(d.newProtections.length)));
     if (app.state.rules.length) extra.push(fmt('statsKpiProtectionsRulesFmt', 'Total rules: {0}', num(app.state.rules.length)));
     U.setText('kpiDetectorsSub', extra.join(' · '));
     spark('kpiDetectorsSpark', 'protections', 'var(--text-muted)');
@@ -157,7 +157,7 @@
       const name = element('span', 'stats-site-name', row.hostname);
       name.setAttribute('dir', 'ltr');
       name.setAttribute('title', row.hostname);
-      li.append(name, U.pill(row.difficulty), U.stack(row), element('span', 'stats-site-count', tr('statsPagesColumn', 'Pages') + ': ' + num(row.visits)));
+      li.append(name, U.pill(row.difficulty), U.stack(row), element('span', 'stats-site-count', FormatUtils.labelValue(tr('statsPagesColumn', 'Pages'), num(row.visits))));
       const open = () => app.openDomain(row.hostname);
       li.addEventListener('click', open);
       li.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(); } });

@@ -226,6 +226,7 @@ function pageHttpStatus(tabId, documentId) {
 /** A main-frame navigation starts (not a redirect of one). */
 function navigationStarted(tabId) {
     noteTabLeaving(tabId);
+    shownPrerenders.delete(tabId);
     pendingNavigations.set(tabId, (pendingNavigations.get(tabId) || 0) + 1);
 }
 
@@ -330,6 +331,147 @@ function readRequestBody(requestBody, limit) {
     return { payloadData: null, payloadType: 'unknown' };
 }
 
+/** A main-frame response's headers by lower-case name, and the cookies its Set-Cookie headers set ({ name, value }). */
+function readResponseHeaders(responseHeaders) {
+    const headers = {};
+    const cookies = [];
+    for (const header of responseHeaders || []) {
+        const headerName = header.name.toLowerCase();
+        headers[headerName] = header.value;
+        if (headerName === 'set-cookie') {
+            const cookieParts = String(header.value).split(';')[0].split('=');
+            if (cookieParts.length >= 2) {
+                cookies.push({ name: cookieParts[0].trim(), value: cookieParts.slice(1).join('=').trim() });
+            }
+        }
+    }
+    return { headers, cookies };
+}
+
+// ─── Pages Chrome prerenders ────────────────────────────────────────────────────────────────────────────────
+
+/**
+ * A page Chrome prerenders (speculation rules, the address bar guessing the next page) loads under the tab's id before it is
+ * the tab's page: its main-frame request is not the shown page's (isPrerenderRequest), and once the page was shown it had no
+ * request of its own in the tab, so its scan read no response headers, no Set-Cookie, no request headers and no HTTP status.
+ * Its main-frame request and response are kept aside here, per tab, until the page is shown (activatePrerenderedPage) or
+ * given up: at most PRERENDER_PAGES_PER_TAB pages per tab, each for PRERENDER_PAGE_TTL_MS, forgotten with the tab. A page the
+ * scan is refused for (a skipped site, or settings that cannot be read) keeps nothing, as when it loads in the tab, and with
+ * the extension off nothing is kept.
+ *
+ * Per tab, a list of { requestId, frameId, documentId, response, request, cookies, timestamp }: the request id ties the hops
+ * of a redirect together (the last one recorded is the page), the frame id ties the request to the document Chrome commits
+ * for it (notePrerenderCommit), and the document is how the page that is shown names itself.
+ */
+const PRERENDER_PAGES_PER_TAB = 4;
+const PRERENDER_PAGE_TTL_MS = 5 * 60 * 1000;
+const prerenderPages = new Map();
+// The prerendered document each tab has shown since its last page load: its load notice finds the tab already set up for it
+const shownPrerenders = new Map();
+
+/** The kept entry of a prerendered page's main-frame request (a new one for a new request), with the tab's stale ones gone. */
+function prerenderPageEntry(details) {
+    const now = Date.now();
+    const list = (prerenderPages.get(details.tabId) || []).filter(entry => now - entry.timestamp < PRERENDER_PAGE_TTL_MS);
+    let entry = list.find(item => item.requestId === details.requestId);
+    if (!entry) {
+        entry = { requestId: details.requestId, frameId: details.frameId, documentId: null };
+        list.push(entry);
+        while (list.length > PRERENDER_PAGES_PER_TAB) list.shift();
+    }
+    entry.timestamp = now;
+    prerenderPages.set(details.tabId, list);
+    return entry;
+}
+
+/**
+ * Keep a prerendered page's main-frame response headers (onHeadersReceived) or request headers (onBeforeSendHeaders) aside,
+ * judged like the page's own load: the extension on, and the page's address one the scan is not refused for.
+ * @returns {Promise<boolean>} whether anything was kept
+ */
+async function keepPrerenderMainFrame(details) {
+    if (!isPrerenderRequest(details) || details.type !== 'main_frame' || typeof details.tabId !== 'number' || details.tabId < 0) return false;
+    if (!details.responseHeaders && !details.requestHeaders) return false;
+    if (!await isExtensionEnabled()) return false;
+    if (!await captureOpenFor(details.url)) return false;
+    const entry = prerenderPageEntry(details);
+    const timestamp = Date.now();
+    if (details.responseHeaders) {
+        const { headers, cookies } = readResponseHeaders(details.responseHeaders);
+        entry.response = { url: details.url, headers, statusCode: details.statusCode, requestId: details.requestId, timestamp };
+        // Each hop answers for itself: a redirect's Set-Cookie is not the page's
+        entry.cookies = cookies.length ? { url: details.url, cookies, timestamp } : null;
+    }
+    if (details.requestHeaders) {
+        const headers = {};
+        for (const header of details.requestHeaders) headers[header.name.toLowerCase()] = header.value;
+        entry.request = { url: details.url, headers, timestamp };
+    }
+    return true;
+}
+
+/** Chrome committed the prerendered document of a kept request (onCommitted in its own frame): the page is known by it now. */
+function notePrerenderCommit(details) {
+    if (!details || details.documentLifecycle !== 'prerender' || !details.documentId) return;
+    const list = prerenderPages.get(details.tabId);
+    if (!list) return;
+    for (let i = list.length - 1; i >= 0; i--) {
+        if (list[i].frameId === details.frameId && !list[i].documentId) { list[i].documentId = details.documentId; return; }
+    }
+}
+
+/** The tab is gone: what it kept of pages it prerendered goes with it. */
+function forgetPrerenderPages(tabId) {
+    prerenderPages.delete(tabId);
+    shownPrerenders.delete(tabId);
+}
+
+/**
+ * A page Chrome prerendered is now the tab's page (the content script says so as soon as it is shown: PRERENDER_SHOWN). What
+ * the tab captured is still the page before's, maybe another site, and goes; the page is no longer the one being left; and
+ * what was kept of its own load becomes the tab's, as if it had loaded here: response headers with its HTTP status, Set-Cookie
+ * and request headers. The page is found by its document, or, when Chrome did not report the commit, by its address (without
+ * the fragment). The tab's other prerendered pages were not shown and are dropped.
+ * @returns {boolean} whether the page's own load was found
+ */
+function activatePrerenderedPage(tabId, url, documentId) {
+    if (typeof tabId !== 'number' || tabId < 0) return false;
+    noteTabLeaving(tabId, documentId);
+    forgetTabRequests(tabId);
+    if (documentId) {
+        shownPrerenders.set(tabId, documentId);
+        tabDocuments.set(tabId, documentId);
+    }
+    // The shown page is judged by its own address from now on, and, as a page that commits in the tab (navigationCommitted,
+    // which leaves prerendered documents out), remembered when its capture was refused: nothing of its load was kept
+    // (keepPrerenderMainFrame), so a scan of it in place once its site is scanned again would be incomplete. With the
+    // extension off there is no verdict (setCaptureScope)
+    setCaptureScope(tabId, url);
+    const scope = tabCaptureScopes.get(tabId);
+    if (scope && documentId && typeof UncapturedPages !== 'undefined') UncapturedPages.noteCommit(tabId, documentId, scope.open);
+    const now = Date.now();
+    const list = (prerenderPages.get(tabId) || []).filter(entry => now - entry.timestamp < PRERENDER_PAGE_TTL_MS);
+    prerenderPages.delete(tabId);
+    const withoutFragment = (value) => String(value || '').split('#')[0];
+    const addressOf = (entry) => (entry.response || entry.request || {}).url;
+    const entry = (documentId && list.find(item => item.documentId === documentId)) ||
+        list.slice().reverse().find(item => !item.documentId && withoutFragment(addressOf(item)) === withoutFragment(url));
+    committedPages.delete(tabId);
+    if (!entry) return false;
+    if (entry.response) {
+        headersStore.set(tabId, { ...entry.response });
+        if (documentId) committedPages.set(tabId, { documentId, requestId: entry.requestId, url: entry.response.url });
+    }
+    if (entry.cookies) responseCookiesStore.set(tabId, { ...entry.cookies });
+    if (entry.request) requestHeadersStore.set(tabId, { ...entry.request });
+    return true;
+}
+
+/** Was this document's activation already handled (activatePrerenderedPage)? Its load notice then clears nothing again. */
+function prerenderShownHandled(tabId, documentId) {
+    return !!documentId && shownPrerenders.get(tabId) === documentId;
+}
+
 function setupHeaderCapture() {
     // Synchronous and registered first, so the new page's own request is recorded after the clear
     chrome.webRequest.onBeforeRequest.addListener(
@@ -344,14 +486,17 @@ function setupHeaderCapture() {
     );
 
     if (chrome.webNavigation) {
-        if (chrome.webNavigation.onCommitted) chrome.webNavigation.onCommitted.addListener((details) => { if (details && details.frameId === 0) navigationCommitted(details); });
+        // Frame 0 is the tab's page; a prerendered page commits in a frame of its own
+        if (chrome.webNavigation.onCommitted) chrome.webNavigation.onCommitted.addListener((details) => { if (details && details.frameId === 0) navigationCommitted(details); else if (details && details.documentLifecycle === 'prerender') notePrerenderCommit(details); });
         if (chrome.webNavigation.onErrorOccurred) chrome.webNavigation.onErrorOccurred.addListener((details) => { if (details && details.frameId === 0) navigationFailed(details.tabId); });
     }
-    if (chrome.tabs && chrome.tabs.onRemoved) chrome.tabs.onRemoved.addListener((tabId) => { tabCaptureScopes.delete(tabId); });
+    if (chrome.tabs && chrome.tabs.onRemoved) chrome.tabs.onRemoved.addListener((tabId) => { tabCaptureScopes.delete(tabId); forgetPrerenderPages(tabId); });
 
     // Listen for response headers
     chrome.webRequest.onHeadersReceived.addListener(
         safeWebRequestListener(async (details) => {
+            // A prerendered page's own response is kept aside until the page is shown
+            if (isPrerenderRequest(details)) { await keepPrerenderMainFrame(details); return; }
             if (isOtherPageRequest(details)) return;
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {
@@ -367,24 +512,8 @@ function setupHeaderCapture() {
             if (details.type === 'main_frame' && details.responseHeaders) {
                 // A page the scan is refused for (or whose settings cannot be read) keeps nothing
                 if (!await captureOpen(details)) return;
-                const headers = {};
-                const responseCookies = [];
-
-                // Convert headers to object and extract Set-Cookie values
-                details.responseHeaders.forEach(header => {
-                    const headerName = header.name.toLowerCase();
-                    headers[headerName] = header.value;
-
-                    if (headerName === 'set-cookie') {
-                        const cookieParts = header.value.split(';')[0].split('=');
-                        if (cookieParts.length >= 2) {
-                            responseCookies.push({
-                                name: cookieParts[0].trim(),
-                                value: cookieParts.slice(1).join('=').trim()
-                            });
-                        }
-                    }
-                });
+                // Headers by name, and the cookies of its Set-Cookie headers
+                const { headers, cookies: responseCookies } = readResponseHeaders(details.responseHeaders);
 
                 headersStore.set(details.tabId, {
                     url: details.url,
@@ -412,6 +541,8 @@ function setupHeaderCapture() {
     // Listen for request headers
     chrome.webRequest.onBeforeSendHeaders.addListener(
         safeWebRequestListener(async (details) => {
+            // A prerendered page's own request is kept aside until the page is shown
+            if (isPrerenderRequest(details)) { await keepPrerenderMainFrame(details); return; }
             if (isOtherPageRequest(details)) return;
             // Skip if extension is disabled
             if (!await isExtensionEnabled()) {

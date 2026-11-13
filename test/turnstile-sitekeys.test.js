@@ -3,7 +3,7 @@ const assert = require('node:assert');
 const vm = require('node:vm');
 const TurnstileSiteKeys = require('../sections/advanced/vendors/cloudflare/turnstile-sitekeys.js');
 
-// Advanced → Turnstile / Cloudflare "Extract Site Key": the probe runs in each
+// Advanced → Turnstile / Cloudflare "Extract site key": the probe runs in each
 // frame of the page; here it runs against a fake document.
 function runProbe({ widgets = [], resources = [], inline = [], url = 'https://demo.test/login' }) {
   const el = (attrs, classes = []) => ({ classList: { contains: c => classes.includes(c) }, getAttribute: name => attrs[name] ?? null });

@@ -54,6 +54,19 @@ SettingsUI.collapseCards = function(root) {
     });
 };
 
+/**
+ * A row's remove button took the row with it when the list was drawn again: the keyboard goes on to the button now in its
+ * place, the one before it when it was the last, or `fallback` (the control that adds one) when nothing is left.
+ * @param {ArrayLike<HTMLElement>} buttons - the remove buttons of the list as drawn now
+ * @param {number} position - where the removed row's button was among the buttons drawn before
+ * @param {HTMLElement|null} fallback
+ */
+SettingsUI.focusAfterRemove = function(buttons, position, fallback) {
+    const list = Array.from(buttons || []);
+    const target = list.length ? list[Math.min(Math.max(position, 0), list.length - 1)] : fallback;
+    if (target && typeof target.focus === 'function') target.focus();
+};
+
 SettingsUI.showSettings = function() {
     const settingsModal = document.querySelector('#settingsModal');
     if (settingsModal) {
@@ -141,6 +154,56 @@ SettingsUI.requestHideSettings = async function() {
       return !this.isModalVisible;
     }
     return false;
+};
+
+/**
+ * Before something replaces the form (a language change that reloads the popup, a preset, an imported settings file, a
+ * restored backup): true to go on. With unsaved changes it asks first, as closing Settings does: Save first (goes on only
+ * if the save worked), Discard (the form shows the saved settings again) or Cancel (false: nothing changes).
+ * @param {object} owner the Settings instance
+ * @param {string} message the question, which says what is about to happen
+ */
+SettingsUI.settleUnsavedChanges = async function(owner, message) {
+    if (!owner || !owner.settingsBaseline || typeof SettingsUI.hasUnsavedChanges !== 'function' || !SettingsUI.hasUnsavedChanges(owner)) return true;
+    if (typeof NotificationHelper === 'undefined' || typeof NotificationHelper.choose !== 'function') return true;
+    const tr = (key, fallback) => ((typeof I18n !== 'undefined') && I18n.get(key)) || fallback;
+    const answer = await NotificationHelper.choose({
+      title: tr('settingsLanguageUnsavedTitle', 'Unsaved settings'),
+      message,
+      cancelText: tr('btnCancel', 'Cancel'),
+      tone: 'warning',
+      actions: [
+        { value: 'discard', text: tr('ruleEditorDiscardConfirm', 'Discard') },
+        { value: 'save', text: tr('btnSave', 'Save'), primary: true }
+      ],
+      defaultValue: 'save'
+    });
+    if (answer === 'save') return SettingsUI.saveFormFirst(owner);
+    if (answer !== 'discard') return false;
+    // The edits are dropped: the form and the staged site lists go back to what is saved
+    owner.settings = JSON.parse(JSON.stringify(owner.settingsBaseline));
+    if (typeof owner.updateSettingsUI === 'function') owner.updateSettingsUI();
+    return true;
+};
+
+/** "Save first": the form's values, checked as the Save button checks them. False when a value is not valid or the save failed. */
+SettingsUI.saveFormFirst = async function(owner) {
+    const fromForm = owner.getSettingsFromUI();
+    const validation = owner.validateSettings(fromForm);
+    if (!validation.isValid) {
+      const message = ((typeof I18n !== 'undefined') && I18n.format && I18n.format('invalidSettingsFmt', validation.errors.join(', ')))
+        || `Invalid settings: ${validation.errors.join(', ')}`;
+      NotificationHelper.error(message);
+      return false;
+    }
+    owner.settings = owner.deepMerge(owner.settings, fromForm);
+    return (await owner.saveSettings({ notify: false })) !== false;
+};
+
+/** The question asked before a preset, an import or a restore replaces settings that have unsaved changes. */
+SettingsUI.settleUnsavedBeforeReplace = function(owner) {
+    const tr = (key, fallback) => ((typeof I18n !== 'undefined') && I18n.get(key)) || fallback;
+    return SettingsUI.settleUnsavedChanges(owner, tr('settingsUnsavedReplaceMessage', 'Your changes to the settings are not saved yet. Save them before the new settings are applied?'));
 };
 
 SettingsUI.switchTab = function(tabName) {
@@ -773,7 +836,7 @@ SettingsUI.validateSettings = function(settings) {
     if (settings.history && settings.history.historyLimit !== undefined) {
       // An emptied number field reads as NaN, which no range comparison catches
       if (!Number.isInteger(settings.history.historyLimit) || settings.history.historyLimit < 0 || settings.history.historyLimit > 10000) {
-        fail('#historyLimit', text('settingsUiErrHistoryLimit', 'History limit must be between 0 (unlimited) and 10000'));
+        fail('#historyLimit', text('settingsUiErrHistoryLimit', 'History limit must be a whole number from 0 to 10000 (0 keeps up to 1,000 entries)'));
       }
     }
 
@@ -1096,7 +1159,7 @@ SettingsUI.setupEventListeners = function() {
           if (this.settings.detection[listKey].includes(domain)) {
             NotificationHelper.info(listKey === 'allowedDomains'
               ? _fmt2('domainAlreadyAllowedFmt', `${domain} is already on the list`, domain)
-              : _fmt2('domainAlreadyBlacklistedFmt', `${domain} is already blacklisted`, domain));
+              : _fmt2('domainAlreadyBlacklistedFmt', `${domain} is already skipped`, domain));
             return;
           }
 
@@ -1110,7 +1173,7 @@ SettingsUI.setupEventListeners = function() {
       });
     }
 
-    // JS API card: "Available Events" / "Usage Example" are collapsed by default
+    // JS API card: "Available events" / "Usage example" are collapsed by default
     document.querySelectorAll('#settingsModal .api-collapsible-header').forEach((header) => {
       if (header.dataset.collapsibleReady) return;
       header.dataset.collapsibleReady = '1';
@@ -1714,7 +1777,7 @@ SettingsUI.checkWatchNow = async function(button) {
       const failed = Number(result.failed) || 0;
       const done = result.checked + result.skipped + failed === 0
         ? text('settingsHistoryWatchNothing', 'No page is watched yet: pin a page in History and choose Watch for changes.')
-        : text('settingsHistoryWatchDoneFmt', 'Checked {0} pages, {1} changed', result.checked, result.changed)
+        : text('settingsHistoryWatchDoneFmt', 'Pages checked: {0}, changed: {1}', result.checked, result.changed)
           + (failed ? ` · ${text('settingsHistoryWatchUncheckedFmt', '{0} could not be checked', failed)}` : '');
       // Every page failed: nothing was checked, which is not a success
       if (failed && !result.checked) NotificationHelper.error(done);
@@ -1745,12 +1808,12 @@ SettingsUI.backUpHistoryNow = async function(button) {
       NotificationHelper.error(text('workerOutdatedHint', "The extension's background part is out of date. Reload the extension on the extensions page and try again."));
     } else {
       // The worker's own reason (for example the browser refusing the download) follows the message
-      const reason = result && result.error ? `: ${String(result.error).slice(0, 160)}` : '';
-      NotificationHelper.error(`${text('settingsHistoryBackupFailed', 'History backup failed')}${reason}`);
+      const failed = text('settingsHistoryBackupFailed', 'History backup failed');
+      NotificationHelper.error(result && result.error ? FormatUtils.labelValue(failed, String(result.error).slice(0, 160)) : failed);
     }
   } catch (error) {
-    const reason = error && error.message ? `: ${String(error.message).slice(0, 160)}` : '';
-    NotificationHelper.error(`${text('settingsHistoryBackupFailed', 'History backup failed')}${reason}`);
+    const failed = text('settingsHistoryBackupFailed', 'History backup failed');
+    NotificationHelper.error(error && error.message ? FormatUtils.labelValue(failed, String(error.message).slice(0, 160)) : failed);
   } finally {
     if (button) button.disabled = false;
     SettingsUI.refreshHistoryStorage.call(this);

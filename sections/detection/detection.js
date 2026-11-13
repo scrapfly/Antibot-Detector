@@ -6,6 +6,8 @@ class Detection {
     this.searchQuery = '';
     // The category chips under the search (DetectionFilter): kept while the popup is open
     this.activeChips = DetectionFilter.normalizeChips();
+    // The Strong toggle inside the search box (80% or more), kept as the chips are
+    this.strongOnly = false;
     // Settings → Detection → Category order
     this.categoryOrder = [...Categories.KEYS];
     this.sortBy = 'category';
@@ -290,6 +292,9 @@ class Detection {
   toggleFilterChip(...args) {
     return DetectionUI.toggleFilterChip.apply(this, args);
   }
+  toggleStrongFilter(...args) {
+    return DetectionUI.toggleStrongFilter.apply(this, args);
+  }
   clearFilters(...args) {
     return DetectionUI.clearFilters.apply(this, args);
   }
@@ -467,6 +472,9 @@ class Detection {
         if (chip) this.toggleFilterChip(chip.dataset.filter);
       });
     }
+    // The Strong toggle inside the search box: only the results with strong evidence
+    const strongToggle = document.querySelector('#detectionStrongToggle');
+    if (strongToggle) strongToggle.addEventListener('click', () => this.toggleStrongFilter());
     const clearFiltersBtn = document.querySelector('#detectionClearFilters');
     if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', () => this.clearFilters());
 
@@ -628,7 +636,7 @@ class Detection {
           }
         } catch (error) {
           Logger.error('UI', 'Failed to remove from blacklist:', error);
-          const removeErrMsg = (typeof I18n !== 'undefined') ? I18n.tr('failedRemoveBlacklist', 'Failed to remove from blacklist') : 'Failed to remove from blacklist';
+          const removeErrMsg = (typeof I18n !== 'undefined') ? I18n.tr('failedRemoveBlacklist', 'Could not remove the site from the skipped sites') : 'Could not remove the site from the skipped sites';
           NotificationHelper.error(removeErrMsg);
         }
       });

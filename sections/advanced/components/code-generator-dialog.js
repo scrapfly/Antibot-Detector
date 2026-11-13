@@ -50,7 +50,7 @@
         if (types.length) {
             const typeGroup = node('div', 'advanced-code-dialog__types', content);
             typeGroup.setAttribute('role', 'group');
-            typeGroup.setAttribute('aria-label', tr('advCommonExportOptions', 'Export Options'));
+            typeGroup.setAttribute('aria-label', tr('advCommonExportOptions', 'Export options'));
             types.forEach(item => {
                 const button = node('button', 'advanced-code-dialog__type export-type-btn', typeGroup, item.label);
                 button.type = 'button'; button.dataset.type = item.id;
@@ -60,7 +60,7 @@
         }
         const tabs = node('div', 'advanced-code-dialog__languages', content);
         tabs.setAttribute('role', 'tablist');
-        tabs.setAttribute('aria-label', tr('advCommonExportCode', 'Export Code'));
+        tabs.setAttribute('aria-label', tr('advCommonExportCode', 'Export code'));
         const tabButtons = languages.map((item, index) => {
             const button = node('button', 'advanced-code-dialog__language lang-tab', tabs, item.label);
             button.type = 'button'; button.dataset.lang = item.id;
@@ -68,7 +68,9 @@
             button.setAttribute('role', 'tab'); button.setAttribute('aria-controls', `${id}-panel`);
             button.addEventListener('click', () => selectLanguage(item.id));
             button.addEventListener('keydown', event => {
-                const directions = { ArrowRight: 1, ArrowLeft: -1, Home: -index, End: languages.length - 1 - index };
+                // Arabic draws the tabs right to left: there the left arrow goes on to the next tab
+                const step = typeof getComputedStyle === 'function' && getComputedStyle(button).direction === 'rtl' ? -1 : 1;
+                const directions = { ArrowRight: step, ArrowLeft: -step, Home: -index, End: languages.length - 1 - index };
                 if (!Object.prototype.hasOwnProperty.call(directions, event.key)) return;
                 event.preventDefault();
                 const next = (index + directions[event.key] + languages.length) % languages.length;
@@ -116,7 +118,7 @@
             });
             const item = languages.find(entry => entry.id === language);
             codeLabel.textContent = item ? item.label : '';
-            textarea.setAttribute('aria-label', `${options.title}: ${codeLabel.textContent}`);
+            textarea.setAttribute('aria-label', FormatUtils.labelValue(options.title, codeLabel.textContent));
             description.textContent = typeof options.description === 'function' ? options.description(type, language) : (options.description || '');
         }
         function selectType(next) {
@@ -295,7 +297,7 @@ func main() {
     function openScriptUrls(owner, name, scripts) {
         const urls = (Array.isArray(scripts) ? scripts : []).map(script => script && script.url).filter(Boolean);
         return open(owner, {
-            title: tr('advCommonExportCode', 'Export Code'),
+            title: tr('advCommonExportCode', 'Export code'),
             languages: SCRIPT_URL_LANGUAGES.map(label => ({ id: label, label })),
             getCode: (_type, language) => scriptUrlsCode(name, urls, language)
         });

@@ -59,6 +59,8 @@ function pageFor(detector, ids) {
     else if (fx.header) page.headers[fx.header[0]] = fx.header[1];
     else if (fx.url) page.networkUrls.push({ url: fx.url, type: 'script', method: 'GET' });
     else if (fx.source) page.content.push({ type: 'inline', content: fx.source });
+    // A block page's own HTML, as a content rule scoped to "page" reads it (3.1.9)
+    else if (fx.page) page.pageSource = `${page.pageSource || ''}${fx.page}`;
     else if (fx.dom) page.dom.push({ ...fx.dom, selector: fx.dom.tagName, id: fx.dom.attributes.id || '', class: fx.dom.attributes.class || '', src: fx.dom.attributes.src });
     else if (fx.payload) page.payloads.push({ ...fx.payload, type: 'text' });
     else if (fx.response) page.responses.push({ ...fx.response, type: 'response' });
@@ -162,7 +164,8 @@ test('forty-nine anti-bot definitions: v2, explicit ids, graded combinations', (
       assert.ok(Number.isInteger(r.confidence) && r.confidence > 0 && r.confidence <= 90, `${d.id}/${r.id}: rule confidence`);
       if (r.method === 'content') {
         assert.ok(r.confidence <= 30, `${d.id}/${r.id}: source text is weak evidence`);
-        assert.equal(r.scope, 'scripts', r.id);
+        // Script source, or (3.1.9) a block page's own HTML: never the text of an ordinary page
+        assert.ok(r.scope === 'scripts' || r.scope === 'page', `${r.id}: scope ${r.scope}`);
       }
       if (r.method === 'url') assert.equal(r.textRegex, true, `${r.id}: anchored regex, not substring`);
     }

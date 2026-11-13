@@ -228,7 +228,7 @@ class Element {
 
 function noteHarness({ url, detection, outcome = 'complete', failing = false }) {
   const note = new Element(), badge = new Element(), description = new Element();
-  badge.textContent = '✓ No Fingerprinting';
+  badge.textContent = '✓ No fingerprinting';
   description.textContent = 'No matching antibot, CAPTCHA, or fingerprinting signals were found on this page.';
   note.hidden = true;
   const debug = [];

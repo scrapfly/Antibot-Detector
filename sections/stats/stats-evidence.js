@@ -22,7 +22,7 @@
       const value = element('div', 'stats-kpi-row');
       value.appendChild(element('div', 'stats-kpi-value', share(row.strong / row.withConfidence)));
       tile.append(element('div', 'stats-kpi-label', U.categoryLabel(row.category)), value, element('div', 'stats-kpi-sub', tr('statsStrongEvidence', 'Strong evidence')));
-      U.setTip(tile, tr('statsStrongEvidence', 'Strong evidence'), fmt('statsStrongEvidenceTipFmt', '{0} of {1} detections score 80% or more.', num(row.strong), num(row.withConfidence)));
+      U.setTip(tile, tr('statsStrongEvidence', 'Strong evidence'), fmt('statsStrongEvidenceTipFmt', 'Detections scoring 80% or more: {0} of {1}.', num(row.strong), num(row.withConfidence)));
       host.appendChild(tile);
     });
   }
@@ -47,7 +47,7 @@
     const rows = s.unconfirmed.map(row => ({
       label: row.name, value: row.pages, color: U.ink(row.category),
       sub: row.driver ? fmt('statsUnconfirmedDriverFmt', 'Mostly found through {0}: {1}', U.methodLabel(row.driver.method), row.driver.label) : tr('statsUnconfirmedNoDriver', 'No single signal stands out.'),
-      meta: { text: (row.weak ? tr('statsTierWeak', 'Weak') + ': ' + num(row.weak) : tr('statsTierModerate', 'Moderate') + ': ' + num(row.moderate)), color: U.ink(row.category) },
+      meta: { text: (row.weak ? FormatUtils.labelValue(tr('statsTierWeak', 'Weak'), num(row.weak)) : FormatUtils.labelValue(tr('statsTierModerate', 'Moderate'), num(row.moderate))), color: U.ink(row.category) },
       tip: [row.name, { label: tr('statsPagesColumn', 'Pages'), value: num(row.pages) },
         { label: tr('statsTierStrong', 'Strong'), value: num(row.strong) }, { label: tr('statsTierModerate', 'Moderate'), value: num(row.moderate) }, { label: tr('statsTierWeak', 'Weak'), value: num(row.weak) }] }));
     root.StatsCharts.rank(host, rows, U.chartOptions(tr('statsUnconfirmed', 'Mentioned, not confirmed'), {}));

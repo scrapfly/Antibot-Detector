@@ -324,6 +324,8 @@ class History {
       const key = chip.dataset.filter;
       const on = HistoryFilter.FLAGS.includes(key) ? this.activeChips[key] === true : this.activeChips.categories.includes(key);
       chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+      // Error status is turned on from the "…" menu: its chip is there only while it is on, to show it and to turn it off
+      if (key === 'httpError') chip.hidden = !on;
       const own = chip.querySelector('[data-ui-icon]');
       if (own && !own.firstChild) own.innerHTML = FormatUtils.uiIconSvg(own.dataset.uiIcon);
       if (!chip.dataset.category) return;
@@ -332,11 +334,13 @@ class History {
       const colour = this.detectorManager?.getCategoryInfo?.(key)?.colour || FormatUtils.DEFAULT_CATEGORY_COLORS[key];
       if (colour) chip.style.setProperty('--chip-color', colour);
     });
+    const menuItem = document.querySelector('#historyHttpErrorsBtn');
+    if (menuItem) menuItem.setAttribute('aria-checked', this.activeChips.httpError === true ? 'true' : 'false');
   }
 
   /**
    * Turn a chip on or off (Pinned, Changed, Combinations or a category) and show what it leaves.
-   * @param {string} key - 'pinned', 'changed', 'combinations', 'antibot', 'captcha' or 'fingerprint'
+   * @param {string} key - 'pinned', 'changed', 'combinations', 'httpError', 'antibot', 'captcha' or 'fingerprint'
    */
   toggleFilterChip(key) {
     const chips = this.activeChips;
@@ -409,6 +413,16 @@ class History {
       return `<span class="history-changed-badge" ${FormatUtils.tipAttrs(_tr('historyChangedBadge', 'Changed'), when, rows)}>${FormatUtils.escapeHtml(_tr('historyChangedBadge', 'Changed'))}</span>`;
     };
 
+    // The page's HTTP status when its scan knew it (none on an entry saved before 3.1.9): a protocol number, ASCII digits in
+    // every language, amber for 4xx and red for 5xx
+    const httpTip = _tr('detectionTipHttpStatus', 'The HTTP status code the page answered with when it was scanned. An error (4xx or 5xx) often means the request was blocked or challenged.');
+    const httpStatusHtml = (item) => {
+      const code = typeof HttpStatus !== 'undefined' ? HttpStatus.of(item.httpStatus) : null;
+      if (!code) return '';
+      const name = FormatUtils.t('detectionHttpStatusFmt', 'HTTP status: {0}', code);
+      return `<span class="history-http history-http--${HttpStatus.tone(code)}" dir="ltr" role="img" aria-label="${FormatUtils.escapeAttr(name)}" ${FormatUtils.tipAttrs(name, httpTip)}>${code}</span>`;
+    };
+
     let cardCount = 0;
     const buildHistoryItemHtml = (item) => {
       const timeAgo = this.getTimeAgo(new Date(item.timestamp));
@@ -439,7 +453,7 @@ class History {
       const confidenceTip = hasCardDetections ? FormatUtils.confidenceTip(cardDetections, confidenceTitle) : null;
       const difficultyTip = hasCardDetections ? FormatUtils.difficultyTip(cardDetections, summary.difficulty, difficultyTitle) : null;
       // What a screen reader says for each number: the tips are only on hover (their targets cannot take the focus)
-      const detectionsName = FormatUtils.escapeAttr(`${summary.labels.detections}: ${summary.totalDetections}`);
+      const detectionsName = FormatUtils.escapeAttr(FormatUtils.labelValue(summary.labels.detections, summary.totalDetections));
       // The title, "…" and Scrapfly are named for their card: twenty buttons that all say "More actions" tell one from another by it
       const cardNumber = ++cardCount;
 
@@ -458,7 +472,7 @@ class History {
             <div class="history-item-content">
               <div class="history-title-row">
                 ${item.pinned === true ? `<span class="history-pin" role="img" aria-label="${FormatUtils.escapeAttr(item.autoPinned === true ? autoPinnedTip : pinnedTip)}" ${FormatUtils.tipAttrs(item.autoPinned === true ? autoPinnedTip : pinnedTip)}>${PIN_ICON}</span>` : ''}
-                ${item.watch === true ? `<span class="history-watch" role="img" aria-label="${FormatUtils.escapeAttr(watchTip)}" ${FormatUtils.tipAttrs(watchTip, item.watchedAt ? _tr('historyWatchCheckedFmt', 'Last checked {0}').replace('{0}', FormatUtils.getTimeAgo(item.watchedAt)) : _tr('historyWatchNever', 'Not checked yet'))}>${WATCH_ICON}</span>` : ''}
+                ${item.watch === true ? `<span class="history-watch" role="img" aria-label="${FormatUtils.escapeAttr(watchTip)}" ${FormatUtils.tipAttrs(watchTip, item.watchedAt ? _tr('historyWatchCheckedFmt', 'Last checked {0}').replace('{0}', FormatUtils.getTimeAgo(item.watchedAt, { inline: true })) : _tr('historyWatchNever', 'Not checked yet'))}>${WATCH_ICON}</span>` : ''}
                 <div class="history-title" title="${attrTitle}" id="history-title-${cardNumber}">${safeTitle}</div>
                 ${changedBadgeHtml(item)}
               </div>
@@ -491,6 +505,7 @@ class History {
             <div class="history-detections">
               ${this.renderHistorySummary(cardDetections)}
             </div>
+            ${httpStatusHtml(item)}
             <span class="history-timestamp"${savedAt ? ` data-tip="${FormatUtils.escapeAttr(savedAt)}"` : ''}>${FormatUtils.escapeHtml(timeAgo)}</span>
           </div>
         </div>
@@ -597,7 +612,7 @@ class History {
         return { label: FormatUtils.detectorName(d) || FormatUtils.t('timeUnknown', 'Unknown'), value: `${value}%`, tone: FormatUtils.confidenceTone(value) };
       });
       if (inCategory.length > 8) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', inCategory.length - 8) });
-      const chipTitle = `${FormatUtils.categoryLabel(key)}: ${inCategory.length}`;
+      const chipTitle = FormatUtils.labelValue(FormatUtils.categoryLabel(key), inCategory.length);
       return `<span class="history-cat-count${inCategory.length ? '' : ' is-zero'}" ${FormatUtils.tipAttrs(chipTitle, '', rows)} role="img" aria-label="${FormatUtils.escapeAttr(chipTitle)}">`
         + `<span class="category-icon" style="color:${colour}" aria-hidden="true">${FormatUtils.categoryIconSvg(key)}</span>`
         + `<span class="history-cat-value">${inCategory.length}</span></span>`;
@@ -635,7 +650,7 @@ class History {
     const rows = ranked.slice(0, 8).map(row => ({ label: row.label, value: `${row.value}%`, tone: FormatUtils.confidenceTone(row.value) }));
     if (ranked.length > 8) rows.push({ label: FormatUtils.t('tipMoreFmt', '+{0} more', ranked.length - 8) });
     const label = FormatUtils.t('detectionModalCombinations', 'Matched combinations');
-    const chipTitle = `${label}: ${fired.length}`;
+    const chipTitle = FormatUtils.labelValue(label, fired.length);
     return `<span class="history-cat-count history-combo-count${fired.length ? '' : ' is-zero'}" ${FormatUtils.tipAttrs(chipTitle, '', rows)} role="img" aria-label="${FormatUtils.escapeAttr(chipTitle)}">`
       + `<span class="category-icon" aria-hidden="true">${FormatUtils.uiIconSvg('combination')}</span>`
       + `<span class="history-cat-value">${fired.length}</span></span>`;
@@ -707,7 +722,7 @@ class History {
         detections: _tr('statDetections', 'Detections'),
         confidence: _tr('statConfidence', 'Confidence'),
         difficulty: _tr('statDifficulty', 'Difficulty'),
-        scope: _tr('statCacheScope', 'Cache Scope')
+        scope: _tr('statCacheScope', 'Cache scope')
       }
     };
   }
@@ -746,18 +761,18 @@ class History {
           ${segments.map(seg => {
             const count = s.categoryCounts[seg.key];
             const pct = Math.round((count / s.totalDetections) * 100);
-            const detail = FormatUtils.t('historyCategoryShareFmt', '{0} of {1} detections · {2}%', count, s.totalDetections, pct);
-            return `<span class="hm-bar-seg cat-${seg.key}" style="flex: ${count}" role="img" aria-label="${FormatUtils.escapeAttr(`${seg.label}: ${detail}`)}" data-tip="${FormatUtils.escapeAttr(seg.label)}" data-tip-detail="${FormatUtils.escapeAttr(detail)}" data-tip-dot="cat-${seg.key}"></span>`;
+            const detail = FormatUtils.t('historyCategoryShareFmt', 'Detections: {0} of {1} · {2}%', count, s.totalDetections, pct);
+            return `<span class="hm-bar-seg cat-${seg.key}" style="flex: ${count}" role="img" aria-label="${FormatUtils.escapeAttr(`${seg.label} · ${detail}`)}" data-tip="${FormatUtils.escapeAttr(seg.label)}" data-tip-detail="${FormatUtils.escapeAttr(detail)}" data-tip-dot="cat-${seg.key}"></span>`;
           }).join('')}
         </div>
         <div class="hm-legend">
           ${segments.map(seg => {
             const count = s.categoryCounts[seg.key];
             const pct = Math.round((count / s.totalDetections) * 100);
-            const detail = FormatUtils.t('historyCategoryShareFmt', '{0} of {1} detections · {2}%', count, s.totalDetections, pct);
+            const detail = FormatUtils.t('historyCategoryShareFmt', 'Detections: {0} of {1} · {2}%', count, s.totalDetections, pct);
             return `<span class="hm-legend-item" ${FormatUtils.tipAttrs(seg.label, detail, [], `cat-${seg.key}`)}><i class="hm-dot cat-${seg.key}"></i>${esc(seg.label)}<b>${count}</b></span>`;
           }).join('')}
-          <span class="hm-legend-scope" ${FormatUtils.tipAttrs(`${s.labels.scope}: ${s.scopeDisplay}`, this.getScopeHint(item.cacheScope))}>
+          <span class="hm-legend-scope" ${FormatUtils.tipAttrs(FormatUtils.labelValue(s.labels.scope, s.scopeDisplay), this.getScopeHint(item.cacheScope))}>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a13 13 0 0 0 0 18a13 13 0 0 0 0-18M3 12h18"/></svg>${esc(s.scopeDisplay)}
           </span>
         </div>
@@ -1256,6 +1271,11 @@ class History {
     pick.append(field, where);
     const range = make('div', 'history-dialog-count history-compare-range');
     range.setAttribute('role', 'status');
+    // Under the dates, the two scans' HTTP status when either knew it ("HTTP status: 200 → 403"): a page that started answering
+    // 403 is a change too
+    const status = make('div', 'history-dialog-count history-compare-http');
+    status.hidden = true;
+    const rtl = typeof I18n !== 'undefined' && typeof I18n.dir === 'function' && I18n.dir() === 'rtl';
     const summary = make('ul', 'history-compare-summary');
     summary.setAttribute('role', 'list');
     const result = make('div', 'history-compare-result');
@@ -1272,7 +1292,7 @@ class History {
     copyIcon.innerHTML = COPY;
     copySummary.append(copyIcon, make('span', 'history-compare-copy-text', t('historyCompareCopySummary', 'Copy summary')));
     const form = make('div', 'history-dialog-form history-compare');
-    form.append(pick, range, summary, copySummary, result);
+    form.append(pick, range, status, summary, copySummary, result);
 
     let current = null;
     let unchangedOpen = null; // what the person chose for Unchanged (true = open), kept when another scan is picked
@@ -1353,6 +1373,9 @@ class History {
       // Hover texts go through the shared tooltip (data-tip): a plain title would be adopted once and then go stale.
       // The list has none: it has the focus when the dialog opens, and a tip would cover the dialog straight away
       hover(range, rangeText(dateText(current.earlier.timestamp), dateText(current.later.timestamp)));
+      const statusLine = HistoryCompare.statusText(current, { t, rtl });
+      status.textContent = statusLine;
+      status.hidden = !statusLine;
       const place = HistoryCompare.whereText(item, other);
       where.hidden = !place;
       where.textContent = place;
@@ -1395,7 +1418,7 @@ class History {
     if (copy && current) {
       await FormatUtils.copyToClipboard(HistoryCompare.toMarkdown(current, {
         host: siteHost, address: String(item.url || '').replace(/[?#].*$/s, ''),
-        t, methodLabel, categoryLabel, dateText
+        t, methodLabel, categoryLabel, dateText, rtl
       }));
     }
     return true;
@@ -1493,11 +1516,11 @@ class History {
       text += '   ' + L('clipboardConfidenceFmt', 'Confidence: {0}%', confidence) + '\n';
 
       if (detection.matches && detection.matches.length > 0) {
-        text += '   ' + L('clipboardDetectionMethodsHeading', 'Detection Methods:') + '\n';
+        text += '   ' + L('clipboardDetectionMethodsHeading', 'Detection methods:') + '\n';
         detection.matches.forEach(match => {
           const methodType = (match.type || 'unknown').replace(/_/g, ' ').toUpperCase();
           const value = History.copyLabel(match) || unknownValue;
-          text += `     - ${methodType}: ${value} (${match.confidence || 0}%)\n`;
+          text += `     - ${FormatUtils.labelValue(methodType, value)} (${match.confidence || 0}%)\n`;
         });
       }
       text += '\n';
@@ -1547,11 +1570,11 @@ class History {
     try {
       const domain = this.getDomainFromUrl(historyItem.url);
       const confirmed = await NotificationHelper.confirm({
-        title: _tr('dialogClearCacheTitle', 'Clear Cache'),
+        title: _tr('dialogClearCacheTitle', 'Clear cache'),
         message: _fmt('dialogClearCacheMessageFmt', `Clear cached detection data for ${domain}? The history entry will be kept.`, domain),
         type: 'warning',
         tone: 'danger',
-        confirmText: _tr('buttonClearCache', 'Clear Cache'),
+        confirmText: _tr('buttonClearCache', 'Clear cache'),
         cancelText: _tr('btnCancel', 'Cancel'),
         emphasizeAction: true
       });
@@ -1621,9 +1644,9 @@ class History {
       }
 
       const confirmed = await NotificationHelper.confirm({
-        title: _tr('addBlacklistTitle', 'Add to Blacklist'),
-        message: _fmt('addBlacklistMsgFmt', `Domain "${domain}" will be excluded from all future detections. You can remove it later in Settings.`, domain),
-        confirmText: _tr('addBlacklistBtn', 'Add to Blacklist'),
+        title: _tr('addBlacklistTitle', 'Skip this site'),
+        message: _fmt('addBlacklistMsgFmt', `"${domain}" will not be scanned from now on. You can undo this in Settings → Detection → Sites to scan.`, domain),
+        confirmText: _tr('addBlacklistBtn', 'Skip this site'),
         cancelText: _tr('btnCancel', 'Cancel'),
         type: 'danger',
         emphasizeAction: true
@@ -1641,7 +1664,7 @@ class History {
       }
 
       if (settings.detection.blacklistedDomains.includes(domain)) {
-        NotificationHelper.info(_fmt('alreadyBlacklistedFmt', `Domain "${domain}" is already blacklisted`, domain));
+        NotificationHelper.info(_fmt('alreadyBlacklistedFmt', `"${domain}" is already skipped`, domain));
         return;
       }
 
@@ -1652,10 +1675,10 @@ class History {
         throw new Error('Failed to save settings');
       }
 
-      NotificationHelper.success(_fmt('notificationDomainBlacklistedFmt', `Added "${domain}" to blacklist`, domain));
+      NotificationHelper.success(_fmt('notificationDomainBlacklistedFmt', `Added "${domain}" to the skipped sites`, domain));
     } catch (error) {
       Logger.warn('UI', '[History] Blacklist add failed', error);
-      NotificationHelper.error(_tr('notificationBlacklistFailed', 'Failed to add to blacklist'));
+      NotificationHelper.error(_tr('notificationBlacklistFailed', 'Could not skip this site'));
     }
   }
 
@@ -1670,7 +1693,7 @@ class History {
     try {
       const domain = this.getDomainFromUrl(historyItem.url);
       const confirmed = await NotificationHelper.confirm({
-        title: _tr('dialogDeleteHistoryTitle', 'Delete History Item'),
+        title: _tr('dialogDeleteHistoryTitle', 'Delete History item'),
         message: _fmt('dialogDeleteHistoryMessageFmt', `Are you sure you want to delete this detection from ${domain}?`, domain),
         type: 'danger',
         confirmText: _tr('btnDelete', 'Delete'),
@@ -1716,7 +1739,7 @@ class History {
 
     return ordered.map(({ detection, index }) => {
       const rawName = FormatUtils.detectorName(detection);
-      const name = rawName || _tr('unknownDetection', 'Unknown Detection');
+      const name = rawName || _tr('unknownDetection', 'Unknown detection');
       const safeName = FormatUtils.escapeAttr(name); // also in alt="..."
       const category = detection.category || '';
       const categoryKey = Categories.labelOf(category)?.[0] || null;
@@ -2351,7 +2374,7 @@ class History {
       shown.text.textContent = FormatUtils.t('historyExportShownFmt', 'Only the entries shown ({0})', listed.length);
       const n = matching(listed).length;
       count.textContent = n
-        ? FormatUtils.t('historyExportCountFmt', '{0} of {1} entries will be exported', n, this.historyItems.length)
+        ? FormatUtils.t('historyExportCountFmt', 'Entries to export: {0} of {1}', n, this.historyItems.length)
         : FormatUtils.t('historyExportNone', 'No entries match these filters');
       count.classList.toggle('is-empty', n === 0);
     };
@@ -2426,7 +2449,7 @@ class History {
 
       const mode = await NotificationHelper.chooseImportMode({
         title: _tr('importHistoryTitle', 'Import History'),
-        message: _fmt('importHistoryModeMessageFmt', `Import ${usable} history items? Your current history has ${this.historyItems.length}.<br>Merge adds the new items to it. Replace deletes it first.`, usable, this.historyItems.length),
+        message: _fmt('importHistoryModeMessageFmt', `Entries to import: ${usable}. Entries in your current history: ${this.historyItems.length}.<br>Merge adds the new entries to it. Replace deletes it first.`, usable, this.historyItems.length),
         replaceText: _tr('replaceOption', 'Replace')
       });
 
@@ -2654,7 +2677,7 @@ class History {
   /**
    * Load HTML template into history tab
    */
-  /** The entry menu offers "Add to Blacklist" or "Scan this site", whichever list Settings → Detection → Sites to scan reads. */
+  /** The entry menu offers "Skip this site" or "Scan this site", whichever list Settings → Detection → Sites to scan reads. */
   syncScanModeMenu() {
     const mode = this.scanMode || 'blocklist';
     for (const element of document.querySelectorAll('#historyItemMenu [data-scan-mode-show]')) element.hidden = element.dataset.scanModeShow !== mode;
@@ -2686,17 +2709,7 @@ class History {
     // Setup search functionality
     const searchInput = document.querySelector('#historySearch');
     if (searchInput) {
-      // "/" jumps to the search box while the History tab is open and nothing is being typed
-      document.addEventListener('keydown', (e) => {
-        if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey || e.defaultPrevented) return;
-        const t = e.target;
-        if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
-        const tab = document.querySelector('#historyTab');
-        if (!tab || tab.style.display === 'none' || document.querySelector('.modal.show, .modal-overlay.show')) return;
-        e.preventDefault();
-        searchInput.focus();
-        searchInput.select();
-      });
+      // "/" jumps here while the History tab is open: SearchShortcut (modules/ui/search-shortcut.js), for every tab
       searchInput.addEventListener('input', (e) => {
         this.handleSearch(e.target.value);
       });
@@ -2805,7 +2818,7 @@ class History {
           title: _tr('dialogClearHistoryTitle', 'Clear History'),
           message: _tr('dialogClearHistoryMessage', 'Are you sure you want to clear all history? This action cannot be undone.'),
           type: 'danger',
-          confirmText: _tr('buttonClearAll', 'Clear All'),
+          confirmText: _tr('buttonClearAll', 'Clear all'),
           cancelText: _tr('btnCancel', 'Cancel'),
           emphasizeAction: true
         });
@@ -2826,6 +2839,12 @@ class History {
     const statsBtn = document.querySelector('#historyTab #openStatsBtn');
     if (statsBtn) {
       statsBtn.addEventListener('click', () => this.openStatistics());
+    }
+
+    // Error status, from the "…" menu (the toolbar menu closes first, so the focus goes back to its button)
+    const httpErrorsBtn = document.querySelector('#historyTab #historyHttpErrorsBtn');
+    if (httpErrorsBtn) {
+      httpErrorsBtn.addEventListener('click', () => this.toggleFilterChip('httpError'));
     }
 
     // History is paused: Resume, in the note above the list and in the empty state

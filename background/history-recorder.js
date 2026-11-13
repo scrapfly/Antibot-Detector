@@ -340,6 +340,8 @@ class HistoryRecorder {
           && HistoryPolicy.shouldAutoPin(detectionResults, settings)
           && HistoryPolicy.countAutoPins(history) < HistoryPolicy.MAX_AUTO_PINS;
 
+        // The page's HTTP status when this scan knew it (none for a cached result, a page its service worker answered...)
+        const httpStatus = HistoryRecorder.httpStatusOf(pageData.httpStatus);
         const fresh = {
           url: entryUrl,
           hostname: entryHostname,
@@ -350,6 +352,7 @@ class HistoryRecorder {
           detectionCount: detectionResults.length,
           categories: [...new Set(detectionResults.map(d => d.category))],
           cacheScope: cacheScope,
+          ...(httpStatus ? { httpStatus } : {}),
           ...(fromCache ? { fromCache: true } : {})
         };
         // A change since the earlier scan is marked on the entry (the badge in History)
@@ -377,6 +380,8 @@ class HistoryRecorder {
             updated.changed = { ...updated.changed, seen: (Number(updated.changed.seen) || 0) + 1 };
           }
           if (!fromCache) delete updated.fromCache;
+          // A new scan with no known status says nothing about the page's earlier answer: the old code does not stay beside it
+          if (!keepsScan && !httpStatus) delete updated.httpStatus;
           if (pinsItself && kept.pinned !== true && kept.unpinned !== true) { updated.pinned = true; updated.autoPinned = true; }
           next = [updated, ...history.filter((_, i) => i !== duplicateAt)];
         } else {
@@ -414,10 +419,19 @@ class HistoryRecorder {
    * whose protections change, when Settings → History alerts for pinned pages or for all).
    * @param {string} entryId
    * @param {Array} detectionResults  the finished results of the check
+   * @param {{httpStatus?: number}} [extra]  the HTTP status the checked page answered with, when known
    * @returns {Promise<{found: boolean, changed: boolean, added?: string[], removed?: string[]}>}
    */
-  static async applyWatchResult(entryId, detectionResults, chrome, now = Date.now()) {
+  static async applyWatchResult(entryId, detectionResults, chrome, now = Date.now(), extra = {}) {
     const settings = await Utils.getHistorySettings();
+    // The status the check's page answered with: it replaces the entry's when it is known (a check with none keeps the old one,
+    // unless it brings a new scan, which never shows another scan's status)
+    const httpStatus = this.httpStatusOf(extra && extra.httpStatus);
+    const withStatus = (entry) => {
+      const next = Object.assign({}, entry);
+      if (httpStatus) next.httpStatus = httpStatus;
+      return next;
+    };
     const { result } = await HistoryStore.mutate((history) => {
       const index = history.findIndex(item => item && item.id === entryId && item.pinned === true && item.watch === true);
       if (index === -1) return { result: { found: false, changed: false } };
@@ -425,9 +439,9 @@ class HistoryRecorder {
       // An entry recorded from the cache (maybe another page's result) is not what this page had: the check only
       // takes its place, as the page's first real scan
       if (entry.fromCache === true) {
-        const { fromCache: _cached, ...rest } = entry;
+        const { fromCache: _cached, httpStatus: _status, ...rest } = entry;
         const next = history.slice();
-        next[index] = Object.assign(rest, { watchedAt: now, detections: detectionResults, detectionCount: detectionResults.length,
+        next[index] = Object.assign(rest, httpStatus ? { httpStatus } : {}, { watchedAt: now, detections: detectionResults, detectionCount: detectionResults.length,
           categories: [...new Set(detectionResults.map(d => d.category))] });
         return { items: next, result: { found: true, changed: false } };
       }
@@ -436,10 +450,11 @@ class HistoryRecorder {
         const next = history.slice();
         // A check that agrees with the mark confirms it: going back later is a change of its own, not a blip
         const confirmed = entry.changed ? { changed: { ...entry.changed, seen: (Number(entry.changed.seen) || 0) + 1 } } : {};
-        next[index] = Object.assign({}, entry, { watchedAt: now }, confirmed);
+        next[index] = Object.assign(withStatus(entry), { watchedAt: now }, confirmed);
         return { items: next, result: { found: true, changed: false } };
       }
-      const updated = Object.assign({}, entry, {
+      const { httpStatus: _earlier, ...unstatused } = entry;
+      const updated = Object.assign(unstatused, httpStatus ? { httpStatus } : {}, {
         timestamp: now,
         watchedAt: now,
         detections: detectionResults,
@@ -454,6 +469,12 @@ class HistoryRecorder {
     }, chrome.storage.local);
     await this.notifyChange(result && result.alert, chrome).catch(() => {});
     return { found: !!(result && result.found), changed: !!(result && result.changed), added: result && result.added, removed: result && result.removed };
+  }
+
+  /** A page's HTTP status as History keeps it (HttpStatus.of), or null when it is not known. */
+  static httpStatusOf(value) {
+    if (typeof HttpStatus !== 'undefined' && HttpStatus && typeof HttpStatus.of === 'function') return HttpStatus.of(value);
+    return Number.isInteger(value) && value >= 100 && value <= 599 && value !== 304 ? value : null;
   }
 
   /** A watch check that got no answer: the time it was tried, so the next checks start with the other pages. */

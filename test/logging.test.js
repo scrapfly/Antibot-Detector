@@ -125,7 +125,7 @@ test('a report is one collapsed group with its detail lines', () => {
   assert.deepStrictEqual(off.out, []);
 });
 
-test('with the Log Collector on, info goes to the collector only and warnings still print', () => {
+test('with the Log collector on, info goes to the collector only and warnings still print', () => {
   const collected = [];
   const collector = { enabled: true, addLog: (level, args) => collected.push([level, args[0]]) };
   const { Logger, out } = loadLogger({ debug: true, collector });

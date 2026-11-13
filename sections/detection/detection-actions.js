@@ -25,9 +25,9 @@ DetectionActions.clearCache = async function() {
 
     try {
       const confirmed = await NotificationHelper.confirm({
-        title: detectionActionsTr('clearCacheConfirmTitle', 'Clear Cache'),
-        message: detectionActionsTr('clearCacheConfirmMsg', 'This will remove cached detection data for this domain and trigger a fresh analysis.'),
-        confirmText: detectionActionsTr('clearCacheConfirmBtn', 'Clear Cache'),
+        title: detectionActionsTr('clearCacheConfirmTitle', 'Clear cache'),
+        message: detectionActionsTr('clearCacheConfirmMsg', 'This removes the saved detection result for this page (with the Domain or Path cache scope, it may cover other pages too). The page is scanned again when you reload it.'),
+        confirmText: detectionActionsTr('clearCacheConfirmBtn', 'Clear cache'),
         cancelText: detectionActionsTr('btnCancel', 'Cancel'),
         type: 'warning',
         tone: 'danger',
@@ -240,13 +240,13 @@ DetectionActions.addToBlacklist = async function() {
       }
 
       const confirmed = await NotificationHelper.confirm({
-        title: detectionActionsTr('addBlacklistTitle', 'Add to Blacklist'),
+        title: detectionActionsTr('addBlacklistTitle', 'Skip this site'),
         message: detectionActionsFormat(
           'addBlacklistMsgFmt',
-          'Domain "{0}" will be excluded from all future detections. You can remove it later in Settings.',
+          '"{0}" will not be scanned from now on. You can undo this in Settings → Detection → Sites to scan.',
           domain
         ),
-        confirmText: detectionActionsTr('addBlacklistBtn', 'Add to Blacklist'),
+        confirmText: detectionActionsTr('addBlacklistBtn', 'Skip this site'),
         cancelText: detectionActionsTr('btnCancel', 'Cancel'),
         type: 'danger',
         emphasizeAction: true
@@ -267,7 +267,7 @@ DetectionActions.addToBlacklist = async function() {
       if (settings.detection.blacklistedDomains.includes(domain)) {
         NotificationHelper.info(detectionActionsFormat(
           'alreadyBlacklistedFmt',
-          'Domain "{0}" is already blacklisted',
+          '"{0}" is already skipped',
           domain
         ));
         return;
@@ -283,7 +283,7 @@ DetectionActions.addToBlacklist = async function() {
 
       NotificationHelper.success(detectionActionsFormat(
         'addedToBlacklistFmt',
-        'Added "{0}" to blacklist',
+        'Added "{0}" to the skipped sites',
         domain
       ));
 
@@ -292,7 +292,7 @@ DetectionActions.addToBlacklist = async function() {
       Logger.error('UI', 'Failed to add to blacklist:', error);
       NotificationHelper.error(detectionActionsFormat(
         'failedAddBlacklistFmt',
-        'Failed to add to blacklist: {0}',
+        'Could not skip this site: {0}',
         error.message
       ));
     }
@@ -376,7 +376,7 @@ DetectionActions.removeFromBlacklist = async function(domain) {
         this.blacklistedDomain = null;
         NotificationHelper.success(allow
           ? detectionActionsFormat('siteAllowedFmt', 'Added "{0}" to the sites to scan', domain)
-          : detectionActionsFormat('removedFromBlacklistFmt', 'Removed "{0}" from blacklist', domain));
+          : detectionActionsFormat('removedFromBlacklistFmt', 'Removed "{0}" from the skipped sites', domain));
 
         const blacklistWarning = document.querySelector('#blacklistWarning');
         if (blacklistWarning) blacklistWarning.style.display = 'none';
@@ -407,7 +407,7 @@ DetectionActions.removeFromBlacklist = async function(domain) {
       Logger.error('UI', 'Failed to remove from blacklist:', error);
       NotificationHelper.error(detectionActionsFormat(
         'failedRemoveBlacklistFmt',
-        'Failed to remove from blacklist: {0}',
+        'Could not remove the site from the skipped sites: {0}',
         error.message
       ));
     }
@@ -725,7 +725,10 @@ DetectionActions.describeShareExpiry = function(expiry) {
     const SECONDS = { 3600: ['shareExpire1H', '1 hour'], 86400: ['shareExpire1D', '1 day'],
       604800: ['shareExpire1W', '1 week'], 2592000: ['shareExpire30D', '30 days'] };
     switch (expiry?.kind) {
-      case 'days': return fmt('shareExpiryDaysFmt', `deleted after ${expiry.days} days`, expiry.days);
+      // One day has its own words ("1 day"); the count form is for two days or more
+      case 'days': return Number(expiry.days) === 1
+        ? fmt('shareExpiryAfterFmt', 'deleted after 1 day', tr('shareExpire1D', '1 day'))
+        : fmt('shareExpiryDaysFmt', `deleted after ${expiry.days} days`, expiry.days);
       case 'seconds': {
         const [key, fallback] = SECONDS[expiry.seconds] || ['shareExpire30D', '30 days'];
         return fmt('shareExpiryAfterFmt', `deleted after ${fallback}`, tr(key, fallback));

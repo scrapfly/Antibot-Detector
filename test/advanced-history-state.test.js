@@ -165,7 +165,7 @@ test('the History badge follows saved captures without opening the History tab',
   assert.equal(badge.style.display, 'none', 'cleared history hides the badge');
 });
 
-test('every history card has a tool tag in the current language, Analyze Scripts included', () => {
+test('every history card has a tool tag in the current language, Analyze scripts included', () => {
   const es = { btnCheckCookies: 'Comprobar cookies', btnAnalyzeScripts: 'Analizar scripts', advHistoryCaptureTag: 'Captura',
     btnExtractSiteKey: 'Extraer clave del sitio' };
   const grid = node();
@@ -185,14 +185,14 @@ test('every history card has a tool tag in the current language, Analyze Scripts
   }
   const Advanced = context.window.Advanced;
   const entry = (id, data) => ({ id, moduleId: 'awswaf', moduleName: 'AWS WAF', url: 'https://coinmarketcap.com/es/', timestamp: Date.now(), data });
-  // As saved: the worker's Analyze Scripts result has no label; Check Cookies kept the label of the language it ran in
+  // As saved: the worker's Analyze scripts result has no label; Check cookies kept the label of the language it ran in
   const captures = [
     entry('scripts', { schemaVersion: 1, tool: 'analysis', label: '', result: { scripts: [] } }),
-    entry('cookies', { schemaVersion: 1, tool: 'awswafCheckCookies', label: 'Check Cookies', result: {} }),
+    entry('cookies', { schemaVersion: 1, tool: 'awswafCheckCookies', label: 'Check cookies', result: {} }),
     entry('capture', { sensorData: 'x' }),
     entry('other', { schemaVersion: 1, tool: 'akamaiSomething', label: 'Tool <b>name</b>', result: {} })
   ];
-  assert.equal(Advanced.captureKind(captures[0]), 'scripts', 'filed under Analyze Scripts, not Other tools');
+  assert.equal(Advanced.captureKind(captures[0]), 'scripts', 'filed under Analyze scripts, not Other tools');
   const advanced = new Advanced({}, {});
   advanced.setupCaptureCardListeners = () => {};
   advanced.renderCaptureCards(captures, { querySelector: () => grid });

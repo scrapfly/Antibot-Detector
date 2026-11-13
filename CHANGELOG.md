@@ -5,6 +5,51 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.1.9] - 2026-11-13
+
+### Added
+
+- Rules editor: content rules can be limited to block and challenge pages ("Only block and challenge pages").
+- Detection: a "Strong (≥80%)" toggle inside the search box shows only detections with strong evidence.
+- Detection details: explains what the difficulty level means and links the vendor's website and its detection guide in your language.
+- Detection details: Open tools goes straight to the Advanced tools for that protection.
+- Detection: What was checked lists how many cookies, scripts, requests and headers a scan read and whether the JS hooks finished, also when nothing was found.
+- Detection details: cookie rows show when the cookie was set, how often it changed and when it expires, never its value.
+- Detection details: Edit rule opens the protection's rule in the Rules editor, and Copy evidence copies the detection as Markdown without cookie or header values.
+- Press / to jump to the search box on Detection, History, Rules and Captures; Settings → Keyboard shortcuts lists every shortcut.
+- History cards, exports and Compare scans show the page's HTTP status, and the ⋯ menu can keep only pages that answered with an error.
+- Bulk scan: Show can keep only pages with an error status, or only pages where one protection was found.
+- Bulk scan: an optional wait between pages (0 to 60 seconds) for sites that block quick visits.
+
+### Changed
+
+- Sites you exclude from scanning are now called skipped sites, with Skip this site buttons, instead of a blacklist; your saved list is kept.
+- The Advanced tab's History sub-tab is now called Captures, so it is not confused with the History tab.
+- Settings explains what Cache scope, Include timestamps and Save on cache hits do.
+- Interface texts use sentence case, such as "Nothing detected", "Clear cache" and "Check now".
+
+### Fixed
+
+- Pages Chrome loads ahead of time and then shows keep their JS hooks, window checks, headers, cookies and HTTP status in the scan.
+- F5 BIG-IP, Sucuri and Radware block pages are recognised from the page's own text, not only from cookies and headers.
+- Counts read correctly for one and for many in every language, including the Russian, Polish, Czech, Ukrainian and Arabic forms.
+- Labels and values are joined the way each language writes them, such as the full-width colon in Chinese and Japanese.
+- Advanced → Captures sizes use your language's decimal separator.
+- The Clear cache confirmation no longer promises a new scan that never starts, or says "this domain" when the cache covers a path or exact address.
+- The History limit error no longer says 0 means unlimited; 0 keeps up to 1,000 entries.
+- Detection and Rules stay on the page you were viewing when you come back to their tab.
+- In Arabic, the arrow keys move through the Advanced code window's language tabs in reading order.
+- Settings: removing a site or a webhook header keeps keyboard focus in the list, and copying a webhook template variable says when the browser refuses it.
+- Light theme: the Settings dropdown arrows and the icon of Advanced tools without a logo are visible again.
+- Applying a preset, importing settings or restoring a backup now asks about unsaved Settings changes instead of discarding them.
+- Rules editor: the list of cookies, headers or scripts picked from the page scrolls again, so every item can be reached.
+- A page prerendered while its site was skipped is no longer saved half-scanned when you turn the site back on and scan it.
+- A prerendered page answered from saved results no longer leaves a scan in progress in the background.
+- Arabic: the Detection summary lines show the page path and the +/− protection names on the correct side.
+- The summary lines no longer read "Last checked Just now"; a scan from a moment ago reads naturally in every language.
+- Detection details no longer describe fingerprinting techniques as blocking traffic.
+- Arabic, Russian and Czech: watchlist limits, update waits and the Rules editor's pattern counts read correctly for every number.
+
 ## [3.1.8] - 2026-11-12
 
 ### Added
@@ -1169,6 +1214,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.1.9]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.8...v3.1.9
 [3.1.8]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.7...v3.1.8
 [3.1.7]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.6...v3.1.7
 [3.1.6]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.5...v3.1.6

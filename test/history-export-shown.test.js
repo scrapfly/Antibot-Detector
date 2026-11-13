@@ -163,7 +163,7 @@ test('the dialog\'s own choices still apply on top of the entries shown (the sam
   assert.equal(category.tagName, 'SELECT', 'the Protections list');
   category.value = 'captcha';
   category.fire('change');
-  assert.equal(d.count.textContent, '1 of 5 entries will be exported', 'the shop.example entries with a CAPTCHA');
+  assert.equal(d.count.textContent, 'Entries to export: 1 of 5', 'the shop.example entries with a CAPTCHA');
   assert.deepEqual(idsOf(await d.confirm()), ['shop-old']);
   const pinned = await openExport({ query: 'shop' });
   toggle(pinned.boxOf('Pinned pages only'), true);
@@ -176,19 +176,19 @@ test('the dialog\'s own choices still apply on top of the entries shown (the sam
 
 test('the count line and the label follow the box: the entries shown, or every entry', async () => {
   const d = await openExport({ query: 'shop' });
-  assert.equal(d.count.textContent, '2 of 5 entries will be exported');
+  assert.equal(d.count.textContent, 'Entries to export: 2 of 5');
   toggle(d.box, false);
-  assert.equal(d.count.textContent, '5 of 5 entries will be exported');
+  assert.equal(d.count.textContent, 'Entries to export: 5 of 5');
   assert.equal(d.shown.textContent, 'Only the entries shown (2)', 'the label still says how many are shown');
   toggle(d.box, true);
-  assert.equal(d.count.textContent, '2 of 5 entries will be exported');
+  assert.equal(d.count.textContent, 'Entries to export: 2 of 5');
   assert.equal(d.count.classes.has('is-empty'), false);
   await d.cancel();
   const none = await openExport({ query: 'nothing-matches-this' });
   assert.equal(none.count.textContent, 'No entries match these filters');
   assert.equal(none.count.classes.has('is-empty'), true);
   toggle(none.box, false);
-  assert.equal(none.count.textContent, '5 of 5 entries will be exported');
+  assert.equal(none.count.textContent, 'Entries to export: 5 of 5');
   assert.equal(none.count.classes.has('is-empty'), false);
   await none.cancel();
 });

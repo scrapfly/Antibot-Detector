@@ -282,7 +282,7 @@
     "message": "Resultaten verschijnen hier zodra ze klaar zijn."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Verwijderen uit blokkeerlijst"
+    "message": "Van de lijst verwijderen"
   },
   "statDetections": {
     "message": "Detecties"
@@ -537,7 +537,7 @@
     "message": "Tools"
   },
   "advancedSubtabHistory": {
-    "message": "Geschiedenis"
+    "message": "Opnamen"
   },
   "advancedFilterSite": {
     "message": "Site"
@@ -711,10 +711,10 @@
     "message": "Dagen"
   },
   "blacklistedDomains": {
-    "message": "Domeinen op de blokkeerlijst"
+    "message": "Overgeslagen sites"
   },
   "blacklistedDomainsDesc": {
-    "message": "Domeinen waarvoor detectie volledig wordt overgeslagen"
+    "message": "Op deze sites draait de detectie nooit. Elk item is een exacte hostnaam: de subdomeinen ervan worden nog steeds gescand."
   },
   "jsApiEvents": {
     "message": "JS API-gebeurtenissen"
@@ -842,7 +842,7 @@
     "message": "Cache wissen"
   },
   "clearCacheConfirmMsg": {
-    "message": "Hiermee worden de in de cache opgeslagen detectiegegevens voor dit domein verwijderd en wordt een nieuwe analyse gestart."
+    "message": "Hiermee wordt het opgeslagen detectieresultaat voor deze pagina verwijderd (met het cachebereik Domein of Pad kan het ook voor andere pagina’s gelden). De pagina wordt opnieuw gescand wanneer je haar herlaadt."
   },
   "clearCacheConfirmBtn": {
     "message": "Cache wissen"
@@ -860,28 +860,28 @@
     "message": "Ongeldig domein"
   },
   "addBlacklistTitle": {
-    "message": "Toevoegen aan blokkeerlijst"
+    "message": "Deze site overslaan"
   },
   "addBlacklistMsgFmt": {
-    "message": "Domein \"{0}\" wordt uitgesloten van alle toekomstige detecties. Je kunt het later verwijderen in Instellingen."
+    "message": "\"{0}\" wordt vanaf nu niet meer gescand. Je kunt dit ongedaan maken in Instellingen → Detectie → Te scannen sites."
   },
   "addBlacklistBtn": {
-    "message": "Toevoegen aan blokkeerlijst"
+    "message": "Deze site overslaan"
   },
   "alreadyBlacklistedFmt": {
-    "message": "Domein \"{0}\" staat al op de blokkeerlijst"
+    "message": "\"{0}\" wordt al overgeslagen"
   },
   "addedToBlacklistFmt": {
-    "message": "\"{0}\" toegevoegd aan blokkeerlijst"
+    "message": "\"{0}\" toegevoegd aan de overgeslagen sites"
   },
   "failedAddBlacklistFmt": {
-    "message": "Toevoegen aan blokkeerlijst mislukt: {0}"
+    "message": "Kan deze site niet overslaan: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "\"{0}\" verwijderd van de blokkeerlijst"
+    "message": "\"{0}\" verwijderd uit de overgeslagen sites"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Verwijderen van de blokkeerlijst mislukt: {0}"
+    "message": "Kan de site niet uit de overgeslagen sites verwijderen: {0}"
   },
   "historyNoDetections": {
     "message": "Geen detecties"
@@ -914,10 +914,10 @@
     "message": "Cache wissen mislukt"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "\"{0}\" toegevoegd aan blokkeerlijst"
+    "message": "\"{0}\" toegevoegd aan de overgeslagen sites"
   },
   "notificationBlacklistFailed": {
-    "message": "Toevoegen aan blokkeerlijst mislukt"
+    "message": "Kan deze site niet overslaan"
   },
   "notificationHistoryItemDeleted": {
     "message": "Geschiedenisitem verwijderd"
@@ -989,7 +989,7 @@
     "message": "Kan de URL van de huidige pagina niet ophalen"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} staat al op de blokkeerlijst"
+    "message": "{0} wordt al overgeslagen"
   },
   "failedAddDomainFmt": {
     "message": "Domein toevoegen mislukt: {0}"
@@ -1418,7 +1418,7 @@
     "message": "Cache-instellingen"
   },
   "settingsCardSkipDomains": {
-    "message": "Domeinen overslaan"
+    "message": "Deze sites overslaan"
   },
   "settingsAddCurrentPage": {
     "message": "Huidige pagina toevoegen"
@@ -1517,13 +1517,13 @@
     "message": "Gebruiksvoorbeeld"
   },
   "detectionDisabledForDomain": {
-    "message": "Detectie uitgeschakeld voor dit domein"
+    "message": "Detectie gepauzeerd: je slaat deze site over"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Verwijderen uit blokkeerlijst"
+    "message": "Deze site weer scannen"
   },
   "detectionBlacklistHint": {
-    "message": "Of ga naar Instellingen → Detectie → Domeinen op de blokkeerlijst om dit te beheren."
+    "message": "Of ga naar Instellingen → Detectie → Te scannen sites om de lijst te beheren."
   },
   "detectionNoDetectionsDesc": {
     "message": "Er zijn geen overeenkomende anti-bot-, CAPTCHA- of fingerprintingsignalen gevonden op deze pagina."
@@ -1541,7 +1541,7 @@
     "message": "Kan de instellingen niet lezen — bewerking geannuleerd"
   },
   "failedRemoveBlacklist": {
-    "message": "Verwijderen van de blokkeerlijst mislukt"
+    "message": "Kan de site niet uit de overgeslagen sites verwijderen"
   },
   "pasteConfirmTitle": {
     "message": "Detecties uploaden?"
@@ -1562,7 +1562,7 @@
     "message": "Overzicht kopiëren"
   },
   "detectionTitleBlockDomain": {
-    "message": "Dit domein blokkeren"
+    "message": "Deze site overslaan"
   },
   "detectionStatSite": {
     "message": "Site"
@@ -1589,7 +1589,7 @@
     "message": "van"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Dit domein staat op de blokkeerlijst"
+    "message": "Deze site wordt overgeslagen"
   },
   "detectionModalConfidence": {
     "message": "Zekerheid"
@@ -1858,7 +1858,7 @@
     "message": "Ondersteunde beveiligingen"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "Opnamegeschiedenis bekijken ({0})"
+    "message": "Opnamen bekijken ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript-hooks"
@@ -3100,7 +3100,7 @@
     "message": "Nee"
   },
   "advHcaptchaNoHistory": {
-    "message": "Nog geen opnamegeschiedenis"
+    "message": "Nog geen opnamen"
   },
   "advHcaptchaNotAvailable": {
     "message": "n.v.t."
@@ -3256,7 +3256,7 @@
     "message": "Gekopieerd naar klembord"
   },
   "advPanelCookiesFoundFmt": {
-    "message": "{0}/{1} cookies gevonden"
+    "message": "Gevonden cookies: {0}/{1}"
   },
   "advPanelScriptsFoundFmt": {
     "message": "Gevonden scripts: {0}"
@@ -3289,10 +3289,10 @@
     "message": "n.v.t."
   },
   "advPanelHistoryClearedFmt": {
-    "message": "Opnamegeschiedenis van {0} gewist"
+    "message": "Opnamen van {0} gewist"
   },
   "advPanelFailedClearHistory": {
-    "message": "Geschiedenis wissen mislukt"
+    "message": "Opnamen wissen mislukt"
   },
   "rulesUiNewDetectorName": {
     "message": "Nieuwe detector"
@@ -3550,16 +3550,16 @@
     "message": "Fout: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "Geen domeinen op de blokkeerlijst"
+    "message": "Geen overgeslagen sites"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Geen domeinen komen overeen met je zoekopdracht"
+    "message": "Geen sites komen overeen met je zoekopdracht"
   },
   "settingsUiChecking": {
     "message": "Controleren..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "De geschiedenislimiet moet tussen 0 (onbeperkt) en 10.000 liggen"
+    "message": "De geschiedenislimiet moet een geheel getal van 0 tot 10.000 zijn (0 bewaart tot 1.000 items)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "De cacheduur moet tussen 1 en {0} {1} liggen"
@@ -4153,7 +4153,7 @@
     "message": "Waarde"
   },
   "advCommonCharsFmt": {
-    "message": "{0} tekens"
+    "message": "tekens: {0}"
   },
   "advCookiePath": {
     "message": "Pad"
@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "De HTTP-statuscode waarmee de pagina antwoordde toen ze werd gescand. Een fout (4xx of 5xx) betekent vaak dat het verzoek werd geblokkeerd of een challenge kreeg."
   },
+  "detectionFactsTitle": {
+    "message": "Wat er is gecontroleerd"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookies: {0} · Scripts: {1} · Verzoeken: {2} · Headers: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS-hooks: voltooid"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS-hooks: gestopt bij de tijdslimiet"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS-hooks: uit voor deze site"
+  },
   "tipCacheExpires": {
     "message": "Verloopt"
   },
@@ -4535,7 +4550,7 @@
     "message": "Controleren"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Deze regel komt overeen met {1} van de {0} opgeslagen pagina's"
+    "message": "Opgeslagen pagina's waarmee deze regel overeenkomt: {1} van {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
     "message": "Pagina's: {0} van {1}"
@@ -5006,7 +5021,7 @@
     "message": "Geziene beveiligingen"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "{0} nieuw in deze periode"
+    "message": "Nieuw in deze periode: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "Totaal aantal regels: {0}"
@@ -5597,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Combinaties"
   },
+  "historyFilterHttpError": {
+    "message": "Foutstatus"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Alleen pagina's met een foutstatus (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Geen items komen overeen met je zoekopdracht of filters."
   },
@@ -6114,7 +6135,7 @@
     "message": "Laatste controle: {0} · {1} gecontroleerd, {2} gewijzigd"
   },
   "settingsHistoryWatchDoneFmt": {
-    "message": "{0} pagina's gecontroleerd, {1} gewijzigd"
+    "message": "Gecontroleerde pagina's: {0}, gewijzigd: {1}"
   },
   "settingsHistoryWatchUncheckedFmt": {
     "message": "Niet gecontroleerd: {0}"
@@ -6208,6 +6229,18 @@
   },
   "settingsShortcutRescanFmt": {
     "message": "Deze pagina opnieuw scannen: {0}"
+  },
+  "settingsShortcutOpenFmt": {
+    "message": "De extensie openen: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Zoeken in het geopende tabblad: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Tussen geschiedenisitems wisselen: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Een dialoogvenster sluiten: {0}"
   },
   "settingsShortcutsDesc": {
     "message": "De pagina wordt opnieuw geladen, zodat alles vanaf het begin wordt verzameld."
@@ -6483,7 +6516,7 @@
     "message": "niet voldaan"
   },
   "ruleLiveTestPageFmt": {
-    "message": "Gelezen: {0} scripts, {1} elementen, {2} cookies en {3} verzoeken."
+    "message": "Gelezen van de pagina. Scripts: {0} · elementen: {1} · cookies: {2} · verzoeken: {3}."
   },
   "ruleLiveTestNoRequests": {
     "message": "De verzoeken van de pagina zijn nu niet beschikbaar, dus URL-patronen zijn alleen gecontroleerd tegen het adres en de scripts."
@@ -6581,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Tijdslimiet per pagina, in seconden"
   },
+  "bulkDelayLabel": {
+    "message": "Wachttijd tussen pagina's, in seconden"
+  },
   "bulkStart": {
     "message": "Starten"
   },
@@ -6619,6 +6655,12 @@
     "message": "Mislukt of overgeslagen",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "Foutstatus (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Alleen {0}"
+  },
   "bulkCopyLines": {
     "message": "Kopiëren als regels"
   },
@@ -6626,7 +6668,7 @@
     "message": "Geen pagina komt overeen met dit filter."
   },
   "bulkShowingFmt": {
-    "message": "{0} van {1} pagina's getoond. Exports bevatten alleen deze.",
+    "message": "Getoonde pagina's: {0} van {1}. Exports bevatten alleen deze.",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
@@ -6773,6 +6815,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Je wijzigingen in de instellingen zijn nog niet opgeslagen. Opslaan voordat je sluit?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Je wijzigingen in de instellingen zijn nog niet opgeslagen. Opslaan voordat de nieuwe instellingen worden toegepast?"
+  },
   "historySortLabel": {
     "message": "Geschiedenis sorteren"
   },
@@ -6790,5 +6835,47 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Eén regel"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Alleen blokkeer- en challengepagina's"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Doorzoekt de volledige HTML, inclusief titel, van alleen kleine pagina's, zoals de blokkeerpagina van een firewall. Grotere pagina's worden niet doorzocht"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Welke pagina’s één opgeslagen resultaat delen. Domein: elke pagina van de site. Pad: hetzelfde adres, ongeacht de query. Volledige URL: alleen precies hetzelfde adres."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Voegt de scandatum van elke pagina toe aan CSV-, platte-tekst- en Markdown-exports. JSON-exports bevatten die altijd."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Legt een pagina ook in de geschiedenis vast wanneer haar resultaat uit de cache wordt hergebruikt in plaats van een nieuwe scan."
+  },
+  "detectionStrongToggle": {
+    "message": "Sterk (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Lage moeilijkheid: laat gewoon verkeer meestal door, en verzoeken met realistische headers en cookies komen vaak door."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Gemiddelde moeilijkheid: eenvoudige HTTP-clients krijgen vaak een uitdaging; een echte browser met consistente instellingen komt meestal door."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Hoge moeilijkheid: moeilijk te passeren. Controleert de browser, zijn gedrag en het netwerk waar hij vandaan komt, en blokkeert eenvoudige HTTP-clients."
+  },
+  "detectionModalWebsite": {
+    "message": "Website"
+  },
+  "detectionModalEditRule": {
+    "message": "Regel bewerken"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Bewijs kopiëren"
+  },
+  "detectionModalDocs": {
+    "message": "Detectiegids"
   }
 }

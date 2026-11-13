@@ -401,6 +401,66 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* What was checked: a square at the end of the Cache row, as tall as its tiles. It opens the counts and how the JS hooks ended
+   under the row, so the summary card keeps its height while it is closed */
+.scan-facts-toggle {
+  flex: 0 0 auto;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  padding: 0;
+  background: var(--g-323232);
+  border: 1px solid var(--g-424242);
+  border-radius: 7px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.scan-facts-toggle:hover,
+.scan-facts-toggle[aria-expanded="true"] {
+  border-color: var(--g-525252);
+  color: var(--accent-light);
+}
+
+.scan-facts-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.scan-facts-toggle[hidden],
+.scan-facts-panel[hidden] {
+  display: none;
+}
+
+.scan-facts-panel {
+  margin: 0;
+  padding: 6px 12px 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-bottom: none;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--text-secondary);
+}
+
+.scan-facts-panel p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.scan-facts-title {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.scan-facts-panel .scan-facts-line[hidden] {
+  display: none;
+}
+
 #httpStatusTile .tone-amber { --tone: var(--warning); }
 #httpStatusTile .tone-red { --tone: var(--danger); }
 
@@ -597,6 +657,49 @@
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.12);
+}
+
+/* The Strong toggle sits inside the search field, at its end (the field leaves it room); a small pill like the chips below */
+#detectionResults .detection-search .search-input {
+  padding-inline-end: 118px;
+}
+
+#detectionResults .detection-search .detection-strong-toggle {
+  position: absolute;
+  top: 11px;
+  inset-inline-end: 16px;
+  max-width: 108px;
+  height: 24px;
+  padding: 0 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 22px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+}
+
+#detectionResults .detection-search .detection-strong-toggle:hover {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+#detectionResults .detection-search .detection-strong-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+#detectionResults .detection-search .detection-strong-toggle[aria-pressed="true"] {
+  color: var(--text-primary);
+  border-color: var(--accent);
+  background: rgba(59, 130, 246, 0.14);
 }
 
 /* Filter chips under the search, in the summary card's last strip. The chips are History's (.history-filter-chip, in history.css,
@@ -1159,6 +1262,63 @@
   font-size: 12px;
   line-height: 1.55;
   color: var(--text-secondary);
+}
+
+/* Under the description: what the difficulty means, then the vendor's site, the docs page and Open tools as quiet links */
+.detection-modal-difficulty-note {
+  margin: 2px 0 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.detection-modal-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  margin-top: 2px;
+}
+
+.detection-modal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--text-primary);
+  background: none;
+  border: none;
+  text-decoration: underline;
+  text-decoration-color: var(--g-4b4b4b);
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+
+.detection-modal-link:hover {
+  color: var(--accent-light);
+  text-decoration-color: currentColor;
+}
+
+.detection-modal-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.detection-modal-link-icon {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.detection-modal-difficulty-note[hidden],
+.detection-modal-links[hidden],
+.detection-modal-link[hidden] {
+  display: none;
 }
 
 .detection-modal-section {
@@ -2087,6 +2247,30 @@
   display: none;
 }
 
+/* A cookie row's life on this site (set, changed, expires: times only, never the value): shown folded or not, under the value */
+.detection-modal-methods-list .method-item-card.has-life {
+  grid-template-areas:
+    "head"
+    "value"
+    "life";
+}
+
+.detection-modal-methods-list .method-item-card.has-life.is-folded {
+  grid-template-areas:
+    "head"
+    "life";
+}
+
+.method-cookie-life {
+  grid-area: life;
+  min-width: 0;
+  padding: 0 2px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
 /* A "must not be found" signal: its row says so where the score would be */
 .method-not-present {
   font-size: 11px;
@@ -2194,6 +2378,10 @@
 .detection-note-action[hidden],
 .detection-note-sep[hidden] {
   display: none;
+}
+
+.state-card-checked.state-card-facts {
+  margin-top: 8px;
 }
 
 .state-card-checked {

@@ -538,8 +538,8 @@ Advanced.prototype.clearAllCaptures = async function() {
     try {
       const confirmed = await this.showWarningConfirmation(
         _trCA('clearAllCapturesConfirm', 'Are you sure you want to delete all captures? This cannot be undone.'),
-        _trCA('advConfirmClearAllTitle', 'Clear All Captured Data?'),
-        _trCA('btnClearData', 'Clear Data')
+        _trCA('advConfirmClearAllTitle', 'Clear all captured data?'),
+        _trCA('btnClearData', 'Clear data')
       );
       if (!confirmed) return;
 

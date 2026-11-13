@@ -173,6 +173,23 @@ const ScanReport = {
         return { title, lines };
     },
 
+    /**
+     * What the scan looked at, kept with the cached result so the Detection tab can say it ("What was checked"): the counts of
+     * cookies, scripts, requests and headers, and how the JS hooks ended ('done', or 'timeout' when the time limit stopped them;
+     * storeDetection makes it 'off' on a site with the hooks off). Null when the counts are not known (the match step never ran).
+     * Counts only: no name, address or value.
+     * @param {object} state - the tab's detection state (stats from processDetectionData, hooks flags)
+     * @returns {{cookies: number, scripts: number, requests: number, headers: number, hooks: string}|null}
+     */
+    facts(state = {}) {
+        const stats = (state && state.stats) || {};
+        const count = (value) => (Number.isFinite(value) && value >= 0 ? Math.round(value) : null);
+        const facts = { cookies: count(stats.cookies), scripts: count(stats.scripts), requests: count(stats.requests), headers: count(stats.headers) };
+        if (Object.values(facts).some(value => value === null)) return null;
+        facts.hooks = state.hooksTimedOut ? 'timeout' : 'done';
+        return facts;
+    },
+
     /** Print the report (Debug mode only; free otherwise) */
     log(url, results, state) {
         if (typeof Logger === 'undefined' || !Logger.debugMode) return;

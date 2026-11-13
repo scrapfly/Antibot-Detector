@@ -12,7 +12,7 @@ Radware Bot Manager（旧 ShieldSquare）は Radware のボット管理製品で
 
 ## サイトが Radware Bot Manager を使っているかを見分ける方法
 
-これらのシグナルは、`detect-radware` に対する拡張機能自身の検出ルール（ルールのバージョン 2.2.0、最終更新日 2026-10-16）から生成されています。シグナルはあくまで目安です。信頼度とは、そのシグナル単体が確認されたときに拡張機能がどの程度確信を持つかを表します。「補強のみ」とマークされたシグナルは、他の製品でも発生しうるため、それだけでは判定に加算されません。
+これらのシグナルは、`detect-radware` に対する拡張機能自身の検出ルール（ルールのバージョン 2.3.0、最終更新日 2026-11-12）から生成されています。シグナルはあくまで目安です。信頼度とは、そのシグナル単体が確認されたときに拡張機能がどの程度確信を持つかを表します。「補強のみ」とマークされたシグナルは、他の製品でも発生しうるため、それだけでは判定に加算されません。
 
 ### Cookie
 
@@ -47,8 +47,8 @@ Radware Bot Manager（旧 ShieldSquare）は Radware のボット管理製品で
 
 | シグナル | 信頼度 | 示唆する内容 |
 | --- | --- | --- |
-| `CloudWebSec.radware.com` | 20% (補強のみ) | Script reference to the CloudWebSec vendor portal host |
-| `Unauthorized Request Blocked` | 20% (補強のみ) | Script reference to the Radware block-page message |
+| `CloudWebSec[.@]radware\.com` | 20% (補強のみ) | CloudWebSec contact address on the Radware block page |
+| `Unauthorized Request Blocked` | 20% (補強のみ) | Radware block-page message |
 
 ### JavaScript グローバル（window）
 
@@ -65,9 +65,9 @@ Radware Bot Manager（旧 ShieldSquare）は Radware のボット管理製品で
 
 | 組み合わせ | 信頼度 | 必要な条件 |
 | --- | --- | --- |
-| Block-page message with the vendor portal reference | 70% | Script reference to the CloudWebSec vendor portal host および Script reference to the Radware block-page message |
-| Component-state header with block-page evidence | 80% | Radware SecureLink component-state response header および (Script reference to the CloudWebSec vendor portal host または Script reference to the Radware block-page message) |
-| Component-state header with both block-page signals | 90% | Radware SecureLink component-state response header および Script reference to the CloudWebSec vendor portal host および Script reference to the Radware block-page message |
+| Block-page message with the vendor portal reference | 70% | CloudWebSec contact address on the Radware block page および Radware block-page message |
+| Component-state header with block-page evidence | 80% | Radware SecureLink component-state response header および (CloudWebSec contact address on the Radware block page または Radware block-page message) |
+| Component-state header with both block-page signals | 90% | Radware SecureLink component-state response header および CloudWebSec contact address on the Radware block page および Radware block-page message |
 | Bot Manager cookies with its first-party script | 100% | Radware Bot Manager session cookies (__uzma … __uzmf) および First-party Radware Bot Manager script (stormcaster.js) |
 | Bot Manager cookies, script and connector object | 100% | Radware Bot Manager session cookies (__uzma … __uzmf) および First-party Radware Bot Manager script (stormcaster.js) および Radware Bot Manager JavaScript connector object |
 | Bot Manager captcha host with its session cookies | 100% | Radware Bot Manager captcha / validation host および Radware Bot Manager session cookies (__uzma … __uzmf) |

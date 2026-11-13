@@ -229,7 +229,7 @@ function invalidSave({ fieldAttributes = {} } = {}) {
   h.elements['#historyLimit'] = field;
   Object.assign(h.owner, {
     getSettingsFromUI: () => ({}),
-    validateSettings: () => ({ isValid: false, errors: ['History limit must be between 0 (unlimited) and 10000'], fields: ['#historyLimit'] }),
+    validateSettings: () => ({ isValid: false, errors: ['History limit must be a whole number from 0 to 10000 (0 keeps up to 1,000 entries)'], fields: ['#historyLimit'] }),
     saveSettings: async () => { throw new Error('an invalid form is never saved'); }
   });
   return { ...h, field, head, isFolded: () => folded };
@@ -239,7 +239,7 @@ test('a Save that finds an invalid value keeps its message, and goes to the fiel
   const h = invalidSave();
   await h.ui.handleSaveSettings.call(h.owner);
   assert.equal(h.errors.length, 1);
-  assert.match(h.errors[0], /^Invalid settings: History limit must be between 0 \(unlimited\) and 10000$/);
+  assert.match(h.errors[0], /^Invalid settings: History limit must be a whole number from 0 to 10000 \(0 keeps up to 1,000 entries\)$/);
   assert.equal(h.owner.tab, 'history', 'the tab that holds the field is shown');
   assert.equal(h.isFolded(), false, 'its card is open');
   assert.equal(h.head.attributes['aria-expanded'], 'true');

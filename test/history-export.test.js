@@ -62,12 +62,12 @@ test('build json: the file History imports, always complete', () => {
 
 test('build csv: one row per detection, optional timestamp column, pin and note', () => {
   const withTime = E.build(items, { format: 'csv', includeTimestamps: true }).text.split('\r\n');
-  assert.strictEqual(withTime[0], 'url,hostname,title,timestamp,protection,category,confidence,difficulty,pinned,note');
+  assert.strictEqual(withTime[0], 'url,hostname,title,timestamp,protection,category,confidence,difficulty,pinned,note,http_status');
   assert.strictEqual(withTime.length, 1 + 5 + 1, 'header, five detections, trailing newline');
-  assert.match(withTime[1], /^https:\/\/shop\.example\.com\/p\?x=1,shop\.example\.com,Title a,2026-10-18T12:00:00\.000Z,Cloudflare,Anti-Bot,95,Medium,yes,"check ""later"""$/);
+  assert.match(withTime[1], /^https:\/\/shop\.example\.com\/p\?x=1,shop\.example\.com,Title a,2026-10-18T12:00:00\.000Z,Cloudflare,Anti-Bot,95,Medium,yes,"check ""later""",$/, 'no status known: the last cell is empty');
 
   const noTime = E.build(items, { format: 'csv', includeTimestamps: false }).text.split('\r\n');
-  assert.strictEqual(noTime[0], 'url,hostname,title,protection,category,confidence,difficulty,pinned,note');
+  assert.strictEqual(noTime[0], 'url,hostname,title,protection,category,confidence,difficulty,pinned,note,http_status');
   assert.ok(!/2026-10/.test(noTime.join('')), 'no date anywhere');
   assert.strictEqual(E.build(items, { format: 'csv' }).type, 'text/csv');
 });
@@ -77,7 +77,7 @@ test('build csv: an entry without detections still has a row, and formulas are n
   const lines = E.build(odd, { format: 'csv', includeTimestamps: false }).text.split('\r\n');
   assert.strictEqual(lines.length, 3);
   assert.ok(lines[1].includes(`"'=HYPERLINK(""http://evil"")"`), lines[1]);
-  assert.ok(lines[1].endsWith(",,,,,'+1"), lines[1]);
+  assert.ok(lines[1].endsWith(",,,,,'+1,"), lines[1]);
 });
 
 test('build txt: readable blocks, date only when asked', () => {
@@ -149,8 +149,8 @@ test('Markdown export: a table with one escaped row per page, dated when timesta
   const out = HistoryExportMd.build(items, { format: 'md' });
   assert.strictEqual(out.type, 'text/markdown');
   assert.strictEqual(out.extension, 'md');
-  assert.ok(out.text.includes('| Page | Address | Date | Protections | Pinned | Note |'));
-  assert.ok(out.text.includes('| A \\| B | <https://a.example/x> | 2027-01-15T08:00:00.000Z | Cloudflare (Anti-Bot, 95%) | yes | line1 line2 |'));
+  assert.ok(out.text.includes('| Page | Address | Date | Protections | Pinned | Note | HTTP status |'));
+  assert.ok(out.text.includes('| A \\| B | <https://a.example/x> | 2027-01-15T08:00:00.000Z | Cloudflare (Anti-Bot, 95%) | yes | line1 line2 |  |'));
   assert.ok(!HistoryExportMd.build(items, { format: 'md', includeTimestamps: false }).text.includes('Date'));
   assert.strictEqual(HistoryExportMd.fileName('md', 0), 'scrapfly-history-1970-01-01.md');
 });
@@ -160,18 +160,18 @@ test('Markdown export: a page title cannot become an image, a link, HTML or a ne
   const text = HistoryExportMd.build([{ url: 'https://a.example/', title: '![x](https://t.example/p.gif) <img src=x> [l](u) *b* `c`', detections: [] }], { format: 'md' }).text;
   const row = text.split('\n')[4];
   assert.ok(row.includes('!\\[x\\](https://t.example/p.gif) \\<img src=x\\> \\[l\\](u) \\*b\\* \\`c\\`'), row);
-  assert.strictEqual((row.match(/(?<!\\)\|/g) || []).length, 7, 'six cells, no extra column');
+  assert.strictEqual((row.match(/(?<!\\)\|/g) || []).length, 8, 'seven cells, no extra column');
 });
 
 test('Markdown export: an address is written as a link, so an underscore or a tilde in the path has no backslash in it', () => {
   const row = (url) => E.build([{ url, title: 't', detections: [] }], { format: 'md', includeTimestamps: false }).text.split('\n')[4];
-  assert.strictEqual(row('https://shop.example/a_b/~c?x=1#y'), '| t | <https://shop.example/a_b/~c> | - |  |  |',
+  assert.strictEqual(row('https://shop.example/a_b/~c?x=1#y'), '| t | <https://shop.example/a_b/~c> | - |  |  |  |',
     'escaped, an underscore ends a link where the backslash is, or shows the backslash in a chat that does not render Markdown');
   assert.ok(row('https://shop.example/a|b').includes('<https://shop.example/a\\|b>'), 'a pipe in the path cannot end the cell');
   // Anything that is not a plain http(s) address stays text, escaped like the rest
   assert.ok(row('not a url_ | x').includes('| not a url\\_ \\| x |'), row('not a url_ | x'));
   assert.ok(!row('javascript:alert(1)').includes('<javascript'), 'only http(s) addresses become links');
-  assert.strictEqual(row('https://a.example/<b>'), '| t | <https://a.example/%3Cb%3E> | - |  |  |', 'the address parser encodes angle brackets: none can end the link');
+  assert.strictEqual(row('https://a.example/<b>'), '| t | <https://a.example/%3Cb%3E> | - |  |  |  |', 'the address parser encodes angle brackets: none can end the link');
 });
 
 test('the Markdown export gives each address without its query or fragment, like every other copy for tickets', () => {
@@ -280,4 +280,23 @@ test('oneLines writes the protections as the per-entry "Copy as one line" does (
   const rest = (line) => line.split(': ').slice(1).join(': ');
   assert.strictEqual(rest(E.oneLines([entry])), rest(single));
   assert.strictEqual(rest(E.oneLines([entry])), 'Cloudflare 95%, reCAPTCHA 70%, Canvas 30%');
+});
+
+test('the page\'s HTTP status is in every export: the CSV\'s last column, a line of the text file, the Markdown table\'s last column', () => {
+  const pages = [
+    { url: 'https://blocked.example/', hostname: 'blocked.example', title: 'Blocked', timestamp: NOW, httpStatus: 403, detections: [{ detector: { name: 'Cloudflare' }, category: 'Anti-Bot', confidence: 95 }] },
+    { url: 'https://old.example/', hostname: 'old.example', title: 'Old', timestamp: NOW, detections: [] },
+    { url: 'https://odd.example/', hostname: 'odd.example', title: 'Odd', timestamp: NOW, httpStatus: '500', detections: [] }
+  ];
+  const csv = E.build(pages, { format: 'csv', includeTimestamps: false }).text.split('\r\n');
+  assert.ok(csv[1].endsWith(',403'), csv[1]);
+  assert.ok(csv[2].endsWith(','), 'none known: empty');
+  assert.ok(csv[3].endsWith(','), 'not a status: empty');
+  const txt = E.build(pages, { format: 'txt', includeTimestamps: false }).text;
+  assert.match(txt, /^Blocked\nhttps:\/\/blocked\.example\/\nHTTP status: 403\nProtections: Cloudflare/);
+  assert.strictEqual((txt.match(/HTTP status/g) || []).length, 1, 'only the page whose status is known');
+  const md = E.build(pages, { format: 'md', includeTimestamps: false }).text.split('\n');
+  assert.strictEqual(md[4], '| Blocked | <https://blocked.example/> | Cloudflare (Anti-Bot, 95%) |  |  | 403 |');
+  assert.ok(md[5].endsWith('|  |'));
+  assert.strictEqual(JSON.parse(E.build(pages, { format: 'json' }).text).items[0].httpStatus, 403, 'JSON keeps every field');
 });

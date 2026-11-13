@@ -256,7 +256,7 @@ const HistoryWatch = {
                 if (!second.ok || !this.samePage(second.url, entry.url)) return 'unstable';
                 if (!this.sameChange(diff, HistoryPolicy.diffProtections(entry.detections, second.results))) return 'unstable';
             }
-            const applied = await HistoryRecorder.applyWatchResult(entry.id, first.results, chrome);
+            const applied = await HistoryRecorder.applyWatchResult(entry.id, first.results, chrome, Date.now(), { httpStatus: first.httpStatus });
             if (!applied.found) return 'skipped'; // unpinned or unwatched while it was being checked
             return applied.changed ? 'changed' : 'unchanged';
         } finally {

@@ -72,7 +72,7 @@ Rules.prototype.renderLiveTest = function(rule, reply) {
   const heading = (key, fallback) => `<h4 class="rule-check-heading">${esc(liveTestText(key, fallback))}</h4>`;
   const page = reply.page || {};
   const hasUrlPatterns = rows.some(row => row.method === 'url');
-  const notes = [liveTestText('ruleLiveTestPageFmt', 'Read {0} scripts, {1} elements, {2} cookies and {3} requests.', page.scripts || 0, page.elements || 0, page.cookies || 0, page.requests || 0)];
+  const notes = [liveTestText('ruleLiveTestPageFmt', 'Read from the page. Scripts: {0} · elements: {1} · cookies: {2} · requests: {3}.', page.scripts || 0, page.elements || 0, page.cookies || 0, page.requests || 0)];
   if (hasUrlPatterns && !page.requests) notes.push(liveTestText('ruleLiveTestNoRequests', 'The requests the page made are not available now, so URL patterns were checked against its address and scripts only.'));
   if ((reply.untested || []).length) notes.push(liveTestText('ruleLiveTestUntestedNote', 'Patterns marked "needs a real scan" are not part of this test: the answer above covers the others.'));
   return `

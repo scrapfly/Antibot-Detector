@@ -226,7 +226,7 @@
     "message": "डोमेन"
   },
   "statsTableCountFmt": {
-    "message": "{1} में से {0} पंक्तियाँ"
+    "message": "पंक्तियाँ: {1} में से {0}"
   },
   "statsTableMore": {
     "message": "और दिखाएँ"
@@ -282,7 +282,7 @@
     "message": "जाँच पूरी होने पर परिणाम यहाँ दिखेंगे।"
   },
   "actionRemoveFromBlacklist": {
-    "message": "ब्लैकलिस्ट से हटाएं"
+    "message": "सूची से हटाएँ"
   },
   "statDetections": {
     "message": "जांच"
@@ -537,7 +537,7 @@
     "message": "टूल"
   },
   "advancedSubtabHistory": {
-    "message": "इतिहास"
+    "message": "कैप्चर"
   },
   "advancedFilterSite": {
     "message": "साइट"
@@ -711,10 +711,10 @@
     "message": "दिन"
   },
   "blacklistedDomains": {
-    "message": "ब्लैकलिस्टेड डोमेन"
+    "message": "छोड़ी गई साइटें"
   },
   "blacklistedDomainsDesc": {
-    "message": "डोमेन जहां जांच पूरी तरह से छोड़ दी जाती है"
+    "message": "इन साइटों पर जांच कभी नहीं चलती। हर प्रविष्टि एक सटीक होस्ट नाम है: उसके सबडोमेन फिर भी स्कैन होते हैं।"
   },
   "jsApiEvents": {
     "message": "JS API इवेंट"
@@ -842,7 +842,7 @@
     "message": "कैश साफ़ करें"
   },
   "clearCacheConfirmMsg": {
-    "message": "इससे इस डोमेन के लिए कैश किया गया डिटेक्शन डेटा हटा दिया जाएगा और एक नया विश्लेषण शुरू हो जाएगा।"
+    "message": "इससे इस पेज का सहेजा गया जांच परिणाम हट जाएगा (कैश दायरा डोमेन या पथ होने पर यह दूसरे पेजों पर भी लागू हो सकता है)। पेज को दोबारा लोड करने पर वह फिर से स्कैन होगा।"
   },
   "clearCacheConfirmBtn": {
     "message": "कैश साफ़ करें"
@@ -860,28 +860,28 @@
     "message": "अमान्य डोमेन"
   },
   "addBlacklistTitle": {
-    "message": "ब्लैकलिस्ट में जोड़ें"
+    "message": "इस साइट को छोड़ें"
   },
   "addBlacklistMsgFmt": {
-    "message": "डोमेन \"{0}\" को भविष्य के सभी डिटेक्शन से बाहर रखा जाएगा। आप इसे बाद में सेटिंग्स में हटा सकते हैं।"
+    "message": "\"{0}\" को अब से स्कैन नहीं किया जाएगा। आप इसे सेटिंग्स → जांच → स्कैन की जाने वाली साइटें में वापस बदल सकते हैं।"
   },
   "addBlacklistBtn": {
-    "message": "ब्लैकलिस्ट में जोड़ें"
+    "message": "इस साइट को छोड़ें"
   },
   "alreadyBlacklistedFmt": {
-    "message": "डोमेन \"{0}\" पहले से ब्लैकलिस्टेड है"
+    "message": "\"{0}\" पहले से छोड़ी गई है"
   },
   "addedToBlacklistFmt": {
-    "message": "\"{0}\" को ब्लैकलिस्ट में जोड़ा गया"
+    "message": "\"{0}\" को छोड़ी गई साइटों में जोड़ा गया"
   },
   "failedAddBlacklistFmt": {
-    "message": "ब्लैकलिस्ट में जोड़ने में विफल: {0}"
+    "message": "इस साइट को छोड़ा नहीं जा सका: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "\"{0}\" को ब्लैकलिस्ट से हटाया गया"
+    "message": "\"{0}\" को छोड़ी गई साइटों से हटाया गया"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "ब्लैकलिस्ट से हटाने में विफल: {0}"
+    "message": "साइट को छोड़ी गई साइटों से हटाया नहीं जा सका: {0}"
   },
   "historyNoDetections": {
     "message": "कोई डिटेक्शन नहीं"
@@ -914,10 +914,10 @@
     "message": "कैश साफ़ करने में विफल"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "\"{0}\" को ब्लैकलिस्ट में जोड़ा गया"
+    "message": "\"{0}\" को छोड़ी गई साइटों में जोड़ा गया"
   },
   "notificationBlacklistFailed": {
-    "message": "ब्लैकलिस्ट में जोड़ने में विफल"
+    "message": "इस साइट को छोड़ा नहीं जा सका"
   },
   "notificationHistoryItemDeleted": {
     "message": "इतिहास आइटम हटा दिया गया"
@@ -989,7 +989,7 @@
     "message": "वर्तमान पेज URL प्राप्त नहीं हो सका"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} पहले से ब्लैकलिस्टेड है"
+    "message": "{0} पहले से छोड़ी गई है"
   },
   "failedAddDomainFmt": {
     "message": "डोमेन जोड़ने में विफल: {0}"
@@ -1043,7 +1043,7 @@
     "message": "फ़ाइल पढ़ने में त्रुटि: {0}"
   },
   "detectorsUpdatedFmt": {
-    "message": "{0} डिटेक्टर अपडेट किए गए"
+    "message": "अपडेट किए गए डिटेक्टर: {0}"
   },
   "detectorDeletedFmt": {
     "message": "\"{0}\" हटा दिया गया"
@@ -1100,7 +1100,7 @@
     "message": "बदलें"
   },
   "importHistoryModeMessageFmt": {
-    "message": "{0} इतिहास आइटम इम्पोर्ट करें? आपके मौजूदा इतिहास में {1} आइटम हैं।<br>“मर्ज करें” नए आइटम जोड़ता है। “बदलें” पहले मौजूदा इतिहास हटा देता है।"
+    "message": "इम्पोर्ट होने वाले आइटम: {0}। आपके मौजूदा इतिहास में आइटम: {1}।<br>“मर्ज करें” नए आइटम जोड़ता है। “बदलें” पहले मौजूदा इतिहास हटा देता है।"
   },
   "clearLogsTitle": {
     "message": "लॉग साफ़ करें"
@@ -1418,7 +1418,7 @@
     "message": "कैश सेटिंग्स"
   },
   "settingsCardSkipDomains": {
-    "message": "डोमेन छोड़ें"
+    "message": "इन साइटों को छोड़ें"
   },
   "settingsAddCurrentPage": {
     "message": "वर्तमान पेज जोड़ें"
@@ -1517,13 +1517,13 @@
     "message": "उपयोग उदाहरण"
   },
   "detectionDisabledForDomain": {
-    "message": "इस डोमेन के लिए डिटेक्शन अक्षम है"
+    "message": "जांच रुकी है: आप इस साइट को छोड़ते हैं"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "ब्लैकलिस्ट से हटाएँ"
+    "message": "इस साइट को फिर से स्कैन करें"
   },
   "detectionBlacklistHint": {
-    "message": "या प्रबंधन के लिए सेटिंग्स → डिटेक्शन → ब्लैकलिस्टेड डोमेन पर जाएँ।"
+    "message": "या सूची प्रबंधित करने के लिए सेटिंग्स → जांच → स्कैन की जाने वाली साइटें पर जाएँ।"
   },
   "detectionNoDetectionsDesc": {
     "message": "इस पेज पर कोई मिलान वाले एंटी-बॉट, CAPTCHA, या फ़िंगरप्रिंटिंग सिग्नल नहीं मिले।"
@@ -1541,7 +1541,7 @@
     "message": "सेटिंग्स पढ़ नहीं सकीं — कार्रवाई रद्द की गई"
   },
   "failedRemoveBlacklist": {
-    "message": "ब्लैकलिस्ट से हटाने में विफल"
+    "message": "साइट को छोड़ी गई साइटों से हटाया नहीं जा सका"
   },
   "pasteConfirmTitle": {
     "message": "पहचान अपलोड करें?"
@@ -1562,7 +1562,7 @@
     "message": "अवलोकन कॉपी करें"
   },
   "detectionTitleBlockDomain": {
-    "message": "इस डोमेन को ब्लॉक करें"
+    "message": "इस साइट को छोड़ें"
   },
   "detectionStatSite": {
     "message": "साइट"
@@ -1589,7 +1589,7 @@
     "message": "का"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "यह डोमेन ब्लैकलिस्टेड है"
+    "message": "यह साइट छोड़ी गई है"
   },
   "detectionModalConfidence": {
     "message": "विश्वसनीयता"
@@ -1858,7 +1858,7 @@
     "message": "समर्थित सुरक्षा प्रणालियाँ"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "कैप्चर इतिहास देखें ({0})"
+    "message": "कैप्चर देखें ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript हुक"
@@ -1975,13 +1975,13 @@
     "message": "इस अवधि में कोई डेटा नहीं"
   },
   "statsTipPagesFmt": {
-    "message": "{0} पेज"
+    "message": "पेज: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{1} में से {0} डिटेक्शन · {2}%"
+    "message": "डिटेक्शन: {1} में से {0} · {2}%"
   },
   "statsTimelineMetaFmt": {
-    "message": "{0} डिटेक्शन · {1} दिन"
+    "message": "डिटेक्शन: {0} · दिन: {1}"
   },
   "deleteOfficialDetectorNote": {
     "message": "यह Scrapfly का आधिकारिक डिटेक्टर है। अपडेट इसे वापस नहीं लाएंगे; इसे वापस पाने के लिए … मेनू में \"आधिकारिक डिटेक्टर पुनर्स्थापित करें\" का उपयोग करें।"
@@ -2011,7 +2011,7 @@
     "message": "कस्टम डिटेक्टर साफ़ किए जा रहे हैं..."
   },
   "customDetectorsClearedFmt": {
-    "message": "{0} कस्टम डिटेक्टर हटाए गए"
+    "message": "हटाए गए कस्टम डिटेक्टर: {0}"
   },
   "noCustomDetectorsToClear": {
     "message": "साफ़ करने के लिए कोई कस्टम डिटेक्टर नहीं है"
@@ -3100,7 +3100,7 @@
     "message": "नहीं"
   },
   "advHcaptchaNoHistory": {
-    "message": "अभी तक कोई कैप्चर इतिहास नहीं"
+    "message": "अभी तक कोई कैप्चर नहीं"
   },
   "advHcaptchaNotAvailable": {
     "message": "उपलब्ध नहीं"
@@ -3256,7 +3256,7 @@
     "message": "क्लिपबोर्ड पर कॉपी किया गया"
   },
   "advPanelCookiesFoundFmt": {
-    "message": "{0}/{1} कुकीज़ मिलीं"
+    "message": "मिली कुकीज़: {0}/{1}"
   },
   "advPanelScriptsFoundFmt": {
     "message": "मिली स्क्रिप्ट्स: {0}"
@@ -3289,10 +3289,10 @@
     "message": "उपलब्ध नहीं"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "{0} कैप्चर इतिहास साफ़ किया गया"
+    "message": "{0} कैप्चर साफ़ किए गए"
   },
   "advPanelFailedClearHistory": {
-    "message": "इतिहास साफ़ करने में विफल"
+    "message": "कैप्चर साफ़ करने में विफल"
   },
   "rulesUiNewDetectorName": {
     "message": "नया डिटेक्टर"
@@ -3550,16 +3550,16 @@
     "message": "त्रुटि: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "ब्लैकलिस्ट में कोई डोमेन नहीं है"
+    "message": "कोई छोड़ी गई साइट नहीं"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "आपकी खोज से कोई डोमेन मेल नहीं खाता"
+    "message": "आपकी खोज से कोई साइट मेल नहीं खाती"
   },
   "settingsUiChecking": {
     "message": "जांच हो रही है..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "इतिहास सीमा 0 (असीमित) और 10000 के बीच होनी चाहिए"
+    "message": "इतिहास सीमा 0 से 10000 तक की पूर्ण संख्या होनी चाहिए (0 पर अधिकतम 1,000 प्रविष्टियाँ रखी जाती हैं)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "कैश अवधि 1 और {0} के बीच होनी चाहिए ({1})"
@@ -4153,7 +4153,7 @@
     "message": "मान"
   },
   "advCommonCharsFmt": {
-    "message": "{0} अक्षर"
+    "message": "अक्षर: {0}"
   },
   "advCookiePath": {
     "message": "पाथ"
@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "स्कैन के समय पेज ने जिस HTTP स्थिति कोड के साथ जवाब दिया। कोई त्रुटि (4xx या 5xx) अक्सर बताती है कि अनुरोध ब्लॉक किया गया या उसे चुनौती दी गई।"
   },
+  "detectionFactsTitle": {
+    "message": "क्या जाँचा गया"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "कुकीज़: {0} · स्क्रिप्ट: {1} · अनुरोध: {2} · हेडर: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS हुक: पूरे हुए"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS हुक: समय सीमा पर रुक गए"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS हुक: इस साइट के लिए बंद"
+  },
   "tipCacheExpires": {
     "message": "समाप्ति"
   },
@@ -4535,13 +4550,13 @@
     "message": "जाँचें"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "यह नियम {0} सहेजे गए पेजों में से {1} पर मेल खाता है"
+    "message": "इस नियम से मेल खाने वाले सहेजे गए पेज: {0} में से {1}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{1} में से {0} पेज"
+    "message": "पेज: {1} में से {0}"
   },
   "ruleHistoryCheckOtherFmt": {
-    "message": "+{0} अन्य पेज"
+    "message": "अन्य पेज: +{0}"
   },
   "ruleHistoryCheckNoHistory": {
     "message": "इतिहास खाली है: पहले कुछ पेज देखें।"
@@ -4550,7 +4565,7 @@
     "message": "अनुमान: इतिहास मिले हुए मान रखता है, पूरे पेज नहीं।"
   },
   "ruleHistoryCheckCombinationFmt": {
-    "message": "{0} पेजों पर सक्रिय"
+    "message": "सक्रिय पेज: {0}"
   },
   "ruleHistoryCheckEmpty": {
     "message": "जाँचने के लिए पैटर्न जोड़ें।"
@@ -5006,7 +5021,7 @@
     "message": "दिखे सुरक्षा उपाय"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "इस अवधि में {0} नए"
+    "message": "इस अवधि में नए: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "कुल नियम: {0}"
@@ -5180,7 +5195,7 @@
     "message": "मज़बूत साक्ष्य"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{1} में से {0} डिटेक्शन का स्कोर 80% या उससे ज़्यादा है।"
+    "message": "80% या उससे ज़्यादा स्कोर वाले डिटेक्शन: {1} में से {0}।"
   },
   "statsUnconfirmed": {
     "message": "ज़िक्र है, पुष्टि नहीं"
@@ -5249,7 +5264,7 @@
     "message": "कवरेज"
   },
   "statsRulesCoverageFmt": {
-    "message": "सक्षम {1} नियमों में से {0} इस अवधि में मेल खाए"
+    "message": "इस अवधि में मेल खाए सक्षम नियम: {1} में से {0}"
   },
   "statsRulesAttention": {
     "message": "ध्यान देने योग्य"
@@ -5559,7 +5574,7 @@
     "message": "सिर्फ़ बदले हुए पेज"
   },
   "historyExportCountFmt": {
-    "message": "{1} में से {0} प्रविष्टियाँ निर्यात होंगी"
+    "message": "निर्यात होने वाली प्रविष्टियाँ: {1} में से {0}"
   },
   "historyExportNone": {
     "message": "इन फ़िल्टर से कोई प्रविष्टि मेल नहीं खाती"
@@ -5596,6 +5611,12 @@
   },
   "historyFilterCombinations": {
     "message": "संयोजन"
+  },
+  "historyFilterHttpError": {
+    "message": "त्रुटि स्थिति"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "केवल त्रुटि स्थिति वाले पेज (4xx, 5xx)"
   },
   "historyNoResults": {
     "message": "आपकी खोज या फ़िल्टर से कोई प्रविष्टि मेल नहीं खाती।"
@@ -6114,7 +6135,7 @@
     "message": "पिछली जाँच: {0} · {1} जाँचे गए, {2} बदले"
   },
   "settingsHistoryWatchDoneFmt": {
-    "message": "{0} पेज जाँचे गए, {1} बदले"
+    "message": "जाँचे गए पेज: {0}, बदले: {1}"
   },
   "settingsHistoryWatchUncheckedFmt": {
     "message": "जाँचे नहीं जा सके: {0}"
@@ -6208,6 +6229,18 @@
   },
   "settingsShortcutRescanFmt": {
     "message": "इस पेज को फिर से स्कैन करें: {0}"
+  },
+  "settingsShortcutOpenFmt": {
+    "message": "एक्सटेंशन खोलें: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "खुले टैब में खोजें: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "इतिहास की प्रविष्टियों के बीच जाएँ: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "डायलॉग बंद करें: {0}"
   },
   "settingsShortcutsDesc": {
     "message": "पेज रीलोड होता है, ताकि सब कुछ शुरू से इकट्ठा हो।"
@@ -6483,7 +6516,7 @@
     "message": "सक्रिय नहीं"
   },
   "ruleLiveTestPageFmt": {
-    "message": "पढ़े गए: {0} स्क्रिप्ट, {1} एलिमेंट, {2} कुकीज़ और {3} अनुरोध।"
+    "message": "पेज से पढ़ा गया। स्क्रिप्ट: {0} · एलिमेंट: {1} · कुकीज़: {2} · अनुरोध: {3}।"
   },
   "ruleLiveTestNoRequests": {
     "message": "पेज के किए गए अनुरोध अभी उपलब्ध नहीं हैं, इसलिए URL पैटर्न केवल उसके पते और स्क्रिप्ट से मिलाए गए।"
@@ -6581,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "हर पेज की समय सीमा, सेकंड में"
   },
+  "bulkDelayLabel": {
+    "message": "पेजों के बीच प्रतीक्षा, सेकंड में"
+  },
   "bulkStart": {
     "message": "शुरू करें"
   },
@@ -6619,6 +6655,12 @@
     "message": "विफल या छोड़े गए",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "त्रुटि स्थिति (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "केवल {0}"
+  },
   "bulkCopyLines": {
     "message": "पंक्तियों के रूप में कॉपी करें"
   },
@@ -6626,7 +6668,7 @@
     "message": "कोई पेज इस फ़िल्टर से मेल नहीं खाता।"
   },
   "bulkShowingFmt": {
-    "message": "{1} में से {0} पेज दिख रहे हैं। एक्सपोर्ट में केवल यही शामिल होंगे।",
+    "message": "दिख रहे पेज: {1} में से {0}। एक्सपोर्ट में केवल यही शामिल होंगे।",
     "description": "Bulk scan: shown under the filter when it hides pages; {0} is the number shown, {1} the total. The exports follow the filter"
   },
   "bulkNewList": {
@@ -6773,6 +6815,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "सेटिंग्स में किए गए आपके बदलाव अभी सहेजे नहीं गए हैं। क्या बंद करने से पहले उन्हें सहेजें?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "सेटिंग्स में किए गए आपके बदलाव अभी सहेजे नहीं गए हैं। क्या नई सेटिंग्स लागू करने से पहले उन्हें सहेजें?"
+  },
   "historySortLabel": {
     "message": "इतिहास को क्रमबद्ध करें"
   },
@@ -6790,5 +6835,47 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "एक पंक्ति"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "केवल ब्लॉक और चैलेंज पेज"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "सिर्फ़ छोटे पेजों का पूरा HTML, शीर्षक सहित, खोजें, जैसे किसी फ़ायरवॉल का ब्लॉक पेज। बड़े पेज नहीं खोजे जाते"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "कौन-से पेज एक ही सहेजा गया परिणाम साझा करते हैं। डोमेन: साइट का हर पेज। पथ: वही पता, क्वेरी चाहे जो हो। पूर्ण URL: सिर्फ़ बिल्कुल वही पता।"
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "CSV, सादा टेक्स्ट और Markdown निर्यात में हर पेज की स्कैन तिथि जोड़ता है। JSON निर्यात में यह हमेशा रहती है।"
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "जब किसी पेज का परिणाम नए स्कैन के बजाय कैश से दोबारा इस्तेमाल होता है, तब भी उस पेज को इतिहास में दर्ज करता है।"
+  },
+  "detectionStrongToggle": {
+    "message": "मज़बूत (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "कम कठिनाई: यह आम तौर पर सामान्य ट्रैफ़िक को जाने देता है, और यथार्थवादी हेडर और कुकी वाले अनुरोध अक्सर पार हो जाते हैं।"
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "मध्यम कठिनाई: साधारण HTTP क्लाइंट को अक्सर चुनौती मिलती है; एक जैसी सेटिंग वाला असली ब्राउज़र आम तौर पर पार हो जाता है।"
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "उच्च कठिनाई: पार करना कठिन। यह ब्राउज़र, उसके व्यवहार और उसके नेटवर्क की जाँच करता है, और साधारण HTTP क्लाइंट को रोकता है।"
+  },
+  "detectionModalWebsite": {
+    "message": "वेबसाइट"
+  },
+  "detectionModalEditRule": {
+    "message": "नियम संपादित करें"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "साक्ष्य कॉपी करें"
+  },
+  "detectionModalDocs": {
+    "message": "पहचान गाइड"
   }
 }

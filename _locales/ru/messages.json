@@ -187,7 +187,7 @@
     "message": "Даты и часы указаны в вашем местном часовом поясе."
   },
   "statsTimelineLimitFmt": {
-    "message": "Показаны последние {0} дней. Итоги и экспорт включают весь выбранный период."
+    "message": "Показаны только последние дни (дней: {0}). Итоги и экспорт включают весь выбранный период."
   },
   "statsProtectionDetails": {
     "message": "Все защиты"
@@ -226,7 +226,7 @@
     "message": "Домен"
   },
   "statsTableCountFmt": {
-    "message": "{0} из {1} строк"
+    "message": "Строк: {0} из {1}"
   },
   "statsTableMore": {
     "message": "Показать ещё"
@@ -282,7 +282,7 @@
     "message": "Результаты появятся здесь после проверки."
   },
   "actionRemoveFromBlacklist": {
-    "message": "Удалить из чёрного списка"
+    "message": "Удалить из списка"
   },
   "statDetections": {
     "message": "Обнаружения"
@@ -537,7 +537,7 @@
     "message": "Инструменты"
   },
   "advancedSubtabHistory": {
-    "message": "История"
+    "message": "Захваты"
   },
   "advancedFilterSite": {
     "message": "Сайт"
@@ -609,7 +609,7 @@
     "message": "Показано {0}-{1} из {2}"
   },
   "paginationShowingItems": {
-    "message": "Показано {0}-{1} из {2} {3}"
+    "message": "{3}: показано {0}-{1} из {2}"
   },
   "timeUnknown": {
     "message": "Неизвестно"
@@ -660,7 +660,7 @@
     "message": "Цвета категорий"
   },
   "methodSuffixPatterns": {
-    "message": "шаблонов"
+    "message": "Шаблоны"
   },
   "btnSaveRule": {
     "message": "Сохранить правило"
@@ -711,10 +711,10 @@
     "message": "Дней"
   },
   "blacklistedDomains": {
-    "message": "Чёрный список доменов"
+    "message": "Пропускаемые сайты"
   },
   "blacklistedDomainsDesc": {
-    "message": "Домены, для которых обнаружение полностью пропускается"
+    "message": "На этих сайтах обнаружение никогда не запускается. Каждая запись — точное имя хоста: его поддомены по-прежнему сканируются."
   },
   "jsApiEvents": {
     "message": "События JS API"
@@ -818,7 +818,7 @@
     "message": "Нет совпадающих шаблонов"
   },
   "methodSuffixMatches": {
-    "message": "совпадений"
+    "message": "Совпадения"
   },
   "cacheExpiredLabel": {
     "message": "Истёк"
@@ -842,7 +842,7 @@
     "message": "Очистить кэш"
   },
   "clearCacheConfirmMsg": {
-    "message": "Это удалит закэшированные данные обнаружения для этого домена и запустит новый анализ."
+    "message": "Сохранённый результат обнаружения для этой страницы будет удалён (при области кэша «Домен» или «Путь» он может относиться и к другим страницам). Страница будет просканирована снова, когда вы её перезагрузите."
   },
   "clearCacheConfirmBtn": {
     "message": "Очистить кэш"
@@ -860,28 +860,28 @@
     "message": "Недопустимый домен"
   },
   "addBlacklistTitle": {
-    "message": "Добавить в чёрный список"
+    "message": "Пропускать этот сайт"
   },
   "addBlacklistMsgFmt": {
-    "message": "Домен \"{0}\" будет исключён из всех последующих обнаружений. Вы можете удалить его позже в настройках."
+    "message": "Сайт \"{0}\" больше не будет сканироваться. Отменить это можно в разделе Настройки → Обнаружение → Сайты для сканирования."
   },
   "addBlacklistBtn": {
-    "message": "Добавить в чёрный список"
+    "message": "Пропускать этот сайт"
   },
   "alreadyBlacklistedFmt": {
-    "message": "Домен \"{0}\" уже в чёрном списке"
+    "message": "Сайт \"{0}\" уже пропускается"
   },
   "addedToBlacklistFmt": {
-    "message": "Домен \"{0}\" добавлен в чёрный список"
+    "message": "Сайт \"{0}\" добавлен в пропускаемые"
   },
   "failedAddBlacklistFmt": {
-    "message": "Не удалось добавить в чёрный список: {0}"
+    "message": "Не удалось добавить сайт в пропускаемые: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "Домен \"{0}\" удалён из чёрного списка"
+    "message": "Сайт \"{0}\" удалён из пропускаемых"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "Не удалось удалить из чёрного списка: {0}"
+    "message": "Не удалось удалить сайт из пропускаемых: {0}"
   },
   "historyNoDetections": {
     "message": "Нет обнаружений"
@@ -914,10 +914,10 @@
     "message": "Не удалось очистить кэш"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "Домен \"{0}\" добавлен в чёрный список"
+    "message": "Сайт \"{0}\" добавлен в пропускаемые"
   },
   "notificationBlacklistFailed": {
-    "message": "Не удалось добавить в чёрный список"
+    "message": "Не удалось добавить сайт в пропускаемые"
   },
   "notificationHistoryItemDeleted": {
     "message": "Запись истории удалена"
@@ -989,7 +989,7 @@
     "message": "Не удалось получить URL текущей страницы"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0} уже в чёрном списке"
+    "message": "{0} уже пропускается"
   },
   "failedAddDomainFmt": {
     "message": "Не удалось добавить домен: {0}"
@@ -1418,7 +1418,7 @@
     "message": "Настройки кэша"
   },
   "settingsCardSkipDomains": {
-    "message": "Пропускаемые домены"
+    "message": "Пропускать эти сайты"
   },
   "settingsAddCurrentPage": {
     "message": "Добавить текущую страницу"
@@ -1517,13 +1517,13 @@
     "message": "Пример использования"
   },
   "detectionDisabledForDomain": {
-    "message": "Обнаружение отключено для этого домена"
+    "message": "Обнаружение приостановлено: вы пропускаете этот сайт"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "Удалить из чёрного списка"
+    "message": "Снова сканировать этот сайт"
   },
   "detectionBlacklistHint": {
-    "message": "Или перейдите в Настройки → Обнаружение → Домены в чёрном списке для управления."
+    "message": "Или перейдите в Настройки → Обнаружение → Сайты для сканирования, чтобы управлять списком."
   },
   "detectionNoDetectionsDesc": {
     "message": "На этой странице не найдено сигналов анти-бот систем, CAPTCHA или фингерпринтинга."
@@ -1541,7 +1541,7 @@
     "message": "Не удалось прочитать настройки — операция отменена"
   },
   "failedRemoveBlacklist": {
-    "message": "Не удалось удалить из чёрного списка"
+    "message": "Не удалось удалить сайт из пропускаемых"
   },
   "pasteConfirmTitle": {
     "message": "Загрузить обнаружения?"
@@ -1562,7 +1562,7 @@
     "message": "Копировать обзор"
   },
   "detectionTitleBlockDomain": {
-    "message": "Заблокировать этот домен"
+    "message": "Пропускать этот сайт"
   },
   "detectionStatSite": {
     "message": "Сайт"
@@ -1589,7 +1589,7 @@
     "message": "из"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "Этот домен в чёрном списке"
+    "message": "Этот сайт пропускается"
   },
   "detectionModalConfidence": {
     "message": "Уверенность"
@@ -1858,7 +1858,7 @@
     "message": "Поддерживаемые системы защиты"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "История захватов ({0})"
+    "message": "Показать захваты ({0})"
   },
   "detectionMethodJsHooks": {
     "message": "Перехватчики JavaScript"
@@ -1978,7 +1978,7 @@
     "message": "Страниц: {0}"
   },
   "historyCategoryShareFmt": {
-    "message": "{0} из {1} обнаружений · {2}%"
+    "message": "Обнаружений: {0} из {1} · {2}%"
   },
   "statsTimelineMetaFmt": {
     "message": "Обнаружений: {0} · дней: {1}"
@@ -3100,7 +3100,7 @@
     "message": "Нет"
   },
   "advHcaptchaNoHistory": {
-    "message": "История захватов пока пуста"
+    "message": "Захватов пока нет"
   },
   "advHcaptchaNotAvailable": {
     "message": "Н/Д"
@@ -3289,10 +3289,10 @@
     "message": "Н/Д"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "История захватов {0} очищена"
+    "message": "Захваты {0} очищены"
   },
   "advPanelFailedClearHistory": {
-    "message": "Не удалось очистить историю"
+    "message": "Не удалось очистить захваты"
   },
   "rulesUiNewDetectorName": {
     "message": "Новый детектор"
@@ -3550,16 +3550,16 @@
     "message": "Ошибка: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "В чёрном списке нет доменов"
+    "message": "Нет пропускаемых сайтов"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "Нет доменов, соответствующих запросу"
+    "message": "Нет сайтов, соответствующих запросу"
   },
   "settingsUiChecking": {
     "message": "Проверка..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "Лимит истории должен быть от 0 (без ограничений) до 10000"
+    "message": "Лимит истории должен быть целым числом от 0 до 10000 (при 0 хранится до 1 000 записей)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "Длительность кэша должна быть от 1 до {0} ({1})"
@@ -3631,7 +3631,7 @@
     "message": "Списку «Одно из этих» в каждом варианте нужен шаблон, который должен быть найден."
   },
   "combinationInvalidAtLeastFmt": {
-    "message": "Для «Хотя бы {0}» нужно {0} шаблонов, которые должны быть найдены."
+    "message": "Для «Хотя бы {0}» нужны шаблоны, которые должны быть найдены (количество: {0})."
   },
   "combinationSentenceOne": {
     "message": "Срабатывает, когда выполнено это условие."
@@ -3643,7 +3643,7 @@
     "message": "Срабатывает, когда выполнено любое из этих условий ({0})."
   },
   "combinationSentenceAtLeastFmt": {
-    "message": "Срабатывает, когда выполнено хотя бы {0} из {1} условий."
+    "message": "Срабатывает, когда выполнено минимальное число условий: {0} из {1}."
   },
   "combinationSentenceConfidenceFmt": {
     "message": "Уверенность: {0}%."
@@ -3808,7 +3808,7 @@
     "message": "Сохранено"
   },
   "tipConfidenceAverageFmt": {
-    "message": "Среднее по {0} обнаружениям, от {1}% до {2}%"
+    "message": "Среднее по обнаружениям (всего: {0}), от {1}% до {2}%"
   },
   "tipConfidenceFromCombinations": {
     "message": "По совпавшим комбинациям"
@@ -3832,7 +3832,7 @@
     "message": "Задаётся защитой {0}"
   },
   "tipDifficultyManyFmt": {
-    "message": "Повышена из-за {0} защит вместе"
+    "message": "Повышена из-за нескольких защит вместе (всего: {0})"
   },
   "tipDifficultyNoneCounted": {
     "message": "Анти-бот или CAPTCHA с уверенностью от 50% не найдены"
@@ -4153,7 +4153,7 @@
     "message": "Значение"
   },
   "advCommonCharsFmt": {
-    "message": "{0} симв."
+    "message": "символов: {0}"
   },
   "advCookiePath": {
     "message": "Путь"
@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "Код HTTP-статуса, которым страница ответила при сканировании. Ошибка (4xx или 5xx) часто означает, что запрос заблокировали или отправили на проверку."
   },
+  "detectionFactsTitle": {
+    "message": "Что проверено"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Файлы cookie: {0} · Скрипты: {1} · Запросы: {2} · Заголовки: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS-хуки: завершены"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS-хуки: остановлены по лимиту времени"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS-хуки: выключены для этого сайта"
+  },
   "tipCacheExpires": {
     "message": "Истекает"
   },
@@ -4535,13 +4550,13 @@
     "message": "Проверить"
   },
   "ruleHistoryCheckSummaryFmt": {
-    "message": "Это правило совпадает на страницах: {1} из {0} сохранённых"
+    "message": "Сохранённых страниц, где совпадает это правило: {1} из {0}"
   },
   "ruleHistoryCheckRulePagesFmt": {
-    "message": "{0} из {1} страниц"
+    "message": "Страниц: {0} из {1}"
   },
   "ruleHistoryCheckOtherFmt": {
-    "message": "+{0} других страниц"
+    "message": "Других страниц: +{0}"
   },
   "ruleHistoryCheckNoHistory": {
     "message": "История пуста: сначала откройте несколько страниц."
@@ -4550,7 +4565,7 @@
     "message": "Оценка: История хранит найденные значения, а не страницы целиком."
   },
   "ruleHistoryCheckCombinationFmt": {
-    "message": "срабатывает на {0} страницах"
+    "message": "срабатывает на страницах: {0}"
   },
   "ruleHistoryCheckEmpty": {
     "message": "Добавьте шаблоны, чтобы проверить их."
@@ -5006,7 +5021,7 @@
     "message": "Замечено защит"
   },
   "statsKpiProtectionsNewFmt": {
-    "message": "{0} новых за период"
+    "message": "Новых за период: {0}"
   },
   "statsKpiProtectionsRulesFmt": {
     "message": "Всего правил: {0}"
@@ -5180,7 +5195,7 @@
     "message": "Сильные доказательства"
   },
   "statsStrongEvidenceTipFmt": {
-    "message": "{0} из {1} обнаружений набирают 80% и выше."
+    "message": "Обнаружений с 80% и выше: {0} из {1}."
   },
   "statsUnconfirmed": {
     "message": "Упомянуты, но не подтверждены"
@@ -5249,7 +5264,7 @@
     "message": "Охват"
   },
   "statsRulesCoverageFmt": {
-    "message": "{0} из {1} включённых правил сработали за этот период"
+    "message": "Включённых правил, сработавших за этот период: {0} из {1}"
   },
   "statsRulesAttention": {
     "message": "Требуют внимания"
@@ -5559,7 +5574,7 @@
     "message": "Только изменённые страницы"
   },
   "historyExportCountFmt": {
-    "message": "Будет экспортировано {0} из {1} записей"
+    "message": "Будет экспортировано записей: {0} из {1}"
   },
   "historyExportNone": {
     "message": "Нет записей, подходящих под эти фильтры"
@@ -5596,6 +5611,12 @@
   },
   "historyFilterCombinations": {
     "message": "Комбинации"
+  },
+  "historyFilterHttpError": {
+    "message": "Код ошибки"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Только страницы с кодом ошибки (4xx, 5xx)"
   },
   "historyNoResults": {
     "message": "Нет записей, подходящих под поиск или фильтры."
@@ -6209,6 +6230,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Сканировать страницу заново: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Открыть расширение: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Поиск на открытой вкладке: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Переход между записями истории: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Закрыть диалоговое окно: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Страница перезагружается, поэтому всё собирается с самого начала."
   },
@@ -6483,7 +6516,7 @@
     "message": "не срабатывает"
   },
   "ruleLiveTestPageFmt": {
-    "message": "Прочитано: скриптов — {0}, элементов — {1}, файлов cookie — {2}, запросов — {3}."
+    "message": "Прочитано со страницы. Скриптов: {0} · элементов: {1} · файлов cookie: {2} · запросов: {3}."
   },
   "ruleLiveTestNoRequests": {
     "message": "Запросы, которые сделала страница, сейчас недоступны, поэтому шаблоны URL проверены только по её адресу и скриптам."
@@ -6581,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Лимит времени на страницу, в секундах"
   },
+  "bulkDelayLabel": {
+    "message": "Пауза между страницами, в секундах"
+  },
   "bulkStart": {
     "message": "Запустить"
   },
@@ -6618,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Со сбоем или пропущенные",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Код ошибки (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Только {0}"
   },
   "bulkCopyLines": {
     "message": "Копировать строками"
@@ -6773,6 +6815,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Изменения настроек ещё не сохранены. Сохранить их перед закрытием?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Изменения настроек ещё не сохранены. Сохранить их перед применением новых настроек?"
+  },
   "historySortLabel": {
     "message": "Сортировка истории"
   },
@@ -6790,5 +6835,47 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "Одна строка"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "Только страницы блокировки и проверки"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "Искать во всём HTML, включая заголовок, только на небольших страницах, например на странице блокировки файрвола. Большие страницы не проверяются"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "Какие страницы используют один сохранённый результат. Домен: все страницы сайта. Путь: тот же адрес при любом запросе. Полный URL: только точно тот же адрес."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "Добавляет дату сканирования каждой страницы в экспорт CSV, обычного текста и Markdown. Экспорт JSON содержит её всегда."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "Записывает страницу в историю и тогда, когда её результат берётся из кэша, а не из нового сканирования."
+  },
+  "detectionStrongToggle": {
+    "message": "Сильные (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "Низкая сложность: обычный трафик, как правило, пропускается, а запросы с реалистичными заголовками и cookie часто проходят."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "Средняя сложность: простые HTTP-клиенты часто получают проверку; настоящий браузер с согласованными настройками обычно проходит."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "Высокая сложность: обойти трудно. Проверяет браузер, его поведение и сеть, из которой он приходит, и блокирует простые HTTP-клиенты."
+  },
+  "detectionModalWebsite": {
+    "message": "Сайт"
+  },
+  "detectionModalEditRule": {
+    "message": "Редактировать правило"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Копировать доказательства"
+  },
+  "detectionModalDocs": {
+    "message": "Руководство по обнаружению"
   }
 }

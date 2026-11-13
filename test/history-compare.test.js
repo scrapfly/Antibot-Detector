@@ -581,8 +581,8 @@ test('the dialog: "Copy summary" is a real button of the content, after the four
   assert.equal(copy.getAttribute('type'), 'button', 'a button of the page, so it submits nothing');
   assert.equal(copy.textContent, 'Copy summary', 'its own text is its name');
   assert.equal(copy.first('history-compare-copy-icon').getAttribute('aria-hidden'), 'true', 'its icon is decoration');
-  const order = d.form.children.map((node) => [...node.classes].find((name) => /^history-compare-(pick|range|summary|copy|result)$/.test(name)));
-  assert.deepEqual(order, ['history-compare-pick', 'history-compare-range', 'history-compare-summary', 'history-compare-copy', 'history-compare-result'],
+  const order = d.form.children.map((node) => [...node.classes].find((name) => /^history-compare-(pick|range|http|summary|copy|result)$/.test(name)));
+  assert.deepEqual(order, ['history-compare-pick', 'history-compare-range', 'history-compare-http', 'history-compare-summary', 'history-compare-copy', 'history-compare-result'],
     'the Tab order is the reading order: the list, the button for the counts above it, then the scrolling results');
   assert.deepEqual([d.options.confirmText, d.options.cancelText, d.options.focus === d.select], ['Copy as Markdown', 'Close', true], 'the footer and the first focus are as before');
   d.close(false);
@@ -654,4 +654,18 @@ test('the dialog: Enter on "Copy summary" presses the button, as it does on Unch
   d.close(false);
   await d.done;
   assert.equal(d.listeners.filter((l) => l.type === 'keydown').length, 0, 'removed when the dialog closes');
+});
+
+test('the two scans\' HTTP status: the move, the same code once, a dash for a scan that did not know it, nothing when neither did', () => {
+  const at = (id, time, httpStatus) => ({ ...entry(id, 'https://shop.example/p', time, [det('Cloudflare', 'Anti-Bot', 90)]), ...(httpStatus === undefined ? {} : { httpStatus }) });
+  assert.equal(C.statusText(C.compare(at('b', T0 + 1000, 403), at('a', T0, 200))), 'HTTP status: 200 → 403', 'earlier first, whatever order they come in');
+  assert.equal(C.statusText(C.compare(at('a', T0, 200), at('b', T0 + 1000, 403)), { rtl: true }), 'HTTP status: 200 ← 403', 'a right-to-left line reads the arrow its own way');
+  assert.equal(C.statusText(C.compare(at('a', T0, 503), at('b', T0 + 1000, 503))), 'HTTP status: 503');
+  assert.equal(C.statusText(C.compare(at('a', T0), at('b', T0 + 1000, 429))), 'HTTP status: - → 429', 'an entry saved before 3.1.9');
+  assert.equal(C.statusText(C.compare(at('a', T0), at('b', T0 + 1000, 304))), '', 'neither known (a 304 says nothing)');
+  const t = (key, fallback, ...args) => `[${key}]${args.join('|')}`;
+  assert.equal(C.statusText(C.compare(at('a', T0, 200), at('b', T0 + 1000, 403)), { t }), '[detectionHttpStatusFmt]200 → 403', 'the Detection tab\'s own words');
+  const md = C.toMarkdown(C.compare(at('a', T0, 200), at('b', T0 + 1000, 403)), { host: 'shop.example' });
+  assert.match(md, /\nFrom .+\n\nHTTP status: 200 → 403\n/, 'the report says it under the dates');
+  assert.ok(!/HTTP status/.test(C.toMarkdown(C.compare(at('a', T0), at('b', T0 + 1000)), { host: 'shop.example' })), 'and nothing when it is not known');
 });

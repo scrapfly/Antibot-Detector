@@ -38,7 +38,7 @@ AkamaiAdvanced.prototype.beforeCapture = async function() {
                 options: {
                 type: 'error',
                 module: 'Akamai',
-                title: tr('advAkamaiNoticeNotDetectedTitle', 'No Akamai Detected'),
+                title: tr('advAkamaiNoticeNotDetectedTitle', 'No Akamai detected'),
                 message: `${tr('advAkamaiNoticeNoAbck', 'The _abck cookie is not present on this page.')} ${tr('advAkamaiNoticeNotActive', 'Akamai Bot Manager is not active here.')}`,
                 duration: 7000
                 }

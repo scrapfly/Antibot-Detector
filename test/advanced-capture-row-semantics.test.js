@@ -46,7 +46,7 @@ test('a row is a labelled group, not a button, and cannot take the focus itself'
     assert.match(open, /data-capture-id="c\d"/);
   }
   assert.match(rows[0], /aria-label="Capture · Akamai · shop\.example"/);
-  assert.match(rows[1], /aria-label="Analyze Scripts · Akamai · shop\.example"/);
+  assert.match(rows[1], /aria-label="Analyze scripts · Akamai · shop\.example"/);
 });
 
 test('the row has three real buttons side by side: open (logo and text), Copy and Delete; none inside another', () => {
@@ -70,7 +70,7 @@ test('the row has three real buttons side by side: open (logo and text), Copy an
 test('the names stay safe: a vendor or tool name with markup is escaped in the labels', () => {
   const [row] = rowsOf(render([{ ...entry('c1', { schemaVersion: 1, tool: 'analysis' }), moduleName: 'A"><img src=x>' }]));
   assert.doesNotMatch(row, /<img src=x>/);
-  assert.match(row, /aria-label="Analyze Scripts · A&quot;&gt;&lt;img src=x&gt; · shop\.example"/);
+  assert.match(row, /aria-label="Analyze scripts · A&quot;&gt;&lt;img src=x&gt; · shop\.example"/);
 });
 
 test('the stylesheet lays the open button out as the row did: it fills what the actions leave, draws nothing of its own, and the row shows the focus ring', () => {

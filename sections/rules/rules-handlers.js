@@ -39,9 +39,9 @@ Rules.prototype.handleImport = async function(event) {
     const data = JSON.parse(text);
 
     const mode = await NotificationHelper.chooseImportMode({
-      title: _tr('importDetectorsTitle', 'Import Detectors'),
-      message: _tr('importDetectorsModeMessage', 'Merge adds the imported detectors to yours.<br>Replace All deletes your custom detectors first; built-in detectors stay.'),
-      replaceText: _tr('replaceAllOption', 'Replace All')
+      title: _tr('importDetectorsTitle', 'Import detectors'),
+      message: _tr('importDetectorsModeMessage', 'Merge adds the imported detectors to yours.<br>Replace all deletes your custom detectors first; built-in detectors stay.'),
+      replaceText: _tr('replaceAllOption', 'Replace all')
     });
 
     // Cancel, ✕, Escape and the backdrop: leave the stored detectors alone
@@ -317,7 +317,7 @@ Rules.prototype.resolveEditedRuleUpdates = async function(updates) {
   if (replace.length > 0) {
     const result = await UpdateManager.applyUpdates({ ids: replace, overwriteModified: true });
     if (result.success && result.count > 0) {
-      NotificationHelper.success(_fmt('detectorsUpdatedFmt', `${result.count} detectors updated`, result.count));
+      NotificationHelper.success(_fmt('detectorsUpdatedFmt', `Detectors updated: ${result.count}`, result.count));
     } else if (!result.success || result.failed > 0) {
       NotificationHelper.warning(_tr('couldNotFetchUpdates', 'Could not fetch updates from server'));
     }
@@ -415,7 +415,7 @@ Rules.prototype.handleClear = async function() {
       chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, (response) => {
         Logger.ui('Detectors reloaded in background after clear:', response);
       });
-      NotificationHelper.success(_fmt('customDetectorsClearedFmt', `${removed} custom detectors removed`, removed));
+      NotificationHelper.success(_fmt('customDetectorsClearedFmt', `Custom detectors removed: ${removed}`, removed));
     } else {
       NotificationHelper.info(_tr('noCustomDetectorsToClear', 'There are no custom detectors to clear'));
     }
@@ -436,7 +436,7 @@ Rules.prototype.handleRestoreOfficial = async function() {
   const _fmt = (key, fallback, ...args) => (t && t.format(key, ...args)) || fallback;
   const failMessage = (error) => {
     const reason = error && error.message ? error.message : String(error);
-    return `${_tr('failedRestoreOfficialDetectors', 'Failed to restore official detectors')}: ${reason}`;
+    return FormatUtils.labelValue(_tr('failedRestoreOfficialDetectors', 'Failed to restore official detectors'), reason);
   };
   // The latest release on GitHub, as Rules → Update uses; without it the
   // copies included in the extension are used

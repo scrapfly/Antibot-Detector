@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extensionName__",
-  "version": "3.1.8",
+  "version": "3.1.9",
   "description": "__MSG_extensionDescription__",
   "default_locale": "en",
   "minimum_chrome_version": "111",
@@ -51,6 +51,7 @@
       "js": [
         "modules/core/bridge-protocol.js",
         "modules/core/worker-messages.js",
+        "modules/core/prerender-outbox.js",
         "modules/core/logger.js",
         "modules/core/constants.js",
         "modules/core/hooks-config.js",

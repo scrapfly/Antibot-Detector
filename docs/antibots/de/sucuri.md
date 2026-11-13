@@ -12,7 +12,7 @@ Offizielle Website: [https://sucuri.net/](https://sucuri.net/)
 
 ## Woran erkenne ich, ob eine Website Sucuri WAF nutzt?
 
-Diese Signale werden aus den eigenen Erkennungsregeln der Erweiterung für `detect-sucuri` erzeugt (Regelversion 2.1.0, zuletzt aktualisiert am 2026-10-16). Ein Signal ist nur ein Hinweis: Die Konfidenz gibt an, wie sicher sich die Erweiterung ist, wenn genau dieses eine Signal auftritt. Signale mit der Kennzeichnung „nur zur Bestätigung“ zählen nie allein, weil auch andere Produkte sie erzeugen können.
+Diese Signale werden aus den eigenen Erkennungsregeln der Erweiterung für `detect-sucuri` erzeugt (Regelversion 2.2.0, zuletzt aktualisiert am 2026-11-12). Ein Signal ist nur ein Hinweis: Die Konfidenz gibt an, wie sicher sich die Erweiterung ist, wenn genau dieses eine Signal auftritt. Signale mit der Kennzeichnung „nur zur Bestätigung“ zählen nie allein, weil auch andere Produkte sie erzeugen können.
 
 ### Cookies
 
@@ -39,7 +39,7 @@ Text, der in der Seite oder ihren Skripten gefunden wird.
 
 | Signal | Konfidenz | Worauf es hinweist |
 | --- | --- | --- |
-| `Sucuri WebSite Firewall - Access Denied` | 30% (nur zur Bestätigung) | Sucuri block page title |
+| `Sucuri Web ?Site Firewall - (?:CloudProxy - )?Access Denied\|Access Denied - Sucuri Web ?Site Firewall` | 30% (nur zur Bestätigung) | Sucuri block page title |
 | `Block ID:` | 20% (nur zur Bestätigung) | Block ID label on the Sucuri block page |
 | `sucuri_cloudproxy_js` | 10% | Sucuri CloudProxy JS challenge variable |
 

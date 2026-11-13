@@ -282,7 +282,7 @@
     "message": "검사가 끝나면 여기에 결과가 표시됩니다."
   },
   "actionRemoveFromBlacklist": {
-    "message": "블랙리스트에서 제거"
+    "message": "목록에서 제거"
   },
   "statDetections": {
     "message": "탐지"
@@ -537,7 +537,7 @@
     "message": "도구"
   },
   "advancedSubtabHistory": {
-    "message": "기록"
+    "message": "캡처"
   },
   "advancedFilterSite": {
     "message": "사이트"
@@ -711,10 +711,10 @@
     "message": "일"
   },
   "blacklistedDomains": {
-    "message": "블랙리스트 도메인"
+    "message": "건너뛰는 사이트"
   },
   "blacklistedDomainsDesc": {
-    "message": "탐지가 완전히 건너뛰어지는 도메인"
+    "message": "이 사이트에서는 탐지를 실행하지 않습니다. 각 항목은 정확한 호스트 이름이며, 하위 도메인은 계속 스캔됩니다."
   },
   "jsApiEvents": {
     "message": "JS API 이벤트"
@@ -842,7 +842,7 @@
     "message": "캐시 지우기"
   },
   "clearCacheConfirmMsg": {
-    "message": "이 도메인의 캐시된 감지 데이터를 제거하고 새로운 분석을 실행합니다."
+    "message": "이 페이지의 저장된 탐지 결과를 제거합니다(캐시 범위가 도메인 또는 경로이면 다른 페이지에도 적용될 수 있습니다). 페이지를 새로고침하면 다시 스캔됩니다."
   },
   "clearCacheConfirmBtn": {
     "message": "캐시 지우기"
@@ -860,28 +860,28 @@
     "message": "유효하지 않은 도메인"
   },
   "addBlacklistTitle": {
-    "message": "블랙리스트에 추가"
+    "message": "이 사이트 건너뛰기"
   },
   "addBlacklistMsgFmt": {
-    "message": "도메인 \"{0}\"이(가) 향후 모든 감지에서 제외됩니다. 나중에 설정에서 제거할 수 있습니다."
+    "message": "\"{0}\"은(는) 이제부터 스캔하지 않습니다. 설정 → 탐지 → 스캔할 사이트에서 되돌릴 수 있습니다."
   },
   "addBlacklistBtn": {
-    "message": "블랙리스트에 추가"
+    "message": "이 사이트 건너뛰기"
   },
   "alreadyBlacklistedFmt": {
-    "message": "도메인 \"{0}\"은(는) 이미 블랙리스트에 있습니다"
+    "message": "\"{0}\"은(는) 이미 건너뛰고 있습니다"
   },
   "addedToBlacklistFmt": {
-    "message": "\"{0}\"을(를) 블랙리스트에 추가했습니다"
+    "message": "\"{0}\"을(를) 건너뛰는 사이트에 추가했습니다"
   },
   "failedAddBlacklistFmt": {
-    "message": "블랙리스트에 추가하지 못했습니다: {0}"
+    "message": "이 사이트를 건너뛰도록 설정하지 못했습니다: {0}"
   },
   "removedFromBlacklistFmt": {
-    "message": "블랙리스트에서 \"{0}\"을(를) 제거했습니다"
+    "message": "\"{0}\"을(를) 건너뛰는 사이트에서 제거했습니다"
   },
   "failedRemoveBlacklistFmt": {
-    "message": "블랙리스트에서 제거하지 못했습니다: {0}"
+    "message": "건너뛰는 사이트에서 제거하지 못했습니다: {0}"
   },
   "historyNoDetections": {
     "message": "감지 없음"
@@ -914,10 +914,10 @@
     "message": "캐시를 지우지 못했습니다"
   },
   "notificationDomainBlacklistedFmt": {
-    "message": "\"{0}\"을(를) 블랙리스트에 추가했습니다"
+    "message": "\"{0}\"을(를) 건너뛰는 사이트에 추가했습니다"
   },
   "notificationBlacklistFailed": {
-    "message": "블랙리스트에 추가하지 못했습니다"
+    "message": "이 사이트를 건너뛰도록 설정하지 못했습니다"
   },
   "notificationHistoryItemDeleted": {
     "message": "기록 항목이 삭제되었습니다"
@@ -989,7 +989,7 @@
     "message": "현재 페이지 URL을 가져올 수 없습니다"
   },
   "domainAlreadyBlacklistedFmt": {
-    "message": "{0}은(는) 이미 블랙리스트에 있습니다"
+    "message": "{0}은(는) 이미 건너뛰고 있습니다"
   },
   "failedAddDomainFmt": {
     "message": "도메인을 추가하지 못했습니다: {0}"
@@ -1418,7 +1418,7 @@
     "message": "캐시 설정"
   },
   "settingsCardSkipDomains": {
-    "message": "도메인 건너뛰기"
+    "message": "다음 사이트 건너뛰기"
   },
   "settingsAddCurrentPage": {
     "message": "현재 페이지 추가"
@@ -1517,13 +1517,13 @@
     "message": "사용 예시"
   },
   "detectionDisabledForDomain": {
-    "message": "이 도메인에 대해 감지가 비활성화되어 있습니다"
+    "message": "탐지 일시 중지됨: 이 사이트를 건너뛰고 있습니다"
   },
   "detectionRemoveFromBlacklistBtn": {
-    "message": "블랙리스트에서 제거"
+    "message": "이 사이트 다시 스캔"
   },
   "detectionBlacklistHint": {
-    "message": "또는 설정 → 감지 → 블랙리스트 도메인에서 관리할 수 있습니다."
+    "message": "또는 설정 → 탐지 → 스캔할 사이트에서 목록을 관리할 수 있습니다."
   },
   "detectionNoDetectionsDesc": {
     "message": "이 페이지에서 일치하는 안티봇, CAPTCHA 또는 핑거프린팅 신호를 찾지 못했습니다."
@@ -1541,7 +1541,7 @@
     "message": "설정을 읽을 수 없습니다 — 작업이 취소되었습니다"
   },
   "failedRemoveBlacklist": {
-    "message": "차단 목록에서 제거하지 못했습니다"
+    "message": "건너뛰는 사이트에서 제거하지 못했습니다"
   },
   "pasteConfirmTitle": {
     "message": "탐지 결과를 업로드할까요?"
@@ -1562,7 +1562,7 @@
     "message": "개요 복사"
   },
   "detectionTitleBlockDomain": {
-    "message": "이 도메인 차단"
+    "message": "이 사이트 건너뛰기"
   },
   "detectionStatSite": {
     "message": "사이트"
@@ -1589,7 +1589,7 @@
     "message": "/"
   },
   "detectionDomainBlacklistedTitle": {
-    "message": "이 도메인은 블랙리스트에 있습니다"
+    "message": "이 사이트는 건너뛰고 있습니다"
   },
   "detectionModalConfidence": {
     "message": "신뢰도"
@@ -1858,7 +1858,7 @@
     "message": "지원되는 보호 기능"
   },
   "advancedToolsOpenHistoryFmt": {
-    "message": "캡처 기록 보기({0})"
+    "message": "캡처 보기({0})"
   },
   "detectionMethodJsHooks": {
     "message": "JavaScript 후크"
@@ -3100,7 +3100,7 @@
     "message": "아니요"
   },
   "advHcaptchaNoHistory": {
-    "message": "아직 캡처 기록이 없습니다"
+    "message": "아직 캡처 없음"
   },
   "advHcaptchaNotAvailable": {
     "message": "없음"
@@ -3289,10 +3289,10 @@
     "message": "없음"
   },
   "advPanelHistoryClearedFmt": {
-    "message": "{0} 캡처 기록을 지웠습니다"
+    "message": "{0} 캡처를 지웠습니다"
   },
   "advPanelFailedClearHistory": {
-    "message": "기록을 지우지 못했습니다"
+    "message": "캡처를 지우지 못했습니다"
   },
   "rulesUiNewDetectorName": {
     "message": "새 탐지기"
@@ -3550,16 +3550,16 @@
     "message": "오류: {0}"
   },
   "settingsUiBlacklistEmpty": {
-    "message": "블랙리스트에 도메인이 없습니다"
+    "message": "건너뛰는 사이트가 없습니다"
   },
   "settingsUiBlacklistNoMatches": {
-    "message": "검색과 일치하는 도메인이 없습니다"
+    "message": "검색과 일치하는 사이트가 없습니다"
   },
   "settingsUiChecking": {
     "message": "확인 중..."
   },
   "settingsUiErrHistoryLimit": {
-    "message": "기록 한도는 0(무제한)에서 10000 사이여야 합니다"
+    "message": "기록 한도는 0에서 10000 사이의 정수여야 합니다(0이면 최대 1,000개 항목을 보관)"
   },
   "settingsUiErrCacheDurationFmt": {
     "message": "캐시 기간은 1에서 {0} 사이여야 합니다({1})"
@@ -4521,6 +4521,21 @@
   },
   "detectionTipHttpStatus": {
     "message": "스캔할 때 페이지가 응답한 HTTP 상태 코드입니다. 오류(4xx 또는 5xx)는 요청이 차단되었거나 챌린지를 받았다는 뜻인 경우가 많습니다."
+  },
+  "detectionFactsTitle": {
+    "message": "확인한 항목"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "쿠키: {0} · 스크립트: {1} · 요청: {2} · 헤더: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS 후크: 완료"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS 후크: 시간 제한에서 중지됨"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS 후크: 이 사이트에서 꺼짐"
   },
   "tipCacheExpires": {
     "message": "만료"
@@ -5597,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "조합"
   },
+  "historyFilterHttpError": {
+    "message": "오류 상태"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "오류 상태인 페이지만 (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "검색어나 필터와 일치하는 항목이 없습니다."
   },
@@ -6209,6 +6230,18 @@
   "settingsShortcutRescanFmt": {
     "message": "이 페이지 다시 스캔: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "확장 프로그램 열기: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "열린 탭에서 검색: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "기록 항목 간 이동: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "대화 상자 닫기: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "페이지를 새로고침하므로 모든 항목을 처음부터 수집합니다."
   },
@@ -6581,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "페이지당 제한 시간(초)"
   },
+  "bulkDelayLabel": {
+    "message": "페이지 사이 대기 시간(초)"
+  },
   "bulkStart": {
     "message": "시작"
   },
@@ -6618,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "실패 또는 건너뜀",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "오류 상태 (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "{0}만"
   },
   "bulkCopyLines": {
     "message": "줄로 복사"
@@ -6773,6 +6815,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "설정 변경 사항이 아직 저장되지 않았습니다. 닫기 전에 저장할까요?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "설정 변경 사항이 아직 저장되지 않았습니다. 새 설정을 적용하기 전에 저장할까요?"
+  },
   "historySortLabel": {
     "message": "기록 정렬"
   },
@@ -6790,5 +6835,47 @@
   },
   "detectionCopyMenuOneLine": {
     "message": "한 줄"
+  },
+  "rulesOnlyBlockPages": {
+    "message": "차단 및 챌린지 페이지만"
+  },
+  "rulesOnlyBlockPagesHint": {
+    "message": "방화벽 차단 페이지처럼 작은 페이지에서만 제목을 포함한 HTML 전체를 검색합니다. 더 큰 페이지는 검색하지 않습니다"
+  },
+  "labelValueFmt": {
+    "message": "{0}: {1}"
+  },
+  "settingsCacheScopeDesc": {
+    "message": "하나의 저장된 결과를 함께 쓰는 페이지 범위입니다. 도메인: 사이트의 모든 페이지. 경로: 쿼리와 관계없이 같은 주소. 전체 URL: 정확히 같은 주소만."
+  },
+  "settingsIncludeTimestampsDesc": {
+    "message": "CSV, 일반 텍스트, Markdown 내보내기에 각 페이지의 스캔 날짜를 추가합니다. JSON 내보내기에는 항상 포함됩니다."
+  },
+  "settingsSaveOnCacheHitsDesc": {
+    "message": "새로 스캔하지 않고 캐시의 결과를 다시 사용할 때도 해당 페이지를 기록에 남깁니다."
+  },
+  "detectionStrongToggle": {
+    "message": "강함 (≥80%)"
+  },
+  "detectionModalDifficultyLow": {
+    "message": "난이도 낮음: 일반 트래픽은 대개 통과시키며, 현실적인 헤더와 쿠키를 갖춘 요청도 자주 통과합니다."
+  },
+  "detectionModalDifficultyMedium": {
+    "message": "난이도 중간: 단순 HTTP 클라이언트는 자주 챌린지를 받으며, 설정이 일관된 실제 브라우저는 대개 통과합니다."
+  },
+  "detectionModalDifficultyHigh": {
+    "message": "난이도 높음: 통과하기 어렵습니다. 브라우저와 그 동작, 접속 네트워크를 확인하고 단순 HTTP 클라이언트는 차단합니다."
+  },
+  "detectionModalWebsite": {
+    "message": "웹사이트"
+  },
+  "detectionModalEditRule": {
+    "message": "규칙 편집"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "증거 복사"
+  },
+  "detectionModalDocs": {
+    "message": "탐지 가이드"
   }
 }

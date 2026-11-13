@@ -115,3 +115,35 @@ test('with two protections the list stays to choose from, and a former single vi
   assert.notEqual(panel.style.display, 'block');
 });
 
+
+// Detection details → Open tools: the Advanced tab opens on that protection's tools
+test('a protection asked for from the Detection dialog opens its tools, with focus on Change', async () => {
+  const { advanced, panel, change } = fixture();
+  let loaded;
+  advanced.loadDetectionModule = async id => { loaded = id; return { renderTools: () => 'reCAPTCHA tools' }; };
+  advanced.constructor.requestTools('detect-recaptcha');
+  assert.equal(await advanced.openRequestedOrOnlyProtection(), true);
+  assert.equal(loaded, 'detect-recaptcha');
+  assert.equal(panel.innerHTML, 'reCAPTCHA tools');
+  assert.equal(change.focused, true, 'the person pressed Open tools: focus goes to the tools');
+  assert.equal(advanced.constructor.takeRequestedTools(), null, 'the request is used once');
+});
+
+test('a request for a protection Advanced does not list falls back to the usual view', async () => {
+  const { advanced, panel } = fixture();
+  advanced.loadDetectionModule = async () => { throw new Error('nothing should load'); };
+  advanced.constructor.requestTools('detect-datadome');
+  assert.equal(await advanced.openRequestedOrOnlyProtection(), false, 'two protections listed, neither asked for: the list');
+  assert.notEqual(panel.style.display, 'block');
+  assert.equal(advanced.constructor.takeRequestedTools(), null, 'and the request is gone');
+});
+
+test('a request left unused for a minute is forgotten', () => {
+  const { advanced } = fixture();
+  const Advanced = advanced.constructor;
+  Advanced.requestTools('detect-akamai', 1000);
+  assert.equal(Advanced.takeRequestedTools(1000 + 61000), null);
+  Advanced.requestTools('detect-akamai', 1000);
+  assert.equal(Advanced.takeRequestedTools(1000 + 59000), 'detect-akamai');
+  assert.equal(Advanced.takeRequestedTools(1000 + 59000), null, 'once');
+});

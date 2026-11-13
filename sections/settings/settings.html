@@ -57,7 +57,7 @@
 
         <!-- Core Settings: one card, one divider row per setting -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title" data-i18n="settingsGroupCoreSettings">Core Settings</div>
+          <div class="settings-card-group-title" data-i18n="settingsGroupCoreSettings">Core settings</div>
 
           <div class="settings-card">
             <!-- Notifications -->
@@ -122,8 +122,13 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg>
                   <span data-i18n="settingsShortcutsTitle">Keyboard shortcuts</span>
                 </div>
-                <p class="settings-row-desc" id="settingsShortcutRescan">Scan this page again: Alt+Shift+S</p>
+                <p class="settings-row-desc" id="settingsShortcutOpen">Open the extension: <kbd dir="ltr">not set</kbd></p>
+                <p class="settings-row-desc" id="settingsShortcutRescan">Scan this page again: <kbd dir="ltr">Alt+Shift+S</kbd></p>
                 <p class="settings-row-desc" data-i18n="settingsShortcutsDesc">The page reloads, so everything is collected from the start.</p>
+                <!-- The popup's own keys (SettingsUI.POPUP_SHORTCUTS) -->
+                <p class="settings-row-desc" id="settingsShortcutSearch">Search the open tab: <kbd dir="ltr">/</kbd></p>
+                <p class="settings-row-desc" id="settingsShortcutHistory">Move between History entries: <kbd dir="ltr">j / k, ↓ / ↑</kbd></p>
+                <p class="settings-row-desc" id="settingsShortcutEscape">Close a dialog: <kbd dir="ltr">Esc</kbd></p>
               </div>
               <button type="button" id="openShortcutsBtn" class="action-btn" data-i18n="settingsShortcutsChange">Change</button>
             </div>
@@ -133,7 +138,7 @@
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14,12H10V10H14M14,16H10V14H14M20,8H17.19C16.74,7.22 16.12,6.55 15.37,6.04L17,4.41L15.59,3L13.42,5.17C12.96,5.06 12.5,5 12,5C11.5,5 11.04,5.06 10.59,5.17L8.41,3L7,4.41L8.62,6.04C7.88,6.55 7.26,7.22 6.81,8H4V10H6.09C6.04,10.33 6,10.66 6,11V12H4V14H6V15C6,15.34 6.04,15.67 6.09,16H4V18H6.81C7.85,19.79 9.78,21 12,21C14.22,21 16.15,19.79 17.19,18H20V16H17.91C17.96,15.67 18,15.34 18,15V14H20V12H18V11C18,10.66 17.96,10.33 17.91,10H20V8M16,15A4,4 0 0,1 12,19A4,4 0 0,1 8,15V11A4,4 0 0,1 12,7A4,4 0 0,1 16,11V15Z"/></svg>
-                  <span id="debugModeGeneralLabel" data-i18n="settingsCardDebug">Debug Mode</span>
+                  <span id="debugModeGeneralLabel" data-i18n="settingsCardDebug">Debug mode</span>
                 </div>
                 <p class="settings-row-desc" data-i18n="settingsCardDebugDesc">Writes one readable report per scanned page to the extension's console.</p>
               </div>
@@ -163,7 +168,7 @@
               </div>
               <div class="setting-row setting-row--inline setting-row--toggle">
                 <span class="setting-row-label debug-option-label">
-                  <span id="logCollectorEnabledLabel" data-i18n="settingsRowLogCollector">Log Collector</span>
+                  <span id="logCollectorEnabledLabel" data-i18n="settingsRowLogCollector">Log collector</span>
                   <span class="debug-option-desc" data-i18n="settingsRowLogCollectorDesc">Keep the logs here instead of the console, to export them as JSON or text</span>
                 </span>
                 <label class="switch switch-sm">
@@ -173,7 +178,7 @@
               </div>
               <div id="logCollectorControls" style="display: none;">
                 <div class="setting-row setting-row--inline">
-                  <span id="logCollectorMaxLogsLabel" class="setting-row-label" data-i18n="settingsRowMaxLogs">Max Logs</span>
+                  <span id="logCollectorMaxLogsLabel" class="setting-row-label" data-i18n="settingsRowMaxLogs">Max logs</span>
                   <input type="number" id="logCollectorMaxLogs" class="input-field" min="100" max="5000" step="100" value="5000" aria-labelledby="logCollectorMaxLogsLabel">
                 </div>
                 <div class="setting-row setting-row--inline">
@@ -185,7 +190,7 @@
                     <svg width="14" height="14" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z" fill="currentColor"/></svg>
                     JSON
                   </button>
-                  <button id="exportLogsTextBtn" class="action-btn" title="Export Text" data-i18n-title="settingsUiExportText">
+                  <button id="exportLogsTextBtn" class="action-btn" title="Export text" data-i18n-title="settingsUiExportText">
                     <svg width="14" height="14" viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M8,15.5H16V17H8V15.5M8,11.5H16V13H8V11.5Z" fill="currentColor"/></svg>
                     <span data-i18n="settingsUiLogsText">Text</span>
                   </button>
@@ -200,14 +205,14 @@
 
         <!-- Detector Updates Group -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title" data-i18n="settingsGroupDetectorUpdates">Detector Updates</div>
+          <div class="settings-card-group-title" data-i18n="settingsGroupDetectorUpdates">Detector updates</div>
 
           <div class="settings-card">
             <div class="settings-row settings-row--auto-update">
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21,10.12H14.22L16.96,7.3C14.23,4.6 9.81,4.5 7.08,7.2C4.35,9.91 4.35,14.28 7.08,17C9.81,19.7 14.23,19.7 16.96,17C18.32,15.65 19,14.08 19,12.1H21C21,14.08 20.12,16.65 18.36,18.39C14.85,21.87 9.15,21.87 5.64,18.39C2.14,14.92 2.11,9.28 5.62,5.81C9.13,2.34 14.76,2.34 18.27,5.81L21,3V10.12M12.5,8V12.25L16,14.33L15.28,15.54L11,13V8H12.5Z"/></svg>
-                  <span id="autoUpdateLabel" data-i18n="settingsCardAutoUpdate">Auto-check for Updates</span>
+                  <span id="autoUpdateLabel" data-i18n="settingsCardAutoUpdate">Auto-check for updates</span>
                 </div>
                 <p class="settings-row-desc" data-i18n="settingsCardAutoUpdateDesc">Automatically check for new detector definitions</p>
               </div>
@@ -218,7 +223,7 @@
             </div>
             <div class="settings-card-body" id="updateIntervalGroup">
               <div class="setting-row setting-row--inline">
-                <span id="checkIntervalHoursLabel" class="setting-row-label" data-i18n="settingsRowCheckInterval">Check Interval</span>
+                <span id="checkIntervalHoursLabel" class="setting-row-label" data-i18n="settingsRowCheckInterval">Check interval</span>
                 <select id="checkIntervalHours" class="select-field" aria-labelledby="checkIntervalHoursLabel">
                   <option value="6" data-i18n="interval6Hours">6 hours</option>
                   <option value="12" data-i18n="interval12Hours">12 hours</option>
@@ -228,10 +233,10 @@
                 </select>
               </div>
               <div class="setting-row setting-row--inline">
-                <span class="setting-row-label"><span data-i18n="settingsRowLastCheck">Last Check</span>: <span id="lastUpdateCheckTime" class="setting-row-muted">Never</span></span>
+                <span class="setting-row-label"><span data-i18n="settingsRowLastCheck">Last check</span>: <span id="lastUpdateCheckTime" class="setting-row-muted">Never</span></span>
                 <button id="checkUpdatesNowBtn" class="action-btn action-btn-sm">
                   <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.650C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" fill="currentColor"/></svg>
-                  <span data-i18n="settingsBtnCheckNow">Check Now</span>
+                  <span data-i18n="settingsBtnCheckNow">Check now</span>
                 </button>
               </div>
             </div>
@@ -244,14 +249,14 @@
                   </svg>
                 </div>
                 <div class="warning-content">
-                  <div class="warning-title" data-i18n="settingsExtensionUpdateRequired">Extension Update Required</div>
+                  <div class="warning-title" data-i18n="settingsExtensionUpdateRequired">Extension update required</div>
                   <div class="warning-message" id="incompatibleMessage" data-i18n-fmt="settingsUiIncompatibleCountFmt" data-i18n-args="0">Detector updates that need a newer extension version: 0</div>
                   <a href="https://chromewebstore.google.com/detail/scrapfly-anti-bot-detecto/pdpakdgmjhkfimgaihlgaaiijlbilkca"
                      target="_blank" class="action-btn action-btn-warning action-btn-sm">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
                     </svg>
-                    <span data-i18n="settingsBtnUpdateExtension">Update Extension</span>
+                    <span data-i18n="settingsBtnUpdateExtension">Update extension</span>
                   </a>
                 </div>
               </div>
@@ -262,7 +267,7 @@
 
         <!-- Badge Colors Group -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title" data-i18n="settingsGroupBadgeColors">Badge Colors</div>
+          <div class="settings-card-group-title" data-i18n="settingsGroupBadgeColors">Badge colors</div>
 
           <div class="settings-card">
             <!-- Toolbar number: what the number on the toolbar icon counts -->
@@ -338,7 +343,7 @@
         <!-- Tag Colors Group with Pagination -->
         <div class="settings-card-group">
           <div class="settings-card-group-title">
-            <span data-i18n="tagColors">Tag Colors</span>
+            <span data-i18n="tagColors">Tag colors</span>
             <div class="color-pagination-controls">
               <button id="colorPrevBtn" class="pagination-btn" type="button" aria-label="Previous page" data-i18n-aria-label="paginationPrev" disabled>
                 <svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 7.41L14 6L8 12L14 18L15.41 16.59L10.83 12Z" fill="currentColor"/></svg>
@@ -436,16 +441,16 @@
       <div class="settings-tab-content" data-tab-content="detection" id="settingsPanel-detection" role="tabpanel" aria-labelledby="settingsTab-detection">
         <!-- Cache Configuration Group -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title" data-i18n="cacheConfiguration">Cache Configuration</div>
+          <div class="settings-card-group-title" data-i18n="cacheConfiguration">Cache configuration</div>
 
           <div class="settings-card">
             <div class="settings-card-head">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"/></svg>
-              <span data-i18n="settingsCardCacheSettings">Cache Settings</span>
+              <span data-i18n="settingsCardCacheSettings">Cache settings</span>
             </div>
             <div class="settings-card-body">
               <div class="setting-row">
-                <label id="cacheUnitLabel" class="setting-row-label" for="cacheDuration" data-i18n="cacheDuration">Cache Duration</label>
+                <label id="cacheUnitLabel" class="setting-row-label" for="cacheDuration" data-i18n="cacheDuration">Cache duration</label>
                 <div class="setting-row-controls">
                   <input type="number" id="cacheDuration" class="input-field input-field--short" min="1" max="30" value="7">
                   <select id="cacheUnit" class="select-field" aria-labelledby="cacheUnitLabel">
@@ -462,13 +467,16 @@
                 </div>
               </div>
               <div class="setting-row">
-                <label class="setting-row-label" for="cacheScope" data-i18n="statCacheScope">Cache Scope</label>
-                <select id="cacheScope" class="select-field">
+                <label class="setting-row-label" for="cacheScope" data-i18n="statCacheScope">Cache scope</label>
+                <select id="cacheScope" class="select-field" aria-describedby="cacheScopeDesc">
                   <button type="button" class="select-button"><selectedcontent></selectedcontent></button>
                   <option value="domain" data-i18n="scopeDomain"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="opt-label">Domain</span></option>
                   <option value="path" data-i18n="scopePath"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span class="opt-label">Path</span></option>
                   <option value="full" data-i18n="scopeFullUrl"><svg class="opt-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1 1"/><path d="M14 10a4 4 0 0 0-5.66 0l-3 3a4 4 0 0 0 5.66 5.66l1-1"/></svg><span class="opt-label">Full URL</span></option>
                 </select>
+                <div class="setting-row-help">
+                  <p id="cacheScopeDesc" data-i18n="settingsCacheScopeDesc">Which pages share one saved result. Domain: every page of the site. Path: the same address, whatever the query. Full URL: only the exact address.</p>
+                </div>
               </div>
             </div>
           </div>
@@ -553,18 +561,18 @@
 
         <!-- Sites: every site except the skipped ones, or only the chosen sites -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title" data-scan-mode-show="blocklist" data-i18n="blacklistedDomains">Blacklisted Domains</div>
-          <div class="settings-card-group-title" data-scan-mode-show="allowlist" data-i18n="allowedDomainsTitle" hidden>Chosen Sites</div>
+          <div class="settings-card-group-title" data-scan-mode-show="blocklist" data-i18n="blacklistedDomains">Skipped sites</div>
+          <div class="settings-card-group-title" data-scan-mode-show="allowlist" data-i18n="allowedDomainsTitle" hidden>Chosen sites</div>
 
           <div class="settings-card">
             <div class="settings-row settings-row--head">
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12,2C17.5,2 22,6.5 22,12C22,17.5 17.5,22 12,22C6.5,22 2,17.5 2,12C2,6.5 6.5,2 12,2M12,4C7.58,4 4,7.58 4,12C4,16.42 7.58,20 12,20C16.42,20 20,16.42 20,12C20,7.58 16.42,4 12,4M16.95,5.63L18.37,7.05L7.05,18.37L5.63,16.95L16.95,5.63Z"/></svg>
-                  <span data-scan-mode-show="blocklist" data-i18n="settingsCardSkipDomains">Skip Domains</span>
-                  <span data-scan-mode-show="allowlist" data-i18n="settingsCardAllowDomains" hidden>Scan Only These Sites</span>
+                  <span data-scan-mode-show="blocklist" data-i18n="settingsCardSkipDomains">Skip these sites</span>
+                  <span data-scan-mode-show="allowlist" data-i18n="settingsCardAllowDomains" hidden>Scan only these sites</span>
                 </div>
-                <p class="settings-row-desc" data-scan-mode-show="blocklist" data-i18n="blacklistedDomainsDesc">Domains where detection is completely skipped</p>
+                <p class="settings-row-desc" data-scan-mode-show="blocklist" data-i18n="blacklistedDomainsDesc">Detection never runs on these sites. Each entry is an exact host name: its subdomains are still scanned.</p>
                 <p class="settings-row-desc" data-scan-mode-show="allowlist" data-i18n="allowedDomainsDesc" hidden>Detection runs only on these sites and their subdomains. Everywhere else it is paused.</p>
               </div>
             </div>
@@ -580,7 +588,7 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
                 </svg>
-                <span data-i18n="settingsAddCurrentPage">Add Current Page</span>
+                <span data-i18n="settingsAddCurrentPage">Add current page</span>
               </button>
               <div class="blacklist-search-container">
                 <input type="text" id="blacklistSearchInput" class="input-field" placeholder="Search domains..." data-i18n-placeholder="settingsSearchDomainsPlaceholder">
@@ -625,14 +633,14 @@
 
         <!-- JS API Events Group -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title" data-i18n="jsApiEvents">JS API Events</div>
+          <div class="settings-card-group-title" data-i18n="jsApiEvents">JS API events</div>
 
           <div class="settings-card">
             <div class="settings-row">
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M11,14H13V16H11V14M11,8H13V12H11V8Z"/></svg>
-                  <span id="enableJsApiLabel" data-i18n="settingsEnableJsApi">Enable JS API Events</span>
+                  <span id="enableJsApiLabel" data-i18n="settingsEnableJsApi">Enable JS API events</span>
                 </div>
                 <p class="settings-row-desc" data-i18n="jsApiEventsDesc">Dispatch custom events to page window</p>
               </div>
@@ -720,14 +728,14 @@
 
         <!-- Webhook Integration Group -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title" data-i18n="settingsCardWebhookIntegration">Webhook Integration</div>
+          <div class="settings-card-group-title" data-i18n="settingsCardWebhookIntegration">Webhook integration</div>
 
           <div class="settings-card">
             <div class="settings-row">
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16,18C16,18.55 16.45,19 17,19H21V17H17C16.45,17 16,17.45 16,18M13,18C13,18.55 13.45,19 14,19H14.18C14.61,17.84 15.71,17 17,17H21V13H17C14.24,13 12,15.24 12,18C12,18.55 12.45,19 13,19M19,3H5C3.9,3 3,3.9 3,5V19C3,20.1 3.9,21 5,21H11.11C11.04,20.67 11,20.34 11,20C11,19.66 11.04,19.33 11.11,19H5V5H19V11.11C19.33,11.04 19.66,11 20,11C20.34,11 20.67,11.04 21,11.11V5C21,3.9 20.1,3 19,3M17,7H7V9H17V7M14,11H7V13H14V11Z"/></svg>
-                  <span id="enableWebhookLabel" data-i18n="settingsEnableWebhook">Enable Webhook</span>
+                  <span id="enableWebhookLabel" data-i18n="settingsEnableWebhook">Enable webhook</span>
                 </div>
                 <p class="settings-row-desc" data-i18n="settingsEnableWebhookDesc">Send HTTP requests on detection</p>
               </div>
@@ -758,7 +766,7 @@
           <div id="webhookSettings" class="webhook-settings-container">
               <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
-                  <span id="webhookMethodLabel" data-i18n="settingsHttpMethod">HTTP Method</span>
+                  <span id="webhookMethodLabel" data-i18n="settingsHttpMethod">HTTP method</span>
                   <span class="setting-description" data-i18n="settingsHttpMethodDesc">Select the HTTP method for webhook requests</span>
                 </label>
                 <input type="hidden" id="webhookMethod" value="POST">
@@ -838,7 +846,7 @@
 
               <div class="setting-group setting-group--stacked" id="webhookHeadersGroup">
                 <label class="setting-label">
-                  <span data-i18n="settingsCustomHeaders">Custom Headers</span>
+                  <span data-i18n="settingsCustomHeaders">Custom headers</span>
                   <span class="setting-description" data-i18n="settingsCustomHeadersDesc">Add custom HTTP headers to the webhook request</span>
                 </label>
                 <div id="webhookHeadersContainer">
@@ -848,7 +856,7 @@
                   <svg width="14" height="14" viewBox="0 0 24 24">
                     <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
                   </svg>
-                  <span data-i18n="webhookAddHeader">Add Header</span>
+                  <span data-i18n="webhookAddHeader">Add header</span>
                 </button>
               </div>
 
@@ -874,7 +882,7 @@
               <div class="setting-group setting-group--stacked" id="webhookPayloadGroup">
                 <div class="setting-label">
                   <span class="webhook-title-row">
-                    <label for="webhookPayload" data-i18n="settingsPayloadTemplate">Payload Template</label>
+                    <label for="webhookPayload" data-i18n="settingsPayloadTemplate">Payload template</label>
                     <button type="button" id="webhookVariablesHelpBtn" class="webhook-help-btn" aria-haspopup="dialog" title="Template variables" aria-label="Template variables" data-i18n-title="webhookVarsTitle" data-i18n-aria-label="webhookVarsTitle">?</button>
                   </span>
                   <span class="setting-description" data-i18n="settingsPayloadTemplateDesc">Body sent with each webhook. Click a variable to insert it.</span>
@@ -901,7 +909,7 @@
 
               <div class="setting-group setting-group--stacked">
                 <label class="setting-label">
-                  <span data-i18n="settingsTestWebhook">Test Webhook</span>
+                  <span data-i18n="settingsTestWebhook">Test webhook</span>
                   <span class="setting-description" data-i18n="settingsTestWebhookDesc">Send a test request to your webhook URL</span>
                 </label>
                 <button id="testWebhookBtn" class="action-btn">
@@ -1038,7 +1046,7 @@
                   <p class="setting-row-help" data-i18n="settingsShareCustomUrlDesc">HTTPS on a public host. Can contain &lt;EXPIRY_DAYS&gt;.</p>
                 </div>
                 <div class="setting-row">
-                  <label class="setting-row-label" for="shareCustomMethod" data-i18n="settingsHttpMethod">HTTP Method</label>
+                  <label class="setting-row-label" for="shareCustomMethod" data-i18n="settingsHttpMethod">HTTP method</label>
                   <select id="shareCustomMethod" class="select-field">
                     <option value="POST">POST</option>
                     <option value="PUT">PUT</option>
@@ -1062,7 +1070,7 @@
                   <p class="setting-row-help" data-i18n="settingsShareCustomJsonDesc">Variables: &lt;CONTENT_JSON&gt;, &lt;TITLE_JSON&gt;, &lt;EXPIRY_DAYS&gt;</p>
                 </div>
                 <div class="setting-row">
-                  <label class="setting-row-label" for="shareCustomHeaders" data-i18n="settingsCustomHeaders">Custom Headers</label>
+                  <label class="setting-row-label" for="shareCustomHeaders" data-i18n="settingsCustomHeaders">Custom headers</label>
                   <textarea id="shareCustomHeaders" class="textarea-field textarea-field--mono" rows="2" spellcheck="false" autocomplete="off"></textarea>
                   <p class="setting-row-help" data-i18n="settingsShareCustomHeadersDesc">One per line as Name: value, for example Authorization: Bearer …</p>
                 </div>
@@ -1094,16 +1102,16 @@
       <div class="settings-tab-content" data-tab-content="history" id="settingsPanel-history" role="tabpanel" aria-labelledby="settingsTab-history">
         <!-- History Configuration Group -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title" data-i18n="settingsCardHistoryConfig">History Configuration</div>
+          <div class="settings-card-group-title" data-i18n="settingsCardHistoryConfig">History configuration</div>
 
           <div class="settings-card">
             <div class="settings-card-head">
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5,8H12V13L16.28,15.54L17,14.33L13.5,12.25V8M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z"/></svg>
-              <span data-i18n="settingsHistorySettings">History Settings</span>
+              <span data-i18n="settingsHistorySettings">History settings</span>
             </div>
             <div class="settings-card-body settings-card-body--history">
               <div class="setting-row setting-row--inline setting-row--limit">
-                <label class="setting-row-label" for="historyLimit"><span data-i18n="settingsHistoryLimit">History Limit</span> <span class="setting-row-note" data-i18n="settingsHistoryLimitNote">(0 = 1,000-entry safety limit)</span></label>
+                <label class="setting-row-label" for="historyLimit"><span data-i18n="settingsHistoryLimit">History limit</span> <span class="setting-row-note" data-i18n="settingsHistoryLimitNote">(0 = 1,000-entry safety limit)</span></label>
                 <input type="number" id="historyLimit" class="input-field" min="0" max="10000" value="0">
               </div>
               <div class="setting-row setting-row--switch-below">
@@ -1130,25 +1138,27 @@
               </div>
               <p class="setting-row-hint" data-i18n="settingsHistoryFingerprintDaysHint">0 keeps them like every other page, so only Auto-delete applies to them. Pinned pages are never deleted.</p>
               <div class="setting-row setting-row--inline">
-                <label class="setting-row-label" for="exportFormat" data-i18n="settingsExportFormat">Export Format</label>
+                <label class="setting-row-label" for="exportFormat" data-i18n="settingsExportFormat">Export format</label>
                 <select id="exportFormat" class="select-field">
                   <option value="json">JSON</option>
                   <option value="csv">CSV</option>
-                  <option value="txt" data-i18n="settingsExportFormatPlainText">Plain Text</option>
+                  <option value="txt" data-i18n="settingsExportFormatPlainText">Plain text</option>
                   <option value="md">Markdown</option>
                 </select>
               </div>
-              <div class="setting-row setting-row--inline setting-row--toggle">
-                <span id="includeTimestampsLabel" class="setting-row-label" data-i18n="settingsIncludeTimestamps">Include Timestamps</span>
+              <div class="setting-row setting-row--switch-below">
+                <span id="includeTimestampsLabel" class="setting-row-label" data-i18n="settingsIncludeTimestamps">Include timestamps</span>
+                <p id="includeTimestampsDesc" class="setting-row-desc" data-i18n="settingsIncludeTimestampsDesc">Adds each page's scan date to CSV, plain text and Markdown exports. JSON exports always include it.</p>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="includeTimestamps" checked aria-labelledby="includeTimestampsLabel">
+                  <input type="checkbox" id="includeTimestamps" checked aria-labelledby="includeTimestampsLabel" aria-describedby="includeTimestampsDesc">
                   <span class="slider"></span>
                 </label>
               </div>
-              <div class="setting-row setting-row--inline setting-row--toggle">
-                <span id="historyBypassCacheLabel" class="setting-row-label" data-i18n="settingsSaveOnCacheHits">Save on Cache Hits</span>
+              <div class="setting-row setting-row--switch-below">
+                <span id="historyBypassCacheLabel" class="setting-row-label" data-i18n="settingsSaveOnCacheHits">Save on cache hits</span>
+                <p id="historyBypassCacheDesc" class="setting-row-desc" data-i18n="settingsSaveOnCacheHitsDesc">Also records a page in History when its result is reused from the cache instead of a new scan.</p>
                 <label class="switch switch-sm">
-                  <input type="checkbox" id="historyBypassCache" aria-labelledby="historyBypassCacheLabel">
+                  <input type="checkbox" id="historyBypassCache" aria-labelledby="historyBypassCacheLabel" aria-describedby="historyBypassCacheDesc">
                   <span class="slider"></span>
                 </label>
               </div>
@@ -1274,14 +1284,14 @@
 
         <!-- Duplicate Prevention Group -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title" data-i18n="settingsCardDuplicatePrevention">Duplicate Prevention</div>
+          <div class="settings-card-group-title" data-i18n="settingsCardDuplicatePrevention">Duplicate prevention</div>
 
           <div class="settings-card">
             <div class="settings-row">
               <div class="settings-row-text">
                 <div class="settings-row-title">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>
-                  <span id="preventDuplicatesLabel" data-i18n="settingsEnableDuplicatePrevention">Enable Duplicate Prevention</span>
+                  <span id="preventDuplicatesLabel" data-i18n="settingsEnableDuplicatePrevention">Enable duplicate prevention</span>
                 </div>
                 <p class="settings-row-desc" data-i18n="settingsDuplicatePreventionDesc">Block duplicate history entries within a time window</p>
               </div>
@@ -1301,7 +1311,7 @@
                 </select>
               </div>
               <div class="setting-row">
-                <label id="duplicateUnitLabel" class="setting-row-label" for="duplicateDuration" data-i18n="settingsTimeWindow">Time Window</label>
+                <label id="duplicateUnitLabel" class="setting-row-label" for="duplicateDuration" data-i18n="settingsTimeWindow">Time window</label>
                 <div class="setting-row-controls">
                   <input type="number" id="duplicateDuration" class="input-field input-field--short" min="1" max="999" value="1">
                   <select id="duplicateUnit" class="select-field" aria-labelledby="duplicateUnitLabel">
@@ -1449,7 +1459,7 @@
 
         <!-- Export/Import Group -->
         <div class="settings-card-group">
-          <div class="settings-card-group-title settings-card-group-title--rule" data-i18n="settingsDataExportImport">Export & Import</div>
+          <div class="settings-card-group-title settings-card-group-title--rule" data-i18n="settingsDataExportImport">Export & import</div>
 
           <div class="settings-card settings-card--data">
             <div class="data-card-head">
@@ -1457,7 +1467,7 @@
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,3C7.58,3 4,4.79 4,7C4,9.21 7.58,11 12,11C16.42,11 20,9.21 20,7C20,4.79 16.42,3 12,3M4,9V12C4,14.21 7.58,16 12,16C16.42,16 20,14.21 20,12V9C20,11.21 16.42,13 12,13C7.58,13 4,11.21 4,9M4,14V17C4,19.21 7.58,21 12,21C16.42,21 20,19.21 20,17V14C20,16.21 16.42,18 12,18C7.58,18 4,16.21 4,14Z"/></svg>
               </span>
               <div class="data-card-head-text">
-                <div class="data-card-title" data-i18n="settingsDataManagement">Data Management</div>
+                <div class="data-card-title" data-i18n="settingsDataManagement">Data management</div>
                 <p class="data-card-desc" data-i18n="settingsDataManagementDesc">Export or import your extension data</p>
               </div>
             </div>
@@ -1475,11 +1485,11 @@
                   <span class="data-item-format">JSON</span>
                 </div>
                 <div class="data-item-actions">
-                  <button id="exportSettingsBtn" class="data-btn data-export-btn" title="Export Settings" data-i18n-title="settingsDataExportSettingsTitle">
+                  <button id="exportSettingsBtn" class="data-btn data-export-btn" title="Export settings" data-i18n-title="settingsDataExportSettingsTitle">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,12L16,16H13.5V19H10.5V16H8L12,12Z" fill="currentColor"/></svg>
                     <span data-i18n="btnExport">Export</span>
                   </button>
-                  <button id="importSettingsBtn" class="data-btn data-import-btn" title="Import Settings" data-i18n-title="settingsDataImportSettingsTitle">
+                  <button id="importSettingsBtn" class="data-btn data-import-btn" title="Import settings" data-i18n-title="settingsDataImportSettingsTitle">
                     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,12L16,16H13.5V19H10.5V16H8L12,12Z" fill="currentColor"/></svg>
                     <span data-i18n="btnImport">Import</span>
                   </button>
@@ -1608,7 +1618,7 @@
         <span data-i18n="poweredBy">Powered by</span> <a href="https://scrapfly.io" target="_blank" rel="noopener noreferrer">Scrapfly</a>
       </div>
       <div class="modal-footer-buttons">
-        <button id="saveSettingsBtn" class="primary-btn" data-i18n="btnSaveSettings">Save Settings</button>
+        <button id="saveSettingsBtn" class="primary-btn" data-i18n="btnSaveSettings">Save settings</button>
         <button id="cancelSettingsBtn" class="secondary-btn" data-i18n="btnCancelSettings">Cancel</button>
       </div>
     </div>

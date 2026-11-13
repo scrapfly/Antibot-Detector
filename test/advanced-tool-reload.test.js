@@ -24,7 +24,7 @@ function fixture(vendor, options = {}) {
     rejectReload = reject;
   });
   const txt = (key, fallback, ...args) => fallback.replace(/\{(\d+)\}/g, (_, index) => args[index]);
-  // The shared Analyze Scripts flow lives on BaseAdvancedModule (components/script-results.js)
+  // The shared Analyze scripts flow lives on BaseAdvancedModule (components/script-results.js)
   class BaseAdvancedModule {
     static _tr(key, fallback) { return fallback; }
     static _fmt(key, fallback, ...args) { return txt(key, fallback, ...args); }
@@ -104,7 +104,7 @@ for (const vendor of Object.keys(vendors)) {
     const messages = f.calls.filter(([kind]) => kind === 'message').map(([, message]) => message.type);
     assert.deepEqual(messages.slice(0, 2), ['ADVANCED_LOADED_SCRIPTS', `${vendor.toUpperCase()}_START_ANALYSIS`],
       'what the page already loaded is asked first; only nothing found reloads');
-    // Analyze Scripts draws nothing on the page: the popup shows the progress
+    // Analyze scripts draws nothing on the page: the popup shows the progress
     assert.equal(messages.some(type => /_SHOW_ANALYZING_NOTIFICATION$/.test(type)), false);
     f.finishReload();
     assert.equal((await action).awaitingResult, true, 'the tool card waits for the result');

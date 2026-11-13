@@ -21,7 +21,7 @@ class AdvancedCookieResults {
         const uiLocale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
         let count = String(length);
         try { count = length.toLocaleString(uiLocale); } catch (_) { /* plain digits */ }
-        return `${label} · ${BaseAdvancedModule._fmt('advCommonCharsFmt', `${count} chars`, count)}`;
+        return `${label} · ${BaseAdvancedModule._fmt('advCommonCharsFmt', `characters: ${count}`, count)}`;
     }
 
     /** The page's site's protection cookie timeline from the worker ({ cookies: { name: events[] }, now }), or null. */
@@ -39,29 +39,10 @@ class AdvancedCookieResults {
         });
     }
 
-    /** "set 4 min. ago · changed 3 times · last change 40 sec. ago · expires in 1 hr." for one cookie's events. */
+    /** "set 4 min. ago · changed 3 times · last change 40 sec. ago · expires in 1 hr." for one cookie's events (CookieTimeline.describe). */
     static cookieTimelineSummary(events, now) {
-        const K = BaseAdvancedModule;
         const locale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
-        const ago = (t) => CookieTimeline.relative(t - now, locale);
-        const s = CookieTimeline.summarize(events);
-        if (s.state === 'none') return '';
-        const parts = [];
-        if (s.state !== 'live') {
-            parts.push(s.state === 'expired'
-                ? K._fmt('advCookieTimelineExpiredFmt', `expired ${ago(s.endedAt)}`, ago(s.endedAt))
-                : K._fmt('advCookieTimelineRemovedFmt', `removed ${ago(s.endedAt)}`, ago(s.endedAt)));
-        }
-        if (s.setAt !== null) parts.push(K._fmt('advCookieTimelineSetFmt', `set ${ago(s.setAt)}`, ago(s.setAt)));
-        if (s.changes === 1) parts.push(K._tr('advCookieTimelineChangedOnce', 'changed once'));
-        else if (s.changes > 1) parts.push(K._fmt('advCookieTimelineChangedFmt', `changed ${s.changes} times`, s.changes));
-        if (s.lastChangeAt !== null) parts.push(K._fmt('advCookieTimelineLastChangeFmt', `last change ${ago(s.lastChangeAt)}`, ago(s.lastChangeAt)));
-        if (s.state === 'live') {
-            parts.push(s.expiresAt !== null
-                ? K._fmt('advCookieTimelineExpiresFmt', `expires ${CookieTimeline.relative(s.expiresAt - now, locale)}`, CookieTimeline.relative(s.expiresAt - now, locale))
-                : K._tr('advCookieTimelineSession', 'session cookie'));
-        }
-        return parts.join(' · ');
+        return CookieTimeline.describe(events, now, { t: (key, ...args) => (typeof I18n !== 'undefined' ? I18n.format(key, ...args) : ''), locale });
     }
 
     /**
@@ -92,7 +73,7 @@ class AdvancedCookieResults {
             const facts = [];
             if (Number.isFinite(event.l) && (event.e === 'set' || event.e === 'changed')) {
                 const count = String(event.l);
-                facts.push(esc(K._fmt('advCommonCharsFmt', `${count} chars`, count)));
+                facts.push(esc(K._fmt('advCommonCharsFmt', `characters: ${count}`, count)));
                 if (event.m) facts.push(`<code class="adv-cookie-timeline-marker" title="${markerHint}">${esc(event.m)}</code>`);
             }
             return `
@@ -136,14 +117,14 @@ class AdvancedCookieResults {
         const summary = `
             <div class="adv-cookie-summary adv-cookie-summary--${status}">
                 <span class="adv-cookie-summary-dot" aria-hidden="true"></span>
-                <span>${esc(K._fmt('advPanelCookiesFoundFmt', `Found ${cookies.length}/${total} cookies`, cookies.length, total))}</span>
+                <span>${esc(K._fmt('advPanelCookiesFoundFmt', `Cookies found: ${cookies.length}/${total}`, cookies.length, total))}</span>
             </div>${K.kitFacts(facts)}`;
         const meta = (label, value, wide = false) => (value === '' || value === null || value === undefined) ? ''
             : `<div class="adv-cookie-meta-row${wide ? ' is-wide' : ''}"><dt>${esc(label)}</dt><dd>${esc(String(value))}</dd></div>`;
         const cards = cookies.map(cookie => `
             <article class="adv-cookie">
                 <div class="adv-cookie-head">
-                    <button type="button" class="adv-cookie-name" data-copy="${attr(cookie.name)}" title="${copyTitle}" aria-label="${attr(`${tr('ruleFieldName', 'Name')}: ${cookie.name}`)}">
+                    <button type="button" class="adv-cookie-name" data-copy="${attr(cookie.name)}" title="${copyTitle}" aria-label="${attr(FormatUtils.labelValue(tr('ruleFieldName', 'Name'), cookie.name))}">
                         <span class="adv-cookie-name-text">${esc(cookie.name)}</span>${copyIcon}
                     </button>
                     <span class="adv-cookie-flags">${(cookie.secure ? K.kitChip('Secure', 'green') : '')

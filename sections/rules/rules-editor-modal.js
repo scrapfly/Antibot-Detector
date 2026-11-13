@@ -84,8 +84,8 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
     if (actionEl) actionEl.textContent = (_t && _t.format(titleKey, shownName)) || titleFallback;
     if (nameEl) {
       nameEl.textContent = (_t && typeof _t.tr === 'function')
-        ? _t.tr('rulesModalDetectorLabel', 'Detection Rule')
-        : 'Detection Rule';
+        ? _t.tr('rulesModalDetectorLabel', 'Detection rule')
+        : 'Detection rule';
     }
 
     // Populate modal with detector data (now currentEditDetector is available)
@@ -186,6 +186,31 @@ Rules.prototype.updateEditorCardSummaries = function() {
  * @param {object} detector - Detector being edited
  * @returns {string}
  */
+/**
+ * Open a rule in the editor by its id, as a click on its card does (the Detection details dialog's Edit rule). Waits for the
+ * tab's markup when the tab is opened for the first time.
+ * @param {string} detectorId
+ * @returns {Promise<boolean>} false when no loaded rule has that id
+ */
+Rules.prototype.openRuleById = async function(detectorId) {
+    if (typeof detectorId !== 'string' || !detectorId) return false;
+    await this.initialize();
+    const all = (this.detectorManager && typeof this.detectorManager.getAllDetectors === 'function')
+      ? this.detectorManager.getAllDetectors() || {} : {};
+    for (const [category, detectors] of Object.entries(all)) {
+      for (const [detectorName, detector] of Object.entries(detectors || {})) {
+        if (!detector || (detector.id || detectorName) !== detectorId) continue;
+        this.openEditModal({
+          ...detector,
+          displayName: this.getDetectorDisplayName(detector.name) || detectorName,
+          detection: detector.detection || {}
+        }, category, detectorName, false);
+        return true;
+      }
+    }
+    return false;
+  };
+
 Rules.prototype.getEditorDetectorName = function(detector) {
     const stored = detector?.name || detector?.displayName || '';
     if (stored) return this.getDetectorDisplayName(stored);

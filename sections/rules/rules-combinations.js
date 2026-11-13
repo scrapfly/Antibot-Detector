@@ -559,7 +559,8 @@ Rules.prototype.comboSentences = function(combo, options = this.getComboPatternO
   const count = children.length;
   const when = count === 1
     ? combosText('combinationSentenceOne', 'Fires when this condition is met.')
-    : key === 'any' ? combosFormat('combinationSentenceAnyFmt', 'Fires when any one of these {0} conditions is met.', count)
+    // "At least 1 of these" is "any one of these", which reads right ("at least 1 ... are met" does not)
+    : key === 'any' || (key === 'of' && root.atLeast === 1) ? combosFormat('combinationSentenceAnyFmt', 'Fires when any one of these {0} conditions is met.', count)
       : key === 'of' ? combosFormat('combinationSentenceAtLeastFmt', 'Fires when at least {0} of these {1} conditions are met.', root.atLeast, count)
         : combosFormat('combinationSentenceAllFmt', 'Fires when all {0} conditions are met.', count);
   const refs = this.comboReferencedOptions(combo, options);

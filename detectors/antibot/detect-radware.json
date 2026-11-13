@@ -5,9 +5,9 @@
   "enabled": true,
   "category": "Anti-Bot",
   "difficulty": "Low",
-  "lastUpdated": "2026-10-16",
-  "version": "2.2.0",
-  "minExtensionVersion": "2.8",
+  "lastUpdated": "2026-11-12",
+  "version": "2.3.0",
+  "minExtensionVersion": "3.1.9",
   "website": "https://www.radware.com/products/bot-manager/",
   "icon": "radware_official.png",
   "description": "Radware Bot Manager (formerly ShieldSquare) and Radware Cloud WAF: __uzm cookies, stormcaster.js, the validate.perfdrive.com captcha and the Cloud WAF block page",
@@ -39,21 +39,20 @@
         "id": "radware-cloudwebsec-reference",
         "confidence": 20,
         "standalone": false,
-        "description": "Script reference to the CloudWebSec vendor portal host",
-        "text": "CloudWebSec.radware.com",
-        "textCaseSensitive": true,
-        "scope": "scripts",
-        "checkScripts": true
+        "description": "CloudWebSec contact address on the Radware block page",
+        "text": "CloudWebSec[.@]radware\\.com",
+        "textRegex": true,
+        "textCaseSensitive": false,
+        "scope": "page"
       },
       {
         "id": "radware-block-message",
         "confidence": 20,
         "standalone": false,
-        "description": "Script reference to the Radware block-page message",
+        "description": "Radware block-page message",
         "text": "Unauthorized Request Blocked",
         "textCaseSensitive": true,
-        "scope": "scripts",
-        "checkScripts": true
+        "scope": "page"
       }
     ],
     "cookie": [

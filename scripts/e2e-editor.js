@@ -456,6 +456,55 @@ const CASES = [
     }
   }
 
+  // ---------------------------------------------------- 3.1.9: "Only block and challenge pages" (content scope "page")
+  console.log('Content scope: block and challenge pages');
+  {
+    const titleRule = async () => (await stored('antibot', 'detect-sucuri')).detection.content.find(r => r.id === 'sucuri-block-title');
+    const openTitleSettings = async () => {
+      await openEditor('detect-sucuri', 'Sucuri');
+      const section = '#editRuleModal .method-section[data-method-type="content"]';
+      await p.evaluate((sel) => document.querySelector(sel)?.classList.remove('collapsed'), section);
+      await p.evaluate((sel) => document.querySelector(`${sel} .method-item[data-pattern-id="sucuri-block-title"] .field-actions[data-field-type="name"] .method-action-btn.settings`).click(), section);
+      await p.waitForSelector('#methodSettingsModal', { state: 'visible' });
+      await sleep(300);
+    };
+    const toggles = () => p.evaluate(() => ({ scripts: document.querySelector('#checkScripts').checked, pages: document.querySelector('#checkPageSource').checked,
+      label: document.querySelector('#checkPageSourceLabel').textContent }));
+    const shipped = await titleRule();
+    report(shipped?.scope === 'page' && !shipped.checkScripts, `the shipped Sucuri title rule reads small pages — scope ${shipped?.scope}`);
+    await openTitleSettings();
+    const shown = await toggles();
+    report(shown.pages && !shown.scripts && shown.label === 'Only block and challenge pages', `its settings show "${shown.label}" on, scripts off`);
+    await p.$eval('#checkScripts', e => e.click());
+    const afterScripts = await toggles();
+    await p.$eval('#checkPageSource', e => e.click());
+    const afterPages = await toggles();
+    report(afterScripts.scripts && !afterScripts.pages && afterPages.pages && !afterPages.scripts, 'turning one on turns the other off');
+    await click('#saveMethodSettings');
+    await sleep(200);
+    const rowFlag = await p.evaluate(() => document.querySelector('#editRuleModal .method-item[data-pattern-id="sucuri-block-title"]').dataset.pageScope);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const kept = await titleRule();
+    report(rowFlag === 'true' && kept?.scope === 'page' && !kept.checkScripts && kept.text === shipped.text, 'saved, the rule keeps scope "page" and its text');
+    await openTitleSettings();
+    await p.$eval('#checkPageSource', e => e.click());
+    await click('#saveMethodSettings');
+    await sleep(200);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    const off = await titleRule();
+    report(off && off.scope === undefined && !off.checkScripts, `turned off, the rule reads the whole page again — scope ${off?.scope}`);
+    await openTitleSettings();
+    report(!(await toggles()).pages, 'and the editor shows it off');
+    await p.$eval('#checkPageSource', e => e.click());
+    await click('#saveMethodSettings');
+    await sleep(200);
+    await click('#saveRuleEdit');
+    await sleep(1500);
+    report((await titleRule())?.scope === 'page', 'turned on again, scope "page" is stored');
+  }
+
   console.log(`\nRESULT ${failures ? failures + ' FAILED' : 'ALL PASS'}`);
   await ctx.close();
   process.exit(failures ? 1 : 0);

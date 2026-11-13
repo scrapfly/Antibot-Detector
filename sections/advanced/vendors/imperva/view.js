@@ -5,7 +5,7 @@ ImpervaAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
                 id: 'impervaCheckCookies',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckCookies')) || 'Check Cookies'),
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckCookies')) || 'Check cookies'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M9,8A1.5,1.5 0 0,1 10.5,9.5A1.5,1.5 0 0,1 9,11A1.5,1.5 0 0,1 7.5,9.5A1.5,1.5 0 0,1 9,8M16.5,9.5A1.5,1.5 0 0,1 15,11A1.5,1.5 0 0,1 13.5,9.5A1.5,1.5 0 0,1 15,8A1.5,1.5 0 0,1 16.5,9.5M9,15A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 9,18A1.5,1.5 0 0,1 7.5,16.5A1.5,1.5 0 0,1 9,15M15,14A1.5,1.5 0 0,1 16.5,15.5A1.5,1.5 0 0,1 15,17A1.5,1.5 0 0,1 13.5,15.5A1.5,1.5 0 0,1 15,14Z"/>
@@ -14,7 +14,7 @@ ImpervaAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'impervaStartCapture',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start Capturing'),
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start capturing'),
                 kind: 'capture',
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -24,7 +24,7 @@ ImpervaAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'impervaAnalyzeScripts',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze Scripts'),
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze scripts'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
@@ -72,7 +72,7 @@ ImpervaAdvanced.prototype.renderCaptureHistoryItems = function(items) {
                             </div>
                             ${incapSesCount > 0 ? `
                             <div class="capture-type-row">
-                                <span class="capture-type-label">${esc(tr('advImpervaSessionCookies', 'Session Cookies'))}</span>
+                                <span class="capture-type-label">${esc(tr('advImpervaSessionCookies', 'Session cookies'))}</span>
                                 <span class="capture-type-value" style="color: var(--info);">${incapSesCount}</span>
                             </div>
                             ` : ''}
@@ -116,9 +116,9 @@ ImpervaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
             total(tr('advImpervaResourceUrls', 'Resource URLs'), data.incapResourceUrls),
             total(tr('advImpervaInterrogationUrls', 'Interrogation URLs'), data.interrogationUrls)
         ]);
-        return K.kitSection(tr('advImpervaSecurityComponents', 'Security Components'), components)
-            + K.kitSection(tr('advImpervaSessionCookies', 'Session Cookies'), cookies)
-            + K.kitSection(tr('advImpervaResourceDetection', 'Resource Detection'), resources);
+        return K.kitSection(tr('advImpervaSecurityComponents', 'Security components'), components)
+            + K.kitSection(tr('advImpervaSessionCookies', 'Session cookies'), cookies)
+            + K.kitSection(tr('advImpervaResourceDetection', 'Resource detection'), resources);
     };
 
     // ========================================================================
@@ -152,7 +152,7 @@ ImpervaAdvanced.prototype.displayExtractionResults = function(extractedData) {
         const cards = scripts.map(script => K.kitCard(
             K.kitField(label(tr('advCommonScriptUrl', 'Script URL:')), script.url, { clamp: true })
             + (script.type === 'Reese84' && scriptPaths.reeseSensorPath
-                ? K.kitField(label(tr('advImpervaSensorPath', 'Sensor Path:')), `${origin}${scriptPaths.reeseSensorPath}?d=${data.hostname || ''}`, { clamp: true })
+                ? K.kitField(label(tr('advImpervaSensorPath', 'Sensor path:')), `${origin}${scriptPaths.reeseSensorPath}?d=${data.hostname || ''}`, { clamp: true })
                 : ''),
             K.kitChip(fmt('advImpervaScriptTypeFmt', '{0} Script', script.type), 'blue')
         )).join('');
@@ -164,13 +164,13 @@ ImpervaAdvanced.prototype.displayExtractionResults = function(extractedData) {
             ? facts + cards
             : K.kitNote(`${tr('advImpervaNoScripts', 'No scripts detected')}. ${tr('advImpervaMayNotBePresent', 'Imperva may not be present on this page')}`);
         this.openKitModal({
-            title: tr('advImpervaAnalysisTitle', 'Imperva Analysis'),
+            title: tr('advImpervaAnalysisTitle', 'Imperva analysis'),
             subtitle: data.hostname || '',
             iconSvg: K.toolIcon('scripts'),
             body,
             copiedMessage: tr('advValueCopied', 'Value copied'),
             actions: parsingCodes ? [{
-                label: tr('advCommonExportCode', 'Export Code'),
+                label: tr('advCommonExportCode', 'Export code'),
                 primary: true,
                 onClick: () => this.displayExportCodeModal(parsingCodes, scriptPaths, data)
             }] : [],
@@ -189,12 +189,12 @@ ImpervaAdvanced.prototype.displayExportCodeModal = function(parsingCodes, script
         const hasReese84 = !!scriptPaths.reeseScriptPath;
         const hasUtmvc = !!scriptPaths.utmvcScriptPath;
         const types = [];
-        if (hasReese84 && hasUtmvc) types.push({ id: 'all', label: tr('advCommonAllTypes', 'All Types') });
+        if (hasReese84 && hasUtmvc) types.push({ id: 'all', label: tr('advCommonAllTypes', 'All types') });
         if (hasReese84) types.push({ id: 'reese84', label: fmt('advImpervaTypeOnlyFmt', '{0} Only', 'Reese84') });
         if (hasUtmvc) types.push({ id: 'utmvc', label: fmt('advImpervaTypeOnlyFmt', '{0} Only', 'UTMVC') });
         let initial = true;
         return AdvancedCodeDialog.open(this, {
-            title: tr('advCommonCodeGenTitle', 'Script Parsing Code Generator'), types,
+            title: tr('advCommonCodeGenTitle', 'Script parsing code generator'), types,
             languages: ['javascript', 'python', 'nodejs', 'php', 'csharp', 'go'].map((id, index) => ({ id, label: ['JavaScript', 'Python', 'Node.js', 'PHP', 'C#', 'Go'][index] })),
             getCodes: type => {
                 const codes = initial ? parsingCodes : this.generateParsingCode(extractedData, scriptPaths, type);

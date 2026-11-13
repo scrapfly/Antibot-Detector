@@ -63,7 +63,7 @@ class ScrapflyPopup {
   warnIfRulesUnreadable() {
     if (this.rulesChecked || !this.detectorManager || this.detectorManager.storageState !== 'unreadable') return;
     this.rulesChecked = true;
-    NotificationHelper.error(FormatUtils.t('rulesUnreadableHint', 'The stored rules could not be read: the built-in rules are in use and rule changes are not saved. To replace the stored rules, import a rules file in the Rules tab and choose Replace All.'));
+    NotificationHelper.error(FormatUtils.t('rulesUnreadableHint', 'The stored rules could not be read: the built-in rules are in use and rule changes are not saved. To replace the stored rules, import a rules file in the Rules tab and choose Replace all.'));
   }
 
   /**
@@ -216,6 +216,9 @@ class ScrapflyPopup {
         this.switchTab(navigationTabs[index].dataset.tab);
       });
     });
+
+    // "/" goes to the open tab's search box (Detection, History, Rules, Captures)
+    if (typeof SearchShortcut !== 'undefined') SearchShortcut.install(document, () => this.currentTab);
 
     // Main enable/disable toggle
     const enableToggle = document.querySelector('#enableToggle');
@@ -505,7 +508,7 @@ class ScrapflyPopup {
       badgeTrimmed === '?' ||
       badgeTrimmed === '\u2715';
 
-    // Without a finished scan the page is never shown as "Nothing Detected": that green card is for a scan that
+    // Without a finished scan the page is never shown as "Nothing detected": that green card is for a scan that
     // ran and found nothing (its result comes with data). A reload mark means the scan was cut short or cleared.
     if (isReloadBadge) {
       this.detection.showEmptyState({ outcome: 'unscanned' });
@@ -513,7 +516,7 @@ class ScrapflyPopup {
     }
 
     // A page that is still loading has no scan to report yet: show the scan, not
-    // "Nothing Detected" or "Scan interrupted" (Nike reloads itself under Kasada)
+    // "Nothing detected" or "Scan interrupted" (Nike reloads itself under Kasada)
     const tabLoading = await this.isTabLoading(tabId);
     if (!this.isDetectionViewRequestCurrent(requestId)) {
       return false;
@@ -642,7 +645,8 @@ class ScrapflyPopup {
                     expiry: request.expiry,
                     cacheScope: request.cacheScope,
                     favicon: request.favicon,
-                    httpStatus: request.httpStatus
+                    httpStatus: request.httpStatus,
+                    scanFacts: request.scanFacts
                   }
                 });
               } else {
@@ -845,7 +849,8 @@ class ScrapflyPopup {
           if (this.detection.currentResults && this.detection.currentResults.length > 0) {
             // The list as the search and the chips leave it, not the whole list for a moment
             if (this.detection.paginationManager) {
-              DetectionUI.applyFilters.call(this.detection);
+              // On the page of results that was shown before the tab was left
+              DetectionUI.applyFilters.call(this.detection, { keepPage: true });
             }
           }
         }
@@ -872,7 +877,8 @@ class ScrapflyPopup {
         } else {
           // Re-attach event listeners after cleanup (search, buttons, etc.)
           this.rules.setupEventListeners();
-          this.rules.displayRules();
+          // On the page of rules that was shown before the tab was left
+          this.rules.displayRules({ keepPage: true });
         }
         break;
       case 'advanced':
@@ -933,7 +939,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       I18n.startAutoApply();
       // i18n.js has no data-i18n-alt, so the header logo's alt text is set here
       const logo = document.querySelector('.logo-icon');
-      if (logo) logo.alt = I18n.tr('popupUiLogoAlt', 'Scrapfly Robot');
+      if (logo) logo.alt = I18n.tr('popupUiLogoAlt', 'Scrapfly robot');
     } catch (e) { /* i18n is best-effort */ }
   }
 

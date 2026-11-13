@@ -3,7 +3,7 @@
  * Settings → the search box, in the real extension (unpacked in Chromium), with a real keyboard:
  *
  *   Place       the box sits between the header and the tabs, outside the scrolling body (it stays when the body scrolls) and has a name
- *   Finding     "cache duration" opens the Detection tab, unfolds Cache Settings and leaves that one row on screen; "webhook secret"
+ *   Finding     "cache duration" opens the Detection tab, unfolds Cache settings and leaves that one row on screen; "webhook secret"
  *               shows the switch that turns the fields on, and, with the webhook on, only the signing secret
  *   Nothing     a word nothing holds shows the line that says so, and the count is said through the status line
  *   Escape      the first one empties the box and keeps Settings open, the second closes Settings (focus trap and window listener)
@@ -84,7 +84,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
       await shot('01-empty');
     });
 
-    await check('"cache duration" opens the Detection tab, unfolds Cache Settings and leaves that one row', async () => {
+    await check('"cache duration" opens the Detection tab, unfolds Cache settings and leaves that one row', async () => {
       await type('cache duration');
       assert.equal(await openTab(), 'detection');
       assert.equal(await shown('#cacheDuration'), true);

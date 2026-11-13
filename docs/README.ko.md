@@ -137,13 +137,13 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 - **탐지 결과 업로드**로 공유 링크 받기(기본값은 dpaste.com, [공유 링크](#공유-링크) 참고)
 - **캐시 지우기**로 다음 로드 때 페이지를 다시 스캔하기
 - **복사** 메뉴: 업로드가 공유하는 것과 같은 요약, 티켓이나 채팅용 Markdown 표, 사이트와 보호 기술을 담은 한 줄, 또는 JSON(이들에는 쿠키나 헤더 값이 포함되지 않습니다). 또한 페이지를 다시 요청하는 코드를 curl 명령, Python (requests), Node.js (fetch)로 복사할 수도 있으며, 이 브라우저의 User-Agent, Accept-Language, client hints와 페이지가 보내는 모든 쿠키(HttpOnly 포함)가 들어갑니다. 이 코드에는 쿠키 값과 쿼리 문자열이 있는 페이지 주소가 들어 있으므로 외부에 공유하지 마세요
-- **이 도메인 차단**으로 확장 프로그램이 해당 도메인을 더 이상 스캔하지 않게 하기
+- **이 사이트 건너뛰기**로 확장 프로그램이 해당 사이트를 더 이상 스캔하지 않게 하기
 
 ### 기록
 
-탐지 결과가 있었던 모든 페이지가 보호 기술과 난이도와 함께 표시됩니다. 검색할 수 있고(악센트는 무시됩니다), 검색창 아래의 칩(고정됨, 변경됨, 카테고리, 또는 신호 조합이 일치한 페이지인 조합)으로 좁힐 수 있으며, 항목을 열어 세부 정보를 보고, JSON 내보내기 파일을 가져오고, JSON, CSV, 일반 텍스트 또는 Markdown으로 내보낼 수 있습니다. 내보내기 전에 보호 기술, 기간, 사이트, 고정된 페이지를 선택합니다. 항목의 **⋯** 메뉴에서 고정(기록을 정리해도 유지됩니다), 메모 추가, 페이지 열기, 지금 다시 스캔, Markdown으로 복사를 할 수 있습니다. 보호 기술이 변경되었다는 알림을 클릭하면 해당 페이지가 열립니다. **변경됨** 표시는 보호 기술이 마지막 스캔과 달라진 페이지를 나타냅니다. **설정 → 데이터 → 통계 열기**는 기록을 바탕으로 로컬에서 계산한 통계 페이지(활동, 보호 기술, 도메인, 신뢰도, 신호, 조합, 규칙, 고급 도구)를 엽니다.
+탐지 결과가 있었던 모든 페이지가 보호 기술과 난이도와 함께 표시됩니다. 검색할 수 있고(악센트는 무시됩니다), 검색창 아래의 칩(고정됨, 변경됨, 카테고리, 또는 신호 조합이 일치한 페이지인 조합)으로 좁힐 수 있으며, 항목을 열어 세부 정보를 보고, JSON 내보내기 파일을 가져오고, JSON, CSV, 일반 텍스트 또는 Markdown으로 내보낼 수 있습니다. 내보내기 전에 보호 기술, 기간, 사이트, 고정된 페이지를 선택합니다. 항목의 **⋯** 메뉴에서 고정(기록을 정리해도 유지됩니다), 메모 추가, 페이지 열기, 지금 다시 스캔, Markdown으로 복사를 할 수 있습니다. 보호 기술이 변경되었다는 알림을 클릭하면 해당 페이지가 열립니다. **변경됨** 표시는 보호 기술이 마지막 스캔과 달라진 페이지를 나타냅니다. 각 카드에는 페이지가 응답한 HTTP 상태가 표시되며(4xx는 주황색, 5xx는 빨간색), **⋯** 메뉴의 **오류 상태인 페이지만**을 선택하면 그런 페이지만 남습니다. **설정 → 데이터 → 통계 열기**는 기록을 바탕으로 로컬에서 계산한 통계 페이지(활동, 보호 기술, 도메인, 신뢰도, 신호, 조합, 규칙, 고급 도구)를 엽니다.
 
-기록의 **추가 작업**(⋯) 메뉴에 있는 **일괄 스캔**은 페이지 목록을 대신 스캔해 줍니다. 주소나 https 사이트맵을 붙여넣거나 .txt 또는 .csv 파일을 업로드하면, 각 페이지가 쿠키를 가진 실제 방문처럼 백그라운드 탭에서 하나씩 열립니다. 스캔할 페이지 수와 페이지당 시간 제한을 정하고, 실행을 일시정지하거나 중지하고(팝업을 닫아도 계속됩니다), 오류가 난 페이지를 다시 스캔하고, 표를 CSV, JSON, Markdown으로 내보낼 수 있습니다. 완료된 페이지는 일반 스캔을 거치므로 기록에 저장되고(일시정지 상태가 아닌 경우) 웹훅으로 전송되며, 합계에는 가장 많은 페이지에서 발견된 보호 기술을 보여 주는 **가장 많이 확인됨** 줄이 추가됩니다. 사이트맵은 자기 사이트의 페이지만 추가하며, **설정 → 탐지**에서 건너뛰도록 한 사이트는 제외됩니다.
+기록의 **추가 작업**(⋯) 메뉴에 있는 **일괄 스캔**은 페이지 목록을 대신 스캔해 줍니다. 주소나 https 사이트맵을 붙여넣거나 .txt 또는 .csv 파일을 업로드하면, 각 페이지가 쿠키를 가진 실제 방문처럼 백그라운드 탭에서 하나씩 열립니다. 스캔할 페이지 수, 페이지당 시간 제한, 페이지 사이 대기 시간을 정하고, 실행을 일시정지하거나 중지하고(팝업을 닫아도 계속됩니다), 오류가 난 페이지를 다시 스캔하고, 오류 상태이거나 특정 보호 기술이 있는 페이지만 표시하고, 표를 CSV, JSON, Markdown으로 내보낼 수 있습니다. 완료된 페이지는 일반 스캔을 거치므로 기록에 저장되고(일시정지 상태가 아닌 경우) 웹훅으로 전송되며, 합계에는 가장 많은 페이지에서 발견된 보호 기술을 보여 주는 **가장 많이 확인됨** 줄이 추가됩니다. 사이트맵은 자기 사이트의 페이지만 추가하며, **설정 → 탐지**에서 건너뛰도록 한 사이트는 제외됩니다.
 
 ### 규칙
 
@@ -157,21 +157,21 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 | 보호 기술 | 도구 |
 | --- | --- |
-| Akamai Bot Manager | Check Cookies · Analyze Scripts · Extract Sensor Information · Start Capturing |
-| AWS WAF | Check Cookies · Analyze Scripts |
-| Cloudflare Bot Management | Check Cookies · Analyze Scripts |
-| Cloudflare Turnstile | Extract SiteKey · Analyze Scripts |
-| DataDome | Check Cookies · Analyze Scripts |
-| FunCaptcha (Arkose Labs) | Extract Public Key · Analyze Scripts · Start Capturing |
-| GeeTest | Check Version · Analyze Scripts |
-| Google reCAPTCHA | Obtain Selector · Extract SiteKey · reCAPTCHA callback · Start Capturing |
-| hCaptcha | Extract SiteKey · Check Version · Analyze Scripts · Start Capturing |
-| Incapsula (Imperva) | Check Cookies · Analyze Scripts · Start Capturing |
-| Shape Security | Check Version · Check Cookies · Analyze Scripts · Start Capturing |
-| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
+| Akamai Bot Manager | Check cookies · Analyze scripts · Extract sensor information · Start capturing |
+| AWS WAF | Check cookies · Analyze scripts |
+| Cloudflare Bot Management | Check cookies · Analyze scripts |
+| Cloudflare Turnstile | Extract site key · Analyze scripts |
+| DataDome | Check cookies · Analyze scripts |
+| FunCaptcha (Arkose Labs) | Extract public key · Analyze scripts · Start capturing |
+| GeeTest | Check version · Analyze scripts |
+| Google reCAPTCHA | Obtain selector · Extract site key · reCAPTCHA callback · Start capturing |
+| hCaptcha | Extract site key · Check version · Analyze scripts · Start capturing |
+| Incapsula (Imperva) | Check cookies · Analyze scripts · Start capturing |
+| Shape Security | Check version · Check cookies · Analyze scripts · Start capturing |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract site key · Analyze scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
-결과와 캡처는 **고급 → 기록**에 30분 동안 보관되며, 사이트, 공급업체, 도구별로 필터링하고 다시 열고 내보낼 수 있습니다.
+결과와 캡처는 **고급 → 캡처**에 30분 동안 보관되며, 사이트, 공급업체, 도구별로 필터링하고 다시 열고 내보낼 수 있습니다.
 
 ### 설정
 

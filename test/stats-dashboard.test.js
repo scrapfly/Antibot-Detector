@@ -144,7 +144,7 @@ test('Rules use every category and make the chips inert; Tools hides the filter 
     antibot: { unused: { id: 'unused', name: 'Unused rule', author: 'me', detection: { dom: [{ selector: '#x' }] } } } } };
   const ui = await createPage(mixed(), { preferences: { scrapfly_detectors: detectors, scrapfly_advanced_history: { akamai: [{ timestamp: NOW - 60000, expiresAt: NOW + 600000, data: {} }] } } });
   ui.section('rules');
-  assert.match(ui.text('rulesCoverageSub'), /^1 of 2 enabled rules matched in this range$/, 'a fingerprint rule matches although fingerprint is out of scope');
+  assert.match(ui.text('rulesCoverageSub'), /^Enabled rules matched in this range: 1 of 2$/, 'a fingerprint rule matches although fingerprint is out of scope');
   assert.equal(ui.id('statsScope').classes.has('is-inert'), true);
   assert.equal(ui.id('statsScope').attributes['aria-disabled'], 'true');
   assert.equal(ui.text('statsScopeNoteText'), messages.statsScopeRulesNote.message);
@@ -452,7 +452,7 @@ test('what changed: new, rising and switched lists, and the rules of the baselin
   assert.match(ui.text('changedGone'), /DataDome/, 'seen before, not now');
   assert.match(ui.text('changedSwitched'), /switch\.example/);
   assert.match(ui.text('changedSwitched'), /Akamai Bot Manager|PerimeterX/);
-  assert.match(ui.text('kpiDetectorsSub'), /new this period/);
+  assert.match(ui.text('kpiDetectorsSub'), /New this period/);
   ui.section('domains');
   assert.match(ui.text('statsChangeTable'), /\/login/, 'the same page is compared with its earlier copy');
   assert.ok(!/\/other/.test(ui.text('statsChangeTable')), 'a different page of the same domain is not a change');
@@ -774,7 +774,7 @@ test('Activity: the whole timeline without paging, calendar facts and weekday or
 
 test('Tools lists live captures only, counts the expired ones apart and refreshes while visible', async () => {
   const captures = { akamai: [
-    { timestamp: NOW - 120000, expiresAt: NOW + 1680000, hostname: 'one.example', data: { tool: 't', label: 'Analyze Scripts' } },
+    { timestamp: NOW - 120000, expiresAt: NOW + 1680000, hostname: 'one.example', data: { tool: 't', label: 'Analyze scripts' } },
     { timestamp: NOW - 1500000, expiresAt: NOW + 240000, url: 'https://two.example/x', data: {} },
     { timestamp: NOW - 3000000, expiresAt: NOW - 1200000, hostname: 'old.example', data: {} }] };
   const ui = await createPage(basic(), { preferences: { scrapfly_advanced_history: captures, scrapfly_stats_section: 'tools' } });
@@ -791,7 +791,7 @@ test('Tools lists live captures only, counts the expired ones apart and refreshe
   const rows = ui.rows('statsCaptureTable');
   assert.equal(rows.length, 2);
   assert.ok(!/old\.example/.test(ui.text('statsCaptureTable')));
-  assert.match(ui.text('statsCaptureTable'), /Analyze Scripts/);
+  assert.match(ui.text('statsCaptureTable'), /Analyze scripts/);
   assert.match(ui.text('statsCaptureTable'), /two\.example/);
   assert.match(ui.text('statsCaptureTable'), /Capture/);
   assert.match(ui.text('statsCaptureTable'), /2 minutes ago/);

@@ -82,11 +82,16 @@
     const raw = tip == null ? fallback : (Array.isArray(tip) ? tip : [tip]);
     return raw.map(line => isObject(line) ? line : text(line));
   }
+  // "Label: value" as the page language joins them (FormatUtils on the page; the English pattern where it is not loaded)
+  function labelValue(label, value) {
+    if (typeof FormatUtils !== 'undefined' && typeof FormatUtils.labelValue === 'function') return FormatUtils.labelValue(label, value);
+    return '{0}: {1}'.replace('{0}', () => label).replace('{1}', () => value);
+  }
   function describe(lines) {
     let out = '';
     lines.forEach((line, i) => {
-      const part = isObject(line) ? (line.value == null || line.value === '' ? text(line.label) : `${text(line.label)}: ${text(line.value)}`) : line;
-      out += i ? (isObject(lines[i - 1]) ? ', ' : ': ') + part : part;
+      const part = isObject(line) ? (line.value == null || line.value === '' ? text(line.label) : labelValue(text(line.label), text(line.value))) : line;
+      out = !i ? part : isObject(lines[i - 1]) ? `${out}, ${part}` : labelValue(out, part);
     });
     return out;
   }
@@ -265,7 +270,7 @@
           if (row.partial) seg.setAttribute('opacity', .5);
         });
         node(g, 'rect', { x: 42 + i * slot, y: 16, width: slot, height: 186, fill: 'transparent' });
-        hit(c, g, row.label, series.map(s => `${text(s.label)}: ${fmt(o, positive((row.values || {})[s.key]))}`), row.tip, o);
+        hit(c, g, row.label, series.map(s => labelValue(text(s.label), fmt(o, positive((row.values || {})[s.key])))), row.tip, o);
         if (i % step === 0) label(c.svg, 42 + (i + .5) * slot, 226, shortened(row.label, 10), i === 0 ? 'start' : 'middle');
       });
       return;
