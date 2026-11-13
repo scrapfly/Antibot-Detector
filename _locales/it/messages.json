@@ -6299,11 +6299,23 @@
   "historyCompareNone": {
     "message": "Nessun’altra analisi salvata di questa pagina con cui confrontarla"
   },
+  "historyCompareNoneAny": {
+    "message": "Nessun’altra analisi salvata con cui confrontarla"
+  },
   "historyCompareTitle": {
     "message": "Confronta le analisi"
   },
   "historyCompareWith": {
     "message": "Confronta con"
+  },
+  "historyCompareScopePage": {
+    "message": "Questa pagina"
+  },
+  "historyCompareScopeAny": {
+    "message": "Qualsiasi pagina"
+  },
+  "historyCompareSearch": {
+    "message": "Filtra per indirizzo o titolo"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · trovate: {1}"

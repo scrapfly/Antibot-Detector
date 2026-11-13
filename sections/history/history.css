@@ -1739,6 +1739,64 @@
   min-width: 0;
 }
 
+/* "Compare with", then This page / Any page on the same line: two small pills, the pressed one filled with the accent */
+.history-compare-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  min-width: 0;
+}
+
+.history-compare-scope {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+}
+
+.history-compare-scope-btn {
+  height: 22px;
+  padding: 0 9px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--g-4b4b4b);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background-color 0.15s;
+}
+
+.history-compare-scope-btn:hover:not(:disabled) {
+  color: var(--text-primary);
+  border-color: var(--accent);
+}
+
+.history-compare-scope-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.history-compare-scope-btn[aria-pressed="true"] {
+  color: var(--text-primary);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.history-compare-scope-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.history-compare-search[hidden] {
+  display: none;
+}
+
 /* One line: a long date is cut with an ellipsis, the whole text is the list's hover text */
 .history-compare .history-dialog-input {
   overflow: hidden;

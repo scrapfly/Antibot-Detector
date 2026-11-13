@@ -553,12 +553,146 @@ test('the dialog: "Copy as Markdown" copies the same report as before, with the 
   assert.deepEqual(shut.copied, []);
 });
 
-test('the dialog: a page with no other scan says so and opens nothing', async () => {
+test('the dialog: History with no other scan at all says so and opens nothing', async () => {
   const lonely = entry('lonely', SEARCH, NOW, []);
-  const d = compareDialog([lonely, entry('other', 'https://other.example/', T0, [])], lonely);
+  const d = compareDialog([lonely, { ...entry('cached', 'https://other.example/', T0, []), fromCache: true }], lonely);
   assert.equal(d.options, null);
-  assert.deepEqual(d.infos, ['No other saved scan of this page to compare with']);
+  assert.deepEqual(d.infos, ['No other saved scan to compare with']);
   assert.equal(await d.done, false);
+});
+
+// ---- 3.2.0: compare with a scan of any page or site -------------------------------------------------------------------------
+
+test('others(): "any" lists every other scan, newest first, still without the entry or a scan served from the cache', () => {
+  const a = entry('a', 'https://s.example/cart?x=1', T0, []);
+  const items = [a, entry('b', 'https://s.example/cart?x=2', T0 + HOUR, []), entry('c', 'https://s.example/cart', T0 - HOUR, []),
+    entry('d', 'https://s.example/other', T0 + 2 * HOUR, []), entry('e', 'https://t.example/cart', T0 + 3 * HOUR, []),
+    { ...entry('f', 'https://u.example/', T0 + 4 * HOUR, []), fromCache: true }, null];
+  assert.deepEqual(C.others(items, a, { scope: 'any' }).map(i => i.id), ['e', 'd', 'b', 'c']);
+  assert.deepEqual(C.others(items, a, { scope: 'page' }).map(i => i.id), ['b', 'c'], 'this page, as before');
+  assert.deepEqual(C.others(items, { id: 'x', url: '', hostname: '' }, { scope: 'any' }).map(i => i.id), ['e', 'd', 'b', 'a', 'c'], 'an entry with no page can still be compared with any scan');
+});
+
+test('others(): the filter matches the address, the host or the title, every word, without case', () => {
+  const a = entry('a', 'https://s.example/', T0, []);
+  const items = [a, { ...entry('b', 'https://shop.example/cart?ref=mail', T0 + HOUR, []), title: 'Your Basket' },
+    { ...entry('c', 'https://news.example/front', T0 + 2 * HOUR, []), title: 'Front page' }, entry('d', 'https://other.example/basket', T0 + 3 * HOUR, [])];
+  const ids = (query) => C.others(items, a, { scope: 'any', query }).map(i => i.id);
+  assert.deepEqual(ids('SHOP'), ['b']);
+  assert.deepEqual(ids('basket'), ['d', 'b'], 'the address of one, the title of the other');
+  assert.deepEqual(ids('ref=mail'), ['b'], 'the query of the address');
+  assert.deepEqual(ids('front news'), ['c'], 'every word, in any order');
+  assert.deepEqual(ids('front shop'), []);
+  assert.deepEqual(ids('   '), ['d', 'c', 'b'], 'blank is no filter');
+  assert.equal(C.matchesQuery(null, 'x'), false);
+  assert.equal(C.matchesQuery({ url: 'https://a.example/' }, ''), true);
+});
+
+test('pageLabel() and samePage(): a scan\'s page as host and path, and whether two scans are of one page', () => {
+  assert.equal(C.pageLabel({ url: 'https://Shop.Example/cart?token=1#top' }), 'shop.example/cart');
+  assert.equal(C.pageLabel({ url: 'https://shop.example/' }), 'shop.example');
+  assert.equal(C.pageLabel({ url: 'not a url', hostname: 'h.example' }), 'h.example');
+  assert.equal(C.pageLabel(null), '');
+  assert.equal(C.samePage({ url: 'https://s.example/a?x=1' }, { url: 'https://s.example/a#y' }), true);
+  assert.equal(C.samePage({ url: 'https://s.example/a' }, { url: 'https://s.example/b' }), false);
+  assert.equal(C.samePage({ url: '' }, { url: '' }), false, 'two scans with no page are not one page');
+});
+
+test('whereText(): a scan of another page names both pages, the earlier first, whole', () => {
+  const own = { url: 'https://s.example/cart', timestamp: T0 + HOUR };
+  assert.equal(C.whereText(own, { url: 'https://t.example/login?next=%2F', timestamp: T0 }), 't.example/login?next=%2F → s.example/cart');
+  assert.equal(C.whereText(own, { url: 'https://s.example/checkout#pay', timestamp: T0 + 2 * HOUR }), 's.example/cart → s.example/checkout#pay', 'another page of the same site');
+  assert.equal(C.whereText(own, { url: 'https://s.example/cart?x=2', timestamp: T0 }), '/cart?x=2', 'the same page: its path, as before');
+});
+
+test('toOneLine() and toMarkdown(): two pages are both named, the earlier first, never with a query or a fragment', () => {
+  const a = entry('a', 'https://shop.example/cart?token=SECRET1#top', T0, [det('Kasada', 'Anti-Bot', 80)]);
+  const b = entry('b', 'https://other.example/login?token=SECRET2', T0 + HOUR, [det('Kasada', 'Anti-Bot', 80), det('DataDome', 'Anti-Bot', 70)]);
+  const r = C.compare(b, a);
+  assert.equal(C.toOneLine(r, { host: 'other.example' }), 'shop.example/cart → other.example/login: +DataDome 70%, Unchanged (1)');
+  const md = C.toMarkdown(r, { host: 'other.example', address: 'https://other.example/login' });
+  assert.ok(md.startsWith('## Compare scans: shop.example → other.example\n\nhttps://shop.example/cart → https://other.example/login\n\nFrom '), md.slice(0, 160));
+  assert.ok(!/SECRET|token|#top/.test(C.toOneLine(r) + md));
+  const sameSite = C.compare(a, { ...b, url: 'https://shop.example/checkout?token=SECRET3' });
+  assert.equal(C.toOneLine(sameSite, { host: 'shop.example' }), 'shop.example/cart → shop.example/checkout: +DataDome 70%, Unchanged (1)');
+  assert.ok(C.toMarkdown(sameSite, { host: 'shop.example' }).startsWith('## Compare scans: shop.example\n\nhttps://shop.example/cart → https://shop.example/checkout\n\n'));
+});
+
+const scopeButtons = (d) => d.form.find('history-compare-scope-btn');
+const searchBox = (d) => d.form.first('history-compare-search');
+const typeSearch = (d, text) => { const box = searchBox(d); box.value = text; box.fire('input'); };
+
+test('the dialog: "This page" and "Any page" switch the list; Any page lists every other scan with its page, and a filter box', async () => {
+  const mine = entry('mine', 'https://shop.example/cart', NOW, [det('Kasada', 'Anti-Bot', 80)]);
+  const before = entry('before', 'https://shop.example/cart', T0, [det('Kasada', 'Anti-Bot', 70)]);
+  const news = { ...entry('news', 'https://news.example/front?x=1', T0 + HOUR, [det('Cloudflare', 'Anti-Bot', 90)]), title: 'Front page' };
+  const login = entry('login', 'https://other.example/login', T0 + 2 * HOUR, []);
+  const d = compareDialog([mine, before, news, login], mine);
+  const [page, any] = scopeButtons(d);
+  assert.deepEqual([page.textContent, any.textContent], ['This page', 'Any page']);
+  assert.deepEqual([page.getAttribute('aria-pressed'), any.getAttribute('aria-pressed')], ['true', 'false'], 'this page first, when it has another scan');
+  assert.equal(page.getAttribute('type'), 'button');
+  assert.equal(searchBox(d).hidden, true, 'no filter for one page');
+  assert.equal(searchBox(d).getAttribute('aria-label'), 'Filter by address or title');
+  assert.equal(searchBox(d).getAttribute('placeholder'), 'Filter by address or title');
+  assert.deepEqual(d.select.children.map(o => o.value), ['before']);
+  assert.ok(d.select.getAttribute('aria-labelledby'), 'the list is named by its label');
+
+  any.click();
+  assert.deepEqual([page.getAttribute('aria-pressed'), any.getAttribute('aria-pressed')], ['false', 'true']);
+  assert.equal(searchBox(d).hidden, false);
+  assert.deepEqual(d.select.children.map(o => o.value), ['login', 'news', 'before']);
+  assert.equal(d.select.value, 'before', 'the scan picked stays picked');
+  assert.equal(d.select.children[1].textContent, `${shortAt(T0 + HOUR)} · 1 found · news.example/front`, 'each scan names its page');
+  assert.equal(d.select.children[2].textContent, `${shortAt(T0)} · 1 found · shop.example/cart`);
+
+  d.choose('news');
+  assert.equal(d.where.hidden, false);
+  assert.equal(d.where.textContent, 'news.example/front?x=1 → shop.example/cart', 'both pages, the earlier first');
+  assert.equal(d.where.getAttribute('data-tip'), 'https://news.example/front?x=1 → https://shop.example/cart');
+  assert.deepEqual(d.chips().map(c => c.textContent), ['Added1', 'Removed1', 'Changed0', 'Unchanged0']);
+  d.form.first('history-compare-copy').click();
+  await flush();
+  assert.equal(d.copied[0], `news.example/front → shop.example/cart: +Kasada 80%, ${unicodeMinus}Cloudflare`);
+
+  typeSearch(d, 'FRONT');
+  assert.deepEqual(d.select.children.map(o => o.value), ['news'], 'the title matched');
+  typeSearch(d, 'other.example');
+  assert.deepEqual(d.select.children.map(o => o.value), ['login']);
+  assert.equal(d.select.value, 'login', 'the scan picked is gone from the list: the first one left');
+  assert.equal(d.where.textContent, 'other.example/login → shop.example/cart');
+
+  typeSearch(d, 'nothing like it');
+  assert.equal(d.select.disabled, true);
+  assert.deepEqual(d.select.children.map(o => [o.textContent, o.disabled]), [['No entries match your search or filters.', true]]);
+  assert.equal(d.form.first('history-compare-copy').disabled, true);
+  assert.equal(d.chips().length, 0);
+  assert.equal(d.groups().length, 0);
+  assert.equal(d.where.hidden, true);
+
+  page.click();
+  assert.equal(searchBox(d).hidden, true);
+  assert.equal(d.select.disabled, false);
+  assert.deepEqual(d.select.children.map(o => [o.value, o.textContent]), [['before', `${shortAt(T0)} · 1 found`]], 'this page: as before, no page named');
+  assert.equal(d.form.first('history-compare-copy').disabled, false);
+  d.close(true);
+  await d.done;
+  assert.ok(d.copied[1].startsWith('## Compare scans: shop.example\n\nhttps://shop.example/cart\n\n'), d.copied[1].slice(0, 100));
+});
+
+test('the dialog: a page with no other scan of its own opens on "Any page", and "This page" cannot be chosen', async () => {
+  const lonely = entry('lonely', SEARCH, NOW, [det('Kasada', 'Anti-Bot', 80)]);
+  const d = compareDialog([lonely, entry('other', 'https://other.example/', T0, [])], lonely);
+  assert.ok(d.options, 'the dialog opened');
+  const [page, any] = scopeButtons(d);
+  assert.equal(page.disabled, true);
+  assert.equal(page.getAttribute('data-tip'), 'No other saved scan of this page to compare with');
+  assert.equal(any.getAttribute('aria-pressed'), 'true');
+  assert.deepEqual(d.select.children.map(o => o.value), ['other']);
+  assert.equal(d.where.textContent, `other.example → ${C.pageLabel(lonely)}`);
+  d.close(true);
+  await d.done;
+  assert.ok(d.copied[0].startsWith(`## Compare scans: other.example → search.example\n\nhttps://other.example/ → ${SEARCH}\n\n`), d.copied[0].slice(0, 200));
 });
 
 // ---- "Copy summary": a button of the dialog's own content (the dialog's footer has room for Close and Copy as Markdown only) ---

@@ -6299,11 +6299,23 @@
   "historyCompareNone": {
     "message": "Brak innego zapisanego skanu tej strony do porównania"
   },
+  "historyCompareNoneAny": {
+    "message": "Brak innego zapisanego skanu do porównania"
+  },
   "historyCompareTitle": {
     "message": "Porównaj skany"
   },
   "historyCompareWith": {
     "message": "Porównaj z"
+  },
+  "historyCompareScopePage": {
+    "message": "Ta strona"
+  },
+  "historyCompareScopeAny": {
+    "message": "Dowolna strona"
+  },
+  "historyCompareSearch": {
+    "message": "Filtruj według adresu lub tytułu"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · znaleziono: {1}"

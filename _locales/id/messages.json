@@ -6299,11 +6299,23 @@
   "historyCompareNone": {
     "message": "Tidak ada pindaian tersimpan lain dari halaman ini untuk dibandingkan"
   },
+  "historyCompareNoneAny": {
+    "message": "Tidak ada pindaian tersimpan lain untuk dibandingkan"
+  },
   "historyCompareTitle": {
     "message": "Bandingkan pindaian"
   },
   "historyCompareWith": {
     "message": "Bandingkan dengan"
+  },
+  "historyCompareScopePage": {
+    "message": "Halaman ini"
+  },
+  "historyCompareScopeAny": {
+    "message": "Halaman mana pun"
+  },
+  "historyCompareSearch": {
+    "message": "Filter menurut alamat atau judul"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · {1} ditemukan"

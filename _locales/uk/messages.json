@@ -6299,11 +6299,23 @@
   "historyCompareNone": {
     "message": "Немає іншого збереженого сканування цієї сторінки для порівняння"
   },
+  "historyCompareNoneAny": {
+    "message": "Немає іншого збереженого сканування для порівняння"
+  },
   "historyCompareTitle": {
     "message": "Порівняння сканувань"
   },
   "historyCompareWith": {
     "message": "Порівняти з"
+  },
+  "historyCompareScopePage": {
+    "message": "Ця сторінка"
+  },
+  "historyCompareScopeAny": {
+    "message": "Будь-яка сторінка"
+  },
+  "historyCompareSearch": {
+    "message": "Фільтр за адресою або заголовком"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · знайдено: {1}"

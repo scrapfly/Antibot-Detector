@@ -167,7 +167,7 @@ test('the entry menu names the action for the entry it opens on', () => {
   assert.equal(labels.pin.textContent, 'Unpin');
 });
 
-test('Compare with… is disabled, and says why, when the page has no other saved scan', () => {
+test('Compare with… is disabled, and says why, only when History holds no other saved scan (3.2.0: any page can be compared)', () => {
   const { view } = historyView();
   const compare = { disabled: false, title: '' };
   const menu = { querySelector: (selector) => (selector === '[data-action="compare"]' ? compare : null) };
@@ -176,7 +176,12 @@ test('Compare with… is disabled, and says why, when the page has no other save
   view.historyItems = [entry('a', 2)];
   view.syncItemMenu(menu, view.historyItems[0]);
   assert.equal(compare.disabled, true);
-  assert.equal(compare.title, 'No other saved scan of this page to compare with');
+  assert.equal(compare.title, 'No other saved scan to compare with');
+
+  view.historyItems = [entry('a', 2), { id: 'o', timestamp: 1, url: 'https://other.example.test/', hostname: 'other.example.test' }];
+  view.syncItemMenu(menu, view.historyItems[0]);
+  assert.equal(compare.disabled, false, 'a scan of another page can be compared with');
+  assert.equal(compare.title, '');
 
   view.historyItems = [entry('a', 2), entry('b', 1)];
   view.syncItemMenu(menu, view.historyItems[0]);

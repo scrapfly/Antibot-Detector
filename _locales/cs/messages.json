@@ -6299,11 +6299,23 @@
   "historyCompareNone": {
     "message": "Žádné jiné uložené skenování této stránky k porovnání"
   },
+  "historyCompareNoneAny": {
+    "message": "Žádné jiné uložené skenování k porovnání"
+  },
   "historyCompareTitle": {
     "message": "Porovnat skenování"
   },
   "historyCompareWith": {
     "message": "Porovnat s"
+  },
+  "historyCompareScopePage": {
+    "message": "Tato stránka"
+  },
+  "historyCompareScopeAny": {
+    "message": "Libovolná stránka"
+  },
+  "historyCompareSearch": {
+    "message": "Filtrovat podle adresy nebo názvu"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · nalezeno: {1}"

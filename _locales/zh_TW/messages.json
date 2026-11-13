@@ -6299,11 +6299,23 @@
   "historyCompareNone": {
     "message": "此網頁沒有其他已儲存的掃描可供比較"
   },
+  "historyCompareNoneAny": {
+    "message": "沒有其他已儲存的掃描可供比較"
+  },
   "historyCompareTitle": {
     "message": "比較掃描"
   },
   "historyCompareWith": {
     "message": "比較對象"
+  },
+  "historyCompareScopePage": {
+    "message": "此網頁"
+  },
+  "historyCompareScopeAny": {
+    "message": "任何網頁"
+  },
+  "historyCompareSearch": {
+    "message": "依網址或標題篩選"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · 找到 {1} 個"

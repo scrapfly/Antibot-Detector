@@ -6299,11 +6299,23 @@
   "historyCompareNone": {
     "message": "此页面没有其他已保存的扫描可供比较"
   },
+  "historyCompareNoneAny": {
+    "message": "没有其他已保存的扫描可供比较"
+  },
   "historyCompareTitle": {
     "message": "比较扫描"
   },
   "historyCompareWith": {
     "message": "比较对象"
+  },
+  "historyCompareScopePage": {
+    "message": "此页面"
+  },
+  "historyCompareScopeAny": {
+    "message": "任意页面"
+  },
+  "historyCompareSearch": {
+    "message": "按地址或标题筛选"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · 发现 {1} 个"
