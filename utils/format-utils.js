@@ -173,13 +173,14 @@ class FormatUtils {
    * @param {number} value - Signed amount (negative = in the past)
    * @param {string} unit - Intl unit ('second', 'minute', 'hour', 'day', ...)
    * @param {string} [style='narrow'] - 'long' | 'short' | 'narrow'
+   * @param {string} [numeric='always'] - 'auto' gives the language's own word where it has one (0 seconds: "now", "jetzt")
    * @returns {string|null}
    */
-  static formatRelative(value, unit, style = 'narrow') {
+  static formatRelative(value, unit, style = 'narrow', numeric = 'always') {
     const locale = FormatUtils.uiLocale();
     if (!locale || typeof Intl === 'undefined' || typeof Intl.RelativeTimeFormat !== 'function') return null;
     try {
-      return new Intl.RelativeTimeFormat(locale, { numeric: 'always', style }).format(value, unit);
+      return new Intl.RelativeTimeFormat(locale, { numeric, style }).format(value, unit);
     } catch (_) {
       return null;
     }
@@ -234,11 +235,16 @@ class FormatUtils {
    * Format timestamp as "X time ago" (e.g., "3h ago", "2d ago"), in the UI
    * language via Intl.RelativeTimeFormat when available.
    * @param {number} timestamp - Unix timestamp in milliseconds
+   * @param {{inline?: boolean}} [options] - inline: the time goes inside a sentence ("Last checked {0}"), where the
+   *   stand-alone "Just now" reads wrong ("Last checked Just now"): a moment ago is the language's own word for now instead
+   *   ("Last checked now", "Zuletzt geprüft jetzt"), "just now" with no language loaded
    * @returns {string} Human-readable time ago string
    */
-  static getTimeAgo(timestamp) {
+  static getTimeAgo(timestamp, { inline = false } = {}) {
     const t = (typeof I18n !== 'undefined') ? I18n : null;
-    const get = (key, fallback) => (t && t.get(key)) || fallback;
+    const get = (key, fallback) => (key === 'timeJustNow' && inline
+      ? FormatUtils.formatRelative(0, 'second', 'narrow', 'auto') || 'just now'
+      : (t && t.get(key)) || fallback);
     const fmt = (key, fallback, n, unit) => FormatUtils.formatRelative(-n, unit)
       || (t && t.format(key, n)) || fallback;
 

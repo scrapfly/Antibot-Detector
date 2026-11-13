@@ -47,7 +47,7 @@ function note(actions = []) {
   return node;
 }
 
-function fixture({ tabUrl = 'https://shop.example/login', history = [], settings = {}, answer = { status: 'ok', updated: 1 }, popup = null } = {}) {
+function fixture({ tabUrl = 'https://shop.example/login', history = [], settings = {}, answer = { status: 'ok', updated: 1 }, popup = null, i18n = null } = {}) {
   const log = { reads: 0, messages: [], toasts: [] };
   const els = {
     '#detectionSourceNote': note(), '#emptyCheckedNote': note(), '#detectionChangeNote': note(['compare', 'watch', 'watching']),
@@ -67,6 +67,7 @@ function fixture({ tabUrl = 'https://shop.example/login', history = [], settings
     document: { querySelector: (selector) => els[selector] || null, querySelectorAll: () => [] }
   };
   context.window = popup ? { popupInstance: popup } : {};
+  if (i18n) context.I18n = i18n;
   context.self = context;
   vm.createContext(context);
   for (const file of ['modules/core/categories.js', 'modules/core/domain-list.js', 'modules/core/history-filter.js', 'modules/core/history-policy.js',
@@ -79,6 +80,47 @@ function fixture({ tabUrl = 'https://shop.example/login', history = [], settings
 }
 
 const det = (name, category = 'antibot') => ({ name, category, confidence: 90 });
+// First strong isolate ... pop directional isolate: a path or a name keeps its own direction inside an Arabic line
+const FSI = '\u2068';
+const PDI = '\u2069';
+
+/** An I18n with one language's strings, as the popup loads it. */
+function i18nOf(code) {
+  const messages = JSON.parse(read(`_locales/${code}/messages.json`));
+  return {
+    locale: () => code,
+    get: (key) => (messages[key] ? messages[key].message : ''),
+    format: (key, ...args) => (messages[key] ? messages[key].message.replace(/\{(\d+)\}/g, (m, i) => String(args[Number(i)])) : '')
+  };
+}
+
+test('the page path and the +/− names are isolated, so an Arabic line keeps them on their own side', async () => {
+  const ar = fixture({ tabUrl: 'https://shop.example/login', i18n: i18nOf('ar') });
+  await ar.UI.syncSourceNote.call(ar.detection, { url: 'https://shop.example/account/', timestamp: Date.now() - 3 * HOUR, cacheScope: 'domain' });
+  const text = ar.els['#detectionSourceNote'].text.textContent;
+  assert.ok(text.includes(`${FSI}/account/${PDI}`), text);
+  const { UI, detection, els } = fixture({ history: changed, i18n: i18nOf('ar') });
+  detection.currentResults = [det('DataDome')];
+  await UI.syncChangeNote.call(detection);
+  assert.ok(els['#detectionChangeNote'].text.textContent.endsWith(`${FSI}+DataDome${PDI} ${FSI}−Kasada${PDI}`), els['#detectionChangeNote'].text.textContent);
+});
+
+test('a scan of a moment ago reads as part of the sentence, never as the stand-alone "Just now"', async () => {
+  for (const [code, expected] of [[null, 'Last checked just now'], ['en', 'Last checked now'], ['de', 'Zuletzt geprüft jetzt'], ['ar', 'آخر فحص: الآن']]) {
+    const own = fixture({ tabUrl: 'https://shop.example/', i18n: code ? i18nOf(code) : null });
+    own.detection.scanOutcome = 'complete';
+    await own.UI.syncCheckedNote.call(own.detection, { url: 'https://shop.example/', timestamp: Date.now(), cacheScope: 'domain' });
+    assert.equal(own.els['#emptyCheckedNote'].text.textContent, expected, code || 'no language loaded');
+  }
+  const other = fixture({ tabUrl: 'https://shop.example/login', i18n: i18nOf('de') });
+  other.detection.scanOutcome = 'complete';
+  await other.UI.syncCheckedNote.call(other.detection, { url: 'https://shop.example/', timestamp: Date.now() + 500, cacheScope: 'domain' });
+  assert.ok(other.els['#emptyCheckedNote'].text.textContent.endsWith(', jetzt'), other.els['#emptyCheckedNote'].text.textContent);
+  // A time shown on its own (a list of captures, a History row) keeps "Just now"
+  const plainContext = vm.createContext({ Date, Intl });
+  for (const file of ['modules/core/categories.js', 'utils/format-utils.js']) vm.runInContext(read(file), plainContext);
+  assert.equal(vm.runInContext('FormatUtils.getTimeAgo(Date.now())', plainContext), 'Just now');
+});
 
 test('the three lines are in the template, hidden until they have something to say, with link-style buttons', () => {
   const summary = html.slice(html.indexOf('class="url-display-line"'), html.indexOf('class="search-container detection-search"'));
@@ -132,7 +174,7 @@ test('line 1: results found on another page of the site say which page and when'
   assert.equal(other.path, '/');
   const line = els['#detectionSourceNote'];
   assert.equal(line.hidden, false);
-  assert.equal(line.text.textContent, 'From a scan of /, 3h ago');
+  assert.equal(line.text.textContent, `From a scan of ${FSI}/${PDI}, 3h ago`);
   assert.match(line.text.title, /^https:\/\/shop\.example\//, 'the whole address on hover');
 });
 
@@ -161,7 +203,7 @@ test('line 2: a clean result says when it was checked and offers Scan again now;
   const other = fixture({ tabUrl: 'https://shop.example/login' });
   other.detection.scanOutcome = 'complete';
   await other.UI.syncCheckedNote.call(other.detection, { url: 'https://shop.example/', timestamp: at, cacheScope: 'domain' });
-  assert.equal(other.els['#emptyCheckedNote'].text.textContent, 'From a scan of /, 2h ago');
+  assert.equal(other.els['#emptyCheckedNote'].text.textContent, `From a scan of ${FSI}/${PDI}, 2h ago`);
 
   // no date known: only the button
   const bare = fixture();
@@ -202,7 +244,7 @@ test('line 3: a change since the earlier scan names what came and went, with Com
   const line = els['#detectionChangeNote'];
   assert.equal(log.reads, 1);
   assert.equal(line.hidden, false);
-  assert.match(line.text.textContent, /^Changed since .+: \+DataDome −Kasada$/);
+  assert.match(line.text.textContent, /^Changed since .+: \u2068\+DataDome\u2069 \u2068−Kasada\u2069$/);
   assert.equal(line.action('compare').hidden, false);
   assert.equal(line.action('watch').hidden, false);
   assert.equal(line.action('watching').hidden, true);

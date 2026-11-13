@@ -458,7 +458,7 @@ class History {
             <div class="history-item-content">
               <div class="history-title-row">
                 ${item.pinned === true ? `<span class="history-pin" role="img" aria-label="${FormatUtils.escapeAttr(item.autoPinned === true ? autoPinnedTip : pinnedTip)}" ${FormatUtils.tipAttrs(item.autoPinned === true ? autoPinnedTip : pinnedTip)}>${PIN_ICON}</span>` : ''}
-                ${item.watch === true ? `<span class="history-watch" role="img" aria-label="${FormatUtils.escapeAttr(watchTip)}" ${FormatUtils.tipAttrs(watchTip, item.watchedAt ? _tr('historyWatchCheckedFmt', 'Last checked {0}').replace('{0}', FormatUtils.getTimeAgo(item.watchedAt)) : _tr('historyWatchNever', 'Not checked yet'))}>${WATCH_ICON}</span>` : ''}
+                ${item.watch === true ? `<span class="history-watch" role="img" aria-label="${FormatUtils.escapeAttr(watchTip)}" ${FormatUtils.tipAttrs(watchTip, item.watchedAt ? _tr('historyWatchCheckedFmt', 'Last checked {0}').replace('{0}', FormatUtils.getTimeAgo(item.watchedAt, { inline: true })) : _tr('historyWatchNever', 'Not checked yet'))}>${WATCH_ICON}</span>` : ''}
                 <div class="history-title" title="${attrTitle}" id="history-title-${cardNumber}">${safeTitle}</div>
                 ${changedBadgeHtml(item)}
               </div>
