@@ -16,12 +16,14 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection: What was checked lists how many cookies, scripts, requests and headers a scan read and whether the JS hooks finished, also when nothing was found.
 - Detection details: cookie rows show when the cookie was set, how often it changed and when it expires, never its value.
 - Detection details: Edit rule opens the protection's rule in the Rules editor, and Copy evidence copies the detection as Markdown without cookie or header values.
+- Press / to jump to the search box on Detection, History, Rules and Captures; Settings → Keyboard shortcuts lists every shortcut.
 
 ### Changed
 
 - Sites you exclude from scanning are now called skipped sites, with Skip this site buttons, instead of a blacklist; your saved list is kept.
 - The Advanced tab's History sub-tab is now called Captures, so it is not confused with the History tab.
 - Settings explains what Cache scope, Include timestamps and Save on cache hits do.
+- Interface texts use sentence case, such as "Nothing detected", "Clear cache" and "Check now".
 
 ### Fixed
 
@@ -36,6 +38,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - In Arabic, the arrow keys move through the Advanced code window's language tabs in reading order.
 - Settings: removing a site or a webhook header keeps keyboard focus in the list, and copying a webhook template variable says when the browser refuses it.
 - Light theme: the Settings dropdown arrows and the icon of Advanced tools without a logo are visible again.
+- Applying a preset, importing settings or restoring a backup now asks about unsaved Settings changes instead of discarding them.
 - A page prerendered while its site was skipped is no longer saved half-scanned when you turn the site back on and scan it.
 - A prerendered page answered from saved results no longer leaves a scan in progress in the background.
 - Arabic: the Detection summary lines show the page path and the +/− protection names on the correct side.
