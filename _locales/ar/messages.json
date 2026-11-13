@@ -5601,7 +5601,7 @@
     "message": "حالة خطأ"
   },
   "historyFilterHttpErrorMenu": {
-    "message": "الصفحات ذات حالة الخطأ فقط (4xx, 5xx)"
+    "message": "الصفحات ذات حالة الخطأ فقط (⁦4xx, 5xx⁩)"
   },
   "historyNoResults": {
     "message": "لا توجد إدخالات تطابق بحثك أو عوامل التصفية."
@@ -6629,7 +6629,7 @@
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
   "bulkFilterHttpError": {
-    "message": "حالة خطأ (4xx, 5xx)"
+    "message": "حالة خطأ (⁦4xx, 5xx⁩)"
   },
   "bulkFilterOnlyFmt": {
     "message": "{0} فقط"
