@@ -13,6 +13,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection: a "Strong (≥80%)" toggle inside the search box shows only detections with strong evidence.
 - Detection details: explains what the difficulty level means and links the vendor's website and its detection guide in your language.
 - Detection details: Open tools goes straight to the Advanced tools for that protection.
+- Detection: What was checked lists how many cookies, scripts, requests and headers a scan read and whether the JS hooks finished, also when nothing was found.
+- Detection details: cookie rows show when the cookie was set, how often it changed and when it expires, never its value.
+- Detection details: Edit rule opens the protection's rule in the Rules editor, and Copy evidence copies the detection as Markdown without cookie or header values.
 
 ### Changed
 
