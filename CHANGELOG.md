@@ -33,6 +33,12 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - In Arabic, the arrow keys move through the Advanced code window's language tabs in reading order.
 - Settings: removing a site or a webhook header keeps keyboard focus in the list, and copying a webhook template variable says when the browser refuses it.
 - Light theme: the Settings dropdown arrows and the icon of Advanced tools without a logo are visible again.
+- A page prerendered while its site was skipped is no longer saved half-scanned when you turn the site back on and scan it.
+- A prerendered page answered from saved results no longer leaves a scan in progress in the background.
+- Arabic: the Detection summary lines show the page path and the +/− protection names on the correct side.
+- The summary lines no longer read "Last checked Just now"; a scan from a moment ago reads naturally in every language.
+- Detection details no longer describe fingerprinting techniques as blocking traffic.
+- Arabic, Russian and Czech: watchlist limits, update waits and the Rules editor's pattern counts read correctly for every number.
 
 ## [3.1.8] - 2026-11-12
 
