@@ -4,6 +4,8 @@
  *
  *   linesOf()        the addresses in a pasted list or an uploaded .txt/.csv (one per line; the first cell of a CSV row
  *                    that looks like an address)
+ *   readList(), extrasOf(), attachExtras()   a CSV's other columns (header and cells), kept with the run's pages so the
+ *                    table and the exports give them back after http_status and the results join back to the person's sheet
  *   normalize()      one address as it is scanned: https:// added to a bare host, the #fragment dropped; or why not
  *   prepare()        the run's pages: de-duplicated, http/https only, the "Sites to scan" setting applied, at most
  *                    the cap; what is left out is listed as skipped with the reason (duplicates and the pages over the
@@ -29,7 +31,9 @@
  *   summarize()      the protections of a finished page, as the table and the exports show them
  *   protectionTotals()   how many scanned pages each protection was found on: the "Most seen" line of the page, and a line
  *                    of the Markdown export and a field of the JSON export (the CSV is one row per protection, as it was)
- *   build(), fileName()   the CSV, JSON and Markdown exports
+ *   diff(), diffText()    what changed on each page since an earlier run of the same list (background/bulk-scan-runner.js
+ *                    keeps the last ones: BulkRuns), pages matched by address and protections by name: "+DataDome −Kasada · 200 → 403"
+ *   build(), fileName()   the CSV, JSON and Markdown exports (with the person's columns and the comparison, when there are)
  *   oneLines()            the run as one line per page, for a chat or a ticket
  */
 (function(root) {
@@ -45,6 +49,10 @@
   const DELAY_S = Object.freeze({ min: 0, max: 60, default: 0 });  // the wait between two pages ("Wait between pages")
   const MAX_SKIPPED_LISTED = 200;  // skipped lines listed in the table; the rest are counted
   const MOST_SEEN = 5;             // protections named in the "Most seen" line (the page, the Markdown export)
+  const MAX_EXTRA_COLUMNS = 10;    // the person's own columns of a CSV kept with the results, at most
+  const MAX_EXTRA_ROWS = 5000;     // rows of them (what the worker takes of a list, at most)
+  const MAX_CELL = 200;            // characters of one of their cells
+  const MAX_HEADER = 60;           // characters of one of their column names
   /**
    * Why a page was not scanned (skipped) or has no result (failed); the page shows each in words. 'sitemap': the sitemap could
    * not be read (not fetched, not a sitemap); 'moved': the sitemap was fetched but ended on another site, so it was not read.
@@ -159,17 +167,116 @@
    * @returns {string[]}
    */
   function linesOf(text) {
+    return readList(text).addresses;
+  }
+
+  /**
+   * The list as linesOf() reads it, and when it is a table, the person's other columns too: the header (the first row with no
+   * address, when there is one) and, for each row, the cells beside its address. They go back out with the results (the table and
+   * every export), so the results join back to the person's sheet. Bounded: MAX_EXTRA_COLUMNS columns, MAX_CELL characters a
+   * cell, MAX_HEADER a column name. A table with no header names its columns by their place in the row ("column_3").
+   * @param {string} text
+   * @returns {{addresses: string[], columns: string[], rows: Array<{address: string, cells: string[]}>}}
+   */
+  function readList(text) {
     const lines = logicalLines(text).map(raw => raw.trim()).filter(line => line && !line.startsWith('#'));
     const table = lines.some(line => line.includes('\t'))
       || lines.some(line => { const cells = cellsOf(line); return cells.length > 1 && !cells.some(looksLikeAddress); });
     const out = [];
+    const rows = [];
+    let header = null;
+    let width = 0;
     for (const line of lines) {
       const parts = table || /^"/.test(line) ? cellsOf(line) : partsOf(line);
       if (parts.length < 2) { out.push(unquote(line)); continue; }
-      const addresses = parts.filter(looksLikeAddress);
-      out.push(...(table ? addresses.slice(0, 1) : addresses));
+      if (!table) { out.push(...parts.filter(looksLikeAddress)); continue; }
+      const at = parts.findIndex(looksLikeAddress);
+      if (at === -1) {
+        // The header: the first row with no address, before any row that has one
+        if (header === null && !rows.length) header = parts;
+        continue;
+      }
+      out.push(parts[at]);
+      rows.push({ address: parts[at], at, cells: parts });
+      width = Math.max(width, parts.length);
     }
-    return out.filter(Boolean);
+    if (!table || !rows.length || width < 2) return { addresses: out.filter(Boolean), columns: [], rows: [] };
+    // The address column is where the first row has its address; the others are the person's columns, in their order
+    const addressAt = rows[0].at;
+    const places = [];
+    for (let i = 0; i < width && places.length < MAX_EXTRA_COLUMNS; i++) if (i !== addressAt) places.push(i);
+    const cut = (value, max) => String(value == null ? '' : value).replace(/[\r\n]+/g, ' ').trim().slice(0, max);
+    const columns = places.map(i => cut(header && header[i], MAX_HEADER) || `column_${i + 1}`);
+    const extras = rows.map(row => ({
+      address: row.address,
+      // A row whose address is in another column: its cells are read around that one, so they line up with the header
+      cells: places.map(i => cut(row.at === addressAt ? row.cells[i] : row.cells.filter((_, j) => j !== row.at)[places.indexOf(i)], MAX_CELL))
+    }));
+    const any = extras.some(row => row.cells.some(Boolean)) || !!header;
+    return { addresses: out.filter(Boolean), columns: any ? columns : [], rows: any ? extras : [] };
+  }
+
+  /**
+   * The person's other columns as the worker takes them with the list: the column names, and the cells of each address under
+   * its scanned form (normalize). The first row of an address wins, as the first one is the page that is scanned.
+   * @param {{columns?: string[], rows?: Array<{address: string, cells: string[]}>}} list  readList()'s result
+   * @returns {{columns: string[], rows: Object<string, string[]>}|null}  null when the list has no other columns
+   */
+  function extrasOf(list) {
+    const columns = list && Array.isArray(list.columns) ? list.columns : [];
+    if (!columns.length || !Array.isArray(list.rows)) return null;
+    const rows = {};
+    let count = 0;
+    for (const row of list.rows) {
+      if (count >= MAX_EXTRA_ROWS) break;
+      const normal = row && normalize(row.address);
+      if (!normal || !normal.url || Object.prototype.hasOwnProperty.call(rows, normal.url)) continue;
+      rows[normal.url] = Array.isArray(row.cells) ? row.cells : [];
+      count++;
+    }
+    return count ? cleanExtras({ columns, rows }) : null;
+  }
+
+  /** Extras as they may be kept with a run: checked and bounded, whoever sent them. null when there are none. */
+  function cleanExtras(extras) {
+    if (!extras || typeof extras !== 'object' || !Array.isArray(extras.columns) || !extras.rows || typeof extras.rows !== 'object') return null;
+    const text = (value, max) => (typeof value === 'string' || typeof value === 'number' ? String(value) : '').replace(/[\r\n]+/g, ' ').trim().slice(0, max);
+    const columns = extras.columns.slice(0, MAX_EXTRA_COLUMNS).map((name, i) => text(name, MAX_HEADER) || `column_${i + 2}`);
+    if (!columns.length) return null;
+    const rows = {};
+    let count = 0;
+    for (const [url, cells] of Object.entries(extras.rows)) {
+      if (count >= MAX_EXTRA_ROWS) break;
+      if (typeof url !== 'string' || url.length > 2048 || !Array.isArray(cells)) continue;
+      rows[url] = columns.map((_, i) => text(cells[i], MAX_CELL));
+      count++;
+    }
+    return { columns, rows };
+  }
+
+  /**
+   * Put the person's other columns on the pages of a run (createRun's pages carry the address as it is scanned): run.columns and,
+   * for each page found in them, item.extra (one cell per column). Pages the list did not give (a sitemap's) get empty cells.
+   * Without extras the run keeps what it has (the pages a continued run carried over keep theirs).
+   */
+  function attachExtras(run, extras) {
+    const clean = cleanExtras(extras);
+    if (!run || !Array.isArray(run.items) || !clean) return run;
+    run.columns = clean.columns;
+    for (const item of run.items) {
+      const cells = Object.prototype.hasOwnProperty.call(clean.rows, item.url) ? clean.rows[item.url] : null;
+      if (cells) item.extra = cells;
+      else if (!Array.isArray(item.extra) || item.extra.length !== clean.columns.length) item.extra = clean.columns.map(() => '');
+    }
+    return run;
+  }
+
+  /** The extras of a run, in the form attachExtras() takes them (Run again and the continued runs hand them to the worker again). */
+  function extrasOfRun(run) {
+    if (!run || !Array.isArray(run.columns) || !run.columns.length || !Array.isArray(run.items)) return null;
+    const rows = {};
+    for (const item of run.items) if (item && Array.isArray(item.extra)) rows[item.url] = item.extra;
+    return cleanExtras({ columns: run.columns, rows });
   }
 
   /**
@@ -548,6 +655,115 @@
       .map(({ name, category, pages }) => ({ name, category, pages }));
   }
 
+  /* ---------- Compared with an earlier run ---------- */
+
+  /** The page an item stands for when two runs are compared: its address as it is scanned (normalize), or the text as given. */
+  const pageKeyOf = (url) => { const normal = normalize(url); return normal.url || String(url || '').trim(); };
+  const protectionKeyOf = (name) => (Categories ? Categories.protectionKey(name) : String(name).trim().toLowerCase());
+  const confidenceOf = (d) => (d && d.confidence !== null && d.confidence !== undefined && d.confidence !== '' && Number.isFinite(Number(d.confidence)) ? Math.round(Number(d.confidence)) : null);
+  const OUTCOMES = Object.freeze(['done', 'failed', 'skipped']);
+
+  /** A page's protections by name (one protection under two spellings is one), the strongest of each. */
+  function protectionsOf(item) {
+    const map = new Map();
+    for (const d of Array.isArray(item && item.detections) ? item.detections : []) {
+      const name = detectionName(d);
+      if (!name || name === '?') continue;
+      const row = { name, confidence: confidenceOf(d) };
+      const key = protectionKeyOf(name);
+      const have = map.get(key);
+      if (!have || (row.confidence === null ? -1 : row.confidence) > (have.confidence === null ? -1 : have.confidence)) map.set(key, row);
+    }
+    return map;
+  }
+
+  /**
+   * What changed on each page between an earlier run of a list and this one: pages are matched by their address as it is
+   * scanned, protections by name (as History's Compare matches them). Only a page with an outcome in this run (done, failed,
+   * skipped) is compared; one still waiting has nothing to compare yet.
+   * @param {object} prev  the earlier run (a run, the copy the worker keeps, or a JSON export read back)
+   * @param {object} run   this run
+   * @returns {{startedAt: number|null, finishedAt: number|null, compared: number, changed: number,
+   *   pages: Object<string, {inPrevious: boolean, changed: boolean, added: object[], removed: object[], confidence: object[],
+   *   status: {from: string, to: string}|null, http: {from: number|null, to: number|null}|null}>}|null}
+   *   null without an earlier run. added/removed: [{name, confidence}]; confidence: [{name, from, to}]
+   */
+  function diff(prev, run) {
+    if (!prev || !Array.isArray(prev.items) || !run || !Array.isArray(run.items)) return null;
+    const before = new Map();
+    for (const item of prev.items) {
+      if (!item || typeof item.url !== 'string') continue;
+      const key = pageKeyOf(item.url);
+      if (key && !before.has(key)) before.set(key, item);
+    }
+    const pages = {};
+    let compared = 0;
+    let changed = 0;
+    for (const item of run.items) {
+      if (!item || !OUTCOMES.includes(item.status)) continue;
+      const key = pageKeyOf(item.url);
+      if (!key || Object.prototype.hasOwnProperty.call(pages, key)) continue;
+      const was = before.get(key);
+      compared++;
+      if (!was) {
+        pages[key] = { inPrevious: false, changed: true, added: [], removed: [], confidence: [], status: null, http: null };
+        changed++;
+        continue;
+      }
+      const status = was.status !== item.status ? { from: String(was.status || ''), to: item.status } : null;
+      const httpFrom = was.status === 'done' ? httpStatusOf(was.httpStatus) : null;
+      const httpTo = item.status === 'done' ? httpStatusOf(item.httpStatus) : null;
+      // A code that only one of the two knew is no change (a run made before codes were kept, a page that failed)
+      const http = httpFrom && httpTo && httpFrom !== httpTo ? { from: httpFrom, to: httpTo } : null;
+      const added = [];
+      const removed = [];
+      const confidence = [];
+      // Protections are compared only between two scans: a page that failed has no protections, not none found
+      if (was.status === 'done' && item.status === 'done') {
+        const a = protectionsOf(was);
+        const b = protectionsOf(item);
+        for (const [k, row] of b) {
+          const old = a.get(k);
+          if (!old) added.push(row);
+          else if (old.confidence !== null && row.confidence !== null && old.confidence !== row.confidence) confidence.push({ name: row.name, from: old.confidence, to: row.confidence });
+        }
+        for (const [k, row] of a) if (!b.has(k)) removed.push(row);
+      }
+      const byName = (x, y) => x.name.localeCompare(y.name);
+      [added, removed, confidence].forEach(list => list.sort(byName));
+      const isChanged = !!(status || http || added.length || removed.length || confidence.length);
+      if (isChanged) changed++;
+      pages[key] = { inPrevious: true, changed: isChanged, added, removed, confidence, status, http };
+    }
+    const time = (value) => (Number.isFinite(value) ? value : (typeof value === 'string' && Number.isFinite(Date.parse(value)) ? Date.parse(value) : null));
+    return { startedAt: time(prev.startedAt), finishedAt: time(prev.finishedAt), compared, changed, pages };
+  }
+
+  /** One page's entry of a diff() (undefined when the page was not compared). */
+  const diffOf = (result, item) => (result && result.pages && item ? result.pages[pageKeyOf(item.url)] : undefined);
+
+  const MINUS = '\u2212';
+  /**
+   * One page's change as a line: "+DataDome −Kasada · Cloudflare 70% → 95% · 200 → 403", "done → failed". The words for a page
+   * with no change, a page the earlier run did not have, and the statuses come from the options (the page translates them; the
+   * exports keep the English ones).
+   */
+  function diffText(entry, options = {}) {
+    if (!entry) return '';
+    const words = { unchanged: 'unchanged', new: 'not in the previous run', ...options };
+    if (!entry.inPrevious) return words.new;
+    if (!entry.changed) return words.unchanged;
+    const statusOf = typeof options.status === 'function' ? options.status : (value) => value;
+    const percent = (value) => (value === null || value === undefined ? '' : ` ${value}%`);
+    const parts = [];
+    const names = [...entry.added.map(d => `+${d.name}`), ...entry.removed.map(d => `${MINUS}${d.name}`)];
+    if (names.length) parts.push(names.join(' '));
+    for (const row of entry.confidence) parts.push(`${row.name}${percent(row.from)} \u2192${percent(row.to)}`);
+    if (entry.status) parts.push(`${statusOf(entry.status.from)} \u2192 ${statusOf(entry.status.to)}`);
+    if (entry.http) parts.push(`${entry.http.from} \u2192 ${entry.http.to}`);
+    return parts.join(' \u00b7 ');
+  }
+
   /* ---------- Exports ---------- */
 
   /** A spreadsheet runs text that starts with = + - @ as a formula: the apostrophe keeps it text. */
@@ -558,23 +774,40 @@
   };
   const iso = (ts) => (Number.isFinite(ts) ? new Date(ts).toISOString() : '');
 
-  function buildCsv(run) {
-    // http_status goes last, so the columns a sheet or a script already reads keep their places
-    const header = ['url', 'status', 'reason', 'final_url', 'difficulty', 'protection', 'category', 'confidence', 'scanned_at', 'http_status'];
-    const lines = [header.join(',')];
+  /** The person's own columns of a run (readList), and one page's cells under them. */
+  const columnsOf = (run) => (run && Array.isArray(run.columns) ? run.columns.slice(0, MAX_EXTRA_COLUMNS).map(String) : []);
+  const extraOf = (item, columns) => columns.map((_, i) => (item && Array.isArray(item.extra) && item.extra[i] != null ? String(item.extra[i]) : ''));
+
+  function buildCsv(run, compare) {
+    // http_status stays where it was, so the columns a sheet or a script already reads keep their places; the person's own
+    // columns follow it, and the change since the earlier run comes last
+    const columns = columnsOf(run);
+    const header = ['url', 'status', 'reason', 'final_url', 'difficulty', 'protection', 'category', 'confidence', 'scanned_at', 'http_status',
+      ...columns, ...(compare ? ['vs_previous'] : [])];
+    const lines = [header.map(csvCell).join(',')];
     for (const item of (run && run.items) || []) {
       const detections = Array.isArray(item.detections) && item.detections.length ? item.detections : [null];
+      const tail = [...extraOf(item, columns), ...(compare ? [diffText(diffOf(compare, item))] : [])];
       for (const d of detections) {
         lines.push([item.url, item.status, item.reason || '', item.finalUrl || '', item.difficulty || '',
           d ? d.name : '', d ? d.category : '', d && Number.isFinite(d.confidence) ? d.confidence : '',
-          item.status === 'done' ? iso(item.finishedAt) : '', httpStatusOf(item.httpStatus) || ''].map(csvCell).join(','));
+          item.status === 'done' ? iso(item.finishedAt) : '', httpStatusOf(item.httpStatus) || '', ...tail].map(csvCell).join(','));
       }
     }
     return `${lines.join('\r\n')}\r\n`;
   }
 
-  function buildJson(run, now) {
+  /** A page's change for the JSON export: what diff() found, and the line the other exports show. */
+  function previousOf(compare, item) {
+    const entry = diffOf(compare, item);
+    if (!entry) return null;
+    return { inPrevious: entry.inPrevious, changed: entry.changed, added: entry.added.map(d => d.name), removed: entry.removed.map(d => d.name),
+      confidence: entry.confidence, status: entry.status, httpStatus: entry.http, text: diffText(entry) };
+  }
+
+  function buildJson(run, now, compare) {
     const items = (run && run.items) || [];
+    const columns = columnsOf(run);
     return JSON.stringify({
       version: '1.0',
       type: 'bulk-scan',
@@ -582,7 +815,9 @@
       run: run ? {
         status: run.status, reason: run.reason || null, startedAt: iso(run.startedAt) || null, finishedAt: iso(run.finishedAt) || null,
         timeoutSec: run.timeoutSec, delaySec: delayOf(run.delaySec), duplicates: run.duplicates || 0, overCap: run.overCap || 0, counts: counts(run),
-        protectionTotals: protectionTotals(run)
+        protectionTotals: protectionTotals(run),
+        ...(columns.length ? { columns } : {}),
+        ...(compare ? { comparedWith: { startedAt: iso(compare.startedAt) || null, finishedAt: iso(compare.finishedAt) || null, changed: compare.changed } } : {})
       } : null,
       pages: items.map(item => ({
         url: item.url,
@@ -592,7 +827,9 @@
         httpStatus: httpStatusOf(item.httpStatus),
         difficulty: item.difficulty || null,
         scannedAt: item.status === 'done' ? iso(item.finishedAt) || null : null,
-        detections: Array.isArray(item.detections) ? item.detections : []
+        detections: Array.isArray(item.detections) ? item.detections : [],
+        ...(columns.length ? { extra: extraOf(item, columns) } : {}),
+        ...(compare ? { previous: previousOf(compare, item) } : {})
       }))
     }, null, 2);
   }
@@ -612,7 +849,7 @@
   }
 
   /** A heading, a line of counts and one row per page, for a ticket or a chat. */
-  function buildMarkdown(run) {
+  function buildMarkdown(run, compare) {
     const c = counts(run);
     const parts = [`${c.total} pages`, c.done && `${c.done} scanned`, c.failed && `${c.failed} failed`, c.skipped && `${c.skipped} skipped`,
       c.waiting && `${c.waiting} waiting`, c.scanning && `${c.scanning} scanning`].filter(Boolean);
@@ -620,13 +857,16 @@
     // The protections found on the most pages, when any was found
     const seen = protectionTotals(run).slice(0, MOST_SEEN);
     if (seen.length) lines.push(`Most seen: ${seen.map(row => `${mdCell(row.name)} (${row.pages} page${row.pages === 1 ? '' : 's'})`).join(', ')}`, '');
-    lines.push('| Page | Status | Difficulty | Protections |', '| --- | --- | --- | --- |');
+    const columns = columnsOf(run);
+    const head = ['Page', 'Status', 'Difficulty', 'Protections', ...columns.map(mdCell), ...(compare ? ['Vs previous run'] : [])];
+    lines.push(`| ${head.join(' | ')} |`, `| ${head.map(() => '---').join(' | ')} |`);
     for (const item of (run && run.items) || []) {
       const found = (Array.isArray(item.detections) ? item.detections : [])
         .map(d => `${d.name} (${d.category}${Number.isFinite(d.confidence) ? `, ${d.confidence}%` : ''})`);
       const code = httpStatusOf(item.httpStatus);
       const status = `${item.reason ? `${item.status}: ${item.reason}` : item.status}${code ? ` · ${code}` : ''}`;
-      lines.push(`| ${[mdAddress(item.url), mdCell(status), mdCell(item.difficulty || ''), mdCell(found.length ? found.join('; ') : '-')].join(' | ')} |`);
+      const tail = [...extraOf(item, columns).map(mdCell), ...(compare ? [mdCell(diffText(diffOf(compare, item)))] : [])];
+      lines.push(`| ${[mdAddress(item.url), mdCell(status), mdCell(item.difficulty || ''), mdCell(found.length ? found.join('; ') : '-'), ...tail].join(' | ')} |`);
     }
     return `${lines.join('\n')}\n`;
   }
@@ -648,15 +888,17 @@
 
   /**
    * @param {object} run
-   * @param {{format?: 'csv'|'json'|'md', now?: number}} [options]
+   * @param {{format?: 'csv'|'json'|'md', now?: number, compare?: object}} [options]  compare: diff()'s result
    * @returns {{text: string, fileText: string, type: string, extension: string}}
    *   fileText is what goes in a file: text, with the byte-order mark a CSV needs for a spreadsheet to read UTF-8
    */
   function build(run, options = {}) {
     const format = FORMATS.includes(options.format) ? options.format : 'json';
-    const text = format === 'csv' ? buildCsv(run)
-      : format === 'md' ? buildMarkdown(run)
-      : buildJson(run, Number.isFinite(options.now) ? options.now : Date.now());
+    // The comparison with an earlier run (diff()), when there is one: a column of every export
+    const compare = options.compare && options.compare.pages ? options.compare : null;
+    const text = format === 'csv' ? buildCsv(run, compare)
+      : format === 'md' ? buildMarkdown(run, compare)
+      : buildJson(run, Number.isFinite(options.now) ? options.now : Date.now(), compare);
     return { text, fileText: format === 'csv' ? `\uFEFF${text}` : text, type: TYPES[format], extension: format };
   }
 
@@ -668,10 +910,10 @@
   }
 
   const api = {
-    MAX_URLS, TIMEOUT_S, DELAY_S, MAX_SKIPPED_LISTED, MOST_SEEN, REASONS, FORMATS,
-    capOf, timeoutOf, linesOf, normalize, isSitemap, parseSitemap, sameSite, prepare,
+    MAX_URLS, TIMEOUT_S, DELAY_S, MAX_SKIPPED_LISTED, MOST_SEEN, REASONS, FORMATS, MAX_EXTRA_COLUMNS, MAX_EXTRA_ROWS, MAX_CELL, MAX_HEADER,
+    capOf, timeoutOf, delayOf, linesOf, readList, extrasOf, cleanExtras, attachExtras, extrasOfRun, normalize, isSitemap, parseSitemap, sameSite, prepare,
     createRun, isActive, nextWaiting, waitBefore, counts, begin, finish, fail, skip, pause, resume, hold, release, stop, complete, recover, continuation, carryOver,
-    summarize, protectionTotals, oneLines, build, fileName
+    summarize, protectionTotals, pageKeyOf, diff, diffOf, diffText, oneLines, build, fileName
   };
   root.BulkScan = api;
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.BulkScan = api;
