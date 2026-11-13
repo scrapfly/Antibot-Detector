@@ -61,7 +61,8 @@ const UncapturedPages = {
     },
 
     /**
-     * A page committed in the tab (header-capture.js, navigationCommitted). `open` is the promise of whether it may capture
+     * A page committed in the tab, or a prerendered page was shown in it (header-capture.js, navigationCommitted and
+     * activatePrerenderedPage). `open` is the promise of whether it may capture
      * (captureOpenFor): false, and its document is remembered. A verdict that cannot be read counts as refused, as the capture
      * itself does then.
      * @returns {Promise<void>}
