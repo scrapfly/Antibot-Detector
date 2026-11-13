@@ -6305,6 +6305,75 @@
   "statsOpenInHistoryFmt": {
     "message": "在历史记录中打开 {0}"
   },
+  "statsSectionSite": {
+    "message": "网站"
+  },
+  "statsSiteReport": {
+    "message": "网站报告"
+  },
+  "statsSiteReportForFmt": {
+    "message": "网站报告：{0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "页面：{0} · 扫描：{1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "也以此名称保存：{0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "此网站所有已保存的扫描，与时间范围无关。带 www 和不带 www 的地址算作同一个网站。"
+  },
+  "statsSiteProtections": {
+    "message": "此网站的防护"
+  },
+  "statsFirstSeenColumn": {
+    "message": "首次出现"
+  },
+  "statsScansColumn": {
+    "message": "扫描"
+  },
+  "statsSiteTimeline": {
+    "message": "时间线"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "显示 {1} 次扫描中最近的 {0} 次。"
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}，{1}：{2}"
+  },
+  "statsSiteFound": {
+    "message": "已发现"
+  },
+  "statsSiteNotFound": {
+    "message": "未发现"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP 状态"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP 状态"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "状态未知的扫描：{0}"
+  },
+  "statsSiteChanges": {
+    "message": "防护发生变化的页面"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "扫描日期"
+  },
+  "statsSiteNoChanges": {
+    "message": "此网站已保存的扫描中没有防护发生变化的。"
+  },
+  "statsSiteNoProtections": {
+    "message": "此网站已保存的扫描中未发现任何防护。"
+  },
+  "statsSiteEmptyFmt": {
+    "message": "没有 {0} 的已保存扫描。"
+  },
+  "statsSiteOpenHistory": {
+    "message": "在历史记录中显示"
+  },
   "historyCompare": {
     "message": "与…比较"
   },

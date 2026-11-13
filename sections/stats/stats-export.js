@@ -167,14 +167,22 @@
       const resolved = settings(options);
       const payload = StatsExport.build(items, resolved);
       const filename = StatsExport.filename(format, resolved);
+      const content = format === 'csv' ? '\uFEFF' + StatsExport.toCSV(payload)
+        : format === 'md' ? StatsExport.toMarkdown(payload) : StatsExport.toJSON(payload);
+      return StatsExport.save(content, filename, format);
+    },
+    /**
+     * Saves a text as a file through the browser's Save As (the site report uses it too).
+     * Resolves { downloadId, filename }; rejects with error.canceled true when the person dismissed the dialog.
+     */
+    async save(content, filename, format) {
+      formatOf(format);
       if (!root.chrome || !root.chrome.downloads || typeof root.chrome.downloads.download !== 'function' ||
           !root.URL || typeof root.URL.createObjectURL !== 'function' || typeof root.Blob !== 'function') {
         throw new Error('Local file downloads are unavailable');
       }
-      const content = format === 'csv' ? '\uFEFF' + StatsExport.toCSV(payload)
-        : format === 'md' ? StatsExport.toMarkdown(payload) : StatsExport.toJSON(payload);
       const types = { csv: 'text/csv;charset=utf-8', md: 'text/markdown;charset=utf-8', json: 'application/json;charset=utf-8' };
-      const blob = new root.Blob([content], { type: types[format] });
+      const blob = new root.Blob([String(content)], { type: types[format] });
       const url = root.URL.createObjectURL(blob);
       try {
         const downloadId = await new Promise((resolve, reject) => {

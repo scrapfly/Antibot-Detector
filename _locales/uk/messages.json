@@ -6305,6 +6305,75 @@
   "statsOpenInHistoryFmt": {
     "message": "Відкрити {0} в Історії"
   },
+  "statsSectionSite": {
+    "message": "Сайт"
+  },
+  "statsSiteReport": {
+    "message": "Звіт про сайт"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Звіт про сайт: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Сторінки: {0} · Сканування: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Також збережено як: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Усі збережені сканування цього сайту, незалежно від періоду. Адреси з www і без нього вважаються одним сайтом."
+  },
+  "statsSiteProtections": {
+    "message": "Системи захисту на цьому сайті"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Уперше виявлено"
+  },
+  "statsScansColumn": {
+    "message": "Сканування"
+  },
+  "statsSiteTimeline": {
+    "message": "Хронологія"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Показано останні {0} з {1} сканувань."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "знайдено"
+  },
+  "statsSiteNotFound": {
+    "message": "не знайдено"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP-статуси"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP-статус"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Сканування без відомого статусу: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Сторінки, на яких змінилися системи захисту"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Дата сканування"
+  },
+  "statsSiteNoChanges": {
+    "message": "Жодне збережене сканування цього сайту не змінило систем захисту."
+  },
+  "statsSiteNoProtections": {
+    "message": "У збережених скануваннях цього сайту не знайдено жодного захисту."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Немає збережених сканувань {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Показати в Історії"
+  },
   "historyCompare": {
     "message": "Порівняти з…"
   },

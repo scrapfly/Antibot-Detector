@@ -6305,6 +6305,75 @@
   "statsOpenInHistoryFmt": {
     "message": "Otwórz {0} w Historii"
   },
+  "statsSectionSite": {
+    "message": "Witryna"
+  },
+  "statsSiteReport": {
+    "message": "Raport witryny"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Raport witryny: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Strony: {0} · Skany: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Zapisano też jako: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Wszystkie zapisane skany tej witryny, niezależnie od zakresu dat. Adresy z www i bez www liczą się jako jedna witryna."
+  },
+  "statsSiteProtections": {
+    "message": "Ochrony w tej witrynie"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Pierwszy raz"
+  },
+  "statsScansColumn": {
+    "message": "Skany"
+  },
+  "statsSiteTimeline": {
+    "message": "Oś czasu"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Wyświetlono ostatnie {0} z {1} skanów."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "wykryto"
+  },
+  "statsSiteNotFound": {
+    "message": "nie wykryto"
+  },
+  "statsSiteStatuses": {
+    "message": "Statusy HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "Status HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Skany bez znanego statusu: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Strony, na których zmieniły się ochrony"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Data skanu"
+  },
+  "statsSiteNoChanges": {
+    "message": "Żaden zapisany skan tej witryny nie zmienił swoich ochron."
+  },
+  "statsSiteNoProtections": {
+    "message": "W zapisanych skanach tej witryny nie znaleziono żadnej ochrony."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Brak zapisanych skanów dla {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Pokaż w Historii"
+  },
   "historyCompare": {
     "message": "Porównaj z…"
   },

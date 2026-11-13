@@ -6305,6 +6305,75 @@
   "statsOpenInHistoryFmt": {
     "message": "{0} を履歴で開く"
   },
+  "statsSectionSite": {
+    "message": "サイト"
+  },
+  "statsSiteReport": {
+    "message": "サイトレポート"
+  },
+  "statsSiteReportForFmt": {
+    "message": "サイトレポート: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "ページ: {0} · スキャン: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "別名での保存: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "期間の設定にかかわらず、このサイトの保存済みスキャンすべてが対象です。www の有無が異なるアドレスは同じサイトとして数えます。"
+  },
+  "statsSiteProtections": {
+    "message": "このサイトの保護機能"
+  },
+  "statsFirstSeenColumn": {
+    "message": "初回確認"
+  },
+  "statsScansColumn": {
+    "message": "スキャン"
+  },
+  "statsSiteTimeline": {
+    "message": "タイムライン"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "{1} 件中、最新 {0} 件のスキャンを表示しています。"
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}、{1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "検出"
+  },
+  "statsSiteNotFound": {
+    "message": "未検出"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP ステータス"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP ステータス"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "ステータス不明のスキャン: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "保護が変わったページ"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "スキャン日"
+  },
+  "statsSiteNoChanges": {
+    "message": "このサイトの保存済みスキャンで保護が変わったものはありません。"
+  },
+  "statsSiteNoProtections": {
+    "message": "このサイトの保存済みスキャンでは保護機能が見つかりませんでした。"
+  },
+  "statsSiteEmptyFmt": {
+    "message": "{0} の保存済みスキャンはありません。"
+  },
+  "statsSiteOpenHistory": {
+    "message": "履歴で表示"
+  },
   "historyCompare": {
     "message": "ほかのスキャンと比較…"
   },

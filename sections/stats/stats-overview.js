@@ -158,7 +158,9 @@
       name.setAttribute('dir', 'ltr');
       name.setAttribute('title', row.hostname);
       li.append(name, U.pill(row.difficulty), U.stack(row), element('span', 'stats-site-count', FormatUtils.labelValue(tr('statsPagesColumn', 'Pages'), num(row.visits))));
-      const open = () => app.openDomain(row.hostname);
+      // A site's row opens its report: every protection over time, its statuses and its changed pages
+      li.setAttribute('title', fmt('statsSiteReportForFmt', 'Site report: {0}', row.hostname));
+      const open = () => app.openSite(row.hostname);
       li.addEventListener('click', open);
       li.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); open(); } });
       host.appendChild(li);

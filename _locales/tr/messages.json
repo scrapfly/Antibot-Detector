@@ -6305,6 +6305,75 @@
   "statsOpenInHistoryFmt": {
     "message": "{0} sitesini Geçmiş'te aç"
   },
+  "statsSectionSite": {
+    "message": "Site"
+  },
+  "statsSiteReport": {
+    "message": "Site raporu"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Site raporu: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Sayfalar: {0} · Taramalar: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Şu adla da kaydedildi: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Tarih aralığı ne olursa olsun bu sitenin tüm kayıtlı taramaları. www ile ve www olmadan yazılan adresler tek site sayılır."
+  },
+  "statsSiteProtections": {
+    "message": "Bu sitedeki korumalar"
+  },
+  "statsFirstSeenColumn": {
+    "message": "İlk görülme"
+  },
+  "statsScansColumn": {
+    "message": "Taramalar"
+  },
+  "statsSiteTimeline": {
+    "message": "Zaman çizelgesi"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "{1} taramanın en son {0} tanesi gösteriliyor."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "bulundu"
+  },
+  "statsSiteNotFound": {
+    "message": "bulunmadı"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP durumları"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP durumu"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Durumu bilinmeyen taramalar: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Korumaları değişen sayfalar"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Tarama tarihi"
+  },
+  "statsSiteNoChanges": {
+    "message": "Bu sitenin hiçbir kayıtlı taraması korumalarını değiştirmedi."
+  },
+  "statsSiteNoProtections": {
+    "message": "Bu sitenin kayıtlı taramalarında koruma bulunamadı."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "{0} için kayıtlı tarama yok."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Geçmiş'te göster"
+  },
   "historyCompare": {
     "message": "Şununla karşılaştır…"
   },

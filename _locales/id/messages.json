@@ -6305,6 +6305,75 @@
   "statsOpenInHistoryFmt": {
     "message": "Buka {0} di Riwayat"
   },
+  "statsSectionSite": {
+    "message": "Situs"
+  },
+  "statsSiteReport": {
+    "message": "Laporan situs"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Laporan situs: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Halaman: {0} · Pemindaian: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Juga tersimpan sebagai: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Setiap pemindaian tersimpan dari situs ini, apa pun rentang tanggalnya. Alamat dengan dan tanpa www dihitung sebagai satu situs."
+  },
+  "statsSiteProtections": {
+    "message": "Proteksi di situs ini"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Pertama terlihat"
+  },
+  "statsScansColumn": {
+    "message": "Pemindaian"
+  },
+  "statsSiteTimeline": {
+    "message": "Linimasa"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Menampilkan {0} pemindaian terbaru dari {1}."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "ditemukan"
+  },
+  "statsSiteNotFound": {
+    "message": "tidak ditemukan"
+  },
+  "statsSiteStatuses": {
+    "message": "Status HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "Status HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Pemindaian tanpa status yang diketahui: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Halaman yang proteksinya berubah"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Tanggal pemindaian"
+  },
+  "statsSiteNoChanges": {
+    "message": "Tidak ada pemindaian tersimpan dari situs ini yang mengubah proteksinya."
+  },
+  "statsSiteNoProtections": {
+    "message": "Tidak ada proteksi yang ditemukan dalam pemindaian tersimpan situs ini."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Tidak ada pemindaian tersimpan untuk {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Tampilkan di Riwayat"
+  },
   "historyCompare": {
     "message": "Bandingkan dengan…"
   },

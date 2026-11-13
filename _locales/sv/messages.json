@@ -6305,6 +6305,75 @@
   "statsOpenInHistoryFmt": {
     "message": "Öppna {0} i Historik"
   },
+  "statsSectionSite": {
+    "message": "Webbplats"
+  },
+  "statsSiteReport": {
+    "message": "Webbplatsrapport"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Webbplatsrapport: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Sidor: {0} · Skanningar: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Även sparad som: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Alla sparade skanningar av den här webbplatsen, oavsett datumintervall. Adresser med och utan www räknas som en webbplats."
+  },
+  "statsSiteProtections": {
+    "message": "Skydd på den här webbplatsen"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Först sedd"
+  },
+  "statsScansColumn": {
+    "message": "Skanningar"
+  },
+  "statsSiteTimeline": {
+    "message": "Tidslinje"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Visar de senaste {0} av {1} skanningar."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "hittad"
+  },
+  "statsSiteNotFound": {
+    "message": "inte hittad"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP-statusar"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP-status"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Skanningar utan känd status: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Sidor vars skydd ändrades"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Skanningsdatum"
+  },
+  "statsSiteNoChanges": {
+    "message": "Ingen sparad skanning av den här webbplatsen ändrade sina skydd."
+  },
+  "statsSiteNoProtections": {
+    "message": "Inga skydd hittades i den här webbplatsens sparade skanningar."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Inga sparade skanningar av {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Visa i Historik"
+  },
   "historyCompare": {
     "message": "Jämför med…"
   },

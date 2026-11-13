@@ -581,7 +581,7 @@ test('protections seen: ranked with share, category chip and delta; tiers and di
   assert.equal(levels[1].value, 30);
 });
 
-test('hardest sites list its protections as chips and open the domain in Domains', async () => {
+test('hardest sites list its protections as chips and open the site\'s report', async () => {
   const ui = await createPage([entry('tough.example', 0, [['Cloudflare Bot Management', 'antibot'], ['Turnstile', 'captcha'], ['hCaptcha', 'captcha'], ['Kasada', 'antibot']]), entry('easy.example', 0, [['Kasada', 'antibot']])]);
   const rows = ui.id('statsHardest').children;
   assert.equal(rows.length, 2);
@@ -589,10 +589,11 @@ test('hardest sites list its protections as chips and open the domain in Domains
   assert.equal(rows[0].children[0].attributes.dir, 'ltr');
   assert.match(textOf(rows[0]), /High/);
   assert.match(textOf(rows[0]), /\+1 more/, 'three chips and the rest counted');
+  assert.equal(rows[0].attributes.title, 'Site report: tough.example');
   rows[0].events.click();
-  assert.deepEqual(ui.visiblePanel(), ['domains']);
-  assert.equal(ui.id('statsDomainSearch').value, 'tough.example');
-  assert.deepEqual(plain(ui.rows('statsDomainTable').map(n => textOf(n))), ['tough.example']);
+  assert.deepEqual(ui.visiblePanel(), ['site']);
+  assert.equal(ui.text('statsSiteHost'), 'tough.example');
+  assert.equal(ui.id('stats-tab-site').hidden, false, 'the Site tab is offered once a site is open');
 });
 
 const domainRows = () => Array.from({ length: 70 }, (_, i) => {

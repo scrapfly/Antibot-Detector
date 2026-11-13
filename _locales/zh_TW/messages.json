@@ -6305,6 +6305,75 @@
   "statsOpenInHistoryFmt": {
     "message": "在歷史記錄中開啟 {0}"
   },
+  "statsSectionSite": {
+    "message": "網站"
+  },
+  "statsSiteReport": {
+    "message": "網站報告"
+  },
+  "statsSiteReportForFmt": {
+    "message": "網站報告：{0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "網頁：{0} · 掃描：{1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "也以此名稱儲存：{0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "此網站所有已儲存的掃描，與時間範圍無關。帶 www 與不帶 www 的網址算作同一個網站。"
+  },
+  "statsSiteProtections": {
+    "message": "此網站的防護"
+  },
+  "statsFirstSeenColumn": {
+    "message": "首次出現"
+  },
+  "statsScansColumn": {
+    "message": "掃描"
+  },
+  "statsSiteTimeline": {
+    "message": "時間軸"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "顯示 {1} 次掃描中最近的 {0} 次。"
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}，{1}：{2}"
+  },
+  "statsSiteFound": {
+    "message": "已偵測到"
+  },
+  "statsSiteNotFound": {
+    "message": "未偵測到"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP 狀態"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP 狀態"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "狀態未知的掃描：{0}"
+  },
+  "statsSiteChanges": {
+    "message": "防護有所變化的網頁"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "掃描日期"
+  },
+  "statsSiteNoChanges": {
+    "message": "此網站已儲存的掃描中沒有防護有所變化的。"
+  },
+  "statsSiteNoProtections": {
+    "message": "此網站已儲存的掃描中未發現任何防護。"
+  },
+  "statsSiteEmptyFmt": {
+    "message": "沒有 {0} 的已儲存掃描。"
+  },
+  "statsSiteOpenHistory": {
+    "message": "在歷史記錄中顯示"
+  },
   "historyCompare": {
     "message": "與…比較"
   },

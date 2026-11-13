@@ -6305,6 +6305,75 @@
   "statsOpenInHistoryFmt": {
     "message": "Otevřít {0} v Historii"
   },
+  "statsSectionSite": {
+    "message": "Web"
+  },
+  "statsSiteReport": {
+    "message": "Přehled webu"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Přehled webu: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Stránky: {0} · Skeny: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Uloženo také jako: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Všechny uložené skeny tohoto webu bez ohledu na časové období. Adresy s www a bez něj se počítají jako jeden web."
+  },
+  "statsSiteProtections": {
+    "message": "Ochrany na tomto webu"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Poprvé zjištěno"
+  },
+  "statsScansColumn": {
+    "message": "Skeny"
+  },
+  "statsSiteTimeline": {
+    "message": "Časová osa"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Zobrazeno posledních {0} z {1} skenů."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "nalezeno"
+  },
+  "statsSiteNotFound": {
+    "message": "nenalezeno"
+  },
+  "statsSiteStatuses": {
+    "message": "Stavy HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "Stav HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Skeny bez známého stavu: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Stránky, u nichž se změnily ochrany"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Datum skenu"
+  },
+  "statsSiteNoChanges": {
+    "message": "Žádný uložený sken tohoto webu nezměnil své ochrany."
+  },
+  "statsSiteNoProtections": {
+    "message": "V uložených skenech tohoto webu nebyla nalezena žádná ochrana."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Žádné uložené skeny pro {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Zobrazit v Historii"
+  },
   "historyCompare": {
     "message": "Porovnat s…"
   },

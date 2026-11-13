@@ -6305,6 +6305,75 @@
   "statsOpenInHistoryFmt": {
     "message": "Abrir {0} no Histórico"
   },
+  "statsSectionSite": {
+    "message": "Site"
+  },
+  "statsSiteReport": {
+    "message": "Relatório do site"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Relatório do site: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Páginas: {0} · Verificações: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Também salvo como: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Todas as verificações salvas deste site, seja qual for o período. Endereços com e sem www contam como um só site."
+  },
+  "statsSiteProtections": {
+    "message": "Proteções neste site"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Visto pela primeira vez"
+  },
+  "statsScansColumn": {
+    "message": "Verificações"
+  },
+  "statsSiteTimeline": {
+    "message": "Linha do tempo"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Mostrando as {0} verificações mais recentes de {1}."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "encontrada"
+  },
+  "statsSiteNotFound": {
+    "message": "não encontrada"
+  },
+  "statsSiteStatuses": {
+    "message": "Status HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "Status HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Verificações sem status conhecido: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Páginas cujas proteções mudaram"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Data da verificação"
+  },
+  "statsSiteNoChanges": {
+    "message": "Nenhuma verificação salva deste site mudou suas proteções."
+  },
+  "statsSiteNoProtections": {
+    "message": "Nenhuma proteção encontrada nas verificações salvas deste site."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Nenhuma verificação salva de {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Mostrar no Histórico"
+  },
   "historyCompare": {
     "message": "Comparar com…"
   },
