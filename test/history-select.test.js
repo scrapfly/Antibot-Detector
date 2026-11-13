@@ -186,7 +186,7 @@ test('the worker message exists, and the cards, the bar and the menu item are in
   assert.ok(history.includes('class="history-select-input ui-checkbox"') && history.includes('this.onSelectClick(e, historyId)'));
 });
 
-test('Clear All while selecting ends Select mode, so no "N selected" bar is left with nothing to act on', async () => {
+test('Clear all while selecting ends Select mode, so no "N selected" bar is left with nothing to act on', async () => {
   const { view, els } = load();
   view.selectedIds = new Set(['a', 'b']);
   view.showEmptyState = () => {};

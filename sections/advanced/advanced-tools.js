@@ -68,7 +68,7 @@ Advanced.prototype.renderAdvancedInterface = async function() {
               <h3>${esc(_atr('advancedToolsHeading', 'Capture tools'))}</h3>
               <p>${esc(_atr('advancedToolsSubtitle', 'Choose a protection to open its tools.'))}</p>
             </div>
-            <button type="button" class="advanced-help-btn" id="showAdvancedHelp" title="${attr(_atr('advancedToolsLearnMore', 'Learn about Advanced Tools'))}" aria-label="${attr(_atr('advancedToolsLearnMore', 'Learn about Advanced Tools'))}">
+            <button type="button" class="advanced-help-btn" id="showAdvancedHelp" title="${attr(_atr('advancedToolsLearnMore', 'Learn about the advanced tools'))}" aria-label="${attr(_atr('advancedToolsLearnMore', 'Learn about the advanced tools'))}">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 2-2.5 2-2.5 4M12 16h.01"/></svg>
             </button>
           </div>
@@ -141,7 +141,7 @@ Advanced.prototype.renderAdvancedInterface = async function() {
       if (noAdvancedState) {
         noAdvancedState.style.display = 'flex';
         const _etr = (key, fb) => (typeof I18n !== 'undefined' && I18n.get(key)) || fb;
-        noAdvancedState.innerHTML = `<div style="padding: 20px; text-align: center; color: #ef4444;"><strong>${FormatUtils.escapeHtml(_etr('advPanelErrorLoadingTools', 'Error loading Advanced tools'))}</strong><br>${FormatUtils.escapeHtml(_etr('advPanelCheckConsole', 'Check console for details'))}</div>`;
+        noAdvancedState.innerHTML = `<div style="padding: 20px; text-align: center; color: #ef4444;"><strong>${FormatUtils.escapeHtml(_etr('advPanelErrorLoadingTools', 'Error loading advanced tools'))}</strong><br>${FormatUtils.escapeHtml(_etr('advPanelCheckConsole', 'Check console for details'))}</div>`;
       }
     }
   };
@@ -433,7 +433,7 @@ Advanced.prototype.loadSelectedDetectionTools = async function(detectorId, optio
     } catch (error) {
       Logger.error('UI', '[Advanced] Could not open tools:', error);
       this.clearDetectionToolsPanel();
-      NotificationHelper.error(FormatUtils.t('advPanelErrorLoadingTools', 'Error loading Advanced tools'));
+      NotificationHelper.error(FormatUtils.t('advPanelErrorLoadingTools', 'Error loading advanced tools'));
       return false;
     } finally {
       this.isLoadingTool = false;

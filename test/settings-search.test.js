@@ -81,7 +81,7 @@ function createPage({ locale = 'en', webhookOn = false } = {}) {
   owner.showSettings();
   const $ = (selector) => document.querySelector(selector);
   // What updateSettingsUI leaves under the default settings (the webhook, the JS API and the automatic update are off): what a
-  // switch turns on is hidden by an inline display. The Duplicate Prevention and Log Collector blocks start so in the page itself.
+  // switch turns on is hidden by an inline display. The Duplicate prevention and Log collector blocks start so in the page itself.
   for (const id of ['#webhookSettings', '#webhookOnCacheGroup', '#jsApiSettings', '#updateIntervalGroup']) $(id).style.display = 'none';
   if (webhookOn) {
     $('#webhookSettings').style.display = 'block';
@@ -191,7 +191,7 @@ test('matches by description: a phrase that only a row\'s description holds find
   assert.equal(page.activeTab(), 'general');
   assert.equal(page.hidden(page.unit('notificationsEnabled')), false, '"... History is almost full or its backup fails" is under Notifications');
   for (const other of ['languageOverride', 'themeChoice', 'debugModeGeneral']) assert.equal(page.hidden(page.unit(other)), true, `${other} is another setting`);
-  assert.equal(page.hidden(page.card('autoUpdate')), true, 'and the Detector Updates card has no such text');
+  assert.equal(page.hidden(page.card('autoUpdate')), true, 'and the Detector updates card has no such text');
 });
 
 test('every word must match, in any order and any place of the row: the group and card titles count as part of it', () => {
@@ -232,7 +232,7 @@ test('a setting behind a switch or a choice is found through it: the switch is s
   const page = createPage();
   page.type('time window');
   assert.equal(page.activeTab(), 'history');
-  assert.equal(page.hidden(page.unit('preventDuplicates')), false, 'the switch that opens "Time Window"');
+  assert.equal(page.hidden(page.unit('preventDuplicates')), false, 'the switch that opens "Time window"');
   assert.equal(page.document.getElementById('duplicateSettingsContainer').style.display, 'none', 'the search left its state alone');
   page.type('github token');
   assert.equal(page.activeTab(), 'detection');
@@ -328,7 +328,7 @@ test('opens the first tab that has a match, and stays on the open tab while it h
   page.owner.switchTab('history');
   page.type('cach');
   page.type('cache');
-  assert.equal(page.activeTab(), 'history', 'History has "Save on Cache Hits" too: the person is there, so it stays');
+  assert.equal(page.activeTab(), 'history', 'History has "Save on cache hits" too: the person is there, so it stays');
   page.type('zzzz');
   assert.equal(page.activeTab(), 'history', 'nothing matches anywhere: no tab is better than another');
   page.type('');

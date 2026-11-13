@@ -180,7 +180,7 @@ test('Geetest opens runnable standalone v3/v4 code without copying on open', () 
   }
 });
 
-// Vendors whose Export Code is more than the captured URLs; the URL-only ones
+// Vendors whose Export code is more than the captured URLs; the URL-only ones
 // use AdvancedCodeDialog.openScriptUrls (test/advanced-script-export.test.js)
 const vendors = { akamai: 'AkamaiAdvanced', imperva: 'ImpervaAdvanced', shapesecurity: 'ShapeSecurityAdvanced' };
 function vendorFixture(vendor) {

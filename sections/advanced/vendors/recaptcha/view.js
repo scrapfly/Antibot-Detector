@@ -14,7 +14,7 @@ ReCaptchaAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'recaptchaExtract',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnExtractSiteKey')) || 'Extract SiteKey'),
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnExtractSiteKey')) || 'Extract site key'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12,17A2,2 0 0,0 14,15C14,13.89 13.1,13 12,13A2,2 0 0,0 10,15A2,2 0 0,0 12,17M18,8A2,2 0 0,1 20,10V20A2,2 0 0,1 18,22H6A2,2 0 0,1 4,20V10C4,8.89 4.9,8 6,8H7V6A5,5 0 0,1 12,1A5,5 0 0,1 17,6V8H18M12,3A3,3 0 0,0 9,6V8H15V6A3,3 0 0,0 12,3Z"/>
@@ -32,7 +32,7 @@ ReCaptchaAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'recaptchaStartCapture',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start Capturing'),
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start capturing'),
                 kind: 'capture',
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -89,7 +89,7 @@ ReCaptchaAdvanced.prototype.displaySelectorModal = function(result) {
               + K.kitField(recaptchaText('advRecaptchaSelector', 'Selector'), result.selector, { wrap: true })
             : K.kitNote(errorText || '', 'error');
         this.openKitModal({
-            title: recaptchaText('advRecaptchaSelectorDetection', 'Selector Detection'),
+            title: recaptchaText('advRecaptchaSelectorDetection', 'Selector detection'),
             subtitle: 'reCAPTCHA',
             iconSvg: ReCaptchaAdvanced.KIT_ICONS.selector,
             body,
@@ -112,13 +112,13 @@ ReCaptchaAdvanced.prototype.displayCallbackModal = function(data) {
 
         const clientCards = clients.map((client) => K.kitCard(
             (client.callback
-                ? K.kitField(recaptchaText('advRecaptchaCallbackFunction', 'Callback Function'), client.callback)
-                  + K.kitField(recaptchaText('advRecaptchaCallbackPath', 'Callback Path'), client.callbackPath)
+                ? K.kitField(recaptchaText('advRecaptchaCallbackFunction', 'Callback function'), client.callback)
+                  + K.kitField(recaptchaText('advRecaptchaCallbackPath', 'Callback path'), client.callbackPath)
                 : K.kitNote(recaptchaText('advRecaptchaNoCallback', 'No callback defined')))
             + K.kitField(recaptchaText('advCommonPage', 'Page'), client.pageurl, { mono: false })
         )).join('');
 
-        const list = (items) => items.map(cb => K.kitField(recaptchaText('advRecaptchaCallbackFunction', 'Callback Function'), cb)).join('');
+        const list = (items) => items.map(cb => K.kitField(recaptchaText('advRecaptchaCallbackFunction', 'Callback function'), cb)).join('');
 
         // One example, for the first callback found anywhere
         const exampleName = (clients.find(c => c.callback) || {}).callback || domCallbacks[0] || scriptCallbacks[0] || '';
@@ -139,13 +139,13 @@ window.${exampleName} = function (token) {
         const empty = !clients.length && !domCallbacks.length && !scriptCallbacks.length;
         const body = empty
             ? K.kitNote(recaptchaText('advRecaptchaNoCallbacksFound', 'No reCAPTCHA clients or callbacks were found on this page.'))
-            : K.kitSection(recaptchaText('advRecaptchaClientsTitle', 'reCAPTCHA Clients'), clientCards, clients.length || '')
-              + K.kitSection(recaptchaText('advRecaptchaDomCallbacks', 'DOM Callbacks'), list(domCallbacks), domCallbacks.length || '')
-              + K.kitSection(recaptchaText('advRecaptchaScriptCallbacks', 'Script Callbacks'), list(scriptCallbacks), scriptCallbacks.length || '')
-              + K.kitSection(recaptchaText('advRecaptchaCallbackExamples', 'Callback Usage Examples'), K.kitCode(exampleName, example));
+            : K.kitSection(recaptchaText('advRecaptchaClientsTitle', 'reCAPTCHA clients'), clientCards, clients.length || '')
+              + K.kitSection(recaptchaText('advRecaptchaDomCallbacks', 'DOM callbacks'), list(domCallbacks), domCallbacks.length || '')
+              + K.kitSection(recaptchaText('advRecaptchaScriptCallbacks', 'Script callbacks'), list(scriptCallbacks), scriptCallbacks.length || '')
+              + K.kitSection(recaptchaText('advRecaptchaCallbackExamples', 'Callback usage examples'), K.kitCode(exampleName, example));
 
         this.openKitModal({
-            title: recaptchaText('advRecaptchaCallbacksTitle', 'reCAPTCHA Callbacks'),
+            title: recaptchaText('advRecaptchaCallbacksTitle', 'reCAPTCHA callbacks'),
             subtitle: (clients[0] && clients[0].pageurl) || '',
             iconSvg: ReCaptchaAdvanced.KIT_ICONS.callback,
             body,
@@ -226,19 +226,19 @@ ReCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
         const features = [
             data.isEnterprise ? recaptchaText('advCommonEnterprise', 'Enterprise') : '',
             data.isInvisible ? recaptchaText('advRecaptchaInvisible', 'Invisible') : '',
-            data.isSRequired ? recaptchaText('advRecaptchaSParamRequired', 'S Parameter Required') : '',
-            data.hasSession ? recaptchaText('advRecaptchaHasSession', 'Has Session') : ''
+            data.isSRequired ? recaptchaText('advRecaptchaSParamRequired', 'S parameter required') : '',
+            data.hasSession ? recaptchaText('advRecaptchaHasSession', 'Has session') : ''
         ].filter(Boolean);
         const facts = K.kitFacts([
             data.version ? { label: recaptchaText('ruleFieldVersion', 'Version'), value: `reCAPTCHA ${data.version}` } : null,
-            features.length ? { label: recaptchaText('advRecaptchaFeaturesDetected', 'Features Detected'), html: true,
+            features.length ? { label: recaptchaText('advRecaptchaFeaturesDetected', 'Features detected'), html: true,
                 value: `<span class="adv-kit-chips">${features.map(name => K.kitChip(name, 'green')).join('')}</span>` } : null,
             { label: recaptchaText('advCommonCaptured', 'Captured'), value: recaptchaDateTime(capture.timestamp) }
         ]);
-        const fields = K.kitField(recaptchaText('advCommonSiteKey', 'Site Key'), data.siteKey, { wrap: true })
+        const fields = K.kitField(recaptchaText('advCommonSiteKey', 'Site key'), data.siteKey, { wrap: true })
             + K.kitField(recaptchaText('advRecaptchaAction', 'Action'), data.action)
-            + K.kitField(recaptchaText('advCommonApiDomain', 'API Domain'), data.apiDomain)
-            + K.kitField(recaptchaText('advRecaptchaRequiredCookie', 'Required Cookie'), data.requiredCookie)
+            + K.kitField(recaptchaText('advCommonApiDomain', 'API domain'), data.apiDomain)
+            + K.kitField(recaptchaText('advRecaptchaRequiredCookie', 'Required cookie'), data.requiredCookie)
             + K.kitField(recaptchaText('advCommonSiteUrl', 'Site URL'), data.siteUrl || capture.url, { mono: false, wrap: true });
         return facts + (fields ? K.kitCard(fields) : '');
     };

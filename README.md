@@ -98,7 +98,7 @@ When a page loads, the extension gathers what the page reveals about itself and 
 
 **Fingerprinting.** The API hooks are in place before the page's own scripts run, and they also cover same-origin iframes, where fingerprinting code often hides. By default they watch for at least 4 seconds, then until the page has been quiet for 2 seconds, and for 8 seconds at most.
 
-**Caching.** A result is reused for 7 days by default, so revisiting a page shows it straight away. You can change the duration, and whether a result is shared by the whole domain, by pages with the same path or only by the exact URL, in Settings → Detection. **Clear Cache** on the Detection tab forgets the stored result, so the page is scanned again the next time it loads. Editing, switching off, importing or updating rules also clears the stored results, so every page is scanned again with the new rules on its next visit.
+**Caching.** A result is reused for 7 days by default, so revisiting a page shows it straight away. You can change the duration, and whether a result is shared by the whole domain, by pages with the same path or only by the exact URL, in Settings → Detection. **Clear cache** on the Detection tab forgets the stored result, so the page is scanned again the next time it loads. Editing, switching off, importing or updating rules also clears the stored results, so every page is scanned again with the new rules on its next visit.
 
 ## What it detects
 
@@ -137,9 +137,9 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 The protections found on the current page, each with its confidence, its difficulty and the methods that matched. Click a card to see the exact signals behind it, or use the chips under the search box to show only Anti-bot, Captcha or Fingerprint results. Hovering the toolbar icon names them without opening the popup. **Scan again now**, next to the page address, and **Alt+Shift+S** (Control+Shift+S on Mac; change it in the browser's shortcut settings) scan the current page again. The buttons at the top let you:
 
 - **Upload detections** to get a shareable link (dpaste.com by default; see [Share links](#share-links))
-- **Clear Cache**, so the page is scanned again on its next load
+- **Clear cache**, so the page is scanned again on its next load
 - **Copy**, a menu: the same summary that the upload shares, a Markdown table for a ticket or a chat, one line with the site and its protections, or JSON (none of these holds cookie or header values); or code that asks for the page again, as a curl command, Python (requests) or Node.js (fetch), with this browser's User-Agent, Accept-Language and client hints and every cookie the page sends, HttpOnly ones too. The code does hold the cookie values and the page address with its query string, so keep it private
-- **Block this domain**, so the extension stops scanning it
+- **Skip this site**, so the extension stops scanning it
 
 ### History
 
@@ -159,18 +159,18 @@ Hands-on tools for the protections a page uses. A protection gets its tools when
 
 | Protection | Tools |
 | --- | --- |
-| Akamai Bot Manager | Check Cookies · Analyze Scripts · Extract Sensor Information · Start Capturing |
-| AWS WAF | Check Cookies · Analyze Scripts |
-| Cloudflare Bot Management | Check Cookies · Analyze Scripts |
-| Cloudflare Turnstile | Extract SiteKey · Analyze Scripts |
-| DataDome | Check Cookies · Analyze Scripts |
-| FunCaptcha (Arkose Labs) | Extract Public Key · Analyze Scripts · Start Capturing |
-| GeeTest | Check Version · Analyze Scripts |
-| Google reCAPTCHA | Obtain Selector · Extract SiteKey · reCAPTCHA callback · Start Capturing |
-| hCaptcha | Extract SiteKey · Check Version · Analyze Scripts · Start Capturing |
-| Incapsula (Imperva) | Check Cookies · Analyze Scripts · Start Capturing |
-| Shape Security | Check Version · Check Cookies · Analyze Scripts · Start Capturing |
-| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
+| Akamai Bot Manager | Check cookies · Analyze scripts · Extract sensor information · Start capturing |
+| AWS WAF | Check cookies · Analyze scripts |
+| Cloudflare Bot Management | Check cookies · Analyze scripts |
+| Cloudflare Turnstile | Extract site key · Analyze scripts |
+| DataDome | Check cookies · Analyze scripts |
+| FunCaptcha (Arkose Labs) | Extract public key · Analyze scripts · Start capturing |
+| GeeTest | Check version · Analyze scripts |
+| Google reCAPTCHA | Obtain selector · Extract site key · reCAPTCHA callback · Start capturing |
+| hCaptcha | Extract site key · Check version · Analyze scripts · Start capturing |
+| Incapsula (Imperva) | Check cookies · Analyze scripts · Start capturing |
+| Shape Security | Check version · Check cookies · Analyze scripts · Start capturing |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract site key · Analyze scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
 Results and captures are kept for 30 minutes in **Advanced → Captures**, where you can filter them by site, vendor and tool, open them again and export them.

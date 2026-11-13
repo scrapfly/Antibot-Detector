@@ -86,7 +86,7 @@ function akamaiStartCapture(tabId, captureUrl) {
     if (typeof showCaptureStarted === 'function') {
         showCaptureStarted(tabId, {
             module: 'Akamai',
-            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Akamai'),
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'Akamai'),
             message: pageText('advAkamaiNoticeReloadToMonitor', 'Reload the page to begin monitoring for sensor data and request details'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
@@ -96,7 +96,7 @@ function akamaiStartCapture(tabId, captureUrl) {
         showNotification(tabId, {
             module: 'Akamai',
             type: 'capture',
-            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Akamai'),
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'Akamai'),
             message: pageText('advAkamaiNoticeReloadToMonitor', 'Reload the page to begin monitoring for sensor data and request details'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
@@ -402,7 +402,7 @@ async function handleAkamaiCaptureCompleted(tabId, interceptorData) {
             await showNotification(tabId, {
                 module: 'Akamai',
                 type: 'success',
-                title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                title: pageText('pageNoticeCaptureCompleted', 'Capture completed'),
                 message: pageText('advAkamaiNoticeSensorCaptured', 'Akamai sensor_data captured successfully'),
                 duration: 5000
             }).catch(err => {

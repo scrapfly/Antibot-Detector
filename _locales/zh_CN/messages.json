@@ -2836,7 +2836,7 @@
     "message": "ABCK 级别"
   },
   "advAkamaiAbckCookie": {
-    "message": "ABCK Cookie"
+    "message": "ABCK cookie"
   },
   "advAkamaiVersionLabel": {
     "message": "Akamai 版本"
@@ -3028,7 +3028,7 @@
     "message": "请求头模式"
   },
   "advShapeCookieTitle": {
-    "message": "Shape Cookie"
+    "message": "Shape cookie"
   },
   "advShapeAnalysisTitle": {
     "message": "Shape Security 分析"
@@ -6224,6 +6224,18 @@
   "settingsShortcutRescanFmt": {
     "message": "重新扫描此页面：{0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "打开扩展程序：{0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "在当前标签页中搜索：{0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "在历史记录条目间移动：{0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "关闭对话框：{0}"
+  },
   "settingsShortcutsDesc": {
     "message": "页面会重新加载，从头收集所有数据。"
   },
@@ -6787,6 +6799,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "对设置的更改尚未保存。要在关闭前保存吗？"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "对设置的更改尚未保存。要在应用新设置前保存吗？"
   },
   "historySortLabel": {
     "message": "排序历史记录"

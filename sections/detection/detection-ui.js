@@ -258,7 +258,7 @@ DetectionUI.applyEmptyStateCopy = function(options = {}) {
         const titleFallback = options.outcome === 'unsupported' ? 'This page cannot be scanned'
           : options.outcome === 'failed' ? 'Scan failed'
           : options.outcome === 'interrupted' ? 'Scan interrupted'
-          : options.noCache ? 'No completed scan' : 'Nothing Detected';
+          : options.noCache ? 'No completed scan' : 'Nothing detected';
         emptyStateTitle.setAttribute('data-i18n', titleKey);
         emptyStateTitle.textContent = tr(titleKey, titleFallback);
       }
@@ -298,7 +298,7 @@ DetectionUI.applyDisabledStateCopy = function() {
 
     if (title) {
       title.setAttribute('data-i18n', 'detectionDisabledTitle');
-      title.textContent = tr('detectionDisabledTitle', 'Detection Disabled');
+      title.textContent = tr('detectionDisabledTitle', 'Detection disabled');
     }
     if (desc) {
       desc.setAttribute('data-i18n', 'detectionDisabledDesc');
@@ -333,7 +333,7 @@ DetectionUI.syncHooksOffNote = async function() {
       if (badge) {
         const key = off ? 'hooksOffBadge' : 'detectionBadgeNoFingerprint';
         badge.setAttribute('data-i18n', key);
-        badge.textContent = tr(key, off ? 'Fingerprinting not checked' : '✓ No Fingerprinting');
+        badge.textContent = tr(key, off ? 'Fingerprinting not checked' : '✓ No fingerprinting');
         badge.classList.toggle('state-card-badge--off', off);
       }
       const description = document.querySelector('#emptyState .state-card-description');
@@ -1050,7 +1050,7 @@ DetectionUI.updateCacheInfo = function() {
       const rows = [];
       if (meta && meta.timestamp) rows.push({ label: tr('tipCachedAt', 'Saved'), value: FormatUtils.formatDateTime(meta.timestamp) });
       if (meta && meta.expiry) rows.push({ label: tr('tipCacheExpires', 'Expires'), value: FormatUtils.formatDateTime(meta.expiry) });
-      FormatUtils.setTip(tile, FormatUtils.labelValue(tr('statCacheScope', 'Cache Scope'), scopeNames[key]), scopeHints[key], rows);
+      FormatUtils.setTip(tile, FormatUtils.labelValue(tr('statCacheScope', 'Cache scope'), scopeNames[key]), scopeHints[key], rows);
     };
     if (meta && meta.cacheScope) {
       showScope(meta.cacheScope);

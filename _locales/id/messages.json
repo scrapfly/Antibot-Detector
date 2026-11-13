@@ -1463,7 +1463,7 @@
     "message": "Aktifkan event JS API"
   },
   "settingsDataExportImport": {
-    "message": "Ekspor & Impor"
+    "message": "Ekspor & impor"
   },
   "settingsDataManagement": {
     "message": "Manajemen data"
@@ -2899,7 +2899,7 @@
     "message": "Lanjutan (reese84 + utmvc)"
   },
   "advImpervaLevelBasicSession": {
-    "message": "Dasar (Sesi)"
+    "message": "Dasar (sesi)"
   },
   "advImpervaNoticeReloadToMonitor": {
     "message": "Muat ulang halaman untuk mulai memantau permintaan dan cookie Imperva"
@@ -3148,7 +3148,7 @@
     "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
-    "message": "BDA (Array Data Browser)"
+    "message": "BDA (array data browser)"
   },
   "advFuncaptchaBlobData": {
     "message": "Data blob"
@@ -3400,7 +3400,7 @@
     "message": "Pengaturan nama"
   },
   "rulesUiNameSettingsConfidenceFmt": {
-    "message": "Pengaturan nama (Kepercayaan: {0}%)"
+    "message": "Pengaturan nama (kepercayaan: {0}%)"
   },
   "rulesUiValueSettings": {
     "message": "Pengaturan nilai"
@@ -6224,6 +6224,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Pindai ulang halaman ini: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Buka ekstensi: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Cari di tab yang terbuka: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Berpindah antar entri riwayat: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Tutup dialog: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Halaman dimuat ulang, sehingga semuanya dikumpulkan dari awal."
   },
@@ -6787,6 +6799,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Perubahan pengaturan Anda belum disimpan. Simpan sebelum menutup?"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Perubahan pengaturan Anda belum disimpan. Simpan sebelum pengaturan baru diterapkan?"
   },
   "historySortLabel": {
     "message": "Urutkan riwayat"

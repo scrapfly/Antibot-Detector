@@ -137,7 +137,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 - **検出結果をアップロード**: 共有リンクを取得します（既定は dpaste.com。[共有リンク](#共有リンク)を参照）
 - **キャッシュをクリア**: 次回の読み込み時にそのページを再分析します
 - **コピー**: メニューから、アップロードで共有されるものと同じ概要、チケットやチャットに貼れる Markdown の表、サイトとその保護を 1 行にしたもの、または JSON を選べます（これらには Cookie 値やヘッダー値は含まれません）。ページをもう一度リクエストするコードを、curl コマンド、Python (requests)、Node.js (fetch) で選ぶこともできます。このブラウザーの User-Agent、Accept-Language、client hints と、ページが送信するすべての Cookie（HttpOnly を含む）が入ります。このコードには Cookie の値とクエリ文字列付きのページのアドレスが含まれるため、他の人に見せないでください
-- **このドメインをブロック**: 拡張機能がそのドメインを分析しないようにします
+- **このサイトをスキップ**: 拡張機能がそのサイトを分析しないようにします
 
 ### 履歴
 
@@ -157,18 +157,18 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 | 保護 | ツール |
 | --- | --- |
-| Akamai Bot Manager | Check Cookies · Analyze Scripts · Extract Sensor Information · Start Capturing |
-| AWS WAF | Check Cookies · Analyze Scripts |
-| Cloudflare Bot Management | Check Cookies · Analyze Scripts |
-| Cloudflare Turnstile | Extract SiteKey · Analyze Scripts |
-| DataDome | Check Cookies · Analyze Scripts |
-| FunCaptcha (Arkose Labs) | Extract Public Key · Analyze Scripts · Start Capturing |
-| GeeTest | Check Version · Analyze Scripts |
-| Google reCAPTCHA | Obtain Selector · Extract SiteKey · reCAPTCHA callback · Start Capturing |
-| hCaptcha | Extract SiteKey · Check Version · Analyze Scripts · Start Capturing |
-| Incapsula (Imperva) | Check Cookies · Analyze Scripts · Start Capturing |
-| Shape Security | Check Version · Check Cookies · Analyze Scripts · Start Capturing |
-| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
+| Akamai Bot Manager | Check cookies · Analyze scripts · Extract sensor information · Start capturing |
+| AWS WAF | Check cookies · Analyze scripts |
+| Cloudflare Bot Management | Check cookies · Analyze scripts |
+| Cloudflare Turnstile | Extract site key · Analyze scripts |
+| DataDome | Check cookies · Analyze scripts |
+| FunCaptcha (Arkose Labs) | Extract public key · Analyze scripts · Start capturing |
+| GeeTest | Check version · Analyze scripts |
+| Google reCAPTCHA | Obtain selector · Extract site key · reCAPTCHA callback · Start capturing |
+| hCaptcha | Extract site key · Check version · Analyze scripts · Start capturing |
+| Incapsula (Imperva) | Check cookies · Analyze scripts · Start capturing |
+| Shape Security | Check version · Check cookies · Analyze scripts · Start capturing |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract site key · Analyze scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
 結果とキャプチャは **詳細 → キャプチャ** に 30 分間保存され、サイト、プロバイダー、ツールで絞り込み、再度開き、エクスポートできます。

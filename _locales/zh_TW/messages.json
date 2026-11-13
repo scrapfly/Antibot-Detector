@@ -2836,7 +2836,7 @@
     "message": "ABCK 等級"
   },
   "advAkamaiAbckCookie": {
-    "message": "ABCK Cookie"
+    "message": "ABCK cookie"
   },
   "advAkamaiVersionLabel": {
     "message": "Akamai 版本"
@@ -3028,7 +3028,7 @@
     "message": "標頭模式"
   },
   "advShapeCookieTitle": {
-    "message": "Shape Cookie"
+    "message": "Shape cookie"
   },
   "advShapeAnalysisTitle": {
     "message": "Shape Security 分析"
@@ -6224,6 +6224,18 @@
   "settingsShortcutRescanFmt": {
     "message": "重新掃描此網頁：{0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "開啟擴充功能：{0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "在目前分頁中搜尋：{0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "在歷史記錄項目間移動：{0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "關閉對話方塊：{0}"
+  },
   "settingsShortcutsDesc": {
     "message": "網頁會重新載入，從頭收集所有資料。"
   },
@@ -6787,6 +6799,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "對設定的變更尚未儲存。要在關閉前儲存嗎？"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "對設定的變更尚未儲存。要在套用新設定前儲存嗎？"
   },
   "historySortLabel": {
     "message": "排序歷史記錄"

@@ -169,7 +169,7 @@ const PROBE = {
     assert.deepEqual(back.badge, PAUSED_BADGE, 'and its badge stays paused');
     console.log('PASS Tab switch: returning to the tab of a skipped site scans nothing');
 
-    // 2. Chosen sites, through Settings: the mode, the empty list, Add Current Page, Save
+    // 2. Chosen sites, through Settings: the mode, the empty list, Add current page, Save
     await admin.reload();
     await admin.waitForFunction(() => window.popupInstance?.settings?.settingsBaseline && window.popupInstance?.detectorManager?.initialized, null, { polling: 250 });
     await admin.$eval('#settingsBtn', el => el.click());
@@ -203,7 +203,7 @@ const PROBE = {
     assert.deepEqual(now.detection.allowedDomains, ['localhost']);
     assert.deepEqual(now.detection.blacklistedDomains, ['localhost'], 'the skipped list is kept for when the person switches back');
     void visible;
-    console.log('PASS Chosen sites: the mode is staged, the list starts empty, Add Current Page adds once, Save keeps both lists');
+    console.log('PASS Chosen sites: the mode is staged, the list starts empty, Add current page adds once, Save keeps both lists');
 
     // 3. Scanning follows the list: the chosen site and its subdomains, nothing else
     await wipeCache();

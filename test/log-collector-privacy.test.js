@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
 
-// With the Log Collector on, every line is kept (up to 5,000 in memory, 1,000 in storage.local, where it outlives the
+// With the Log collector on, every line is kept (up to 5,000 in memory, 1,000 in storage.local, where it outlives the
 // browser) and can be exported. A line names the pages it is about (`shop.example: cached result reused`), so a site the
 // person keeps out of records must not be named there: the sites History is told not to record, the sites skipped in
 // Settings → Detection → Sites, and the pages open in a private window. The line stays, with the site's name left out.

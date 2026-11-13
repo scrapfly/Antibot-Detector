@@ -1178,10 +1178,10 @@
     "message": "Falha ao limpar capturas"
   },
   "settingsCardWebhookIntegration": {
-    "message": "Integração de Webhook"
+    "message": "Integração de webhook"
   },
   "settingsEnableWebhook": {
-    "message": "Ativar Webhook"
+    "message": "Ativar webhook"
   },
   "settingsEnableWebhookDesc": {
     "message": "Enviar requisições HTTP em cada detecção"
@@ -1334,7 +1334,7 @@
     "message": "Vazio: a carga útil padrão é enviada"
   },
   "settingsTestWebhook": {
-    "message": "Testar Webhook"
+    "message": "Testar webhook"
   },
   "settingsTestWebhookDesc": {
     "message": "Enviar uma requisição de teste para a URL do seu webhook"
@@ -1820,7 +1820,7 @@
     "message": "✓ Sem CAPTCHAs"
   },
   "detectionBadgeNoAntibot": {
-    "message": "✓ Sem Anti-Bot"
+    "message": "✓ Sem anti-bot"
   },
   "detectionBadgeNoFingerprint": {
     "message": "✓ Sem fingerprinting"
@@ -3130,7 +3130,7 @@
     "message": "Tipo"
   },
   "advCloudflareSiteKeyCopied": {
-    "message": "Site Key copiada"
+    "message": "Site key copiada"
   },
   "advCloudflareTypeChallenge": {
     "message": "Desafio"
@@ -3145,7 +3145,7 @@
     "message": "Chave pública"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
     "message": "BDA (matriz de dados do navegador)"
@@ -6224,6 +6224,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Analisar esta página novamente: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Abrir a extensão: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Pesquisar na aba aberta: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Navegar entre as entradas do histórico: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Fechar uma caixa de diálogo: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "A página é recarregada, então tudo é coletado desde o início."
   },
@@ -6787,6 +6799,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "As alterações nas configurações ainda não foram salvas. Salvar antes de fechar?"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "As alterações nas configurações ainda não foram salvas. Salvar antes de aplicar as novas configurações?"
   },
   "historySortLabel": {
     "message": "Ordenar histórico"

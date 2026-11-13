@@ -774,7 +774,7 @@ test('Activity: the whole timeline without paging, calendar facts and weekday or
 
 test('Tools lists live captures only, counts the expired ones apart and refreshes while visible', async () => {
   const captures = { akamai: [
-    { timestamp: NOW - 120000, expiresAt: NOW + 1680000, hostname: 'one.example', data: { tool: 't', label: 'Analyze Scripts' } },
+    { timestamp: NOW - 120000, expiresAt: NOW + 1680000, hostname: 'one.example', data: { tool: 't', label: 'Analyze scripts' } },
     { timestamp: NOW - 1500000, expiresAt: NOW + 240000, url: 'https://two.example/x', data: {} },
     { timestamp: NOW - 3000000, expiresAt: NOW - 1200000, hostname: 'old.example', data: {} }] };
   const ui = await createPage(basic(), { preferences: { scrapfly_advanced_history: captures, scrapfly_stats_section: 'tools' } });
@@ -791,7 +791,7 @@ test('Tools lists live captures only, counts the expired ones apart and refreshe
   const rows = ui.rows('statsCaptureTable');
   assert.equal(rows.length, 2);
   assert.ok(!/old\.example/.test(ui.text('statsCaptureTable')));
-  assert.match(ui.text('statsCaptureTable'), /Analyze Scripts/);
+  assert.match(ui.text('statsCaptureTable'), /Analyze scripts/);
   assert.match(ui.text('statsCaptureTable'), /two\.example/);
   assert.match(ui.text('statsCaptureTable'), /Capture/);
   assert.match(ui.text('statsCaptureTable'), /2 minutes ago/);

@@ -2647,7 +2647,7 @@
     "message": "ระดับการป้องกัน:"
   },
   "advCommonSiteKey": {
-    "message": "Site Key"
+    "message": "Site key"
   },
   "advCommonWebsiteUrl": {
     "message": "URL ของเว็บไซต์"
@@ -3142,10 +3142,10 @@
     "message": "Bot Management"
   },
   "advFuncaptchaPublicKey": {
-    "message": "Public Key"
+    "message": "Public key"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
     "message": "BDA (อาร์เรย์ข้อมูลเบราว์เซอร์)"
@@ -6224,6 +6224,18 @@
   "settingsShortcutRescanFmt": {
     "message": "สแกนหน้านี้อีกครั้ง: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "เปิดส่วนขยาย: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "ค้นหาในแท็บที่เปิดอยู่: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "เลื่อนระหว่างรายการประวัติ: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "ปิดกล่องโต้ตอบ: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "หน้าจะโหลดซ้ำ จึงเก็บข้อมูลทั้งหมดใหม่ตั้งแต่ต้น"
   },
@@ -6787,6 +6799,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "การเปลี่ยนแปลงการตั้งค่ายังไม่ได้บันทึก บันทึกก่อนปิดไหม"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "การเปลี่ยนแปลงการตั้งค่ายังไม่ได้บันทึก บันทึกก่อนใช้การตั้งค่าใหม่ไหม"
   },
   "historySortLabel": {
     "message": "เรียงลำดับประวัติ"

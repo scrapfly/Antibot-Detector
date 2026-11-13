@@ -3145,7 +3145,7 @@
     "message": "Publik nyckel"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
     "message": "BDA (array med webbläsardata)"
@@ -6224,6 +6224,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Skanna den här sidan igen: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Öppna tillägget: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Sök på den öppna fliken: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Flytta mellan historikposter: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Stäng en dialogruta: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Sidan läses in igen, så allt samlas in från början."
   },
@@ -6787,6 +6799,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Ändringarna i inställningarna har inte sparats ännu. Spara dem innan du stänger?"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Ändringarna i inställningarna har inte sparats ännu. Spara dem innan de nya inställningarna används?"
   },
   "historySortLabel": {
     "message": "Sortera historik"

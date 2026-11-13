@@ -16,13 +16,13 @@ Advanced.prototype.updateCaptureScope = function(currentSite) {
    */
 Advanced.TOOL_KINDS = {
     capture: ['advFilterKindCapture', 'Captures'],
-    cookies: ['btnCheckCookies', 'Check Cookies'],
-    sitekey: ['btnExtractSiteKey', 'Extract Site Key'],
+    cookies: ['btnCheckCookies', 'Check cookies'],
+    sitekey: ['btnExtractSiteKey', 'Extract site key'],
     selector: ['btnObtainSelector', 'Obtain selector'],
     callback: ['advRecaptchaCallbackTool', 'reCAPTCHA callback'],
-    scripts: ['btnAnalyzeScripts', 'Analyze Scripts'],
-    version: ['btnCheckVersion', 'Check Version'],
-    sensor: ['advAkamaiExtractSensorBtn', 'Extract Sensor Information'],
+    scripts: ['btnAnalyzeScripts', 'Analyze scripts'],
+    version: ['btnCheckVersion', 'Check version'],
+    sensor: ['advAkamaiExtractSensorBtn', 'Extract sensor information'],
     inspect: ['advFilterKindOther', 'Other tools']
   };
 
@@ -146,7 +146,7 @@ Advanced.prototype.renderNoResults = function(container) {
       <div id="captureNoResults" class="capture-no-results cap-no-results">
         <p class="no-results-title">${esc(_advHistoryTr('advancedNoResultsTitle', 'No captures found'))}</p>
         <p class="no-results-text">${esc(_advHistoryTr('advPanelNoResultsText', 'Try adjusting your filters or search query to find captures.'))}</p>
-        <button type="button" id="resetAllFiltersBtn" class="history-clear-filters">${esc(_advHistoryTr('advancedBtnResetFilters', 'Reset All Filters'))}</button>
+        <button type="button" id="resetAllFiltersBtn" class="history-clear-filters">${esc(_advHistoryTr('advancedBtnResetFilters', 'Reset all filters'))}</button>
       </div>
     `;
     grid.querySelector('#resetAllFiltersBtn')?.addEventListener('click', () => this.resetAllFilters());

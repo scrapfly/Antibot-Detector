@@ -595,7 +595,7 @@ function handleUrlChangeAbort(options = {}) {
  */
 async function showCaptureStarted(tabId, options = {}) {
     const {
-        title = pageText('pageNoticeCaptureActive', 'Capture Active'),
+        title = pageText('pageNoticeCaptureActive', 'Capture active'),
         message = pageText('pageNoticeReloadToCapture', 'Reload the page to trigger capture.'),
         duration = 60000,
         ...rest

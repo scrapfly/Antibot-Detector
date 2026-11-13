@@ -545,6 +545,63 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
+  await scenario('"/" goes to the search box of the open tab (Detection, History, Rules), not from a field, with a modifier or with a dialog open', async () => {
+    const { page: site, tab } = await scanned(`slash-${uniq()}`, ALL);
+    const popup = await popupFor(tab);
+    await resultsShown(popup, 3);
+    const focused = () => popup.evaluate(() => (document.activeElement && document.activeElement.id) || document.activeElement.tagName);
+    const blur = () => popup.evaluate(() => { document.activeElement.blur(); window.getSelection().removeAllRanges(); });
+    // Detection
+    await popup.fill('#detectionSearch', 'probe');
+    await blur();
+    await popup.keyboard.press('/');
+    assert.equal(await focused(), 'detectionSearch', 'Detection: the search box');
+    assert.equal(await popup.$eval('#detectionSearch', el => el.value), 'probe', 'the "/" is not typed into it');
+    assert.deepEqual(await popup.$eval('#detectionSearch', el => [el.selectionStart, el.selectionEnd]), [0, 5], 'what it holds is selected, to type over');
+    await popup.fill('#detectionSearch', '');
+    // Typed in a field it is a character like any other
+    await popup.keyboard.press('/');
+    assert.equal(await popup.$eval('#detectionSearch', el => el.value), '/', 'in a field "/" is typed');
+    await popup.fill('#detectionSearch', '');
+    await blur();
+    // With a modifier it is not the shortcut
+    await popup.keyboard.press('Control+/');
+    assert.notEqual(await focused(), 'detectionSearch', 'Ctrl+/ is not the shortcut');
+    // A dialog open owns the keys
+    await popup.evaluate(() => window.popupInstance.detection.openDetectionModal(0));
+    await popup.waitForSelector('#detectionModalMethods .method-item-card', { state: 'visible' });
+    await popup.keyboard.press('/');
+    assert.notEqual(await focused(), 'detectionSearch', 'not behind the detection details');
+    await popup.$eval('#closeDetectionModal', el => el.click());
+    // History
+    await popup.$eval('.tab-btn[data-tab="history"]', el => el.click());
+    await popup.waitForSelector('#historySearch', { state: 'visible', timeout: 15000 });
+    await blur();
+    await popup.keyboard.press('/');
+    assert.equal(await focused(), 'historySearch', 'History: its search box, as before');
+    // Rules
+    await popup.$eval('.tab-btn[data-tab="rules"]', el => el.click());
+    await popup.waitForSelector('#rulesSearch', { state: 'visible', timeout: 15000 });
+    await blur();
+    await popup.keyboard.press('/');
+    assert.equal(await focused(), 'rulesSearch', 'Rules: the rules search box');
+    assert.deepEqual(await popup.$$eval('#detectionSearch, #historySearch, #rulesSearch', els => els.map(el => el.getAttribute('aria-keyshortcuts'))), ['/', '/', '/'], 'a screen reader can say the key');
+    // Settings open: the key stays with Settings
+    await blur();
+    await popup.$eval('#settingsBtn', el => el.click());
+    await popup.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 250 });
+    await popup.keyboard.press('/');
+    assert.notEqual(await focused(), 'rulesSearch', 'not behind Settings');
+    // Settings → General → Keyboard shortcuts lists the popup's keys beside the browser's
+    const lines = await popup.$$eval('.settings-row--shortcuts .settings-row-desc', els => els.map(el => el.textContent.trim()));
+    for (const line of ['Search the open tab: /', 'Move between History entries: j / k, ↓ / ↑', 'Close a dialog: Esc']) assert.ok(lines.includes(line), `listed: ${line} (${lines.join(' | ')})`);
+    assert.ok(lines.some(line => line.startsWith('Open the extension: ')), 'the browser shortcut that opens the popup');
+    assert.ok(lines.some(line => line.startsWith('Scan this page again: ')), 'and the rescan one');
+    await popup.close();
+    await site.close();
+  });
+
+  // ===============================================================================================
   await scenario('Rules chips: the categories, Custom, Edited and Disabled filter the list, combine with the search, survive a redraw and clear again', async () => {
     const popup = await popupFor(null);
     await popup.$eval('.tab-btn[data-tab="rules"]', el => el.click());
@@ -791,7 +848,7 @@ async function scenario(name, fn) {
       assert.deepEqual(await listed(popup), ['V313 Fingerprint Probe']);
       await popup.fill('#detectionSearch', '');
       await until(async () => (await listed(popup)).length === 3, 5000, 'the search cleared');
-      // A visit to another tab and back shows the results, not the clean "Nothing Detected" card
+      // A visit to another tab and back shows the results, not the clean "Nothing detected" card
       await popup.$eval('.tab-btn[data-tab="history"]', el => el.click());
       await popup.$eval('.tab-btn[data-tab="detection"]', el => el.click());
       await untilDrawn(popup, async () => (await names(popup)).length === 2, 15000, 'the results after a visit to History and back');

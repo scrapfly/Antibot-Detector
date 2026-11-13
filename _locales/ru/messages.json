@@ -6224,6 +6224,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Сканировать страницу заново: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Открыть расширение: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Поиск на открытой вкладке: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Переход между записями истории: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Закрыть диалоговое окно: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Страница перезагружается, поэтому всё собирается с самого начала."
   },
@@ -6787,6 +6799,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Изменения настроек ещё не сохранены. Сохранить их перед закрытием?"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Изменения настроек ещё не сохранены. Сохранить их перед применением новых настроек?"
   },
   "historySortLabel": {
     "message": "Сортировка истории"

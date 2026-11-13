@@ -94,7 +94,7 @@ const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
         detection.blacklistedDomain = null;
         detection.showEmptyState();
       });
-      assert.equal(await page.locator('#emptyState .state-card-title').innerText(), 'Nothing Detected');
+      assert.equal(await page.locator('#emptyState .state-card-title').innerText(), 'Nothing detected');
       assert.equal(await page.locator('#emptyState .state-card-badges').isVisible(), true);
     });
     assert.deepEqual(errors, [], 'no popup runtime exceptions');

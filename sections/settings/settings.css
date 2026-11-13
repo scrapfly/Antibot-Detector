@@ -1199,6 +1199,19 @@ input[type="file"] {
   overflow-wrap: anywhere;
 }
 
+/* Settings → General → Keyboard shortcuts: the keys of each line, left to right in every language */
+#settingsModal .settings-row--shortcuts kbd {
+  display: inline-block;
+  padding: 0 4px;
+  border: 1px solid var(--settings-border);
+  border-radius: 4px;
+  background: var(--settings-input-bg);
+  color: var(--settings-text);
+  font-size: 10.5px;
+  line-height: 13px;
+  unicode-bidi: isolate;
+}
+
 #settingsModal .settings-row > .switch {
   flex-shrink: 0;
 }

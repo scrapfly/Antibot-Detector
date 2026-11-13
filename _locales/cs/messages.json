@@ -3145,7 +3145,7 @@
     "message": "Veřejný klíč"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
     "message": "BDA (pole dat prohlížeče)"
@@ -6224,6 +6224,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Znovu skenovat tuto stránku: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Otevřít rozšíření: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Hledat v otevřené kartě: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Přecházet mezi záznamy historie: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Zavřít dialog: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Stránka se znovu načte, takže se vše shromáždí od začátku."
   },
@@ -6787,6 +6799,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Změny nastavení ještě nejsou uloženy. Uložit je před zavřením?"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Změny nastavení ještě nejsou uloženy. Uložit je před použitím nového nastavení?"
   },
   "historySortLabel": {
     "message": "Řazení historie"

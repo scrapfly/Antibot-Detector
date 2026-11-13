@@ -6224,6 +6224,18 @@
   "settingsShortcutRescanFmt": {
     "message": "إعادة فحص هذه الصفحة: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "فتح الإضافة: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "البحث في علامة التبويب المفتوحة: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "التنقل بين إدخالات السجل: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "إغلاق مربع حوار: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "يُعاد تحميل الصفحة، فيُجمع كل شيء من البداية."
   },
@@ -6787,6 +6799,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "لم تُحفظ تغييراتك على الإعدادات بعد. هل تريد حفظها قبل الإغلاق؟"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "لم تُحفظ تغييراتك على الإعدادات بعد. هل تريد حفظها قبل تطبيق الإعدادات الجديدة؟"
   },
   "historySortLabel": {
     "message": "ترتيب السجل"

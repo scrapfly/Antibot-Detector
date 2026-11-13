@@ -7,7 +7,7 @@ const withinLimit = require('./helpers/hard-limit.js');
 
 // The protection cookie timeline: which cookies count (the detectors' own rules), what the worker records (name,
 // event, time, expiry, length and a salted marker, never a value), the caps and eviction, private windows, the
-// worker message, and the line Check Cookies shows.
+// worker message, and the line Check cookies shows.
 
 const ROOT = path.join(__dirname, '..');
 const read = file => fs.readFileSync(path.join(ROOT, file), 'utf8');
@@ -270,7 +270,7 @@ function loadPopup(locale = 'en') {
   return context.BaseAdvancedModule;
 }
 
-test('Check Cookies: the summary line, the folded timeline, the empty state and cookies recorded earlier', () => {
+test('Check cookies: the summary line, the folded timeline, the empty state and cookies recorded earlier', () => {
   const K = loadPopup();
   const now = 10 * 3_600_000;
   const events = [
@@ -303,7 +303,7 @@ test('Check Cookies: the summary line, the folded timeline, the empty state and 
   assert.match(K.cookieResultsBody(result, { now, cookies: {} }), /Recording starts/);
 });
 
-test('Check Cookies reads the timeline by name, never saves it with the result, and every language has the texts', () => {
+test('Check cookies reads the timeline by name, never saves it with the result, and every language has the texts', () => {
   const source = read('sections/advanced/components/cookie-results.js');
   assert.match(source, /type: WorkerMessages\.COOKIE_TIMELINE_GET/);
   assert.match(source, /saveToolResult\(\{ \.\.\.result,/, 'the saved result is the one without the timeline');

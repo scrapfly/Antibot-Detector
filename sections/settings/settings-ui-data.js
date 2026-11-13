@@ -51,6 +51,8 @@ SettingsUI.importSettingsFile = async function(event) {
       if (!imported || typeof imported !== 'object' || Array.isArray(imported)) {
         throw new Error('Invalid settings file');
       }
+      // The import redraws the form: edits not saved yet are saved or dropped first (Cancel: nothing changes)
+      if (!(await SettingsUI.settleUnsavedBeforeReplace(this))) return;
       // A portable file changes preferences only. Connections already stored in
       // this browser survive even when an older export includes credentials.
       // Over the saved settings: a change staged in the form but not saved is not written with the import

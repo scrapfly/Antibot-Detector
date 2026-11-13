@@ -137,7 +137,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 - **탐지 결과 업로드**로 공유 링크 받기(기본값은 dpaste.com, [공유 링크](#공유-링크) 참고)
 - **캐시 지우기**로 다음 로드 때 페이지를 다시 스캔하기
 - **복사** 메뉴: 업로드가 공유하는 것과 같은 요약, 티켓이나 채팅용 Markdown 표, 사이트와 보호 기술을 담은 한 줄, 또는 JSON(이들에는 쿠키나 헤더 값이 포함되지 않습니다). 또한 페이지를 다시 요청하는 코드를 curl 명령, Python (requests), Node.js (fetch)로 복사할 수도 있으며, 이 브라우저의 User-Agent, Accept-Language, client hints와 페이지가 보내는 모든 쿠키(HttpOnly 포함)가 들어갑니다. 이 코드에는 쿠키 값과 쿼리 문자열이 있는 페이지 주소가 들어 있으므로 외부에 공유하지 마세요
-- **이 도메인 차단**으로 확장 프로그램이 해당 도메인을 더 이상 스캔하지 않게 하기
+- **이 사이트 건너뛰기**로 확장 프로그램이 해당 사이트를 더 이상 스캔하지 않게 하기
 
 ### 기록
 
@@ -157,18 +157,18 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 
 | 보호 기술 | 도구 |
 | --- | --- |
-| Akamai Bot Manager | Check Cookies · Analyze Scripts · Extract Sensor Information · Start Capturing |
-| AWS WAF | Check Cookies · Analyze Scripts |
-| Cloudflare Bot Management | Check Cookies · Analyze Scripts |
-| Cloudflare Turnstile | Extract SiteKey · Analyze Scripts |
-| DataDome | Check Cookies · Analyze Scripts |
-| FunCaptcha (Arkose Labs) | Extract Public Key · Analyze Scripts · Start Capturing |
-| GeeTest | Check Version · Analyze Scripts |
-| Google reCAPTCHA | Obtain Selector · Extract SiteKey · reCAPTCHA callback · Start Capturing |
-| hCaptcha | Extract SiteKey · Check Version · Analyze Scripts · Start Capturing |
-| Incapsula (Imperva) | Check Cookies · Analyze Scripts · Start Capturing |
-| Shape Security | Check Version · Check Cookies · Analyze Scripts · Start Capturing |
-| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract SiteKey · Analyze Scripts |
+| Akamai Bot Manager | Check cookies · Analyze scripts · Extract sensor information · Start capturing |
+| AWS WAF | Check cookies · Analyze scripts |
+| Cloudflare Bot Management | Check cookies · Analyze scripts |
+| Cloudflare Turnstile | Extract site key · Analyze scripts |
+| DataDome | Check cookies · Analyze scripts |
+| FunCaptcha (Arkose Labs) | Extract public key · Analyze scripts · Start capturing |
+| GeeTest | Check version · Analyze scripts |
+| Google reCAPTCHA | Obtain selector · Extract site key · reCAPTCHA callback · Start capturing |
+| hCaptcha | Extract site key · Check version · Analyze scripts · Start capturing |
+| Incapsula (Imperva) | Check cookies · Analyze scripts · Start capturing |
+| Shape Security | Check version · Check cookies · Analyze scripts · Start capturing |
+| Aliyun Captcha 2.0, ALTCHA, Captcha.eu, Capy Puzzle Captcha, Dingxiang Captcha, Friendly Captcha, Lemin Cropped Captcha, MTCaptcha, NetEase Yidun, Prosopo Procaptcha, QCloud Captcha, Shumei Captcha, Yandex SmartCaptcha | Extract site key · Analyze scripts |
 | AliExpress CAPTCHA, Basilisk Captcha, Binance Captcha | Analyze Scripts |
 
 결과와 캡처는 **고급 → 캡처**에 30분 동안 보관되며, 사이트, 공급업체, 도구별로 필터링하고 다시 열고 내보낼 수 있습니다.

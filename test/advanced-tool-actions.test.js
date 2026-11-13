@@ -253,7 +253,7 @@ test('Akamai override retains recording after a failed stop and clears it only a
 
 test('all method semantics disclose reloads, cookie resets and capture state without relying on translated labels', () => {
   const { context } = fixture();
-  // Analyze Scripts first lists what the page already loaded (no reload), for every vendor: none says it reloads
+  // Analyze scripts first lists what the page already loaded (no reload), for every vendor: none says it reloads
   const resetsScripts = new Set();
   const reloadsScripts = new Set();
   const reloadVersions = new Set(['hcaptcha', 'geetest']);
@@ -285,7 +285,7 @@ test('all method semantics disclose reloads, cookie resets and capture state wit
       count++;
     }
   }
-  // 33 until Cloudflare Bot Management lost Extract Site Key (Turnstile keeps it)
+  // 33 until Cloudflare Bot Management lost Extract site key (Turnstile keeps it)
   assert.equal(count, 32);
 });
 

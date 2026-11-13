@@ -6224,6 +6224,18 @@
   "settingsShortcutRescanFmt": {
     "message": "इस पेज को फिर से स्कैन करें: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "एक्सटेंशन खोलें: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "खुले टैब में खोजें: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "इतिहास की प्रविष्टियों के बीच जाएँ: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "डायलॉग बंद करें: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "पेज रीलोड होता है, ताकि सब कुछ शुरू से इकट्ठा हो।"
   },
@@ -6787,6 +6799,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "सेटिंग्स में किए गए आपके बदलाव अभी सहेजे नहीं गए हैं। क्या बंद करने से पहले उन्हें सहेजें?"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "सेटिंग्स में किए गए आपके बदलाव अभी सहेजे नहीं गए हैं। क्या नई सेटिंग्स लागू करने से पहले उन्हें सहेजें?"
   },
   "historySortLabel": {
     "message": "इतिहास को क्रमबद्ध करें"

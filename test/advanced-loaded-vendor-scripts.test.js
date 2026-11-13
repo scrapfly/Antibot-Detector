@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-// GeeTest, Imperva and Shape Security's Analyze Scripts read the page as already loaded first (no reload, so the
+// GeeTest, Imperva and Shape Security's Analyze scripts read the page as already loaded first (no reload, so the
 // popup stays open); only a page where nothing of the vendor is found goes on to the old reload flow.
 
 const read = file => fs.readFileSync(path.join(__dirname, '..', file), 'utf8');

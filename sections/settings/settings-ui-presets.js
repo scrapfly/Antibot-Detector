@@ -11,6 +11,8 @@ SettingsUI.applyPreset = async function(id) {
     const preset = SettingsPresets.PRESETS[id];
     if (!preset) return;
     const text = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
+    // The preset redraws the form: edits not saved yet are saved or dropped first, as the person chooses
+    if (!(await SettingsUI.settleUnsavedBeforeReplace(this))) return;
     const lines = SettingsUI.presetLines.call(this, id);
     if (!lines.length) {
         NotificationHelper.info(text('presetAlreadySet', 'These settings are already set.'));

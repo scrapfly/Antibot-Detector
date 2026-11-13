@@ -1820,7 +1820,7 @@
     "message": "✓ Sin CAPTCHAs"
   },
   "detectionBadgeNoAntibot": {
-    "message": "✓ Sin Anti-Bot"
+    "message": "✓ Sin anti-bot"
   },
   "detectionBadgeNoFingerprint": {
     "message": "✓ Sin huella digital"
@@ -3130,7 +3130,7 @@
     "message": "Tipo"
   },
   "advCloudflareSiteKeyCopied": {
-    "message": "Site Key copiada"
+    "message": "Site key copiada"
   },
   "advCloudflareTypeChallenge": {
     "message": "Challenge"
@@ -3145,7 +3145,7 @@
     "message": "Clave pública"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
     "message": "BDA (matriz de datos del navegador)"
@@ -6226,6 +6226,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Volver a analizar esta página: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Abrir la extensión: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Buscar en la pestaña abierta: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Moverse entre las entradas del historial: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Cerrar un cuadro de diálogo: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "La página se recarga para recopilar todo desde el principio."
   },
@@ -6789,6 +6801,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Los cambios en los ajustes aún no se han guardado. ¿Guardarlos antes de cerrar?"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Los cambios en los ajustes aún no se han guardado. ¿Guardarlos antes de aplicar los nuevos ajustes?"
   },
   "historySortLabel": {
     "message": "Ordenar historial"

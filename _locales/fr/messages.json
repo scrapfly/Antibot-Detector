@@ -1178,7 +1178,7 @@
     "message": "Échec de la suppression des captures"
   },
   "settingsCardWebhookIntegration": {
-    "message": "Intégration Webhook"
+    "message": "Intégration webhook"
   },
   "settingsEnableWebhook": {
     "message": "Activer le webhook"
@@ -3130,7 +3130,7 @@
     "message": "Type"
   },
   "advCloudflareSiteKeyCopied": {
-    "message": "Site Key copiée"
+    "message": "Site key copiée"
   },
   "advCloudflareTypeChallenge": {
     "message": "Défi"
@@ -6224,6 +6224,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Analyser à nouveau cette page : {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Ouvrir l’extension : {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Rechercher dans l’onglet ouvert : {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Passer d’une entrée de l’historique à l’autre : {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Fermer une boîte de dialogue : {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "La page se recharge pour tout recueillir depuis le début."
   },
@@ -6787,6 +6799,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Vos modifications des paramètres ne sont pas encore enregistrées. Les enregistrer avant de fermer ?"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Vos modifications des paramètres ne sont pas encore enregistrées. Les enregistrer avant d’appliquer les nouveaux paramètres ?"
   },
   "historySortLabel": {
     "message": "Trier l’historique"

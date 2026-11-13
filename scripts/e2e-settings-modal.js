@@ -172,10 +172,25 @@ const REPO = path.resolve(process.argv[2] || path.join(__dirname, '..'));
     };
     await tab('data');
     await clearNotices();
+    // The form still holds the auto-update edit the rejected write could not save: the import asks about it first
+    const unsavedButton = text => page.locator('.notification-btn', { hasText: text });
     await importFile({ ...imported, languageOverride: 'es' });
+    await unsavedButton('Discard').waitFor({ state: 'visible', timeout: 10000 });
+    assert.ok(await page.getByText('Your changes to the settings are not saved yet. Save them before the new settings are applied?').isVisible());
+    await unsavedButton('Cancel').click();
+    await page.waitForTimeout(500);
+    assert.deepEqual(await notices(), [], 'Cancel is not an error');
+    assert.equal(await page.evaluate(() => JSON.stringify(window.popupInstance.settings.settings)), before, 'Cancel keeps the edit and imports nothing');
+    assert.equal((await stored()).debugMode, false);
+    console.log('PASS an import over unsaved edits asks first; Cancel changes nothing');
+    // Discard drops the edit and the import goes on, into the rejected write
+    const saved = await page.evaluate(() => JSON.stringify(window.popupInstance.settings.settingsBaseline));
+    await importFile({ ...imported, languageOverride: 'es' });
+    await unsavedButton('Discard').waitFor({ state: 'visible', timeout: 10000 });
+    await unsavedButton('Discard').click();
     await page.waitForFunction(() => settingsReviewNotices.length === 1, null, { polling: 250 });
     assert.deepEqual(await notices(), ['error']);
-    assert.equal(await page.evaluate(() => JSON.stringify(window.popupInstance.settings.settings)), before);
+    assert.equal(await page.evaluate(() => JSON.stringify(window.popupInstance.settings.settings)), saved, 'the saved settings, without the dropped edit or the import');
     assert.equal(await page.evaluate(async () => (await chrome.storage.local.get('scrapfly_language_override')).scrapfly_language_override), 'en');
     assert.equal((await stored()).debugMode, false);
     console.log('PASS failed file import preserves model, saved preferences and language');

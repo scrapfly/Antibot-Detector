@@ -73,7 +73,7 @@ test('the worker side of each vendor names it the way the registry does', () => 
     const vendor = registry.vendors[registry.canonical(id)];
     if (!vendor) continue; // the generic CAPTCHA interceptor serves every data-driven vendor
     const source = read(`background/advanced/vendors/${id}/interceptor.js`);
-    // The page notices ("module: 'Akamai'" above the title, "{0} Monitoring Started") name the vendor
+    // The page notices ("module: 'Akamai'" above the title, "{0} monitoring started") name the vendor
     const written = new Set([...source.matchAll(/\bmodule: '([^']+)'/g)].map(match => match[1]));
     for (const name of written) assert.strictEqual(name, vendor.displayName, `${id} writes "${name}"`);
     checked += written.size ? 1 : 0;

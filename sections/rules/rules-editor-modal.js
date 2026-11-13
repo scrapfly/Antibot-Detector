@@ -84,8 +84,8 @@ Rules.prototype.openEditModal = function(detector, category, detectorName, isNew
     if (actionEl) actionEl.textContent = (_t && _t.format(titleKey, shownName)) || titleFallback;
     if (nameEl) {
       nameEl.textContent = (_t && typeof _t.tr === 'function')
-        ? _t.tr('rulesModalDetectorLabel', 'Detection Rule')
-        : 'Detection Rule';
+        ? _t.tr('rulesModalDetectorLabel', 'Detection rule')
+        : 'Detection rule';
     }
 
     // Populate modal with detector data (now currentEditDetector is available)

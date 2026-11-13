@@ -62,7 +62,7 @@ const AdvancedUtils = {
      */
     showConfirmationModal(options = {}) {
         const {
-            title = _advUtilsTr('advPanelConfirmAction', 'Confirm Action'),
+            title = _advUtilsTr('advPanelConfirmAction', 'Confirm action'),
             message = _advUtilsTr('notifConfirmMessageDefault', 'Are you sure?'),
             confirmText = _advUtilsTr('advPanelBtnConfirm', 'Confirm'),
             cancelText = _advUtilsTr('btnCancel', 'Cancel'),

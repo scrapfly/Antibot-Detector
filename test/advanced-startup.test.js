@@ -109,7 +109,7 @@ test('render errors leave a visible error state and stop the loader', async () =
   assert.equal(elements['#advancedContent'].style.display, 'none');
   assert.equal(elements['#advancedLoadingState'].style.display, 'none');
   assert.equal(elements['#noAdvancedState'].style.display, 'flex');
-  assert.match(elements['#noAdvancedState'].innerHTML, /Error loading Advanced tools/);
+  assert.match(elements['#noAdvancedState'].innerHTML, /Error loading advanced tools/);
 });
 
 test('a protection gets tools only above 50% confidence', async () => {

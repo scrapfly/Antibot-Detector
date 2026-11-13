@@ -145,7 +145,7 @@ class AdvancedScriptResults {
             body,
             copiedMessage: K._tr('advCommonUrlCopied', 'URL copied'),
             actions: scripts.length ? [{
-                label: K._tr('advCommonExportCode', 'Export Code'),
+                label: K._tr('advCommonExportCode', 'Export code'),
                 primary: true,
                 onClick: () => AdvancedCodeDialog.openScriptUrls(this, name, scripts)
             }] : [],

@@ -196,7 +196,7 @@ DetectionModals.renderDetectionModalContent = function(detection) {
     }
 
     if (this.modalElements.name) {
-      this.modalElements.name.textContent = FormatUtils.detectorName(detection) || _dmText('unknownDetection', 'Unknown Detection');
+      this.modalElements.name.textContent = FormatUtils.detectorName(detection) || _dmText('unknownDetection', 'Unknown detection');
     }
 
     if (this.modalElements.categories) {

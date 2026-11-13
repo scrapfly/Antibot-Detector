@@ -3130,7 +3130,7 @@
     "message": "Tipo"
   },
   "advCloudflareSiteKeyCopied": {
-    "message": "Site Key copiata"
+    "message": "Site key copiata"
   },
   "advCloudflareTypeChallenge": {
     "message": "Challenge"
@@ -3145,7 +3145,7 @@
     "message": "Chiave pubblica"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
     "message": "BDA (array di dati del browser)"
@@ -6224,6 +6224,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Analizza di nuovo questa pagina: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Apri l’estensione: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Cerca nella scheda aperta: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Spostarsi tra le voci della cronologia: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Chiudi una finestra di dialogo: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "La pagina viene ricaricata, così tutto viene raccolto dall’inizio."
   },
@@ -6787,6 +6799,9 @@
   },
   "settingsUnsavedCloseMessage": {
     "message": "Le modifiche alle impostazioni non sono ancora state salvate. Salvarle prima di chiudere?"
+  },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Le modifiche alle impostazioni non sono ancora state salvate. Salvarle prima di applicare le nuove impostazioni?"
   },
   "historySortLabel": {
     "message": "Ordina cronologia"

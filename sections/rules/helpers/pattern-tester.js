@@ -164,7 +164,7 @@
       list.push({ tone: 'warning', key: 'ptNoteLooksRegex', fallback: 'This looks like a regex: turn on Regex, otherwise its symbols are matched as plain text.', args: [] });
     }
     if (options.regex && rawOptions && rawOptions.wholeWord && !KINDS[kind]?.noWholeWord) {
-      list.push({ tone: 'info', key: 'ptNoteWordIgnored', fallback: 'Whole word is ignored while Regex is on.', args: [] });
+      list.push({ tone: 'info', key: 'ptNoteWordIgnored', fallback: 'Whole word is ignored while regex is on.', args: [] });
     }
     if (kind === 'headerName' && options.caseSensitive && /[A-Z]/.test(value.replace(/\\[A-Z]/g, ''))) {
       list.push({ tone: 'warning', key: 'ptNoteHeaderCase', fallback: 'Header names are stored in lower case, so with Case sensitive on this pattern never matches.', args: [] });

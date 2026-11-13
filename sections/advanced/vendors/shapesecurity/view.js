@@ -5,7 +5,7 @@ ShapeSecurityAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
                 id: 'shapesecurityCheckVersion',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckVersion')) || 'Check Version'),
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckVersion')) || 'Check version'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M5.5,7A1.5,1.5 0 0,1 4,5.5A1.5,1.5 0 0,1 5.5,4A1.5,1.5 0 0,1 7,5.5A1.5,1.5 0 0,1 5.5,7M21.41,11.58L12.41,2.58C12.05,2.22 11.55,2 11,2H4C2.89,2 2,2.89 2,4V11C2,11.55 2.22,12.05 2.59,12.41L11.58,21.41C11.95,21.77 12.45,22 13,22C13.55,22 14.05,21.77 14.41,21.41L21.41,14.41C21.77,14.05 22,13.55 22,13C22,12.45 21.77,11.95 21.41,11.58Z"/>
@@ -14,7 +14,7 @@ ShapeSecurityAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'shapesecurityCheckCookies',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckCookies')) || 'Check Cookies'),
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckCookies')) || 'Check cookies'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21A9,9 0 0,0 21,12A9,9 0 0,0 12,3M9,8A1.5,1.5 0 0,1 10.5,9.5A1.5,1.5 0 0,1 9,11A1.5,1.5 0 0,1 7.5,9.5A1.5,1.5 0 0,1 9,8M16.5,9.5A1.5,1.5 0 0,1 15,11A1.5,1.5 0 0,1 13.5,9.5A1.5,1.5 0 0,1 15,8A1.5,1.5 0 0,1 16.5,9.5M9,15A1.5,1.5 0 0,1 10.5,16.5A1.5,1.5 0 0,1 9,18A1.5,1.5 0 0,1 7.5,16.5A1.5,1.5 0 0,1 9,15M15,14A1.5,1.5 0 0,1 16.5,15.5A1.5,1.5 0 0,1 15,17A1.5,1.5 0 0,1 13.5,15.5A1.5,1.5 0 0,1 15,14Z"/>
@@ -23,7 +23,7 @@ ShapeSecurityAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'shapesecurityStartCapture',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start Capturing'),
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start capturing'),
                 kind: 'capture',
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -33,7 +33,7 @@ ShapeSecurityAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'shapesecurityAnalyzeScripts',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze Scripts'),
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze scripts'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
@@ -127,13 +127,13 @@ ShapeSecurityAdvanced.prototype.renderCaptureDetailsContent = function(capture) 
             return match ? match[1] : h.name;
         }))].filter(Boolean);
         const patternLabel = headerPatterns.length > 1
-            ? shapeSecurityText('advShapeHeaderPatterns', 'Header Patterns') : shapeSecurityText('advShapeHeaderPattern', 'Header Pattern');
+            ? shapeSecurityText('advShapeHeaderPatterns', 'Header patterns') : shapeSecurityText('advShapeHeaderPattern', 'Header pattern');
         const facts = K.kitFacts([
             { label: shapeSecurityText('advCommonCaptured', 'Captured'), value: shapeSecurityDateTime(capture.timestamp) }
         ]);
-        const fields = K.kitField(shapeSecurityText('advShapeVersionTitle', 'Shape Security Version'), String(data.version || 'v2').toUpperCase())
+        const fields = K.kitField(shapeSecurityText('advShapeVersionTitle', 'Shape Security version'), String(data.version || 'v2').toUpperCase())
             + headerPatterns.map(pattern => K.kitField(patternLabel, pattern)).join('')
-            + K.kitField(shapeSecurityText('advShapeCookieTitle', 'Shape Cookie'), data.cookie && data.cookie.name);
+            + K.kitField(shapeSecurityText('advShapeCookieTitle', 'Shape cookie'), data.cookie && data.cookie.name);
         return facts + (fields ? K.kitCard(fields) : '');
     };
 
@@ -156,13 +156,13 @@ ShapeSecurityAdvanced.prototype.displayScriptDataModal = function(data) {
             ? K.kitSection(title, urls.map(url => K.kitCard(K.kitField(urlLabel, url, { clamp: true }))).join(''), urls.length)
             : '';
         const facts = K.kitFacts([
-            { label: shapeSecurityText('advCommonTotalScripts', 'Total Scripts:').replace(/:\s*$/, ''), value: String(allScripts.length) },
-            { label: shapeSecurityText('advShapeInitJsScriptsLabel', 'Init.js Scripts:').replace(/:\s*$/, ''), value: String(initJsScripts.length) },
-            { label: shapeSecurityText('advShapeSeedScriptsLabel', 'Seed Scripts:').replace(/:\s*$/, ''), value: String(seedScripts.length) }
+            { label: shapeSecurityText('advCommonTotalScripts', 'Total scripts:').replace(/:\s*$/, ''), value: String(allScripts.length) },
+            { label: shapeSecurityText('advShapeInitJsScriptsLabel', 'Init.js scripts:').replace(/:\s*$/, ''), value: String(initJsScripts.length) },
+            { label: shapeSecurityText('advShapeSeedScriptsLabel', 'Seed scripts:').replace(/:\s*$/, ''), value: String(seedScripts.length) }
         ]);
         const body = allScripts.length
-            ? facts + section(shapeSecurityText('advShapeInitJsScripts', 'Init.js Scripts'), initJsScripts)
-                + section(shapeSecurityText('advShapeSeedScripts', 'Seed Scripts'), seedScripts)
+            ? facts + section(shapeSecurityText('advShapeInitJsScripts', 'Init.js scripts'), initJsScripts)
+                + section(shapeSecurityText('advShapeSeedScripts', 'Seed scripts'), seedScripts)
             : K.kitNote(shapeSecurityText('advCommonNoScriptsToExport', 'No scripts available to export'));
         // Export Code gets each URL with what the generator needs to know about it
         const scripts = allScripts.map(url => ({
@@ -172,13 +172,13 @@ ShapeSecurityAdvanced.prototype.displayScriptDataModal = function(data) {
             seed: url.includes('seed=') ? url.match(/seed=([A-Za-z0-9_\-]+)/)?.[1] : null
         }));
         return this.openKitModal({
-            title: shapeSecurityText('advShapeAnalysisTitle', 'Shape Security Analysis'),
+            title: shapeSecurityText('advShapeAnalysisTitle', 'Shape Security analysis'),
             subtitle: (() => { try { return new URL(this.tabInfo.url).hostname; } catch (_) { return ''; } })(),
             iconSvg: K.toolIcon('scripts'),
             body,
             copiedMessage: shapeSecurityText('advValueCopied', 'Value copied'),
             actions: scripts.length ? [{
-                label: shapeSecurityText('advCommonExportCode', 'Export Code'),
+                label: shapeSecurityText('advCommonExportCode', 'Export code'),
                 primary: true,
                 onClick: () => this.displayExportCodeModal(scripts)
             }] : [],
@@ -204,7 +204,7 @@ ShapeSecurityAdvanced.prototype.displayExportCodeModal = function(scripts) {
         });
         const hasInitJs = initJsScripts.length > 0;
         const hasSeeds = seedScripts.length > 0;
-        const types = [{ id: 'all', label: shapeSecurityText('advCommonAllTypes', 'All Types') }];
+        const types = [{ id: 'all', label: shapeSecurityText('advCommonAllTypes', 'All types') }];
         if (hasInitJs) types.push({ id: 'init', label: 'Init' });
         if (hasSeeds) types.push({ id: 'seed', label: 'Seed' });
         const descriptions = {
@@ -215,7 +215,7 @@ ShapeSecurityAdvanced.prototype.displayExportCodeModal = function(scripts) {
             go: shapeSecurityText('advCodeDescGoQuery', 'Go with net/http and goquery')
         };
         return AdvancedCodeDialog.open(this, {
-            title: shapeSecurityText('advCommonCodeGenTitle', 'Script Parsing Code Generator'), types,
+            title: shapeSecurityText('advCommonCodeGenTitle', 'Script parsing code generator'), types,
             languages: [{ id: 'javascript', label: 'JavaScript' }, { id: 'python', label: 'Python' }, { id: 'nodejs', label: 'Node.js' }, { id: 'php', label: 'PHP' }, { id: 'go', label: 'Go' }],
             getCodes: type => this.generateParsingCode(scripts, { hasInitJs, hasSeeds, scriptType: type }),
             description: (type, language) => descriptions[language]
@@ -231,15 +231,15 @@ ShapeSecurityAdvanced.prototype.showVersionModal = function(version) {
         // v1 is cookie only; v2 also signs requests with its X-xxxxxxxx-* headers
         const requirements = version === 'v1'
             ? shapeSecurityText('advShapeCookieLabel', 'Cookie')
-            : shapeSecurityText('advShapeCookieAndHeaders', 'Cookie + Headers');
+            : shapeSecurityText('advShapeCookieAndHeaders', 'Cookie + headers');
         return this.openKitModal({
-            title: shapeSecurityText('advShapeVersionTitle', 'Shape Security Version'),
+            title: shapeSecurityText('advShapeVersionTitle', 'Shape Security version'),
             subtitle: (() => { try { return new URL(this.tabInfo.url).hostname; } catch (_) { return ''; } })(),
             iconSvg: K.toolIcon('version'),
             body: K.kitFacts([
-                { label: shapeSecurityText('advShapeDetectedVersion', 'Detected Version:').replace(/:\s*$/, ''), html: true,
+                { label: shapeSecurityText('advShapeDetectedVersion', 'Detected version:').replace(/:\s*$/, ''), html: true,
                     value: K.kitChip(versionUpper, version === 'v1' ? 'green' : 'blue') },
-                { label: shapeSecurityText('advShapeCaptureRequirements', 'Capture Requirements'), value: requirements }
+                { label: shapeSecurityText('advShapeCaptureRequirements', 'Capture requirements'), value: requirements }
             ]),
             copiedMessage: shapeSecurityText('advValueCopied', 'Value copied'),
             record: false
