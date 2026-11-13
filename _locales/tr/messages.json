@@ -6625,6 +6625,12 @@
     "message": "Başarısız veya atlanan",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "Hata durumu (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Yalnızca {0}"
+  },
   "bulkCopyLines": {
     "message": "Satırlar olarak kopyala"
   },

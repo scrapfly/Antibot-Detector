@@ -6625,6 +6625,12 @@
     "message": "Fehlgeschlagen oder übersprungen",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "Fehlerstatus (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Nur {0}"
+  },
   "bulkCopyLines": {
     "message": "Als Zeilen kopieren"
   },

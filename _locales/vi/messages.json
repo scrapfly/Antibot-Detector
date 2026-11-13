@@ -6625,6 +6625,12 @@
     "message": "Thất bại hoặc bỏ qua",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "Trạng thái lỗi (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Chỉ {0}"
+  },
   "bulkCopyLines": {
     "message": "Sao chép theo dòng"
   },

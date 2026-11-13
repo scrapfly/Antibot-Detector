@@ -6625,6 +6625,12 @@
     "message": "ไม่สำเร็จหรือข้าม",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "สถานะข้อผิดพลาด (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "เฉพาะ {0}"
+  },
   "bulkCopyLines": {
     "message": "คัดลอกเป็นบรรทัด"
   },

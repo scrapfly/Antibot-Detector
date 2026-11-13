@@ -6625,6 +6625,12 @@
     "message": "실패 또는 건너뜀",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "오류 상태 (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "{0}만"
+  },
   "bulkCopyLines": {
     "message": "줄로 복사"
   },

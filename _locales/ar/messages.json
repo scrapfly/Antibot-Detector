@@ -6625,6 +6625,12 @@
     "message": "فشلت أو تم تخطيها",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "حالة خطأ (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "{0} فقط"
+  },
   "bulkCopyLines": {
     "message": "نسخ كأسطر"
   },

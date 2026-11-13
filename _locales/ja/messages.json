@@ -6625,6 +6625,12 @@
     "message": "失敗またはスキップ",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "エラーステータス（4xx、5xx）"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "{0} のみ"
+  },
   "bulkCopyLines": {
     "message": "行としてコピー"
   },

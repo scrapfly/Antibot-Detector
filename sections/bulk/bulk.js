@@ -396,6 +396,7 @@
     if (run.skippedOver) notes.push(fmt('bulkMoreSkippedFmt', 'Other lines left out: {0}', number(run.skippedOver)));
     byId('bulkRunNotes').textContent = notes.join(' · ');
     byId('bulkRunNotes').hidden = !notes.length;
+    syncFilterOptions(run);
     renderRows(run);
     const shown = run.items.filter(item => BulkFilter.matches(item, state.filter)).length;
     byId('bulkFilterNote').textContent = state.filter === 'all' ? ''
@@ -432,7 +433,36 @@
 
   function restoreFilter() {
     try { state.filter = BulkFilter.normalize(localStorage.getItem(FILTER_KEY)); } catch (_) { /* storage blocked: all pages */ }
-    byId('bulkFilter').value = state.filter;
+    syncFilterOptions(state.run);
+  }
+
+  /**
+   * The Show list's "Only <protection>" choices: one per protection the run found, most pages first (the run's protection totals).
+   * A protection chosen before (remembered from an earlier run) stays listed even when this run has not found it, so the list
+   * says what the table shows. The list is only rebuilt when the protections change, so an open dropdown is not redrawn under
+   * the pointer at every page the run finishes.
+   */
+  function syncFilterOptions(run) {
+    const select = byId('bulkFilter');
+    const group = byId('bulkFilterProtections');
+    const names = (run ? BulkScan.protectionTotals(run) : []).map(row => row.name);
+    const chosen = BulkFilter.protectionOf(state.filter);
+    if (chosen && !names.some(name => BulkFilter.forProtection(name) === state.filter)) names.push(chosen);
+    const signature = names.join('\n');
+    if (group && group.dataset.names !== signature) {
+      group.dataset.names = signature;
+      group.replaceChildren(...names.map((name) => {
+        const option = document.createElement('option');
+        option.value = BulkFilter.forProtection(name);
+        // The name is isolated (FSI ... PDI): a Latin name keeps its own direction inside an Arabic line
+        option.textContent = fmt('bulkFilterOnlyFmt', 'Only {0}', `\u2068${name}\u2069`);
+        return option;
+      }));
+      group.hidden = !names.length;
+      // Its heading in the list, as the table's Protections column names them
+      group.label = tr('statsStackColumn', 'Protections');
+    }
+    select.value = state.filter;
   }
 
   /* ---------- From History ---------- */

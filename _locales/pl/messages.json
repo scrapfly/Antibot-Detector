@@ -6625,6 +6625,12 @@
     "message": "Nieudane lub pominięte",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "Status błędu (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Tylko {0}"
+  },
   "bulkCopyLines": {
     "message": "Kopiuj jako wiersze"
   },

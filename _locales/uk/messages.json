@@ -6625,6 +6625,12 @@
     "message": "Зі збоєм або пропущені",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "Код помилки (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Лише {0}"
+  },
   "bulkCopyLines": {
     "message": "Копіювати рядками"
   },

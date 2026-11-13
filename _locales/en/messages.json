@@ -7285,6 +7285,14 @@
     "message": "Failed or skipped",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "Error status (4xx, 5xx)",
+    "description": "Bulk scan results filter: pages that answered with an HTTP error status (4xx client errors, 5xx server errors)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Only {0}",
+    "description": "Bulk scan results filter, one per protection the run found: the pages where that protection was found. {0} = the protection's name (Cloudflare, reCAPTCHA...)"
+  },
   "bulkCopyLines": {
     "message": "Copy as lines",
     "description": "Bulk scan: button that copies the shown pages as one line each (address and protections), for chats and tickets"

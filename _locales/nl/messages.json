@@ -6625,6 +6625,12 @@
     "message": "Mislukt of overgeslagen",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "Foutstatus (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Alleen {0}"
+  },
   "bulkCopyLines": {
     "message": "Kopiëren als regels"
   },

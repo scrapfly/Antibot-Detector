@@ -6625,6 +6625,12 @@
     "message": "विफल या छोड़े गए",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "त्रुटि स्थिति (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "केवल {0}"
+  },
   "bulkCopyLines": {
     "message": "पंक्तियों के रूप में कॉपी करें"
   },

@@ -6625,6 +6625,12 @@
     "message": "Gagal atau dilewati",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "Status galat (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Hanya {0}"
+  },
   "bulkCopyLines": {
     "message": "Salin sebagai baris"
   },

@@ -82,6 +82,9 @@
           <option value="found" data-i18n="bulkFilterFound">With protections</option>
           <option value="clear" data-i18n="bulkFilterClear">No protection found</option>
           <option value="problem" data-i18n="bulkFilterProblem">Failed or skipped</option>
+          <option value="httpError" data-i18n="bulkFilterHttpError">Error status (4xx, 5xx)</option>
+          <!-- One "Only <protection>" per protection the run found, most pages first (bulk.js syncFilterOptions) -->
+          <optgroup id="bulkFilterProtections" label="Protections" hidden></optgroup>
         </select>
         <span class="bulk-muted" id="bulkFilterNote" aria-live="polite"></span>
       </div>

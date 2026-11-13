@@ -6625,6 +6625,12 @@
     "message": "失敗或已略過",
     "description": "Bulk scan results filter: pages that failed or were skipped"
   },
+  "bulkFilterHttpError": {
+    "message": "錯誤狀態（4xx、5xx）"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "僅 {0}"
+  },
   "bulkCopyLines": {
     "message": "複製為行"
   },
