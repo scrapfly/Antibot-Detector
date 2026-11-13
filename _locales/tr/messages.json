@@ -6347,6 +6347,9 @@
   "statsSiteChanges": {
     "message": "Korumaları değişen sayfalar"
   },
+  "statsSiteScanDateColumn": {
+    "message": "Tarama tarihi"
+  },
   "statsSiteNoChanges": {
     "message": "Bu sitenin hiçbir kayıtlı taraması korumalarını değiştirmedi."
   },

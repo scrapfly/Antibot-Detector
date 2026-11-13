@@ -6347,6 +6347,9 @@
   "statsSiteChanges": {
     "message": "Stránky, u nichž se změnily ochrany"
   },
+  "statsSiteScanDateColumn": {
+    "message": "Datum skenu"
+  },
   "statsSiteNoChanges": {
     "message": "Žádný uložený sken tohoto webu nezměnil své ochrany."
   },

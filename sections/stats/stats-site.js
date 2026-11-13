@@ -175,7 +175,7 @@
     };
     U.table(byId('statsSiteChangeTable'), {
       caption: tr('statsSiteChanges', 'Pages whose protections changed'), ltrFirst: true,
-      headers: [tr('statsChangePageColumn', 'Page'), tr('statsChangeColumn', 'Change'), { text: tr('statsDateColumn', 'Date'), nowrap: true }],
+      headers: [tr('statsChangePageColumn', 'Page'), tr('statsChangeColumn', 'Change'), { text: tr('statsSiteScanDateColumn', 'Scan date'), nowrap: true }],
       rows: rows.map(row => [page(row), change(row), when(row.timestamp)]),
       empty: tr('statsSiteNoChanges', 'No saved scan of this site changed its protections.')
     });

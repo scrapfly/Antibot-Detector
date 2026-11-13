@@ -6347,6 +6347,9 @@
   "statsSiteChanges": {
     "message": "वे पेज जिनके सुरक्षा उपाय बदले"
   },
+  "statsSiteScanDateColumn": {
+    "message": "स्कैन की तारीख़"
+  },
   "statsSiteNoChanges": {
     "message": "इस साइट के किसी सहेजे गए स्कैन ने अपने सुरक्षा उपाय नहीं बदले।"
   },

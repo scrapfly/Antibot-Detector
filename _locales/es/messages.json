@@ -6349,6 +6349,9 @@
   "statsSiteChanges": {
     "message": "Páginas cuyas protecciones cambiaron"
   },
+  "statsSiteScanDateColumn": {
+    "message": "Fecha del escaneo"
+  },
   "statsSiteNoChanges": {
     "message": "Ningún escaneo guardado de este sitio cambió sus protecciones."
   },

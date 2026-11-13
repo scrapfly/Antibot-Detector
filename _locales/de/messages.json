@@ -6347,6 +6347,9 @@
   "statsSiteChanges": {
     "message": "Seiten mit geänderten Schutzmaßnahmen"
   },
+  "statsSiteScanDateColumn": {
+    "message": "Scandatum"
+  },
   "statsSiteNoChanges": {
     "message": "Kein gespeicherter Scan dieser Website hat seine Schutzmaßnahmen geändert."
   },

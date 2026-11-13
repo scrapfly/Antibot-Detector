@@ -6347,6 +6347,9 @@
   "statsSiteChanges": {
     "message": "防护发生变化的页面"
   },
+  "statsSiteScanDateColumn": {
+    "message": "扫描日期"
+  },
   "statsSiteNoChanges": {
     "message": "此网站已保存的扫描中没有防护发生变化的。"
   },

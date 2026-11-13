@@ -6347,6 +6347,9 @@
   "statsSiteChanges": {
     "message": "防護有所變化的網頁"
   },
+  "statsSiteScanDateColumn": {
+    "message": "掃描日期"
+  },
   "statsSiteNoChanges": {
     "message": "此網站已儲存的掃描中沒有防護有所變化的。"
   },

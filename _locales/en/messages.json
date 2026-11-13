@@ -6921,6 +6921,10 @@
     "message": "Pages whose protections changed",
     "description": "Statistics → Site: heading of the list of scans History marked Changed (protections added or removed since the page's earlier scan)"
   },
+  "statsSiteScanDateColumn": {
+    "message": "Scan date",
+    "description": "Statistics → Site → Pages whose protections changed: column with the date of the scan History marked Changed"
+  },
   "statsSiteNoChanges": {
     "message": "No saved scan of this site changed its protections.",
     "description": "Statistics → Site: shown when none of the site's scans is marked Changed"

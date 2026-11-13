@@ -6347,6 +6347,9 @@
   "statsSiteChanges": {
     "message": "保護が変わったページ"
   },
+  "statsSiteScanDateColumn": {
+    "message": "スキャン日"
+  },
   "statsSiteNoChanges": {
     "message": "このサイトの保存済みスキャンで保護が変わったものはありません。"
   },

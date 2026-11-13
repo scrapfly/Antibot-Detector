@@ -6347,6 +6347,9 @@
   "statsSiteChanges": {
     "message": "보호가 바뀐 페이지"
   },
+  "statsSiteScanDateColumn": {
+    "message": "스캔 날짜"
+  },
   "statsSiteNoChanges": {
     "message": "이 사이트의 저장된 스캔 중 보호가 바뀐 것은 없습니다."
   },
