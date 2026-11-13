@@ -7,6 +7,18 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.2.0] - 2026-11-13
 
+### Added
+
+- Bulk scan: a list scanned before shows what changed on each page since the previous run, with a filter and the changes in every export.
+- Bulk scan: compare a run with an earlier Bulk JSON export.
+- Bulk scan: Run again scans the same list with the same limits and wait.
+- Bulk scan: the last finished run is still shown after the browser restarts, with its exports; Settings → Data lists kept runs with Clear.
+- Bulk scan: the other columns of an uploaded CSV come back beside the results and in every export.
+
+### Fixed
+
+- Bulk scan: a long wait between pages combined with a long time limit no longer leaves a page stuck on Scanning.
+
 ## [3.1.9] - 2026-11-13
 
 ### Added
