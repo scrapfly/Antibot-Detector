@@ -2200,6 +2200,9 @@ class History {
     // Scrapfly needs a web page to scrape
     const scrapfly = menu.querySelector('[data-action="scrapfly"]');
     if (scrapfly) scrapfly.hidden = !(typeof ScrapflyExport !== 'undefined' && ScrapflyExport.targetUrl(item.url));
+    // A site report needs the entry's site
+    const siteReport = menu.querySelector('[data-action="site-report"]');
+    if (siteReport) siteReport.disabled = !this.siteReportHost(item);
     // Compare needs another saved scan of the same page
     const compare = menu.querySelector('[data-action="compare"]');
     if (compare) {
@@ -2611,6 +2614,38 @@ class History {
     }
   }
 
+  /**
+   * The host an entry's site report opens on (stats.html?site=<host>): its host name, else its address's; '' when it has none.
+   * @param {object} item - History entry
+   */
+  siteReportHost(item) {
+    const named = item && typeof item.hostname === 'string' ? item.hostname.trim() : '';
+    if (named && named.toLowerCase() !== 'unknown') return named;
+    try {
+      return new URL(String(item && item.url || '')).hostname || '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  /**
+   * Site report, from an entry's "…" menu: the Statistics page in a new tab, on that site's report (every protection found on its
+   * saved scans, over time; www and the bare host together).
+   * @param {object} item - History entry
+   */
+  openSiteReport(item) {
+    const host = this.siteReportHost(item);
+    if (!host) return false;
+    const url = chrome.runtime.getURL('sections/stats/stats.html?site=' + encodeURIComponent(host.slice(0, 253)));
+    try {
+      chrome.tabs.create({ url });
+    } catch (error) {
+      Logger.error('UI', 'Failed to open the site report:', error);
+      window.open(url, '_blank', 'noopener');
+    }
+    return true;
+  }
+
   /** The stored History changed (a scan, the watchlist, a Bulk run): redraw once, a moment after the last write. */
   scheduleStoredRefresh() {
     if (!this.initialized) return;
@@ -2772,6 +2807,8 @@ class History {
           this.rescanHistoryItem(item);
         } else if (action === 'compare') {
           this.compareHistoryItem(item);
+        } else if (action === 'site-report') {
+          this.openSiteReport(item);
         } else if (action === 'scrapfly') {
           this.openScrapfly(item);
         } else if (action === 'copy') {
