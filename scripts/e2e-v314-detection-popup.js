@@ -728,7 +728,7 @@ async function scenario(name, fn) {
       await resultsShown(popup, 1);
       const line = () => popup.$eval('#detectionSourceNote', el => ({ hidden: el.hidden, text: el.querySelector('.detection-note-text').textContent, title: el.querySelector('.detection-note-text').title }));
       const shown = await until(async () => { const l = await line(); return !l.hidden && l; }, 10000, 'the line under the site\'s name');
-      assert.match(shown.text, new RegExp(`^From a scan of /p/home-${token}, `), shown.text);
+      assert.match(shown.text, new RegExp(`^From a scan of \\u2068/p/home-${token}\\u2069, `), shown.text); // the path isolated (FSI...PDI)
       assert.ok(shown.title.startsWith(home), 'the whole address on hover');
       assert.equal(await popup.$eval('#detectionChangeNote', el => el.hidden), true, 'no change line for another page\'s results');
       // Scan again now scans this page: its own result, and the line goes
@@ -800,7 +800,7 @@ async function scenario(name, fn) {
         actions: [...el.querySelectorAll('[data-change-action]')].filter(n => !n.hidden).map(n => n.dataset.changeAction)
       }));
       const shown = await until(async () => { const l = await line(); return !l.hidden && l; }, 10000, 'the change line');
-      assert.match(shown.text, /^Changed since .+: \+V314 Captcha Probe −V314 Bot Probe$/, shown.text);
+      assert.match(shown.text, /^Changed since .+: \u2068\+V314 Captcha Probe\u2069 \u2068−V314 Bot Probe\u2069$/, shown.text); // each name isolated
       assert.deepEqual(shown.actions, ['compare', 'watch']);
       assert.equal(await popup.$eval('#detectionSourceNote', el => el.hidden), true, 'this page\'s own results');
       console.log(`      "${shown.text}"`);
