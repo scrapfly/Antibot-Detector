@@ -79,6 +79,21 @@ test('the difficulty line says what the level means', async () => {
   assert.equal(elements.difficultyNote.hidden, true, 'nothing to explain');
 });
 
+test('a fingerprinting technique has no difficulty line: it blocks nothing, and the line speaks of blocking', async () => {
+  const { context } = load();
+  const { self, elements } = modal(context);
+  for (const category of ['Fingerprint', 'fingerprint']) {
+    elements.difficultyNote.hidden = false;
+    elements.difficultyNote.textContent = 'left over';
+    await render(context, self, detection('detect-canvas-fingerprint', category, 90), 'High');
+    assert.equal(elements.difficultyNote.hidden, true, category);
+    assert.equal(elements.difficultyNote.textContent, '', category);
+  }
+  // A CAPTCHA keeps its line
+  await render(context, self, detection('detect-recaptcha', 'CAPTCHA', 90), 'Medium');
+  assert.equal(elements.difficultyNote.hidden, false);
+});
+
 test('an official anti-bot links its website and its docs page in the person\'s language', async () => {
   const { context } = load({ locale: 'es' });
   const { self, elements } = modal(context);

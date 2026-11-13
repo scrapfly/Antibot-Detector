@@ -356,7 +356,10 @@ const _dmToolsEntry = (detectorId) => {
  */
 DetectionModals.renderAbout = async function(detection, difficulty) {
     const elements = this.modalElements || {};
-    const meaning = DetectionModals.DIFFICULTY_MEANINGS[difficulty];
+    // The levels describe how hard a protection is to get past (challenges, blocking plain HTTP clients); a fingerprinting
+    // technique blocks nothing itself, so its level gets no such line
+    const fingerprinting = FormatUtils.categoryKey(detection) === 'fingerprint';
+    const meaning = fingerprinting ? null : DetectionModals.DIFFICULTY_MEANINGS[difficulty];
     if (elements.difficultyNote) {
       elements.difficultyNote.textContent = meaning ? _dmText(meaning[0], meaning[1]) : '';
       elements.difficultyNote.hidden = !meaning;
