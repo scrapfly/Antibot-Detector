@@ -43,6 +43,10 @@
           <span class="bulk-field-label" data-i18n="bulkTimeoutLabel">Time limit per page, in seconds</span>
           <input type="number" id="bulkTimeout" class="bulk-number" min="10" max="120" step="1" value="45" inputmode="numeric">
         </label>
+        <label class="bulk-field">
+          <span class="bulk-field-label" data-i18n="bulkDelayLabel">Wait between pages, in seconds</span>
+          <input type="number" id="bulkDelay" class="bulk-number" min="0" max="60" step="1" value="0" inputmode="numeric">
+        </label>
         <button type="button" class="bulk-btn bulk-btn--primary" id="bulkStartBtn" data-i18n="bulkStart">Start</button>
       </div>
       <p class="bulk-notice" id="bulkNotice" role="status" hidden></p>
@@ -82,6 +86,9 @@
           <option value="found" data-i18n="bulkFilterFound">With protections</option>
           <option value="clear" data-i18n="bulkFilterClear">No protection found</option>
           <option value="problem" data-i18n="bulkFilterProblem">Failed or skipped</option>
+          <option value="httpError" data-i18n="bulkFilterHttpError">Error status (4xx, 5xx)</option>
+          <!-- One "Only <protection>" per protection the run found, most pages first (bulk.js syncFilterOptions) -->
+          <optgroup id="bulkFilterProtections" label="Protections" hidden></optgroup>
         </select>
         <span class="bulk-muted" id="bulkFilterNote" aria-live="polite"></span>
       </div>

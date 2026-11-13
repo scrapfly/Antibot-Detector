@@ -5612,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "组合"
   },
+  "historyFilterHttpError": {
+    "message": "错误状态"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "仅显示错误状态的页面（4xx、5xx）"
+  },
   "historyNoResults": {
     "message": "没有符合搜索或筛选条件的记录。"
   },
@@ -6608,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "每个页面的时间限制（秒）"
   },
+  "bulkDelayLabel": {
+    "message": "页面之间的等待时间（秒）"
+  },
   "bulkStart": {
     "message": "开始"
   },
@@ -6645,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "失败或已跳过",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "错误状态（4xx、5xx）"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "仅 {0}"
   },
   "bulkCopyLines": {
     "message": "复制为行"

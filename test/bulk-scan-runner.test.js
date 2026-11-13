@@ -469,3 +469,106 @@ test('settings that stop reading during a run stop it before the next page is op
   await finished(w);
   assert.deepEqual(w.stored().items.map(i => i.status), ['done', 'done', 'done'], 'Scan the waiting pages goes on from where it stopped');
 });
+
+// ---- 3.1.9: "Wait between pages" ----
+
+/** A clock the test moves: the run's sleep records what it was asked to wait and moves the clock by it (or waits to be ended). */
+function clocked(w, { hang = false } = {}) {
+  const clock = { offset: 0, waits: [] };
+  const RealDate = Date;
+  class FakeDate extends RealDate {
+    constructor(...args) { if (args.length) super(...args); else super(RealDate.now() + clock.offset); }
+    static now() { return RealDate.now() + clock.offset; }
+  }
+  w.ctx.Date = FakeDate;
+  w.Runner.sleep = (ms) => {
+    clock.waits.push(ms);
+    if (hang) return new Promise(() => {});
+    clock.offset += ms;
+    return Promise.resolve();
+  };
+  return clock;
+}
+
+test('the run waits the chosen time after each page it visits (not before the first), and a wait of 0 keeps the short gap', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: [] }, 'https://b.example/': { results: [] }, 'https://c.example/': { results: [] } } });
+  const clock = clocked(w);
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/', 'https://c.example/'], delaySec: 5 });
+  await finished(w);
+  assert.equal(w.stored().status, 'done');
+  assert.equal(w.stored().delaySec, 5, 'kept on the run');
+  assert.equal(clock.waits.length, 2, 'between pages only');
+  assert.ok(clock.waits.every(ms => ms > 4900 && ms <= 5000), clock.waits.join(','));
+
+  const quick = world({ scans: { 'https://a.example/': { results: [] }, 'https://b.example/': { results: [] } } });
+  const fast = clocked(quick);
+  await quick.Runner.start({ entries: ['https://a.example/', 'https://b.example/'] });
+  await finished(quick);
+  assert.equal(quick.stored().delaySec, 0, 'none chosen: no wait');
+  assert.deepEqual(fast.waits, [quick.Runner.GAP_MS]);
+});
+
+test('Stop during the wait ends it at once: nothing else opens', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: [] }, 'https://b.example/': { results: [] } } });
+  const clock = clocked(w, { hang: true });
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/'], delaySec: 60 });
+  while (!clock.waits.length) await tick(2);
+  assert.equal(await w.Runner.stop(), true);
+  await finished(w);
+  assert.equal(w.stored().status, 'stopped');
+  assert.deepEqual(w.stored().items.map(i => i.status), ['done', 'waiting']);
+  assert.equal(w.log.created.length, 1);
+});
+
+test('Pause during the wait ends it at once; Resume waits only what is left of it, then goes on', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: [] }, 'https://b.example/': { results: [] } } });
+  const clock = clocked(w, { hang: true });
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/'], delaySec: 30 });
+  while (!clock.waits.length) await tick(2);
+  assert.equal(await w.Runner.pause(), true);
+  await tick(5);
+  assert.equal(w.log.created.length, 1, 'paused while waiting: nothing opens');
+  clock.offset += 10000; // ten seconds go by while it is paused
+  w.Runner.sleep = (ms) => { clock.waits.push(ms); clock.offset += ms; return Promise.resolve(); };
+  assert.equal(await w.Runner.resume(), true);
+  await finished(w);
+  assert.equal(w.stored().status, 'done');
+  const rest = clock.waits[clock.waits.length - 1];
+  assert.ok(rest > 19000 && rest <= 20000, `the 20 s left, not the whole 30 s: ${rest}`);
+});
+
+test('the wait survives a worker restart: a paused run keeps it, and the new worker waits what is left before the next page', async () => {
+  const session = {};
+  const first = world({ session, scans: { 'https://a.example/': { results: [] } } });
+  clocked(first, { hang: true });
+  await first.Runner.start({ entries: ['https://a.example/', 'https://b.example/'], delaySec: 40 });
+  while (!first.stored() || first.stored().items[0].status !== 'done') await tick(2);
+  await first.Runner.pause();
+  first.Runner._run = null;
+  assert.equal(session[first.Runner.STATE_KEY].delaySec, 40);
+  const second = world({ session, scans: { 'https://b.example/': { results: [] } } });
+  const clock = clocked(second);
+  clock.offset += 15000;
+  assert.equal((await second.Runner.state()).delaySec, 40, 'recover keeps it');
+  assert.equal(await second.Runner.resume(), true);
+  await finished(second);
+  assert.equal(second.stored().status, 'done');
+  assert.ok(clock.waits[0] > 24000 && clock.waits[0] <= 25000, `what is left of the 40 s: ${clock.waits[0]}`);
+});
+
+test('"Scan the pages still waiting" keeps the run\'s wait unless the page sends another', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: [] }, 'https://b.example/': { silent: true } } });
+  clocked(w);
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/'], delaySec: 7, timeoutSec: 120 });
+  while (w.log.created.length < 2) await tick(2);
+  await w.Runner.stop();
+  await finished(w);
+  await w.Runner.start({ continueRun: true });
+  assert.equal(w.Runner._run.delaySec, 7);
+  await w.Runner.stop();
+  await finished(w);
+  await w.Runner.start({ continueRun: true, delaySec: 2 });
+  assert.equal(w.Runner._run.delaySec, 2);
+  await w.Runner.stop();
+  await finished(w);
+});

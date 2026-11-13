@@ -5612,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "संयोजन"
   },
+  "historyFilterHttpError": {
+    "message": "त्रुटि स्थिति"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "केवल त्रुटि स्थिति वाले पेज (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "आपकी खोज या फ़िल्टर से कोई प्रविष्टि मेल नहीं खाती।"
   },
@@ -6608,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "हर पेज की समय सीमा, सेकंड में"
   },
+  "bulkDelayLabel": {
+    "message": "पेजों के बीच प्रतीक्षा, सेकंड में"
+  },
   "bulkStart": {
     "message": "शुरू करें"
   },
@@ -6645,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "विफल या छोड़े गए",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "त्रुटि स्थिति (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "केवल {0}"
   },
   "bulkCopyLines": {
     "message": "पंक्तियों के रूप में कॉपी करें"

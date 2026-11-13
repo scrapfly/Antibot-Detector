@@ -460,3 +460,75 @@ test('without session storage the page opens as before, with an empty list', asy
   await page.open();
   assert.equal(page.byId('bulkInput').value, '');
 });
+
+// ---- 3.1.9: Show → Error status and Only <protection> ----
+
+test('Show lists "Only <protection>" for each protection the run found, most pages first, and keeps the list while the run adds pages', async () => {
+  const cf = { name: 'Cloudflare', category: 'antibot', confidence: 90 };
+  const dd = { name: 'DataDome', category: 'antibot', confidence: 90 };
+  const page = pageWorld({ run: runOf([finished('https://a.example/', [dd]), finished('https://b.example/', [cf]), finished('https://c.example/', [cf, dd]), finished('https://d.example/', [cf])]) });
+  await page.open();
+  const group = page.byId('bulkFilterProtections');
+  assert.equal(group.hidden, false);
+  assert.equal(group.label, en.statsStackColumn.message);
+  assert.deepEqual(group.children.map(o => [o.value, o.textContent]), [
+    ['protection:Cloudflare', 'Only ⁨Cloudflare⁩'], ['protection:DataDome', 'Only ⁨DataDome⁩']]);
+  const before = group.children;
+  page.update(runOf([finished('https://a.example/', [dd]), finished('https://b.example/', [cf]), finished('https://c.example/', [cf, dd]), finished('https://d.example/', [cf]), finished('https://e.example/', [])]));
+  assert.equal(group.children, before, 'the same protections: the list is not drawn again');
+
+  page.byId('bulkFilter').value = 'protection:DataDome';
+  page.handlers.bulkFilter.change({ target: page.byId('bulkFilter') });
+  assert.equal(page.local.bulkFilter, 'protection:DataDome', 'remembered like the other choices');
+  assert.deepEqual(page.rows().map(row => row.address), ['https://a.example/', 'https://c.example/']);
+  await page.handlers.bulkCopyLinesBtn.click();
+  assert.deepEqual(page.clipboard, ['https://a.example/: DataDome 90%\nhttps://c.example/: Cloudflare 90%, DataDome 90%'], 'Copy follows the filter');
+});
+
+test('a protection chosen on an earlier run stays listed and selected when this run has not found it (no page shown), and a run with none hides the group', async () => {
+  const page = pageWorld({ run: runOf([finished('https://b.example/', [])]), local: { bulkFilter: 'protection:Kasada' } });
+  await page.open();
+  assert.equal(page.byId('bulkFilter').value, 'protection:Kasada');
+  assert.deepEqual(page.byId('bulkFilterProtections').children.map(o => o.value), ['protection:Kasada']);
+  assert.equal(page.byId('bulkRows').children[0].children[0].children[0].textContent, en.bulkFilterNone.message);
+  page.byId('bulkFilter').value = 'all';
+  page.handlers.bulkFilter.change({ target: page.byId('bulkFilter') });
+  assert.equal(page.byId('bulkFilterProtections').hidden, true, 'nothing found, nothing chosen: no group');
+});
+
+test('Show → Error status keeps the pages that answered 4xx or 5xx, and the exports follow it', async () => {
+  const page = pageWorld({ run: runOf([
+    { ...finished('https://a.example/', []), httpStatus: 403 },
+    { ...finished('https://b.example/', []), httpStatus: 200 },
+    { ...finished('https://c.example/', []), httpStatus: 502 },
+    finished('https://d.example/', [])
+  ]), local: { bulkFilter: 'httpError' } });
+  await page.open();
+  assert.equal(page.byId('bulkFilter').value, 'httpError');
+  assert.deepEqual(page.rows().map(row => row.address), ['https://a.example/', 'https://c.example/']);
+  await page.handlers.bulkCopyLinesBtn.click();
+  assert.equal(page.clipboard[0].split('\n').length, 2);
+  const html = read('sections/bulk/bulk.html');
+  assert.match(html, /<option value="httpError" data-i18n="bulkFilterHttpError">Error status \(4xx, 5xx\)<\/option>\s*<!--[\s\S]*?-->\s*<optgroup id="bulkFilterProtections" label="Protections" hidden><\/optgroup>\s*<\/select>/);
+});
+
+test('"Wait between pages" beside the time limit: sent with Start (kept to 0 to 60), shown again from the run, locked while it runs', async () => {
+  const page = pageWorld({});
+  await page.open();
+  assert.equal(page.byId('bulkDelay').min, '0');
+  assert.equal(page.byId('bulkDelay').max, '60');
+  page.byId('bulkDelay').value = '90';
+  await page.start('https://a.example/');
+  const message = page.sent.find(item => item.type === page.ctx.WorkerMessages.BULK_SCAN_START);
+  assert.equal(message.delaySec, 60);
+  assert.equal(page.byId('bulkDelay').value, 60);
+  page.update({ ...runOf([{ url: 'https://a.example/', status: 'scanning' }], 'running'), delaySec: 60 });
+  assert.equal(page.byId('bulkDelay').disabled, true);
+
+  const reopened = pageWorld({ run: { ...runOf([finished('https://a.example/', [])]), delaySec: 15 } });
+  await reopened.open();
+  assert.equal(reopened.byId('bulkDelay').value, 15);
+  assert.equal(reopened.byId('bulkDelay').disabled, false);
+  const html = read('sections/bulk/bulk.html');
+  assert.match(html, /id="bulkTimeout"[^>]*>\s*<\/label>\s*<label class="bulk-field">\s*<span class="bulk-field-label" data-i18n="bulkDelayLabel">Wait between pages, in seconds<\/span>\s*<input type="number" id="bulkDelay" class="bulk-number" min="0" max="60" step="1" value="0" inputmode="numeric">/);
+});

@@ -5612,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Kombinationer"
   },
+  "historyFilterHttpError": {
+    "message": "Felstatus"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Bara sidor med felstatus (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Inga poster matchar din sökning eller dina filter."
   },
@@ -6608,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Tidsgräns per sida, i sekunder"
   },
+  "bulkDelayLabel": {
+    "message": "Väntetid mellan sidor, i sekunder"
+  },
   "bulkStart": {
     "message": "Starta"
   },
@@ -6645,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Misslyckade eller överhoppade",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Felstatus (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Bara {0}"
   },
   "bulkCopyLines": {
     "message": "Kopiera som rader"

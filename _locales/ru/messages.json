@@ -5612,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Комбинации"
   },
+  "historyFilterHttpError": {
+    "message": "Код ошибки"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Только страницы с кодом ошибки (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Нет записей, подходящих под поиск или фильтры."
   },
@@ -6608,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Лимит времени на страницу, в секундах"
   },
+  "bulkDelayLabel": {
+    "message": "Пауза между страницами, в секундах"
+  },
   "bulkStart": {
     "message": "Запустить"
   },
@@ -6645,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Со сбоем или пропущенные",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Код ошибки (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Только {0}"
   },
   "bulkCopyLines": {
     "message": "Копировать строками"

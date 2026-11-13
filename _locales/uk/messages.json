@@ -5612,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Комбінації"
   },
+  "historyFilterHttpError": {
+    "message": "Код помилки"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Лише сторінки з кодом помилки (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Немає записів, що відповідають пошуку чи фільтрам."
   },
@@ -6608,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Ліміт часу на сторінку, у секундах"
   },
+  "bulkDelayLabel": {
+    "message": "Пауза між сторінками, у секундах"
+  },
   "bulkStart": {
     "message": "Запустити"
   },
@@ -6645,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Зі збоєм або пропущені",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Код помилки (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Лише {0}"
   },
   "bulkCopyLines": {
     "message": "Копіювати рядками"

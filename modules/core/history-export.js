@@ -10,7 +10,9 @@
  *   fileName()  scrapfly-history-2026-10-19[-part-2].csv
  *
  * JSON is the format History imports again, so it always keeps every field and timestamp;
- * "Include timestamps" applies to the CSV and plain-text files.
+ * "Include timestamps" applies to the CSV and plain-text files. The page's HTTP status (3.1.9) is the CSV's last column
+ * (http_status, so the columns a sheet already reads keep their places), a line of the text file and the Markdown table's last
+ * column; an entry with no known status leaves it empty.
  */
 (function(root) {
   'use strict';
@@ -20,6 +22,9 @@
 
   // Loaded before this file in the popup and the worker; under Node it sits next to it
   const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
+  const HttpStatus = root.HttpStatus || (typeof require === 'function' ? require('./http-status.js') : undefined);
+  /** An entry's HTTP status, or '' when it is not known. */
+  const statusOf = (item) => (HttpStatus && item ? HttpStatus.of(item.httpStatus) : null) || '';
 
   const FORMATS = ['json', 'csv', 'txt', 'md'];
   const TYPES = { json: 'application/json', csv: 'text/csv', txt: 'text/plain', md: 'text/markdown' };
@@ -90,7 +95,7 @@
   };
 
   function buildCsv(items, includeTimestamps) {
-    const header = ['url', 'hostname', 'title', ...(includeTimestamps ? ['timestamp'] : []), 'protection', 'category', 'confidence', 'difficulty', 'pinned', 'note'];
+    const header = ['url', 'hostname', 'title', ...(includeTimestamps ? ['timestamp'] : []), 'protection', 'category', 'confidence', 'difficulty', 'pinned', 'note', 'http_status'];
     const lines = [header.join(',')];
     for (const item of items.filter(i => i && typeof i === 'object')) {
       const detections = detectionsOf(item).length ? detectionsOf(item) : [null];
@@ -98,7 +103,7 @@
         lines.push([
           item.url, item.hostname, item.title, ...(includeTimestamps ? [isoOf(item)] : []),
           d ? detectionName(d) : '', d ? detectionCategory(d) : '', d && Number.isFinite(Number(d.confidence)) ? Math.round(Number(d.confidence)) : '',
-          d ? (d.difficulty || (d.detector && d.detector.difficulty) || '') : '', item.pinned === true ? 'yes' : '', item.note || ''
+          d ? (d.difficulty || (d.detector && d.detector.difficulty) || '') : '', item.pinned === true ? 'yes' : '', item.note || '', statusOf(item)
         ].map(csvCell).join(','));
       }
     }
@@ -109,6 +114,7 @@
     return items.filter(i => i && typeof i === 'object').map((item) => {
       const lines = [item.title || item.hostname || item.url || '', item.url || ''];
       if (includeTimestamps && timeOf(item)) lines.push(`Date: ${isoOf(item)}`);
+      if (statusOf(item)) lines.push(`HTTP status: ${statusOf(item)}`);
       const found = detectionsOf(item).map(d => `${detectionName(d)} (${detectionCategory(d)}${Number.isFinite(Number(d.confidence)) ? `, ${Math.round(Number(d.confidence))}%` : ''})`);
       lines.push(`Protections: ${found.length ? found.join('; ') : '-'}`);
       if (item.pinned === true) lines.push('Pinned');
@@ -137,12 +143,12 @@
   }
 
   function buildMarkdown(items, includeTimestamps) {
-    const header = ['Page', 'Address', ...(includeTimestamps ? ['Date'] : []), 'Protections', 'Pinned', 'Note'];
+    const header = ['Page', 'Address', ...(includeTimestamps ? ['Date'] : []), 'Protections', 'Pinned', 'Note', 'HTTP status'];
     const lines = ['# Scrapfly Antibot Detector: History', '', `| ${header.join(' | ')} |`, `| ${header.map(() => '---').join(' | ')} |`];
     for (const item of items.filter(i => i && typeof i === 'object')) {
       const found = detectionsOf(item).map(d => `${detectionName(d)} (${detectionCategory(d)}${Number.isFinite(Number(d.confidence)) ? `, ${Math.round(Number(d.confidence))}%` : ''})`);
       lines.push(`| ${[mdCell(item.title || item.hostname || ''), mdAddress(item.url), ...(includeTimestamps ? [mdCell(isoOf(item))] : []),
-        mdCell(found.length ? found.join('; ') : '-'), mdCell(item.pinned === true ? 'yes' : ''), mdCell(item.note || '')].join(' | ')} |`);
+        mdCell(found.length ? found.join('; ') : '-'), mdCell(item.pinned === true ? 'yes' : ''), mdCell(item.note || ''), mdCell(statusOf(item))].join(' | ')} |`);
     }
     return `${lines.join('\n')}\n`;
   }

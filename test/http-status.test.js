@@ -157,3 +157,11 @@ test('BackgroundTabScan passes the status to the Bulk runner only when it is kno
   assert.equal(outcomes[0].httpStatus, 503);
   assert.equal('httpStatus' in outcomes[1], false);
 });
+
+test('History gets the status too: the scan\'s entry, and a watchlist check through its background tab', () => {
+  const lifecycle = read('background/detection-lifecycle.js');
+  const save = lifecycle.slice(lifecycle.indexOf('// Save complete detections'), lifecycle.indexOf('HistoryRecorder.saveDetectionToHistory(tabId, pageData, finalResults'));
+  assert.match(save, /\.\.\.\(state\.httpStatus \? \{ httpStatus: state\.httpStatus \} : \{\}\)/, 'the History entry of a scan carries it');
+  assert.match(lifecycle, /if \(watching\) BackgroundTabScan\.scanFinished\(tabId, state\.url, finalResults, \{ httpStatus: state\.httpStatus \}\);/, 'a watch check gets it');
+  assert.match(read('background/history-watch.js'), /HistoryRecorder\.applyWatchResult\(entry\.id, first\.results, chrome, Date\.now\(\), \{ httpStatus: first\.httpStatus \}\)/);
+});

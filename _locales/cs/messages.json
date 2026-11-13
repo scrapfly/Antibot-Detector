@@ -5612,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Kombinace"
   },
+  "historyFilterHttpError": {
+    "message": "Chybový stav"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Jen stránky s chybovým stavem (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Hledání ani filtrům neodpovídá žádná položka."
   },
@@ -6608,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Časový limit na stránku v sekundách"
   },
+  "bulkDelayLabel": {
+    "message": "Prodleva mezi stránkami v sekundách"
+  },
   "bulkStart": {
     "message": "Spustit"
   },
@@ -6645,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Selhaly nebo přeskočeny",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Chybový stav (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Pouze {0}"
   },
   "bulkCopyLines": {
     "message": "Kopírovat jako řádky"

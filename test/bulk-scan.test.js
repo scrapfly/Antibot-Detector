@@ -606,3 +606,25 @@ test('the runner hands the page\'s HTTP status to finish(), and the table shows 
   const css = fs.readFileSync(path.join(__dirname, '..', 'sections/bulk/bulk.css'), 'utf8');
   for (const tone of ['ok', 'warn', 'error']) assert.match(css, new RegExp(`\\.bulk-http${tone === 'ok' ? '' : `--${tone}`} \\{`), tone);
 });
+
+test('"Wait between pages": 0 to 60 seconds on the run (0 by default), counted from the end of the last page visited', () => {
+  const make = (delaySec) => BulkScan.createRun(BulkScan.prepare(['https://a.example/', 'https://b.example/', 'https://c.example/']), { now: 1000, delaySec });
+  assert.deepEqual([undefined, 0, 12, '30', -5, 61, 'x'].map(value => make(value).delaySec), [0, 0, 12, 30, 0, 60, 0]);
+  assert.deepEqual(BulkScan.DELAY_S, { min: 0, max: 60, default: 0 });
+  const run = make(10);
+  assert.equal(BulkScan.waitBefore(run, 5000), 0, 'nothing visited yet: no wait before the first page');
+  BulkScan.begin(run, 0, 1000);
+  BulkScan.finish(run, 0, {}, 2000);
+  assert.equal(BulkScan.waitBefore(run, 2000), 10000);
+  assert.equal(BulkScan.waitBefore(run, 9000), 3000, 'what is left of it');
+  assert.equal(BulkScan.waitBefore(run, 20000), 0);
+  assert.equal(BulkScan.waitBefore(run, -50000), 10000, 'a clock that went back never makes it longer');
+  BulkScan.begin(run, 1, 3000);
+  BulkScan.fail(run, 1, 'timeout', 6000);
+  assert.equal(BulkScan.waitBefore(run, 6000), 10000, 'a page that failed was visited too');
+  BulkScan.skip(run, 2, 'scope', 50000);
+  assert.equal(BulkScan.waitBefore(run, 16000), 0, 'a page skipped for its site was never opened');
+  assert.equal(BulkScan.waitBefore(make(0), 0), 0);
+  assert.equal(BulkScan.waitBefore(null), 0);
+  assert.equal(JSON.parse(BulkScan.build(run, { format: 'json' }).text).run.delaySec, 10, 'the JSON export says it');
+});

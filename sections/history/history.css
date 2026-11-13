@@ -109,6 +109,14 @@
   --chip-color: var(--warning-light);
 }
 
+.history-filter-chip--http {
+  --chip-color: var(--danger-light);
+}
+
+.history-filter-chip[hidden] {
+  display: none;
+}
+
 .history-filter-icon {
   display: inline-flex;
   color: var(--chip-color);
@@ -293,6 +301,27 @@
   outline: none;
   background: var(--bg-tertiary);
   color: var(--text-primary);
+}
+
+/* A filter that is on or off (Error status): the check mark at the end shows it is on; its label may take two lines rather
+   than widen the menu past the popup */
+.history-menu-check {
+  max-width: 260px;
+  white-space: normal;
+  line-height: 1.3;
+}
+
+.history-menu-check > span {
+  flex: 1;
+}
+
+.history-menu-check .history-menu-check-mark {
+  visibility: hidden;
+  color: var(--accent);
+}
+
+.history-menu-check[aria-checked="true"] .history-menu-check-mark {
+  visibility: visible;
 }
 
 .history-menu-item-danger,
@@ -491,6 +520,29 @@
   flex-shrink: 0;
   color: var(--text-muted);
   font-size: 9px;
+}
+
+/* The page's HTTP status, quiet beside the time; amber for 4xx and red for 5xx, as in Bulk scan */
+.history-http {
+  flex-shrink: 0;
+  margin-inline-start: auto;
+  font-size: 11px;
+  line-height: 14px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-secondary);
+}
+
+.history-http--warn {
+  color: var(--warning-light);
+}
+
+.history-http--error {
+  color: var(--danger-light);
+}
+
+/* Beside the time, at the end of the row: the time no longer pushes itself away from the status */
+.history-http + .history-timestamp {
+  margin-inline-start: 0;
 }
 
 .history-timestamp {
@@ -1722,6 +1774,16 @@
 .history-compare-range {
   line-height: 1.4;
   overflow-wrap: anywhere;
+}
+
+.history-compare-http {
+  margin-top: -4px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+
+.history-compare-http[hidden] {
+  display: none;
 }
 
 /* Four counts, the number in the colour of its group; a kind with none is dimmed. Not buttons: they filter nothing,

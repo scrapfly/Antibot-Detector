@@ -5612,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Kombinacje"
   },
+  "historyFilterHttpError": {
+    "message": "Status błędu"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Tylko strony ze statusem błędu (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Żaden wpis nie pasuje do wyszukiwania ani filtrów."
   },
@@ -6608,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Limit czasu na stronę, w sekundach"
   },
+  "bulkDelayLabel": {
+    "message": "Przerwa między stronami, w sekundach"
+  },
   "bulkStart": {
     "message": "Rozpocznij"
   },
@@ -6645,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Nieudane lub pominięte",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Status błędu (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Tylko {0}"
   },
   "bulkCopyLines": {
     "message": "Kopiuj jako wiersze"

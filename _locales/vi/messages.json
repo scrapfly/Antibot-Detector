@@ -5612,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Tổ hợp"
   },
+  "historyFilterHttpError": {
+    "message": "Trạng thái lỗi"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Chỉ các trang có trạng thái lỗi (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Không có mục nào khớp với tìm kiếm hoặc bộ lọc của bạn."
   },
@@ -6608,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Giới hạn thời gian mỗi trang, tính bằng giây"
   },
+  "bulkDelayLabel": {
+    "message": "Thời gian chờ giữa các trang, tính bằng giây"
+  },
   "bulkStart": {
     "message": "Bắt đầu"
   },
@@ -6645,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Thất bại hoặc bỏ qua",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Trạng thái lỗi (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Chỉ {0}"
   },
   "bulkCopyLines": {
     "message": "Sao chép theo dòng"

@@ -186,15 +186,15 @@ test('"Copy as Markdown" copies the entry as the heading and table History expor
   assert.equal(copied.length, 1);
   assert.deepEqual(copied[0].split('\n'), [
     '# Scrapfly Antibot Detector: History', '',
-    '| Page | Address | Date | Protections | Pinned | Note |', '| --- | --- | --- | --- | --- | --- |',
-    '| Shop \\| Cart | <https://shop.example/cart> | 2026-10-19T12:00:00.000Z | Cloudflare (antibot, 90%) | yes | check later |', '']);
+    '| Page | Address | Date | Protections | Pinned | Note | HTTP status |', '| --- | --- | --- | --- | --- | --- | --- |',
+    '| Shop \\| Cart | <https://shop.example/cart> | 2026-10-19T12:00:00.000Z | Cloudflare (antibot, 90%) | yes | check later |  |', '']);
   assert.ok(!copied[0].includes('SECRET'), 'neither the query nor a cookie value');
 
   // The timestamps follow the History setting, as in the export
   const plain = load({ settings: { includeTimestamps: false } });
   plain.context.FormatUtils.copyToClipboard = async (text) => { copied.push(text); return true; };
   await plain.view.copyHistoryItemMarkdown(item);
-  assert.match(copied[1], /\| Page \| Address \| Protections \| Pinned \| Note \|/);
+  assert.match(copied[1], /\| Page \| Address \| Protections \| Pinned \| Note \| HTTP status \|/);
 });
 
 test('the entry menu offers it, wired to its own action', () => {

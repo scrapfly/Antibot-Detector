@@ -5612,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Combinaties"
   },
+  "historyFilterHttpError": {
+    "message": "Foutstatus"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Alleen pagina's met een foutstatus (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Geen items komen overeen met je zoekopdracht of filters."
   },
@@ -6608,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Tijdslimiet per pagina, in seconden"
   },
+  "bulkDelayLabel": {
+    "message": "Wachttijd tussen pagina's, in seconden"
+  },
   "bulkStart": {
     "message": "Starten"
   },
@@ -6645,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Mislukt of overgeslagen",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Foutstatus (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Alleen {0}"
   },
   "bulkCopyLines": {
     "message": "Kopiëren als regels"

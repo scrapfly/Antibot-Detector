@@ -5612,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Kombinasi"
   },
+  "historyFilterHttpError": {
+    "message": "Status galat"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Hanya halaman dengan status galat (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Tidak ada entri yang cocok dengan pencarian atau filter Anda."
   },
@@ -6608,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Batas waktu per halaman, dalam detik"
   },
+  "bulkDelayLabel": {
+    "message": "Jeda antarhalaman, dalam detik"
+  },
   "bulkStart": {
     "message": "Mulai"
   },
@@ -6645,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Gagal atau dilewati",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Status galat (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Hanya {0}"
   },
   "bulkCopyLines": {
     "message": "Salin sebagai baris"

@@ -5612,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "組み合わせ"
   },
+  "historyFilterHttpError": {
+    "message": "エラーステータス"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "エラーステータスのページのみ（4xx、5xx）"
+  },
   "historyNoResults": {
     "message": "検索条件またはフィルターに一致するエントリはありません。"
   },
@@ -6608,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "1 ページあたりの制限時間（秒）"
   },
+  "bulkDelayLabel": {
+    "message": "ページ間の待機時間（秒）"
+  },
   "bulkStart": {
     "message": "開始"
   },
@@ -6645,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "失敗またはスキップ",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "エラーステータス（4xx、5xx）"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "{0} のみ"
   },
   "bulkCopyLines": {
     "message": "行としてコピー"

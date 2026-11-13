@@ -5612,6 +5612,12 @@
   "historyFilterCombinations": {
     "message": "Kombinasyonlar"
   },
+  "historyFilterHttpError": {
+    "message": "Hata durumu"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Yalnızca hata durumlu sayfalar (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Aramanızla veya filtrelerinizle eşleşen girdi yok."
   },
@@ -6608,6 +6614,9 @@
   "bulkTimeoutLabel": {
     "message": "Sayfa başına süre sınırı (saniye)"
   },
+  "bulkDelayLabel": {
+    "message": "Sayfalar arası bekleme (saniye)"
+  },
   "bulkStart": {
     "message": "Başlat"
   },
@@ -6645,6 +6654,12 @@
   "bulkFilterProblem": {
     "message": "Başarısız veya atlanan",
     "description": "Bulk scan results filter: pages that failed or were skipped"
+  },
+  "bulkFilterHttpError": {
+    "message": "Hata durumu (4xx, 5xx)"
+  },
+  "bulkFilterOnlyFmt": {
+    "message": "Yalnızca {0}"
   },
   "bulkCopyLines": {
     "message": "Satırlar olarak kopyala"
