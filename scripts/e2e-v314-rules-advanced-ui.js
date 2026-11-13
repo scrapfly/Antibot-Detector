@@ -199,7 +199,7 @@ async function scenario(name, fn) {
     await popup.waitForFunction(() => document.querySelector('#settingsModal').classList.contains('is-open'), null, { polling: 200, timeout: 10000 });
     await popup.$eval('.settings-tab-btn[data-settings-tab="data"]', el => el.click());
     await popup.$eval('#storageTotalText', el => el.closest('.data-card-head').click());
-    await popup.waitForFunction(() => document.querySelectorAll('#storageRows .storage-row').length === 8, null, { polling: 200, timeout: 10000 });
+    await popup.waitForFunction(() => document.querySelectorAll('#storageRows .storage-row').length === 9, null, { polling: 200, timeout: 10000 });
     await popup.$eval('[data-clear="updates"]', el => el.click());
     await popup.waitForSelector('.notification-confirm .notification-btn-confirm');
     await popup.$eval('.notification-btn-confirm', el => el.click());
