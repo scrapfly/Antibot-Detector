@@ -379,7 +379,8 @@ async function scenario(name, fn) {
     assert.equal(unchanged.toggle.controls, unchanged.list.id);
     assert.equal(unchanged.list.display, 'none');
     assert.equal(unchanged.rows.length, 9);
-    assert.ok(m.dialog.height < 400, `the dialog is short with Unchanged folded (it was about 490px with nine rows): ${Math.round(m.dialog.height)}px`);
+    // 3.2.0: the This page / Any page pills make the label's line a few pixels taller (about 396px before, 401px with them)
+    assert.ok(m.dialog.height < 410, `the dialog is short with Unchanged folded (it was about 490px with nine rows): ${Math.round(m.dialog.height)}px`);
     assertFits(m, 'one folded');
     await closeCompare(page);
     await page.close();
@@ -425,7 +426,7 @@ async function scenario(name, fn) {
       order.push(await page.evaluate(() => { const a = document.activeElement; return a.tagName === 'SELECT' ? 'select' : (a.className.match(/history-compare-scope-btn|history-compare-copy|history-compare-result|history-compare-toggle|notification-btn-cancel|notification-btn-confirm|notification-confirm-close/) || [a.className])[0]; }));
     }
     assert.deepEqual(order, ['history-compare-copy', 'history-compare-result', 'history-compare-toggle', 'notification-btn-cancel', 'notification-btn-confirm', 'notification-confirm-close',
-      'history-compare-scope-btn', 'history-compare-scope-btn', 'select'], 'the dialog keeps focus inside, in reading order');
+      'history-compare-scope-btn', 'history-compare-scope-btn', 'select'], `the dialog keeps focus inside, in reading order: ${order.join(', ')}`);
     // Enter on the Copy button still copies and closes
     await page.focus('.notification-btn-confirm');
     await page.keyboard.press('Enter');
@@ -620,7 +621,7 @@ async function scenario(name, fn) {
     });
     let s = await state();
     assert.deepEqual(s.pills.map(p => p.slice(0, 2)), [['This page', 'true'], ['Any page', 'false']]);
-    assert.ok(s.pills.every(p => p[2] <= 24), 'small pills');
+    assert.ok(s.pills.every(p => p[2] <= 22), 'small pills');
     assert.ok(s.headLines <= 24, `the label and the pills are one line: ${s.headLines}px`);
     assert.equal(s.searchShown, false);
     assert.deepEqual(s.options.map(o => o[0]), ['mix-before', 'mix-oldest']);

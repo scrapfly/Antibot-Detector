@@ -633,6 +633,7 @@ test('the dialog: "This page" and "Any page" switch the list; Any page lists eve
   assert.deepEqual([page.getAttribute('aria-pressed'), any.getAttribute('aria-pressed')], ['true', 'false'], 'this page first, when it has another scan');
   assert.equal(page.getAttribute('type'), 'button');
   assert.equal(searchBox(d).hidden, true, 'no filter for one page');
+  assert.equal(searchBox(d).disabled, true, 'and out of the Tab order (the dialog\'s trap lists enabled inputs)');
   assert.equal(searchBox(d).getAttribute('aria-label'), 'Filter by address or title');
   assert.equal(searchBox(d).getAttribute('placeholder'), 'Filter by address or title');
   assert.deepEqual(d.select.children.map(o => o.value), ['before']);
@@ -641,6 +642,7 @@ test('the dialog: "This page" and "Any page" switch the list; Any page lists eve
   any.click();
   assert.deepEqual([page.getAttribute('aria-pressed'), any.getAttribute('aria-pressed')], ['false', 'true']);
   assert.equal(searchBox(d).hidden, false);
+  assert.equal(searchBox(d).disabled, false);
   assert.deepEqual(d.select.children.map(o => o.value), ['login', 'news', 'before']);
   assert.equal(d.select.value, 'before', 'the scan picked stays picked');
   assert.equal(d.select.children[1].textContent, `${shortAt(T0 + HOUR)} · 1 found · news.example/front`, 'each scan names its page');

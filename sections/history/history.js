@@ -1319,6 +1319,8 @@ class History {
         button.classList.toggle('is-active', on);
       }
       search.hidden = scope !== 'any';
+      // Hidden and disabled together: the dialog's Tab trap lists enabled inputs, and a hidden one would hold the focus back
+      search.disabled = scope !== 'any';
     };
     fill();
     showScope();
