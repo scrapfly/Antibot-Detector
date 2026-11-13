@@ -14,7 +14,7 @@ const plain = (value) => JSON.parse(JSON.stringify(value));
 const tick = (ms = 5) => new Promise(resolve => setTimeout(resolve, ms));
 
 const FILES = ['modules/core/worker-messages.js', 'modules/core/categories.js', 'modules/core/domain-list.js', 'modules/core/scan-scope.js',
-  'modules/core/message-sender.js', 'modules/core/bulk-scan.js', 'background/background-tab-scan.js', 'background/bulk-scan-runner.js'];
+  'modules/core/message-sender.js', 'modules/core/bulk-scan.js', 'modules/core/bulk-runs.js', 'background/background-tab-scan.js', 'background/bulk-scan-runner.js'];
 
 /**
  * @param {object} options
@@ -591,4 +591,81 @@ test('the keepalive is renewed after the wait between pages, just before each pa
   const sinceWait = events.join(' ').split('wait').slice(1);
   assert.equal(sinceWait.length, 2, events.join(' '));
   for (const part of sinceWait) assert.match(part, /renew\s+tab/, events.join(' '));
+});
+
+// ---- 3.2.0: the runs that finished are kept to compare the next run of the list with ----
+
+const KEPT = 'scrapfly_bulk_runs';
+
+test('a run that is done is kept in local storage, slim; a run of the same list again keeps the one before it', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: found('Kasada') }, 'https://b.example/': { results: [] } } });
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/', 'mailto:x@y.example'] });
+  await finished(w);
+  const first = w.local[KEPT];
+  assert.equal(first.lists.length, 1);
+  assert.equal(first.lists[0].latest.id, w.stored().id);
+  assert.deepEqual(plain(first.lists[0].latest.items.map(i => [i.url, i.status])), [['https://a.example/', 'done'], ['https://b.example/', 'done'], ['mailto:x@y.example', 'skipped']]);
+  assert.deepEqual(plain(first.lists[0].latest.items[0].detections), [{ name: 'Kasada', category: 'antibot', confidence: 90 }]);
+  const firstId = w.stored().id;
+  await w.Runner.clear();
+  await new Promise(resolve => setTimeout(resolve, 2)); // a new id
+  await w.Runner.start({ entries: ['https://b.example/', 'https://a.example/'] });
+  await finished(w);
+  const kept = w.local[KEPT].lists;
+  assert.equal(kept.length, 1, 'the same list, in another order');
+  assert.equal(kept[0].previous.id, firstId);
+  assert.equal(w.ctx.BulkRuns.previousFor(w.local[KEPT], w.stored()).id, firstId);
+});
+
+test('a run that is stopped is not kept; its continuation is, once it is done', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: [] }, 'https://b.example/': { results: [], delay: 30 } } });
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/'] });
+  await tick(15);
+  await w.Runner.stop();
+  await finished(w);
+  assert.equal(w.stored().status, 'stopped');
+  assert.equal(w.local[KEPT], undefined, 'a stopped run is not the list\'s result');
+  await w.Runner.start({ continueRun: true });
+  await finished(w);
+  assert.equal(w.stored().status, 'done');
+  assert.equal(w.local[KEPT].lists[0].latest.items.length, 2);
+});
+
+test('a run started from a private window, or while History is paused, is never kept', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: [] } } });
+  const registry = {};
+  w.Runner.registerHandlers(registry);
+  const answer = await new Promise(resolve => registry[w.ctx.WorkerMessages.BULK_SCAN_START]({
+    request: { entries: ['https://a.example/'], privateWindow: false },
+    sender: { url: 'chrome-extension://abc/sections/bulk/bulk.html', tab: { id: 1, incognito: true } },
+    sendResponse: resolve
+  }));
+  assert.equal(answer.status, 'ok');
+  await finished(w);
+  assert.equal(w.stored().status, 'done');
+  assert.equal(w.stored().private, true, 'the sender says it, not the page');
+  assert.equal(w.local[KEPT], undefined);
+
+  const paused = world({ scans: { 'https://a.example/': { results: [] } } });
+  paused.ctx.Utils.getSettings = async () => ({ detection: { scanMode: 'blocklist', blacklistedDomains: [], allowedDomains: [] }, history: { historyEnabled: false } });
+  await paused.Runner.start({ entries: ['https://a.example/'] });
+  await finished(paused);
+  assert.equal(paused.stored().status, 'done');
+  assert.equal(paused.local[KEPT], undefined);
+});
+
+test('the person\'s other CSV columns are kept on the run\'s pages, checked, and carried into a continued run', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: [] }, 'https://b.example/': { results: [], delay: 30 } } });
+  await w.Runner.start({ entries: ['https://a.example/', 'b.example'], extras: { columns: ['owner'], rows: { 'https://a.example/': ['Ann'], 'https://b.example/': ['Bob', 'extra'] } } });
+  assert.deepEqual(plain(w.stored().columns), ['owner']);
+  assert.deepEqual(plain(w.stored().items.map(i => i.extra)), [['Ann'], ['Bob']]);
+  await tick(15);
+  await w.Runner.stop();
+  await finished(w);
+  await w.Runner.start({ continueRun: true });
+  await finished(w);
+  assert.deepEqual(plain(w.stored().columns), ['owner']);
+  assert.deepEqual(plain(w.stored().items.map(i => [i.url, i.extra])), [['https://a.example/', ['Ann']], ['https://b.example/', ['Bob']]]);
+  // Kept runs never hold them
+  assert.ok(!JSON.stringify(w.local[KEPT]).includes('Ann'));
 });
