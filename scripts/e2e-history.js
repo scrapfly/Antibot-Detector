@@ -672,7 +672,7 @@ async function scenario(name, fn) {
       assert.equal(await page.$eval('#historyFilters', el => el.hidden), false, 'the chips show once History has entries');
       assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip:not([hidden])', els => els.map(el => el.textContent.trim().replace(/\s+/g, ' '))), ['Pinned', 'Changed', 'Anti-bot', 'Captcha', 'Fingerprint', 'Combinations']);
       assert.equal(await page.$$eval('#historyFilters .category-icon svg', els => els.length), 3, 'the category chips carry their icons');
-      assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip', els => els.map(el => {
+      assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip:not([hidden])', els => els.map(el => {
         const icon = el.querySelector('.history-filter-icon svg');
         const box = icon && icon.getBoundingClientRect();
         return [el.dataset.filter, !!icon && box.width > 0 && box.height > 0];
