@@ -18,6 +18,9 @@
  *                    more: a running one is stopped, never left "running"; a paused one stays paused). finish() keeps a
  *                    page's outcome with its HTTP status when it is known (the status code of the response that loaded
  *                    it: a block page answers 403, 429 or 503), which the table and every export show
+ *   waitBefore()     how long the run still waits before its next page: "Wait between pages" (delaySec, 0 to 60 s) counts
+ *                    from the end of the last page visited, so a run resumed, or taken on by a worker that started again,
+ *                    waits only what is left of it
  *   hold(), release()   a pause the person did not ask for ('off': the extension was switched off, so no page can be
  *                    scanned): the page being scanned waits again at once, and the reason stays until the extension is
  *                    on again (release) or the run resumes
@@ -39,6 +42,7 @@
 
   const MAX_URLS = 200;            // pages per run, at most
   const TIMEOUT_S = Object.freeze({ min: 10, max: 120, default: 45 });
+  const DELAY_S = Object.freeze({ min: 0, max: 60, default: 0 });  // the wait between two pages ("Wait between pages")
   const MAX_SKIPPED_LISTED = 200;  // skipped lines listed in the table; the rest are counted
   const MOST_SEEN = 5;             // protections named in the "Most seen" line (the page, the Markdown export)
   /**
@@ -55,6 +59,7 @@
   };
   const capOf = (value) => clampInt(value, 1, MAX_URLS, MAX_URLS);
   const timeoutOf = (value) => clampInt(value, TIMEOUT_S.min, TIMEOUT_S.max, TIMEOUT_S.default);
+  const delayOf = (value) => clampInt(value, DELAY_S.min, DELAY_S.max, DELAY_S.default);
 
   /* ---------- Input ---------- */
 
@@ -294,7 +299,7 @@
 
   /**
    * @param {{items: Array, duplicates?: number, overCap?: number, skippedOver?: number}} prepared
-   * @param {{timeoutSec?: number, cap?: number, now?: number, id?: string}} [options]
+   * @param {{timeoutSec?: number, delaySec?: number, cap?: number, now?: number, id?: string}} [options]
    */
   function createRun(prepared, options = {}) {
     const now = Number.isFinite(options.now) ? options.now : Date.now();
@@ -305,6 +310,7 @@
       startedAt: now,
       finishedAt: null,
       timeoutSec: timeoutOf(options.timeoutSec),
+      delaySec: delayOf(options.delaySec),
       cap: capOf(options.cap),
       duplicates: prepared.duplicates || 0,
       overCap: prepared.overCap || 0,
@@ -324,6 +330,22 @@
       if (item.status === 'done' && Array.isArray(item.detections) && item.detections.length) out.found++;
     }
     return out;
+  }
+
+  /**
+   * How many milliseconds the run still waits before it opens its next page: the run's wait between pages, counted from when the
+   * last page it visited finished (done or failed; a page skipped for its site was never opened). 0 with no wait, or before the
+   * first page. Never more than the wait itself (a clock that went back does not hold the run up).
+   */
+  function waitBefore(run, now = Date.now()) {
+    const delay = run ? delayOf(run.delaySec) * 1000 : 0;
+    if (!delay || !Array.isArray(run.items)) return 0;
+    let last = 0;
+    for (const item of run.items) {
+      if (item && (item.status === 'done' || item.status === 'failed') && Number.isFinite(item.finishedAt)) last = Math.max(last, item.finishedAt);
+    }
+    if (!last) return 0;
+    return Math.min(delay, Math.max(0, last + delay - now));
   }
 
   const itemAt = (run, index) => (run && run.items && run.items[index]) || null;
@@ -559,7 +581,7 @@
       exportedAt: new Date(now).toISOString(),
       run: run ? {
         status: run.status, reason: run.reason || null, startedAt: iso(run.startedAt) || null, finishedAt: iso(run.finishedAt) || null,
-        timeoutSec: run.timeoutSec, duplicates: run.duplicates || 0, overCap: run.overCap || 0, counts: counts(run),
+        timeoutSec: run.timeoutSec, delaySec: delayOf(run.delaySec), duplicates: run.duplicates || 0, overCap: run.overCap || 0, counts: counts(run),
         protectionTotals: protectionTotals(run)
       } : null,
       pages: items.map(item => ({
@@ -646,9 +668,9 @@
   }
 
   const api = {
-    MAX_URLS, TIMEOUT_S, MAX_SKIPPED_LISTED, MOST_SEEN, REASONS, FORMATS,
+    MAX_URLS, TIMEOUT_S, DELAY_S, MAX_SKIPPED_LISTED, MOST_SEEN, REASONS, FORMATS,
     capOf, timeoutOf, linesOf, normalize, isSitemap, parseSitemap, sameSite, prepare,
-    createRun, isActive, nextWaiting, counts, begin, finish, fail, skip, pause, resume, hold, release, stop, complete, recover, continuation, carryOver,
+    createRun, isActive, nextWaiting, waitBefore, counts, begin, finish, fail, skip, pause, resume, hold, release, stop, complete, recover, continuation, carryOver,
     summarize, protectionTotals, oneLines, build, fileName
   };
   root.BulkScan = api;

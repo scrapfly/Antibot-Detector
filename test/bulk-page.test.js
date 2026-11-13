@@ -511,3 +511,24 @@ test('Show → Error status keeps the pages that answered 4xx or 5xx, and the ex
   const html = read('sections/bulk/bulk.html');
   assert.match(html, /<option value="httpError" data-i18n="bulkFilterHttpError">Error status \(4xx, 5xx\)<\/option>\s*<!--[\s\S]*?-->\s*<optgroup id="bulkFilterProtections" label="Protections" hidden><\/optgroup>\s*<\/select>/);
 });
+
+test('"Wait between pages" beside the time limit: sent with Start (kept to 0 to 60), shown again from the run, locked while it runs', async () => {
+  const page = pageWorld({});
+  await page.open();
+  assert.equal(page.byId('bulkDelay').min, '0');
+  assert.equal(page.byId('bulkDelay').max, '60');
+  page.byId('bulkDelay').value = '90';
+  await page.start('https://a.example/');
+  const message = page.sent.find(item => item.type === page.ctx.WorkerMessages.BULK_SCAN_START);
+  assert.equal(message.delaySec, 60);
+  assert.equal(page.byId('bulkDelay').value, 60);
+  page.update({ ...runOf([{ url: 'https://a.example/', status: 'scanning' }], 'running'), delaySec: 60 });
+  assert.equal(page.byId('bulkDelay').disabled, true);
+
+  const reopened = pageWorld({ run: { ...runOf([finished('https://a.example/', [])]), delaySec: 15 } });
+  await reopened.open();
+  assert.equal(reopened.byId('bulkDelay').value, 15);
+  assert.equal(reopened.byId('bulkDelay').disabled, false);
+  const html = read('sections/bulk/bulk.html');
+  assert.match(html, /id="bulkTimeout"[^>]*>\s*<\/label>\s*<label class="bulk-field">\s*<span class="bulk-field-label" data-i18n="bulkDelayLabel">Wait between pages, in seconds<\/span>\s*<input type="number" id="bulkDelay" class="bulk-number" min="0" max="60" step="1" value="0" inputmode="numeric">/);
+});

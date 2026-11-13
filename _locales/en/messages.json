@@ -7241,6 +7241,10 @@
     "message": "Time limit per page, in seconds",
     "description": "Bulk scan: label of the per-page timeout field"
   },
+  "bulkDelayLabel": {
+    "message": "Wait between pages, in seconds",
+    "description": "Bulk scan: label of the number box for the pause between two pages, 0 to 60 seconds (0 = go straight to the next page)"
+  },
   "bulkStart": {
     "message": "Start",
     "description": "Bulk scan: start the run"

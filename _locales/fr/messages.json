@@ -6587,6 +6587,9 @@
   "bulkTimeoutLabel": {
     "message": "Délai par page, en secondes"
   },
+  "bulkDelayLabel": {
+    "message": "Attente entre les pages, en secondes"
+  },
   "bulkStart": {
     "message": "Démarrer"
   },

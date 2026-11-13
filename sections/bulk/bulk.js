@@ -168,14 +168,17 @@
     if (state.starting || BulkScan.isActive(state.run)) return;
     const cap = numberField('bulkCap', 1, BulkScan.MAX_URLS, BulkScan.MAX_URLS);
     const timeoutSec = numberField('bulkTimeout', BulkScan.TIMEOUT_S.min, BulkScan.TIMEOUT_S.max, BulkScan.TIMEOUT_S.default);
+    // The pause after each page (0: straight to the next one), for sites that block a quick run of visits
+    const delaySec = numberField('bulkDelay', BulkScan.DELAY_S.min, BulkScan.DELAY_S.max, BulkScan.DELAY_S.default);
     byId('bulkCap').value = cap;
     byId('bulkTimeout').value = timeoutSec;
+    byId('bulkDelay').value = delaySec;
     state.starting = true;
     syncControls();
     try {
       const entries = entriesOverride || await entriesOf(byId('bulkInput').value, cap);
       if (!entries.length) { notice(tr('bulkNothingToScan', 'There is no address to scan in this list.'), 'warn'); return; }
-      const response = await send(M.BULK_SCAN_START, { entries, cap, timeoutSec, ...extra });
+      const response = await send(M.BULK_SCAN_START, { entries, cap, timeoutSec, delaySec, ...extra });
       if (response.run) state.run = response.run;
       if (response.status !== 'ok') {
         const errors = {
@@ -339,6 +342,7 @@
     byId('bulkUploadBtn').disabled = locked;
     byId('bulkCap').disabled = locked;
     byId('bulkTimeout').disabled = locked;
+    byId('bulkDelay').disabled = locked;
     byId('bulkStartBtn').disabled = locked;
     byId('bulkPauseBtn').hidden = !(run && run.status === 'running');
     byId('bulkResumeBtn').hidden = !(run && run.status === 'paused');
@@ -577,6 +581,8 @@
     byId('bulkCap').max = String(BulkScan.MAX_URLS);
     byId('bulkTimeout').min = String(BulkScan.TIMEOUT_S.min);
     byId('bulkTimeout').max = String(BulkScan.TIMEOUT_S.max);
+    byId('bulkDelay').min = String(BulkScan.DELAY_S.min);
+    byId('bulkDelay').max = String(BulkScan.DELAY_S.max);
     document.title = `${tr('bulkTitle', 'Bulk scan')} · Scrapfly`;
     document.documentElement.lang = I18n.locale();
     document.documentElement.dir = I18n.dir();
@@ -587,6 +593,7 @@
     state.run = response && response.run ? response.run : null;
     if (state.run) {
       byId('bulkTimeout').value = state.run.timeoutSec || BulkScan.TIMEOUT_S.default;
+      byId('bulkDelay').value = Number.isFinite(state.run.delaySec) ? state.run.delaySec : BulkScan.DELAY_S.default;
       byId('bulkCap').value = state.run.cap || BulkScan.MAX_URLS;
     }
     updateCount();

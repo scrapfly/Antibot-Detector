@@ -6587,6 +6587,9 @@
   "bulkTimeoutLabel": {
     "message": "Лимит времени на страницу, в секундах"
   },
+  "bulkDelayLabel": {
+    "message": "Пауза между страницами, в секундах"
+  },
   "bulkStart": {
     "message": "Запустить"
   },

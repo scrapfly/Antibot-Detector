@@ -6587,6 +6587,9 @@
   "bulkTimeoutLabel": {
     "message": "Časový limit na stránku v sekundách"
   },
+  "bulkDelayLabel": {
+    "message": "Prodleva mezi stránkami v sekundách"
+  },
   "bulkStart": {
     "message": "Spustit"
   },

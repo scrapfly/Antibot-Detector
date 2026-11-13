@@ -6587,6 +6587,9 @@
   "bulkTimeoutLabel": {
     "message": "المهلة لكل صفحة بالثواني"
   },
+  "bulkDelayLabel": {
+    "message": "الانتظار بين الصفحات بالثواني"
+  },
   "bulkStart": {
     "message": "بدء"
   },

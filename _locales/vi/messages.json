@@ -6587,6 +6587,9 @@
   "bulkTimeoutLabel": {
     "message": "Giới hạn thời gian mỗi trang, tính bằng giây"
   },
+  "bulkDelayLabel": {
+    "message": "Thời gian chờ giữa các trang, tính bằng giây"
+  },
   "bulkStart": {
     "message": "Bắt đầu"
   },

@@ -6587,6 +6587,9 @@
   "bulkTimeoutLabel": {
     "message": "हर पेज की समय सीमा, सेकंड में"
   },
+  "bulkDelayLabel": {
+    "message": "पेजों के बीच प्रतीक्षा, सेकंड में"
+  },
   "bulkStart": {
     "message": "शुरू करें"
   },

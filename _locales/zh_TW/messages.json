@@ -6587,6 +6587,9 @@
   "bulkTimeoutLabel": {
     "message": "每個網頁的時間限制（秒）"
   },
+  "bulkDelayLabel": {
+    "message": "網頁之間的等待時間（秒）"
+  },
   "bulkStart": {
     "message": "開始"
   },

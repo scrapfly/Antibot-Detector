@@ -6587,6 +6587,9 @@
   "bulkTimeoutLabel": {
     "message": "Sayfa başına süre sınırı (saniye)"
   },
+  "bulkDelayLabel": {
+    "message": "Sayfalar arası bekleme (saniye)"
+  },
   "bulkStart": {
     "message": "Başlat"
   },

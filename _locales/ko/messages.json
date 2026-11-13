@@ -6587,6 +6587,9 @@
   "bulkTimeoutLabel": {
     "message": "페이지당 제한 시간(초)"
   },
+  "bulkDelayLabel": {
+    "message": "페이지 사이 대기 시간(초)"
+  },
   "bulkStart": {
     "message": "시작"
   },

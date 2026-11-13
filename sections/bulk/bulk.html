@@ -43,6 +43,10 @@
           <span class="bulk-field-label" data-i18n="bulkTimeoutLabel">Time limit per page, in seconds</span>
           <input type="number" id="bulkTimeout" class="bulk-number" min="10" max="120" step="1" value="45" inputmode="numeric">
         </label>
+        <label class="bulk-field">
+          <span class="bulk-field-label" data-i18n="bulkDelayLabel">Wait between pages, in seconds</span>
+          <input type="number" id="bulkDelay" class="bulk-number" min="0" max="60" step="1" value="0" inputmode="numeric">
+        </label>
         <button type="button" class="bulk-btn bulk-btn--primary" id="bulkStartBtn" data-i18n="bulkStart">Start</button>
       </div>
       <p class="bulk-notice" id="bulkNotice" role="status" hidden></p>

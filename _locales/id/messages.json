@@ -6587,6 +6587,9 @@
   "bulkTimeoutLabel": {
     "message": "Batas waktu per halaman, dalam detik"
   },
+  "bulkDelayLabel": {
+    "message": "Jeda antarhalaman, dalam detik"
+  },
   "bulkStart": {
     "message": "Mulai"
   },

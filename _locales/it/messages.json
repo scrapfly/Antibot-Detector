@@ -6587,6 +6587,9 @@
   "bulkTimeoutLabel": {
     "message": "Tempo massimo per pagina, in secondi"
   },
+  "bulkDelayLabel": {
+    "message": "Attesa tra le pagine, in secondi"
+  },
   "bulkStart": {
     "message": "Avvia"
   },

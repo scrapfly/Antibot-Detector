@@ -6587,6 +6587,9 @@
   "bulkTimeoutLabel": {
     "message": "เวลาจำกัดต่อหน้า (วินาที)"
   },
+  "bulkDelayLabel": {
+    "message": "เวลารอระหว่างหน้า (วินาที)"
+  },
   "bulkStart": {
     "message": "เริ่ม"
   },
