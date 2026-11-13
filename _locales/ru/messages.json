@@ -609,7 +609,7 @@
     "message": "Показано {0}-{1} из {2}"
   },
   "paginationShowingItems": {
-    "message": "Показано {0}-{1} из {2} {3}"
+    "message": "{3}: показано {0}-{1} из {2}"
   },
   "timeUnknown": {
     "message": "Неизвестно"
@@ -660,7 +660,7 @@
     "message": "Цвета категорий"
   },
   "methodSuffixPatterns": {
-    "message": "шаблонов"
+    "message": "Шаблоны"
   },
   "btnSaveRule": {
     "message": "Сохранить правило"
@@ -818,7 +818,7 @@
     "message": "Нет совпадающих шаблонов"
   },
   "methodSuffixMatches": {
-    "message": "совпадений"
+    "message": "Совпадения"
   },
   "cacheExpiredLabel": {
     "message": "Истёк"

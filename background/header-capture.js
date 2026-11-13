@@ -442,6 +442,13 @@ function activatePrerenderedPage(tabId, url, documentId) {
         shownPrerenders.set(tabId, documentId);
         tabDocuments.set(tabId, documentId);
     }
+    // The shown page is judged by its own address from now on, and, as a page that commits in the tab (navigationCommitted,
+    // which leaves prerendered documents out), remembered when its capture was refused: nothing of its load was kept
+    // (keepPrerenderMainFrame), so a scan of it in place once its site is scanned again would be incomplete. With the
+    // extension off there is no verdict (setCaptureScope)
+    setCaptureScope(tabId, url);
+    const scope = tabCaptureScopes.get(tabId);
+    if (scope && documentId && typeof UncapturedPages !== 'undefined') UncapturedPages.noteCommit(tabId, documentId, scope.open);
     const now = Date.now();
     const list = (prerenderPages.get(tabId) || []).filter(entry => now - entry.timestamp < PRERENDER_PAGE_TTL_MS);
     prerenderPages.delete(tabId);

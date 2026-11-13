@@ -77,7 +77,7 @@ test('change: a Changed record on the newest scan is what changed since the earl
   assert.deepEqual(info.added, ['DataDome']);
   assert.deepEqual(info.removed, ['Kasada']);
   assert.equal(info.comparable, true);
-  assert.equal(D.changeText(info.added, info.removed), '+DataDome −Kasada');
+  assert.equal(D.changeText(info.added, info.removed), '\u2068+DataDome\u2069 \u2068−Kasada\u2069');
 });
 
 test('change: no Changed record is no change since the earlier scan', () => {
@@ -115,7 +115,7 @@ test('change: a Changed record left alone (the scan was updated in place) dates 
 });
 
 test('changeText: one line, names as History shows them, a line break in a name cannot make a second line', () => {
-  assert.equal(D.changeText(['Data\nDome'], []), '+Data Dome');
-  assert.equal(D.changeText([], ['Kasada', '']), '−Kasada');
+  assert.equal(D.changeText(['Data\nDome'], []), '\u2068+Data Dome\u2069');
+  assert.equal(D.changeText([], ['Kasada', '']), '\u2068−Kasada\u2069', 'each sign stays with its name in a right-to-left line');
   assert.equal(D.changeText(null, undefined), '');
 });

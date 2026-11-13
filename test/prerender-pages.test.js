@@ -209,6 +209,61 @@ test('PRERENDER_SHOWN hands the tab to the page that is shown, and only to it', 
   assert.equal(w.activated.length, 1);
 });
 
+/** The worker of worker() with the cache handlers too, and a saved result for every page. */
+function cachedWorker() {
+  const w = worker();
+  const ended = [];
+  Object.assign(w.context, {
+    workerKeepaliveManager: { startOperation: () => {}, endOperation: (id) => ended.push(id) },
+    DetectionEngineManager: { getStoredDetection: async () => ({ detectionResults: [], detectionCount: 0 }), scansFresh: () => false },
+    Utils: { isUrlBlacklisted: async () => false },
+    DetectionUtils: { badgeCount: () => 0, readBadgeCountMode: async () => 'all', getBadgeColor: () => '#000' },
+    CategoryManager: {}, BADGE: { TEXT: { CLEAN: '' }, COLORS: { CLEAN: '#000' } },
+    setBadgeTextColor: async () => {}, recentlyClearedTabs: new Set()
+  });
+  w.context.chrome.action = { setBadgeText: async () => {}, setBadgeBackgroundColor: async () => {} };
+  vm.runInContext(read('background/handlers/messages-cache.js'), w.context, { filename: 'background/handlers/messages-cache.js' });
+  const registry = {};
+  w.context.registerCacheHandlers(registry, {});
+  w.sendCache = async (type, request, sender) => {
+    let response;
+    registry[type]({ request, sender, sendResponse: value => { response = value; }, context: {} });
+    await flush(); await flush();
+    return response;
+  };
+  w.ended = ended;
+  return w;
+}
+
+test('a prerendered page answered from the cache closes the scan its held hook and window reports opened', async () => {
+  for (const type of [WorkerMessages.CHECK_CACHE_EARLY, WorkerMessages.CACHE_HIT_EARLY_EXIT]) {
+    const w = cachedWorker();
+    const shown = w.sender({ frameId: 0 });
+    // Held while the page was hidden, sent when it was shown: normal reasons, the page had not asked the cache yet
+    await w.send('JS_HOOKS_COMPLETE', { url: w.current.url, completionReason: 'activity_timeout' }, w.sender());
+    await w.send('WINDOW_PROPS_COMPLETE', { url: w.current.url, reason: 'all_terminal' }, w.sender());
+    const state = w.context.detectionStates.get(7);
+    assert.ok(state && !state.mainStarted, 'the reports opened a scan state');
+    await w.sendCache(type, { url: w.current.url, detectionData: { detectionResults: [], detectionCount: 0 } }, shown);
+    assert.equal(w.context.detectionStates.has(7), false, `${type}: no scan left open (no "Searching", no worker held awake)`);
+    assert.ok(w.ended.includes(state.keepaliveId), `${type}: its keepalive ended`);
+  }
+});
+
+test('a cache answer leaves alone a scan that started, or a scan of another document', async () => {
+  const w = cachedWorker();
+  await w.send('JS_HOOKS_COMPLETE', { url: w.current.url, completionReason: 'activity_timeout' }, w.sender());
+  const state = w.context.detectionStates.get(7);
+  state.mainStarted = true;
+  await w.sendCache(WorkerMessages.CACHE_HIT_EARLY_EXIT, { url: w.current.url, detectionData: null }, w.sender({ frameId: 0 }));
+  assert.equal(w.context.detectionStates.get(7), state, 'a scan under way is not the cache\'s to close');
+  const other = cachedWorker();
+  await other.send('JS_HOOKS_COMPLETE', { url: other.current.url, completionReason: 'activity_timeout' }, other.sender());
+  const kept = other.context.detectionStates.get(7);
+  await other.sendCache(WorkerMessages.CACHE_HIT_EARLY_EXIT, { url: other.current.url, detectionData: null }, other.sender({ frameId: 0, documentId: 'doc-other' }));
+  assert.equal(other.context.detectionStates.get(7), kept);
+});
+
 // ─── The worker: the page's own load, kept aside ────────────────────────────────────────────────────────────
 
 function capture({ skipped = [], enabled = true } = {}) {

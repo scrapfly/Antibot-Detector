@@ -78,11 +78,43 @@ test('the counts shown only from two on (a singular twin takes one) are labels i
   }
 });
 
+// 3.1.9 review: counts that were still "number + noun" in the languages named, wrong for many numbers (Arabic "{0} صفحة" is the
+// form for 11 and up, and these limits are always 10). The key, the languages and the count placeholder(s)
+const LABELLED_IN = {
+  settingsHistoryWatchCountFmt: [['ar', 'ru', 'cs', 'uk', 'pl'], [0, 1]],
+  historyWatchLimitFmt: [['ar'], 0],
+  historyBulkWatchLimitFmt: [['ar'], [0, 1, 2]],
+  updateErrorRateLimitedFmt: [['ar'], 0],
+  statsLiftFmt: [['ar'], 0]
+};
+
+test('the counts the 3.1.9 review found before a noun are labels in those languages', () => {
+  for (const [key, [locales, value]] of Object.entries(LABELLED_IN)) {
+    for (const locale of locales) {
+      const message = messages(locale)[key].message;
+      for (const index of indexes(value)) assert.ok(labelled(message, index), `${locale} ${key} {${index}}: "${message}"`);
+    }
+  }
+});
+
+test('the Rules pattern pager puts its noun first, as a label ("Patterns: showing 1-20 of 45"), where the noun inflects', () => {
+  // {3} is "patterns" or "matches": after the count it needs the form for that number, before it the plain one
+  for (const locale of ['ar', 'ru', 'cs', 'uk', 'pl']) {
+    const all = messages(locale);
+    assert.match(all.paginationShowingItems.message, /^\{3\}[:：]|^[^{]*\{3\}[:：]/u, `${locale}: "${all.paginationShowingItems.message}"`);
+    // Polish has it after a word ("Wyświetlane wzorce: …"); the others start the line with it
+    if (!all.paginationShowingItems.message.startsWith('{3}')) continue;
+    for (const key of ['methodSuffixPatterns', 'methodSuffixMatches']) {
+      assert.match(all[key].message, /^\p{Lu}|^\p{Script=Arabic}/u, `${locale} ${key}: a label starts the line, "${all[key].message}"`);
+    }
+  }
+});
+
 test('every reworded message keeps its placeholders, and English still says what it did', () => {
   const english = messages('en');
   for (const locale of fs.readdirSync(path.join(root, '_locales'))) {
     const all = messages(locale);
-    for (const key of [...Object.keys(ANY_COUNT), ...Object.keys(FROM_TWO)]) {
+    for (const key of [...Object.keys(ANY_COUNT), ...Object.keys(FROM_TWO), ...Object.keys(LABELLED_IN), 'paginationShowingItems']) {
       const tokens = (text) => (text.match(/\{\d\}/g) || []).sort().join('');
       assert.equal(tokens(all[key].message), tokens(english[key].message), `${locale} ${key}`);
     }

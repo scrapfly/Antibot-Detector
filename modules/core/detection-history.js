@@ -114,10 +114,14 @@
     };
   }
 
-  /** The protections a change added (+) and removed (−), on one line: "+DataDome −Kasada". */
+  /**
+   * The protections a change added (+) and removed (−), on one line: "+DataDome −Kasada". Each is isolated (FSI ... PDI) so in a
+   * right-to-left line the sign stays with its name and the names keep their order.
+   */
   function changeText(added, removed) {
     const list = (value) => (Array.isArray(value) ? value : []).map(oneLine).filter(Boolean);
-    return [...list(added).map(name => `+${name}`), ...list(removed).map(name => `${MINUS}${name}`)].join(' ');
+    const isolate = (text) => `\u2068${text}\u2069`;
+    return [...list(added).map(name => isolate(`+${name}`)), ...list(removed).map(name => isolate(`${MINUS}${name}`))].join(' ');
   }
 
   const api = { MINUS, MAX_PATH, shorten, pageOf, otherPage, scansOf, change, changeText };

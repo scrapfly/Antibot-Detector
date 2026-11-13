@@ -368,9 +368,12 @@ DetectionUI.setNoteText = function(note, text, title = '') {
     note.hidden = !text;
 };
 
-/** "From a scan of /login, 3h ago": the result shown was found on another page of the site (the Domain cache scope). */
+/**
+ * "From a scan of /login, 3h ago": the result shown was found on another page of the site (the Domain cache scope). The path is
+ * isolated (FSI ... PDI) so it keeps its own direction inside a right-to-left line, and the time goes inside the sentence.
+ */
 DetectionUI.otherPageText = function(other) {
-    return FormatUtils.t('detectionFromPageFmt', 'From a scan of {0}, {1}', other.path, FormatUtils.getTimeAgo(other.at));
+    return FormatUtils.t('detectionFromPageFmt', 'From a scan of {0}, {1}', `\u2068${other.path}\u2069`, FormatUtils.getTimeAgo(other.at, { inline: true }));
 };
 
 /** The hover text of that line: the other page's whole address and the scan's date. */
@@ -402,7 +405,7 @@ DetectionUI.syncCheckedNote = async function(scan) {
       text = DetectionUI.otherPageText(other);
       title = DetectionUI.otherPageTitle(other);
     } else if (at > 0) {
-      text = FormatUtils.t('historyWatchCheckedFmt', 'Last checked {0}', FormatUtils.getTimeAgo(at));
+      text = FormatUtils.t('historyWatchCheckedFmt', 'Last checked {0}', FormatUtils.getTimeAgo(at, { inline: true }));
       title = FormatUtils.formatDateTime(at);
     }
     const span = note.querySelector('.detection-note-text');
