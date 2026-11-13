@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-// DataDome → Analyze Scripts: which requests of the reloaded page it lists.
+// DataDome → Analyze scripts: which requests of the reloaded page it lists.
 
 function load() {
   const started = [];
@@ -39,7 +39,7 @@ test('lists the tag, its collector, the challenge scripts and the CAPTCHA / inte
   }
 });
 
-test('Analyze Scripts uses that classifier', () => {
+test('Analyze scripts uses that classifier', () => {
   const { context, started } = load();
   context.datadomeStartAnalysis(7, 'https://shop.example/', 'r1');
   assert.equal(started[0].vendorId, 'datadome');

@@ -9,8 +9,8 @@ const { demParseDOMSelector, demMatchDOMSelector } = require('../modules/detecti
 const withinLimit = require('./helpers/hard-limit.js');
 
 // Advanced tools for the CAPTCHA vendors described as data: the config agrees
-// with the detectors, Analyze Scripts matches only each vendor's hosts, and
-// Extract Site Key finds the key in each vendor's documented embed.
+// with the detectors, Analyze scripts matches only each vendor's hosts, and
+// Extract site key finds the key in each vendor's documented embed.
 
 const root = path.join(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
@@ -143,7 +143,7 @@ const lookAlikes = ['https://js.prosopo.io.evil.example/js/procaptcha.bundle.js'
   'https://eu.altcha.org.evil.example/v1/challenge?apiKey=key_abcdef1234567890', 'https://eu.altcha.org/v1/challenges'];
 
 for (const vendor of Vendors.list) {
-  test(`${vendor.vendorId}: Analyze Scripts lists its own requests and nothing else`, () => {
+  test(`${vendor.vendorId}: Analyze scripts lists its own requests and nothing else`, () => {
     for (const [url, type] of Object.entries(urls[vendor.vendorId])) assert.equal(Vendors.classify(vendor, url), type, url);
     for (const url of lookAlikes) assert.equal(Vendors.classify(vendor, url), null, url);
     for (const other of Vendors.list.filter(item => item !== vendor)) {
@@ -211,7 +211,7 @@ const embeds = {
 };
 
 for (const vendor of Vendors.list.filter(item => item.siteKey)) {
-  test(`${vendor.vendorId}: Extract Site Key finds the key in its documented embed`, () => {
+  test(`${vendor.vendorId}: Extract site key finds the key in its documented embed`, () => {
     const [page, expected, fields = {}, facts = {}] = embeds[vendor.vendorId];
     const args = Vendors.probeArgs(vendor);
     const context = frame(page);
@@ -430,9 +430,9 @@ test('every README lists each data-driven CAPTCHA vendor in the row of its tools
   for (const file of ['README.md', 'docs/README.es.md', 'docs/README.ru.md', 'docs/README.zh-CN.md', 'docs/README.ja.md', 'docs/README.pt-BR.md', 'docs/README.de.md', 'docs/README.fr.md', 'docs/README.ko.md']) {
     const lines = read(file).replace(/\r\n/g, '\n').split('\n');
     const rows = lines.filter(line => line.startsWith('| ') && !line.startsWith('| ---'));
-    // The vendors with a site key share one row, the ones with only Analyze Scripts another; the names are written as the detectors write them
-    assert.deepEqual(names(rows.find(row => names(row).includes('Prosopo Procaptcha'))), byTools(true), `${file}: Extract SiteKey · Analyze Scripts`);
-    assert.deepEqual(names(rows.find(row => names(row).includes('Binance Captcha'))), byTools(false), `${file}: Analyze Scripts`);
+    // The vendors with a site key share one row, the ones with only Analyze scripts another; the names are written as the detectors write them
+    assert.deepEqual(names(rows.find(row => names(row).includes('Prosopo Procaptcha'))), byTools(true), `${file}: Extract site key · Analyze scripts`);
+    assert.deepEqual(names(rows.find(row => names(row).includes('Binance Captcha'))), byTools(false), `${file}: Analyze scripts`);
     // The sentence above the table gives the number of logos the no-tools screen shows
     let at = lines.findIndex(line => line.startsWith('| ') && line.includes('Akamai Bot Manager'));
     while (lines[at - 1].startsWith('|')) at--;
@@ -441,7 +441,7 @@ test('every README lists each data-driven CAPTCHA vendor in the row of its tools
   }
 });
 
-test('the worker routes every vendor\'s Analyze Scripts and reports only that vendor\'s requests', async () => {
+test('the worker routes every vendor\'s Analyze scripts and reports only that vendor\'s requests', async () => {
   const event = () => { const listeners = new Set(); return { listeners, addListener: l => listeners.add(l), removeListener: l => listeners.delete(l),
     emit(...args) { for (const listener of Array.from(listeners)) listener(...args); } }; };
   const timers = new Map(); let nextTimer = 0;

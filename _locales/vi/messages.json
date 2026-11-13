@@ -1799,7 +1799,7 @@
     "message": "Mở công cụ"
   },
   "advancedToolsLearnMore": {
-    "message": "Tìm hiểu về Công cụ nâng cao"
+    "message": "Tìm hiểu về công cụ nâng cao"
   },
   "advancedToolsChange": {
     "message": "Thay đổi"
@@ -2899,7 +2899,7 @@
     "message": "Nâng cao (reese84 + utmvc)"
   },
   "advImpervaLevelBasicSession": {
-    "message": "Cơ bản (Phiên)"
+    "message": "Cơ bản (phiên)"
   },
   "advImpervaNoticeReloadToMonitor": {
     "message": "Tải lại trang để bắt đầu theo dõi các yêu cầu và cookie của Imperva"
@@ -3055,7 +3055,7 @@
     "message": "Yêu cầu ghi"
   },
   "advShapeCookieAndHeaders": {
-    "message": "Cookie + Header"
+    "message": "Cookie + header"
   },
   "advShapeNoticeReloadToMonitor": {
     "message": "Tải lại trang để bắt đầu theo dõi header và cookie của Shape Security"
@@ -3145,10 +3145,10 @@
     "message": "Khóa công khai"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
-    "message": "BDA (Mảng dữ liệu trình duyệt)"
+    "message": "BDA (mảng dữ liệu trình duyệt)"
   },
   "advFuncaptchaBlobData": {
     "message": "Dữ liệu Blob"
@@ -3352,7 +3352,7 @@
     "message": "Phát hiện Cookie là gì?"
   },
   "rulesUiHelpContent": {
-    "message": "Phát hiện Nội dung là gì?"
+    "message": "Phát hiện nội dung là gì?"
   },
   "rulesUiHelpDom": {
     "message": "Phát hiện DOM là gì?"
@@ -3400,7 +3400,7 @@
     "message": "Cài đặt tên"
   },
   "rulesUiNameSettingsConfidenceFmt": {
-    "message": "Cài đặt tên (Độ tin cậy: {0}%)"
+    "message": "Cài đặt tên (độ tin cậy: {0}%)"
   },
   "rulesUiValueSettings": {
     "message": "Cài đặt giá trị"

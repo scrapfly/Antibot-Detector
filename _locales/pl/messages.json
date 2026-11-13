@@ -1178,10 +1178,10 @@
     "message": "Nie udało się wyczyścić przechwyceń"
   },
   "settingsCardWebhookIntegration": {
-    "message": "Integracja z Webhookiem"
+    "message": "Integracja z webhookiem"
   },
   "settingsEnableWebhook": {
-    "message": "Włącz Webhook"
+    "message": "Włącz webhook"
   },
   "settingsEnableWebhookDesc": {
     "message": "Wysyłaj żądania HTTP po wykryciu"
@@ -1334,7 +1334,7 @@
     "message": "Pusty: wysyłany jest domyślny payload"
   },
   "settingsTestWebhook": {
-    "message": "Testuj Webhook"
+    "message": "Testuj webhook"
   },
   "settingsTestWebhookDesc": {
     "message": "Wyślij testowe żądanie na URL webhooka"
@@ -3145,7 +3145,7 @@
     "message": "Klucz publiczny"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
     "message": "BDA (tablica danych przeglądarki)"

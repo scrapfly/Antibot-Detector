@@ -2899,7 +2899,7 @@
     "message": "Gelişmiş (reese84 + utmvc)"
   },
   "advImpervaLevelBasicSession": {
-    "message": "Temel (Oturum)"
+    "message": "Temel (oturum)"
   },
   "advImpervaNoticeReloadToMonitor": {
     "message": "Imperva isteklerini ve çerezlerini izlemeye başlamak için sayfayı yeniden yükleyin"
@@ -3145,10 +3145,10 @@
     "message": "Genel anahtar"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
-    "message": "BDA (Tarayıcı veri dizisi)"
+    "message": "BDA (tarayıcı veri dizisi)"
   },
   "advFuncaptchaBlobData": {
     "message": "Blob verisi"
@@ -3400,7 +3400,7 @@
     "message": "Ad ayarları"
   },
   "rulesUiNameSettingsConfidenceFmt": {
-    "message": "Ad ayarları (Güven: %{0})"
+    "message": "Ad ayarları (güven: %{0})"
   },
   "rulesUiValueSettings": {
     "message": "Değer ayarları"

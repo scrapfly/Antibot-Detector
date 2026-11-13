@@ -2647,7 +2647,7 @@
     "message": "ระดับการป้องกัน:"
   },
   "advCommonSiteKey": {
-    "message": "Site Key"
+    "message": "Site key"
   },
   "advCommonWebsiteUrl": {
     "message": "URL ของเว็บไซต์"
@@ -3142,10 +3142,10 @@
     "message": "Bot Management"
   },
   "advFuncaptchaPublicKey": {
-    "message": "Public Key"
+    "message": "Public key"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
     "message": "BDA (อาร์เรย์ข้อมูลเบราว์เซอร์)"

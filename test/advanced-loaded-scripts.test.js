@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-// Analyze Scripts without a reload: the vendor's scripts among what the tab already loaded (what the worker recorded,
+// Analyze scripts without a reload: the vendor's scripts among what the tab already loaded (what the worker recorded,
 // and the page's own Resource Timing list and script tags), classified by the vendor's own rules.
 
 function load({ recorded = [], frames = [], scriptingFails = false } = {}) {

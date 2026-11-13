@@ -707,7 +707,7 @@ class History {
         detections: _tr('statDetections', 'Detections'),
         confidence: _tr('statConfidence', 'Confidence'),
         difficulty: _tr('statDifficulty', 'Difficulty'),
-        scope: _tr('statCacheScope', 'Cache Scope')
+        scope: _tr('statCacheScope', 'Cache scope')
       }
     };
   }
@@ -1493,7 +1493,7 @@ class History {
       text += '   ' + L('clipboardConfidenceFmt', 'Confidence: {0}%', confidence) + '\n';
 
       if (detection.matches && detection.matches.length > 0) {
-        text += '   ' + L('clipboardDetectionMethodsHeading', 'Detection Methods:') + '\n';
+        text += '   ' + L('clipboardDetectionMethodsHeading', 'Detection methods:') + '\n';
         detection.matches.forEach(match => {
           const methodType = (match.type || 'unknown').replace(/_/g, ' ').toUpperCase();
           const value = History.copyLabel(match) || unknownValue;
@@ -1547,11 +1547,11 @@ class History {
     try {
       const domain = this.getDomainFromUrl(historyItem.url);
       const confirmed = await NotificationHelper.confirm({
-        title: _tr('dialogClearCacheTitle', 'Clear Cache'),
+        title: _tr('dialogClearCacheTitle', 'Clear cache'),
         message: _fmt('dialogClearCacheMessageFmt', `Clear cached detection data for ${domain}? The history entry will be kept.`, domain),
         type: 'warning',
         tone: 'danger',
-        confirmText: _tr('buttonClearCache', 'Clear Cache'),
+        confirmText: _tr('buttonClearCache', 'Clear cache'),
         cancelText: _tr('btnCancel', 'Cancel'),
         emphasizeAction: true
       });
@@ -1670,7 +1670,7 @@ class History {
     try {
       const domain = this.getDomainFromUrl(historyItem.url);
       const confirmed = await NotificationHelper.confirm({
-        title: _tr('dialogDeleteHistoryTitle', 'Delete History Item'),
+        title: _tr('dialogDeleteHistoryTitle', 'Delete History item'),
         message: _fmt('dialogDeleteHistoryMessageFmt', `Are you sure you want to delete this detection from ${domain}?`, domain),
         type: 'danger',
         confirmText: _tr('btnDelete', 'Delete'),
@@ -1716,7 +1716,7 @@ class History {
 
     return ordered.map(({ detection, index }) => {
       const rawName = FormatUtils.detectorName(detection);
-      const name = rawName || _tr('unknownDetection', 'Unknown Detection');
+      const name = rawName || _tr('unknownDetection', 'Unknown detection');
       const safeName = FormatUtils.escapeAttr(name); // also in alt="..."
       const category = detection.category || '';
       const categoryKey = Categories.labelOf(category)?.[0] || null;
@@ -2795,7 +2795,7 @@ class History {
           title: _tr('dialogClearHistoryTitle', 'Clear History'),
           message: _tr('dialogClearHistoryMessage', 'Are you sure you want to clear all history? This action cannot be undone.'),
           type: 'danger',
-          confirmText: _tr('buttonClearAll', 'Clear All'),
+          confirmText: _tr('buttonClearAll', 'Clear all'),
           cancelText: _tr('btnCancel', 'Cancel'),
           emphasizeAction: true
         });

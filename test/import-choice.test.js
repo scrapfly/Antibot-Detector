@@ -139,10 +139,10 @@ test('chooseImportMode: Merge and Replace resolve to themselves', async () => {
 
 test('chooseImportMode: three buttons, Replace outlined danger, focus starts on Merge', async () => {
   const { context, dialog, button, dom } = loadDialogs();
-  const pending = context.NotificationHelper.chooseImportMode({ title: 'T', message: 'M', replaceText: 'Replace All' });
+  const pending = context.NotificationHelper.chooseImportMode({ title: 'T', message: 'M', replaceText: 'Replace all' });
   const labels = dialog().querySelectorAll('.notification-btn').map(b => b.textContent);
-  assert.deepStrictEqual(labels, ['Cancel', 'Replace All', 'Merge']);
-  assert.match(button('Replace All').className, /notification-btn-destructive/);
+  assert.deepStrictEqual(labels, ['Cancel', 'Replace all', 'Merge']);
+  assert.match(button('Replace all').className, /notification-btn-destructive/);
   assert.match(button('Merge').className, /notification-btn-confirm/);
   assert.strictEqual(dom.doc.activeElement, button('Merge'));
   // Enter on the focused Merge merges; Replace is never an Enter default
@@ -266,8 +266,8 @@ for (const how of DISMISSALS) {
   });
 }
 
-test('detector import: Merge merges, Replace All replaces', async () => {
-  for (const [text, expected] of [['Merge', true], ['Replace All', false]]) {
+test('detector import: Merge merges, Replace all replaces', async () => {
+  for (const [text, expected] of [['Merge', true], ['Replace all', false]]) {
     const dialogs = loadDialogs();
     const { rules, calls } = loadRules(dialogs);
     const done = rules.handleImport(importEvent({ detectors: {} }));

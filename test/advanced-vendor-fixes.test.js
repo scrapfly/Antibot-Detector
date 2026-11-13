@@ -76,7 +76,7 @@ test('FunCaptcha: the public_key POST is read from formData as well as raw bytes
   assert.equal(funcaptchaBodyParams({}), null);
 });
 
-test('Imperva: Analyze Scripts that times out still sends its (empty) result instead of throwing', async () => {
+test('Imperva: Analyze scripts that times out still sends its (empty) result instead of throwing', async () => {
   const sent = [];
   const states = new Map();
   const context = worker('imperva', {});
@@ -95,7 +95,7 @@ test('Imperva: Analyze Scripts that times out still sends its (empty) result ins
   assert.equal(states.has(5), false);
 });
 
-test('Imperva: Check Cookies counts ___utmvc', async () => {
+test('Imperva: Check cookies counts ___utmvc', async () => {
   const shown = [];
   const context = { window: {}, console, Logger: { network() {}, error() {} }, ImpervaAdvanced: function() {},
     NotificationHelper: { success() {}, info() {}, error() {} },
@@ -129,7 +129,7 @@ function runInPage(func, { scripts = [], html = '', globals = {} } = {}) {
   return vm.runInContext(`(${func.toString()})()`, page);
 }
 
-test('GeeTest: Check Version says v4 or v3 only when GeeTest is on the page', async () => {
+test('GeeTest: Check version says v4 or v3 only when GeeTest is on the page', async () => {
   const func = await pageFunction('geetest', 'handleGeetestCheckVersion', { tabId: 3 });
   assert.equal(runInPage(func, { html: '<html><p>captchaId mentioned in a blog post</p></html>' }), null, 'no GeeTest, no version');
   assert.equal(runInPage(func, { scripts: ['https://static.geetest.com/v4/gt4.js'] }), 'v4');
@@ -139,7 +139,7 @@ test('GeeTest: Check Version says v4 or v3 only when GeeTest is on the page', as
   assert.equal(runInPage(func, { html: 'initGeetest4({captchaId: "x"})' }), 'v4');
 });
 
-test('Shape Security: Check Version reports v2 only with Shape\'s loader, v1 with its runtime global', async () => {
+test('Shape Security: Check version reports v2 only with Shape\'s loader, v1 with its runtime global', async () => {
   let injected = null;
   const context = worker('shapesecurity');
   context.chrome.scripting = { executeScript: async ({ func }) => { injected = func; return [{ result: runInPage(func, pages.current) }]; } };
@@ -152,7 +152,7 @@ test('Shape Security: Check Version reports v2 only with Shape\'s loader, v1 wit
   assert.ok(injected);
 });
 
-test('Akamai: Start Capture checks for a running capture before deleting _abck', async () => {
+test('Akamai: Start capture checks for a running capture before deleting _abck', async () => {
   const calls = [];
   const context = { window: {}, console, Logger: { network() {}, error() {}, debug() {} }, AkamaiAdvanced: function() {},
     BaseAdvancedModule: { prototype: {} }, NotificationHelper: { error() {}, info() {} }, AdvancedMessageTypes: {},
@@ -223,7 +223,7 @@ test('Shape Security: a capture that ends by itself tells the open popup, with i
   assert.equal(timed[0].message.requestId, 'job-8');
 });
 
-test('Imperva: the Analyze Scripts window gives the page\'s own address, scheme and port included, and the host over https only without one', () => {
+test('Imperva: the Analyze scripts window gives the page\'s own address, scheme and port included, and the host over https only without one', () => {
   const opened = [];
   const K = { kitFacts: items => `FACTS ${JSON.stringify(items)}`, kitCard: body => `CARD ${body}`, kitField: (label, value) => `FIELD ${value};`, kitChip: text => `CHIP ${text}`,
     kitNote: text => `NOTE ${text}`, toolIcon: () => '' };
@@ -255,7 +255,7 @@ test('Imperva: the Analyze Scripts window gives the page\'s own address, scheme 
   assert.deepEqual(addresses({ url: 'about:blank', hostname: 'shop.example', scriptUrls: scripts('') }), expected('https://shop.example', 'shop.example'));
 });
 
-// Akamai's Start Capturing deleted the _abck cookie before the worker had armed the capture: a start that failed had already cost the
+// Akamai's Start capturing deleted the _abck cookie before the worker had armed the capture: a start that failed had already cost the
 // person the cookie. Arm first, delete last
 function akamaiPopup({ answer, removeFails = false }) {
   const events = [];
@@ -286,7 +286,7 @@ function akamaiPopup({ answer, removeFails = false }) {
   return { module, events };
 }
 
-test('Akamai: Start Capturing deletes _abck only once the worker has confirmed the capture is armed, and not when it did not', async () => {
+test('Akamai: Start capturing deletes _abck only once the worker has confirmed the capture is armed, and not when it did not', async () => {
   const run = async options => { const { module, events } = akamaiPopup(options); await module.startCapturing(); return events; };
   const asked = ['sent AKAMAI_GET_CAPTURE_STATE', 'sent AKAMAI_START_CAPTURE'];
   assert.deepEqual(await run({ answer: { status: 'started', requestId: 'r1' } }), [...asked, 'cookie deleted: _abck', 'popup closed'], 'armed first, the cookie last, then the popup closes');

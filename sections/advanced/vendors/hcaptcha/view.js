@@ -2,11 +2,11 @@ HCaptchaAdvanced.prototype.renderTools = function() {
         return this.renderToolGrid([
             {
                 id: 'hcaptchaExtractSiteKey',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnExtractSiteKey')) || 'Extract Site Key')
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnExtractSiteKey')) || 'Extract site key')
             },
             {
                 id: 'hcaptchaCheckVersion',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckVersion')) || 'Check Version'),
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnCheckVersion')) || 'Check version'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M12.5,7H11V13L16.25,16.15L17.02,14.92L12.5,11.58V7Z"/>
@@ -15,7 +15,7 @@ HCaptchaAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'hcaptchaStartCapture',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start Capturing'),
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnStartCapturing')) || 'Start capturing'),
                 kind: 'capture',
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
@@ -25,7 +25,7 @@ HCaptchaAdvanced.prototype.renderTools = function() {
             },
             {
                 id: 'hcaptchaAnalyzeScripts',
-                label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze Scripts'),
+                label: ((typeof I18n !== 'undefined' && I18n.get('btnAnalyzeScripts')) || 'Analyze scripts'),
                 iconSvg: `
                     <svg width="20" height="20" viewBox="0 0 24 24">
                         <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
@@ -62,7 +62,7 @@ HCaptchaAdvanced.prototype.displayVersionModal = function(data) {
 
         if (!version && !websiteKey) {
             this.openKitModal({
-                title: hcaptchaText('advHcaptchaDetectionTitle', 'hCaptcha Detection'),
+                title: hcaptchaText('advHcaptchaDetectionTitle', 'hCaptcha detection'),
                 subtitle: host,
                 iconSvg: HCaptchaAdvanced.VERSION_ICON,
                 body: K.kitNote(hcaptchaText('advHcaptchaNotDetected', 'hCaptcha not detected. Please reload the page with hCaptcha loaded.'))
@@ -74,14 +74,14 @@ HCaptchaAdvanced.prototype.displayVersionModal = function(data) {
             ? K.kitChip(hcaptchaText('advCommonYes', 'Yes'), 'purple')
             : K.kitChip(hcaptchaText('advHcaptchaNo', 'No'), 'neutral');
         const facts = K.kitFacts([
-            { label: hcaptchaText('advHcaptchaEnterpriseMode', 'Enterprise Mode'), value: mode, html: true }
+            { label: hcaptchaText('advHcaptchaEnterpriseMode', 'Enterprise mode'), value: mode, html: true }
         ]);
         const fields = K.kitField(hcaptchaText('ruleFieldVersion', 'Version'), version)
-            + K.kitField(hcaptchaText('advCommonSiteKey', 'Site Key'), websiteKey)
+            + K.kitField(hcaptchaText('advCommonSiteKey', 'Site key'), websiteKey)
             + K.kitField(hcaptchaText('advCommonPage', 'Page'), websiteURL, { mono: false, wrap: true });
 
         this.openKitModal({
-            title: hcaptchaText('advHcaptchaVersionTitle', 'hCaptcha Version'),
+            title: hcaptchaText('advHcaptchaVersionTitle', 'hCaptcha version'),
             subtitle: host,
             iconSvg: HCaptchaAdvanced.VERSION_ICON,
             body: facts + (fields ? K.kitCard(fields) : ''),
@@ -140,13 +140,13 @@ HCaptchaAdvanced.prototype.renderCaptureDetailsContent = function(capture) {
         const K = BaseAdvancedModule;
         const data = capture.captureData || capture.data || {};
         const facts = K.kitFacts([
-            { label: hcaptchaText('advHcaptchaEnterpriseMode', 'Enterprise Mode'), html: true, value: data.isEnterprise
+            { label: hcaptchaText('advHcaptchaEnterpriseMode', 'Enterprise mode'), html: true, value: data.isEnterprise
                 ? K.kitChip(hcaptchaText('advCommonYes', 'Yes'), 'green') : K.kitChip(hcaptchaText('advHcaptchaNo', 'No'), 'neutral') },
             { label: hcaptchaText('advCommonCaptured', 'Captured'), value: hcaptchaDateTime(capture.timestamp) }
         ]);
         const fields = K.kitField(hcaptchaText('advCommonUrl', 'URL'), capture.url, { mono: false, wrap: true })
             + K.kitField(hcaptchaText('ruleFieldVersion', 'Version'), data.version)
-            + K.kitField(hcaptchaText('advCommonSiteKey', 'Site Key'), data.websiteKey, { wrap: true })
+            + K.kitField(hcaptchaText('advCommonSiteKey', 'Site key'), data.websiteKey, { wrap: true })
             + K.kitField(hcaptchaText('advCommonWebsiteUrl', 'Website URL'), data.websiteURL, { mono: false, wrap: true });
         return facts + (fields ? K.kitCard(fields) : '');
     };

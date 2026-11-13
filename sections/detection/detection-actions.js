@@ -25,9 +25,9 @@ DetectionActions.clearCache = async function() {
 
     try {
       const confirmed = await NotificationHelper.confirm({
-        title: detectionActionsTr('clearCacheConfirmTitle', 'Clear Cache'),
+        title: detectionActionsTr('clearCacheConfirmTitle', 'Clear cache'),
         message: detectionActionsTr('clearCacheConfirmMsg', 'This removes the saved detection result for this page (with the Domain or Path cache scope, it may cover other pages too). The page is scanned again when you reload it.'),
-        confirmText: detectionActionsTr('clearCacheConfirmBtn', 'Clear Cache'),
+        confirmText: detectionActionsTr('clearCacheConfirmBtn', 'Clear cache'),
         cancelText: detectionActionsTr('btnCancel', 'Cancel'),
         type: 'warning',
         tone: 'danger',

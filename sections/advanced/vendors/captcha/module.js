@@ -15,9 +15,9 @@ class GenericCaptchaAdvanced extends BaseAdvancedModule {
     renderTools() {
         const tools = [];
         if (this.vendor.siteKey) {
-            tools.push({ id: `${this.vendor.vendorId}ExtractSiteKey`, label: BaseAdvancedModule._tr('btnExtractSiteKey', 'Extract Site Key') });
+            tools.push({ id: `${this.vendor.vendorId}ExtractSiteKey`, label: BaseAdvancedModule._tr('btnExtractSiteKey', 'Extract site key') });
         }
-        tools.push({ id: `${this.vendor.vendorId}AnalyzeScripts`, label: BaseAdvancedModule._tr('btnAnalyzeScripts', 'Analyze Scripts') });
+        tools.push({ id: `${this.vendor.vendorId}AnalyzeScripts`, label: BaseAdvancedModule._tr('btnAnalyzeScripts', 'Analyze scripts') });
         return this.renderToolGrid(tools);
     }
 

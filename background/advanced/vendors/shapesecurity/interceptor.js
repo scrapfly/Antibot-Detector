@@ -202,7 +202,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
     if (typeof showCaptureStarted === 'function') {
         await showCaptureStarted(tabId, {
             module: 'Shape Security',
-            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Shape Security'),
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'Shape Security'),
             message: pageText('advShapeNoticeReloadToMonitor', 'Reload the page to begin monitoring Shape Security headers and cookies'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
@@ -212,7 +212,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
         await showNotification(tabId, {
             module: 'Shape Security',
             type: 'capture',
-            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'Shape Security'),
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'Shape Security'),
             message: pageText('advShapeNoticeReloadToMonitor', 'Reload the page to begin monitoring Shape Security headers and cookies'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
@@ -230,7 +230,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                 showNotification(tabId, {
                     module: 'Shape Security',
                     type: 'warning',
-                    title: pageText('pageNoticePageLoading', 'Page Loading'),
+                    title: pageText('pageNoticePageLoading', 'Page loading'),
                     message: pageText('advShapeNoticeWaitBeforeActions', 'Please wait for the page to fully load before performing actions...'),
                     duration: 5000
                 }).catch(err => {
@@ -309,7 +309,7 @@ async function handleShapeSecurityStartCapture(message, sender, sendResponse) {
                         await showNotification(tabId, {
                             type: 'capture',
                             module: 'Shape Security',
-                            title: pageText('advShapeNoticeMonitoringActiveFmt', 'Monitoring Active ({0})', version.toUpperCase()),
+                            title: pageText('advShapeNoticeMonitoringActiveFmt', 'Monitoring active ({0})', version.toUpperCase()),
                             message: version === 'v1'
                                 ? pageText('advShapeNoticeTriggerCookie', 'Perform actions to trigger cookie')
                                 : pageText('advShapeNoticeTriggerHeadersCookie', 'Perform actions to trigger headers + cookie'),
@@ -494,7 +494,7 @@ async function autoStopCapture(tabId, reason = 'complete') {
             await showNotification(tabId, {
                 module: 'Shape Security',
                 type: nothingCaptured ? 'warning' : 'success',
-                title: nothingCaptured ? pageText('advFuncaptchaCaptureTimeout', 'Capture Timeout') : pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                title: nothingCaptured ? pageText('advFuncaptchaCaptureTimeout', 'Capture timeout') : pageText('pageNoticeCaptureCompleted', 'Capture completed'),
                 message: message,
                 duration: 5000
             }).catch(err => {
@@ -588,7 +588,7 @@ function handleShapeSecurityStopCapture(message, sender, sendResponse) {
                 await showNotification(tabId, {
                     module: 'Shape Security',
                     type: 'success',
-                    title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                    title: pageText('pageNoticeCaptureCompleted', 'Capture completed'),
                     message: pageText('advShapeNoticeCapturedFmt', 'Captured - cookies: {0}, headers: {1}', cookieCount, headerCount),
                     duration: 5000
                 }).catch(err => {

@@ -239,7 +239,7 @@ Rules.prototype.setupMethodSettingsModal = function() {
                 valueSettingsBtn.classList.remove('has-custom-settings');
               }
             }
-            // Hide value container and show "Add Value" button
+            // Hide value container and show "Add value" button
             if (valueContainer) valueContainer.style.display = 'none';
             if (addValueBtn) addValueBtn.style.display = 'flex';
           } else {
@@ -254,7 +254,7 @@ Rules.prototype.setupMethodSettingsModal = function() {
         }
       }
 
-      // Handle "Add Value" button
+      // Handle "Add value" button
       if (e.target.closest('.add-value-btn')) {
         e.stopPropagation();
         const button = e.target.closest('.add-value-btn');
@@ -264,7 +264,7 @@ Rules.prototype.setupMethodSettingsModal = function() {
           const valueContainer = methodItem.querySelector('.value-field-container');
           const valueInput = methodItem.querySelector('.method-input.method-value');
 
-          // Hide "Add Value" button and show value container
+          // Hide "Add value" button and show value container
           button.style.display = 'none';
           if (valueContainer) valueContainer.style.display = 'flex';
           // Focus the value input
@@ -586,13 +586,13 @@ Rules.prototype.openMethodSettingsModal = function(methodItem, fieldType = 'name
         const _tMS = (typeof I18n !== 'undefined') ? I18n : null;
         const _trMS = (key, fallback) => (_tMS && _tMS.get(key)) || fallback;
         if (methodKey === 'urls' || methodKey === 'url') {
-          patternOptionsTitle.textContent = _trMS('urlPatternMatching', 'URL Pattern Matching');
+          patternOptionsTitle.textContent = _trMS('urlPatternMatching', 'URL pattern matching');
         } else if (methodKey === 'content') {
-          patternOptionsTitle.textContent = _trMS('textWordMatching', 'Text/Word Matching');
+          patternOptionsTitle.textContent = _trMS('textWordMatching', 'Text/word matching');
         } else if (methodKey === 'payload') {
-          patternOptionsTitle.textContent = _trMS('payloadTextMatching', 'Payload Text Matching');
+          patternOptionsTitle.textContent = _trMS('payloadTextMatching', 'Payload text matching');
         } else {
-          patternOptionsTitle.textContent = _trMS('nameFieldMatching', 'Name Field Matching');
+          patternOptionsTitle.textContent = _trMS('nameFieldMatching', 'Name field matching');
         }
       }
     }
@@ -818,7 +818,7 @@ Rules.prototype.saveMethodSettings = function() {
       } else {
         valueSettingsBtn.classList.remove('has-custom-settings');
       }
-      valueSettingsBtn.title = (typeof I18n !== 'undefined' && I18n.get('rulesUiValueSettings')) || 'Value Settings';
+      valueSettingsBtn.title = (typeof I18n !== 'undefined' && I18n.get('rulesUiValueSettings')) || 'Value settings';
     }
 
     // Update input indicators

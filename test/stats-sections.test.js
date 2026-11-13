@@ -129,14 +129,14 @@ test('signals and combinations show the rule\'s own description and name', () =>
 });
 
 test('tool stats group Advanced captures by vendor, tool and day within the range', () => {
-  const raw = { akamai: [{ timestamp: NOW, data: { tool: 'akamai-scripts', label: 'Analyze Scripts' } }, { timestamp: NOW - DAY, data: {} }, { timestamp: 'bad' }],
+  const raw = { akamai: [{ timestamp: NOW, data: { tool: 'akamai-scripts', label: 'Analyze scripts' } }, { timestamp: NOW - DAY, data: {} }, { timestamp: 'bad' }],
     awswaf: [{ timestamp: NOW - 2 * DAY, data: {} }], hcaptcha: [{ timestamp: NOW - 60 * DAY, data: {} }], junk: 'x' };
   const captures = ToolsStats.parse(JSON.stringify(raw));
   assert.equal(captures.length, 4);
   const t = ToolsStats.compute(captures, { since: HistoryStats.rangeStart(30, NOW), now: NOW, dayKey: HistoryStats.dayKey });
   assert.equal(t.total, 3);
   assert.deepEqual(t.byModule.map(row => [row.name, row.count]), [['Akamai Bot Manager', 2], ['AWS WAF', 1]]);
-  assert.deepEqual(t.byTool.map(row => [row.capture, row.label, row.count]), [[true, '', 2], [false, 'Analyze Scripts', 1]]);
+  assert.deepEqual(t.byTool.map(row => [row.capture, row.label, row.count]), [[true, '', 2], [false, 'Analyze scripts', 1]]);
   assert.equal(t.perDay.get(HistoryStats.dayKey(NOW)), 1);
   assert.equal(ToolsStats.compute(captures, { since: null, now: NOW }).total, 4);
   assert.deepEqual(ToolsStats.parse('not json'), []);

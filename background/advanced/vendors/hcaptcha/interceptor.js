@@ -260,7 +260,7 @@ function hcaptchaStartCapture(tabId, captureUrl) {
     if (typeof showCaptureStarted === 'function') {
         showCaptureStarted(tabId, {
             module: 'hCaptcha',
-            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'hCaptcha'),
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'hCaptcha'),
             message: pageText('advHcaptchaNoticeReloadToMonitor', 'Reload the page to begin monitoring hCaptcha requests'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
@@ -270,7 +270,7 @@ function hcaptchaStartCapture(tabId, captureUrl) {
         showNotification(tabId, {
             module: 'hCaptcha',
             type: 'capture',
-            title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'hCaptcha'),
+            title: pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'hCaptcha'),
             message: pageText('advHcaptchaNoticeReloadToMonitor', 'Reload the page to begin monitoring hCaptcha requests'),
             duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
         }).catch(err => {
@@ -350,7 +350,7 @@ async function handleHCaptchaCaptureCompleted(tabId, captureData) {
             await showNotification(tabId, {
                 module: 'hCaptcha',
                 type: 'success',
-                title: pageText('pageNoticeCaptureCompleted', 'Capture Completed'),
+                title: pageText('pageNoticeCaptureCompleted', 'Capture completed'),
                 message: pageText('advHcaptchaNoticeCaptured', 'hCaptcha data captured successfully'),
                 duration: 5000
             }).catch(err => {
@@ -420,7 +420,7 @@ function hcaptchaStopCapture(tabId, reason = 'manual') {
             showNotification(tabId, {
                 module: 'hCaptcha',
                 type: 'warning',
-                title: pageText('advFuncaptchaCaptureTimeout', 'Capture Timeout'),
+                title: pageText('advFuncaptchaCaptureTimeout', 'Capture timeout'),
                 message: pageText('advHcaptchaNoDataTimeout', 'No hCaptcha data detected (60s timeout)'),
                 duration: 5000
             }).catch(err => {

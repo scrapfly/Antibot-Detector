@@ -4,8 +4,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-// Akamai's result dialogs (Analyze Scripts, Extract Sensor Information,
-// Capture Details) use the shared kit dialog: copyable rows, code blocks with
+// Akamai's result dialogs (Analyze scripts, Extract sensor information,
+// Capture details) use the shared kit dialog: copyable rows, code blocks with
 // their own Copy, and the main action in a fixed footer.
 
 const root = path.join(__dirname, '..');
@@ -35,16 +35,16 @@ function load() {
 
 const evil = 'https://shop.example.com/a<img src=x onerror=alert(1)>/eGs';
 
-test('Analyze Scripts: counts and level as rows, script URL escaped, Export Code in the footer', () => {
+test('Analyze scripts: counts and level as rows, script URL escaped, Export code in the footer', () => {
   const { module, opened } = load();
   let exported = null;
   module.showScriptParsingModal = (scripts, urls) => { exported = urls; };
   module.displayAnalysisModal({ scriptCount: 114, scripts: [], sensorDataUrls: [], akamaiScriptPath: evil, patterns: {}, cookies: { _abck: true }, sbsdUrls: [] });
   const [dialog] = opened;
-  assert.equal(dialog.title, 'Akamai Analysis');
+  assert.equal(dialog.title, 'Akamai analysis');
   assert.equal(dialog.subtitle, 'Found 1 relevant script(s)');
   assert.match(dialog.body, /class="adv-kit-facts"/);
-  assert.match(dialog.body, /<dt>Total Scripts<\/dt>\s*<dd>114<\/dd>/);
+  assert.match(dialog.body, /<dt>Total scripts<\/dt>\s*<dd>114<\/dd>/);
   assert.match(dialog.body, /adv-kit-chip--blue">Standard</);
   assert.doesNotMatch(dialog.body, /<img src=x/);
   assert.match(dialog.body, /&lt;img src=x onerror=alert\(1\)&gt;/);
@@ -54,14 +54,14 @@ test('Analyze Scripts: counts and level as rows, script URL escaped, Export Code
   assert.deepEqual([...exported], [evil]);
 });
 
-test('Extract Sensor Information: payload in a code block, URL as a copyable row, Copy all as JSON', () => {
+test('Extract sensor information: payload in a code block, URL as a copyable row, Copy all as JSON', () => {
   const { module, opened, copied } = load();
   const sensor = '3;0;1;0;4273475;"<b>x</b>"';
   module.displaySensorDataModal({ sensorData: sensor, sensorScriptUrl: evil });
   const [dialog] = opened;
   assert.equal(dialog.subtitle, 'shop.example.com');
   assert.match(dialog.body, /class="adv-kit-code"/);
-  assert.match(dialog.body, /Sensor Data \(\d+ chars\)/);
+  assert.match(dialog.body, /Sensor data \(\d+ chars\)/);
   assert.match(dialog.body, /&lt;b&gt;x&lt;\/b&gt;/);
   assert.doesNotMatch(dialog.body, /<b>x<\/b>|<img src=x/);
   // No more Copy buttons laid over the text
@@ -75,22 +75,22 @@ test('Extract Sensor Information: payload in a code block, URL as a copyable row
   assert.equal(copied[0].button, button);
 });
 
-test('Extract Sensor Information without data says so instead of an empty box', () => {
+test('Extract sensor information without data says so instead of an empty box', () => {
   const { module, opened } = load();
   module.displaySensorDataModal({});
   assert.match(opened[0].body, /adv-kit-note[^>]*>No sensor data captured</);
   assert.doesNotMatch(opened[0].body, /adv-kit-code"/);
 });
 
-test('Capture Details: cookie and level as chips, version and page copyable, challenges listed', () => {
+test('Capture details: cookie and level as chips, version and page copyable, challenges listed', () => {
   const { module } = load();
   const html = module.renderCaptureDetailsContent({ timestamp: 1700000000000, url: evil,
     captureData: { abckCookie: 'x', abckCookieLevel: 'easy', akamaiVersion: 'Akamai V3', requiresSbsd: true, requiresPixel: true } });
-  assert.match(html, /<dt>ABCK Cookie<\/dt>\s*<dd><span class="adv-kit-chip adv-kit-chip--green">Found</);
+  assert.match(html, /<dt>ABCK cookie<\/dt>\s*<dd><span class="adv-kit-chip adv-kit-chip--green">Found</);
   assert.match(html, /adv-kit-chip--green">Easy</);
   assert.match(html, /data-copy="Akamai V3"/);
-  assert.match(html, /adv-kit-chip--red">SBSD Challenge</);
-  assert.match(html, /adv-kit-chip--red">Pixel Challenge</);
+  assert.match(html, /adv-kit-chip--red">SBSD challenge</);
+  assert.match(html, /adv-kit-chip--red">Pixel challenge</);
   assert.doesNotMatch(html, /<img src=x/);
 });
 

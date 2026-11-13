@@ -7,7 +7,7 @@ const vm = require('node:vm');
 // Stored rules that cannot be read (the storage did not answer, or the stored value is damaged) leave the rules in memory as the
 // shipped ones, or as the ones read before. A save from there is a save of those over the person's custom rules, edits to official
 // rules, switched-off rules and translations, so no save goes ahead while that lasts: not a switch in the Rules tab, a reset to
-// official, an editor save, an add, a delete, a restore, a clear or an import that merges. Only an import with Replace All, which
+// official, an editor save, an add, a delete, a restore, a clear or an import that merges. Only an import with Replace all, which
 // is the person choosing to replace the rules, writes them, and that repairs them. The same holds for the categories (their
 // colours). The popup says so once. And while the rules stay unreadable, the worker does not read them again on every message:
 // it waits a little, and reads at once when the key is written.
@@ -86,7 +86,7 @@ test('every way a rule change reaches the storage is refused while the rules can
   assert.deepEqual(w.writes, [], 'and no other key was written (the deleted-official list, the categories)');
 });
 
-test('an import with Replace All is the person replacing the rules: it writes them, and saves work again after it', async () => {
+test('an import with Replace all is the person replacing the rules: it writes them, and saves work again after it', async () => {
   const w = await damaged();
   const dm = w.detectorManager;
   assert.equal(await dm.importDetectors({ detectors: { antibot: { 'detect-mine': plain(MINE) } } }, false), true);
@@ -249,7 +249,7 @@ test('the popup says once that the stored rules cannot be read and that changes 
   assert.equal(h.toasts.length, 1, 'once');
   assert.deepEqual(h.asked, ['rulesUnreadableHint']);
   assert.match(h.toasts[0], /not saved/);
-  assert.match(h.toasts[0], /Replace All/, 'it names what replaces them');
+  assert.match(h.toasts[0], /Replace all/, 'it names what replaces them');
   for (const state of ['loaded', 'absent', 'empty', undefined]) {
     const ok = popupWith(state);
     ok.popup.warnIfRulesUnreadable();

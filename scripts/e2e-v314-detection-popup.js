@@ -378,7 +378,7 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
-  await scenario('Detection live region: a page with no protection says "Nothing Detected"; in Spanish and Arabic it reads what the footer shows', async () => {
+  await scenario('Detection live region: a page with no protection says "Nothing detected"; in Spanish and Arabic it reads what the footer shows', async () => {
     const clean = `${origin}/p?n=clean-${uniq()}`;
     const site = await ctx.newPage();
     site.on('pageerror', (e) => pageErrors.push(`site: ${e.message}`));
@@ -387,8 +387,8 @@ async function scenario(name, fn) {
     const found = await scanned(`lang-${uniq()}`, ALL);
     try {
       let popup = await popupFor(tab);
-      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing Detected for a page with no protection');
-      assert.equal(await popup.$eval('#emptyState .state-card-title', el => el.textContent.trim()), 'Nothing Detected');
+      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing detected for a page with no protection');
+      assert.equal(await popup.$eval('#emptyState .state-card-title', el => el.textContent.trim()), 'Nothing detected');
       await popup.close();
       for (const code of ['es', 'ar']) {
         const messages = locale(code);
@@ -760,14 +760,14 @@ async function scenario(name, fn) {
       await until(() => cacheStamp(url), 25000, 'the saved clean result');
       const tab = await until(() => tabOf(url), 5000, 'the tab');
       popup = await popupFor(tab);
-      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing Detected');
+      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing detected');
       const note = await until(() => popup.$eval('#emptyCheckedNote', el => !el.hidden && el.offsetParent !== null && el.querySelector('.detection-note-text').textContent), 5000, 'the Last checked line');
       assert.match(note, /^Last checked /, note);
       assert.equal(await popup.$eval('#checkedRescanBtn', el => el.textContent.trim()), say('historyScanAgain'));
       const before = await cacheStamp(url);
       await popup.$eval('#checkedRescanBtn', el => el.click());
       await until(async () => (await cacheStamp(url)) > before, 30000, 'a fresh scan of the clean page');
-      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing Detected again');
+      await until(async () => (await said(popup)) === say('detectionEmptyTitle'), 30000, 'Nothing detected again');
       console.log(`      "${note}"`);
     } finally {
       if (popup) await popup.close();

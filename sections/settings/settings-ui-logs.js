@@ -119,7 +119,7 @@ SettingsUI._setupLogListeners = function() {
     if (clearLogsBtn) {
       clearLogsBtn.addEventListener('click', async () => {
         const confirmed = await NotificationHelper.confirm({
-          title: _trLog('clearLogsTitle', 'Clear Logs'),
+          title: _trLog('clearLogsTitle', 'Clear logs'),
           message: _trLog('clearLogsMessage', 'Are you sure you want to clear all collected logs? This action cannot be undone.'),
           type: 'warning',
           tone: 'danger',

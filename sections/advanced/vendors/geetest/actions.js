@@ -142,7 +142,7 @@ if (match) {
 }`;
 
         return AdvancedCodeDialog.open(this, {
-            title: this._txt('advGeetestExportParsingCode', 'Export Parsing Code'),
+            title: this._txt('advGeetestExportParsingCode', 'Export parsing code'),
             languages: [{ id: 'javascript', label: 'JavaScript' }],
             getCodes: () => ({ javascript: parsingCode })
         });

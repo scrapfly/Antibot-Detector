@@ -95,7 +95,7 @@ test('Shape Security: one request carrying all six headers saves the capture onc
     assert.equal(job.status, 'completed');
 });
 
-test('Shape Security: Stop Capturing on a capture that has seen nothing ends it and saves nothing; one that has the cookie keeps it', async () => {
+test('Shape Security: Stop capturing on a capture that has seen nothing ends it and saves nothing; one that has the cookie keeps it', async () => {
     const f = fixture(), context = f.load('shapesecurity');
     const states = new Map();
     let pageNoticesCleared = 0;
@@ -114,7 +114,7 @@ test('Shape Security: Stop Capturing on a capture that has seen nothing ends it 
     await flush();
     assert.equal(answer.status, 'stopped');
     assert.equal(f.saves.length, 0, 'no empty entry in History');
-    assert.equal(f.notices.filter(notice => notice.type === 'success').length, 0, 'no "Capture Completed"');
+    assert.equal(f.notices.filter(notice => notice.type === 'success').length, 0, 'no "Capture completed"');
     assert.equal(f.messages.filter(message => message.type === 'SHAPESECURITY_CAPTURE_COMPLETED').length, 0, 'the popup that pressed Stop is told by the answer, not by a completion');
     assert.equal(states.has(7), false);
     assert.equal(empty.status, 'completed', 'the capture\'s job is over');
@@ -148,7 +148,7 @@ test('Jobs: the page rewriting its own query or hash does not cancel; another pa
     assert.equal(cleaned, true);
 });
 
-test('Analyze Scripts: a cancelled or timed-out run is not reported as a failed start', async () => {
+test('Analyze scripts: a cancelled or timed-out run is not reported as a failed start', async () => {
     const shown = [];
     let listener = null;
     const context = { console, BaseAdvancedModule: function() {}, Logger: { error() {} },
@@ -172,7 +172,7 @@ test('Analyze Scripts: a cancelled or timed-out run is not reported as a failed 
     assert.equal(await ended('failed'), 'Failed to start analysis');
 });
 
-test('Imperva: Analyze Scripts refuses while a capture runs on the tab and leaves the capture alone', async () => {
+test('Imperva: Analyze scripts refuses while a capture runs on the tab and leaves the capture alone', async () => {
     const f = fixture(), context = f.load('imperva');
     const states = new Map();
     context.impervaCaptureState = states;
@@ -306,7 +306,7 @@ function impervaTab(mode) {
         request: (url, extra = {}) => listener({ tabId: 7, method: 'GET', type: 'xmlhttprequest', url, ...extra }) };
 }
 
-test('Imperva: Analyze Scripts stores a POST body only from an Imperva request, however the body reads', () => {
+test('Imperva: Analyze scripts stores a POST body only from an Imperva request, however the body reads', () => {
     const t = impervaTab('extract');
     // Another site's beacon, a form of the page, a third party that copies the ?d= naming, a beacon that only mentions an Imperva
     // address in its query, a form post: none is Imperva's
@@ -330,7 +330,7 @@ test('Imperva: Analyze Scripts stores a POST body only from an Imperva request, 
     assert.equal(Array.from(t.f.timers.values()).filter(timer => timer.delay === 2000).length, 2, 'an Imperva challenge still completes the analysis shortly after');
 });
 
-test('Imperva: Start Capturing over a running Analyze Scripts takes its page-load listener with it, and a later one starts with a single listener', () => {
+test('Imperva: Start capturing over a running Analyze scripts takes its page-load listener with it, and a later one starts with a single listener', () => {
     const f = fixture(), context = f.load('imperva');
     const states = new Map();
     context.impervaInitializeInterceptor(states);
@@ -360,7 +360,7 @@ test('Imperva: a stored POST body is cut at a fixed size and says so', () => {
     assert.equal(t.state().extractedData.payloads[1].truncated, false);
 });
 
-test('Imperva: Analyze Scripts keeps the script URLs with their queries, which the result window parses', () => {
+test('Imperva: Analyze scripts keeps the script URLs with their queries, which the result window parses', () => {
     const t = impervaTab('extract');
     t.request('https://shop.example/_Incapsula_Resource?SWKMTFSR=1&e=0.1234', { type: 'script' });
     t.request('https://shop.example/Thine-Wert/987', { type: 'script' });
@@ -531,7 +531,7 @@ test('Captures panel binds only its own grid, once per card', () => {
     assert.doesNotThrow(() => advanced.setupCaptureCardListeners());
 });
 
-test('Vendor Captured Data binds only its own list, once per element', () => {
+test('Vendor Captured data binds only its own list, once per element', () => {
     const make = () => ({ listeners: [], getAttribute: () => 'c1', addEventListener(type) { this.listeners.push(type); } });
     const card = make(), expand = make(), img = make();
     const list = { querySelectorAll: selector => ({ '.capture-card': [card], '.capture-expand': [expand], 'img[data-fallback]': [img] })[selector] || [] };
@@ -635,7 +635,7 @@ test('Akamai: a second Extract Sensor on the same tab replaces the first one\'s 
     assert.deepEqual([states.size, f.context.chrome.webRequest.onBeforeRequest.listeners.size], [0, 0], 'the second one\'s own stop ends it');
 });
 
-test('Imperva: an Analyze Scripts that a challenge POST completes ends with the request listener', async () => {
+test('Imperva: an Analyze scripts that a challenge POST completes ends with the request listener', async () => {
     const t = impervaTab('extract');
     t.context.checkCookies = async () => [];
     const { onBeforeRequest } = t.f.context.chrome.webRequest;
@@ -647,7 +647,7 @@ test('Imperva: an Analyze Scripts that a challenge POST completes ends with the 
         [0, 0, null, 0], 'states, request listeners, the listener variable, page-load listeners');
 });
 
-test('Imperva: a tab closed during Analyze Scripts takes both listeners and the 60 s stop with it', () => {
+test('Imperva: a tab closed during Analyze scripts takes both listeners and the 60 s stop with it', () => {
     const t = impervaTab('extract');
     const tabs = tabEvents(t.f, { imperva: t.states });
     const { onBeforeRequest } = t.f.context.chrome.webRequest;
@@ -658,7 +658,7 @@ test('Imperva: a tab closed during Analyze Scripts takes both listeners and the 
     assert.equal(t.context.impervaInterceptionListener, null);
 });
 
-test('Imperva: the tab leaving the page during Analyze Scripts takes both listeners with the extraction', () => {
+test('Imperva: the tab leaving the page during Analyze scripts takes both listeners with the extraction', () => {
     const t = impervaTab('extract');
     const { onBeforeRequest } = t.f.context.chrome.webRequest;
     t.context.impervaHandleCaptureTabUpdate(7, { url: 'https://shop.example/elsewhere' }, { url: 'https://shop.example/elsewhere' });
@@ -719,7 +719,7 @@ test('Imperva: a capture lists an endpoint only for Imperva\'s own request, and 
     assert.deepEqual(Array.from(t.state().interrogationUrls), ['https://static.shop.example/v1/interrogation']);
 });
 
-test('Imperva: Analyze Scripts keeps each challenge address once and at most 20 of each list, by path, with no query', () => {
+test('Imperva: Analyze scripts keeps each challenge address once and at most 20 of each list, by path, with no query', () => {
     const body = tag => `{"solution":"${tag}-${'x'.repeat(20000)}"}`;
     // 500 different bodies posted to one address: one address, 20 bodies
     const one = impervaTab('extract');
@@ -807,7 +807,7 @@ test('Shape Security: with the capture still running, the 5 s check reads the ve
     f.notices.length = 0;
     await f.tick(5000);
     assert.equal(states.get(7).version, 'v1', 'window.__xr_bmobdb is there');
-    assert.deepEqual(f.notices.map(notice => [notice.type, shapeText(notice.title)]), [['capture', 'Monitoring Active ({0})']]);
+    assert.deepEqual(f.notices.map(notice => [notice.type, shapeText(notice.title)]), [['capture', 'Monitoring active ({0})']]);
 });
 
 test('Shape Security: the 60 s running out with nothing captured saves nothing and still tells the popup, with what the other tools send on a timeout', async () => {

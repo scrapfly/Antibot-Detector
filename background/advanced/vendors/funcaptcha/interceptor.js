@@ -76,7 +76,7 @@ async function funcaptchaStartCapture(tabId) {
         try {
             await showCaptureStarted(tabId, {
                 module: 'FunCaptcha',
-                title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'FunCaptcha'),
+                title: pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'FunCaptcha'),
                 message: pageText('advFuncaptchaReloadToMonitor', 'Reload the page to begin monitoring and trigger a FunCaptcha challenge (60s timeout)'),
                 duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
             });
@@ -88,7 +88,7 @@ async function funcaptchaStartCapture(tabId) {
             await showNotification(tabId, {
                 module: 'FunCaptcha',
                 type: 'loading',
-                title: pageText('pageNoticeMonitoringStartedFmt', '{0} Monitoring Started', 'FunCaptcha'),
+                title: pageText('pageNoticeMonitoringStartedFmt', '{0} monitoring started', 'FunCaptcha'),
                 message: pageText('advFuncaptchaReloadToMonitor', 'Reload the page to begin monitoring and trigger a FunCaptcha challenge (60s timeout)'),
                 duration: Constants.CAPTURE_AUTO_STOP_TIMEOUT
             });
@@ -116,7 +116,7 @@ async function funcaptchaStartCapture(tabId) {
                 showNotification(tabId, {
                     module: 'FunCaptcha',
                     type: 'info',
-                    title: pageText('pageNoticePageLoading', 'Page Loading'),
+                    title: pageText('pageNoticePageLoading', 'Page loading'),
                     message: pageText('advFuncaptchaPageLoadingMsg', 'Page is loading, please wait...'),
                     duration: 5000
                 }).catch(() => {});
@@ -305,7 +305,7 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
                 await showNotification(tabId, {
                     module: 'FunCaptcha',
                     type: 'success',
-                    title: pageText('advFuncaptchaCapturedTitle', 'FunCaptcha Captured Successfully'),
+                    title: pageText('advFuncaptchaCapturedTitle', 'FunCaptcha captured successfully'),
                     message: pageText('advFuncaptchaCapturedCountFmt', 'Challenges captured: {0}', state.capturedData.length),
                     duration: 5000
                 });
@@ -313,7 +313,7 @@ async function funcaptchaStopCapture(tabId, reason = 'manual') {
                 await showNotification(tabId, {
                     module: 'FunCaptcha',
                     type: 'warning',
-                    title: pageText('advFuncaptchaCaptureTimeout', 'Capture Timeout'),
+                    title: pageText('advFuncaptchaCaptureTimeout', 'Capture timeout'),
                     message: pageText('advFuncaptchaNoChallenge', 'No FunCaptcha challenge detected (60s timeout)'),
                     duration: 5000
                 });

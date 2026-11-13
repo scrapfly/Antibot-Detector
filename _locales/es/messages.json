@@ -1820,7 +1820,7 @@
     "message": "✓ Sin CAPTCHAs"
   },
   "detectionBadgeNoAntibot": {
-    "message": "✓ Sin Anti-Bot"
+    "message": "✓ Sin anti-bot"
   },
   "detectionBadgeNoFingerprint": {
     "message": "✓ Sin huella digital"
@@ -3130,7 +3130,7 @@
     "message": "Tipo"
   },
   "advCloudflareSiteKeyCopied": {
-    "message": "Site Key copiada"
+    "message": "Site key copiada"
   },
   "advCloudflareTypeChallenge": {
     "message": "Challenge"
@@ -3145,7 +3145,7 @@
     "message": "Clave pública"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
     "message": "BDA (matriz de datos del navegador)"

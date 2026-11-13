@@ -63,7 +63,7 @@ class ScrapflyPopup {
   warnIfRulesUnreadable() {
     if (this.rulesChecked || !this.detectorManager || this.detectorManager.storageState !== 'unreadable') return;
     this.rulesChecked = true;
-    NotificationHelper.error(FormatUtils.t('rulesUnreadableHint', 'The stored rules could not be read: the built-in rules are in use and rule changes are not saved. To replace the stored rules, import a rules file in the Rules tab and choose Replace All.'));
+    NotificationHelper.error(FormatUtils.t('rulesUnreadableHint', 'The stored rules could not be read: the built-in rules are in use and rule changes are not saved. To replace the stored rules, import a rules file in the Rules tab and choose Replace all.'));
   }
 
   /**
@@ -508,7 +508,7 @@ class ScrapflyPopup {
       badgeTrimmed === '?' ||
       badgeTrimmed === '\u2715';
 
-    // Without a finished scan the page is never shown as "Nothing Detected": that green card is for a scan that
+    // Without a finished scan the page is never shown as "Nothing detected": that green card is for a scan that
     // ran and found nothing (its result comes with data). A reload mark means the scan was cut short or cleared.
     if (isReloadBadge) {
       this.detection.showEmptyState({ outcome: 'unscanned' });
@@ -516,7 +516,7 @@ class ScrapflyPopup {
     }
 
     // A page that is still loading has no scan to report yet: show the scan, not
-    // "Nothing Detected" or "Scan interrupted" (Nike reloads itself under Kasada)
+    // "Nothing detected" or "Scan interrupted" (Nike reloads itself under Kasada)
     const tabLoading = await this.isTabLoading(tabId);
     if (!this.isDetectionViewRequestCurrent(requestId)) {
       return false;
@@ -938,7 +938,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       I18n.startAutoApply();
       // i18n.js has no data-i18n-alt, so the header logo's alt text is set here
       const logo = document.querySelector('.logo-icon');
-      if (logo) logo.alt = I18n.tr('popupUiLogoAlt', 'Scrapfly Robot');
+      if (logo) logo.alt = I18n.tr('popupUiLogoAlt', 'Scrapfly robot');
     } catch (e) { /* i18n is best-effort */ }
   }
 

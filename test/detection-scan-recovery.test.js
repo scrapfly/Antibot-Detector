@@ -7,7 +7,7 @@ const vm = require('node:vm');
 
 // The scan card ("Buscando protecciones") must always settle. Nike made it
 // visible: Kasada reloads the page and a heavy page loads for longer than the
-// first 10 s check, so the popup showed "Scan interrupted" or "Nothing Detected"
+// first 10 s check, so the popup showed "Scan interrupted" or "Nothing detected"
 // for a scan that had not finished, or stayed on the scan card for good when
 // the background's completion message never reached the popup.
 
@@ -141,10 +141,10 @@ function popup() {
   return { instance, calls, context };
 }
 
-// Never the green "Nothing Detected": that card is for a finished scan, whose answer carries data
+// Never the green "Nothing detected": that card is for a finished scan, whose answer carries data
 for (const [name, response, outcome] of [['no answer', null, 'unscanned'], ['an interrupted scan', { status: 'interrupted' }, 'interrupted'],
   ['no data', { status: 'ok', data: null }, 'unscanned'], ['an error', { status: 'error', error: 'x' }, 'failed']]) {
-  test(`opening the popup on a page still loading shows the scan card, not "Nothing Detected" (${name})`, async () => {
+  test(`opening the popup on a page still loading shows the scan card, not "Nothing detected" (${name})`, async () => {
     const { instance, calls } = popup();
     tabStatus = 'loading';
     await instance.handleDetectionResponseAndUpdateUI(5, response, 1);

@@ -2,10 +2,10 @@
 /**
  * The 3.1.3 Advanced changes end to end, in the real extension (unpacked in Chromium):
  *
- *   Imperva         Analyze Scripts keeps the POST bodies of Imperva's own requests only (real webRequest bodies), cut at a
+ *   Imperva         Analyze scripts keeps the POST bodies of Imperva's own requests only (real webRequest bodies), cut at a
  *                   fixed size; a beacon, a form and a third party that copies the ?d= naming are not kept
  *   Akamai          Extract Sensor deletes _abck once the extraction is armed, and the sensor the reload sends is captured
- *   Lemin, ALTCHA   Extract Site Key finds each key on a real page; Analyze Scripts lists each vendor's own requests, from what
+ *   Lemin, ALTCHA   Extract site key finds each key on a real page; Analyze scripts lists each vendor's own requests, from what
  *                   the page already loaded and from a reload; the Advanced tab's supported protections count both
  *
  * A local site stands in for each protection. The vendors' hosts do not resolve here (host-resolver rules), so nothing leaves the
@@ -176,7 +176,7 @@ async function scenario(name, fn) {
   await W(() => chrome.storage.local.set({ scrapfly_language_override: 'en' }));
 
   // ===============================================================================================
-  await scenario('Imperva: Analyze Scripts keeps the body of Imperva\'s own request only, cut at 8192 characters', async () => {
+  await scenario('Imperva: Analyze scripts keeps the body of Imperva\'s own request only, cut at 8192 characters', async () => {
     const url = `${origin}/imperva`;
     const page = await open(url);
     const tabId = await tabIdOf(url);
@@ -223,7 +223,7 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
-  await scenario('Lemin and ALTCHA: Extract Site Key finds each key on a real page and nothing of the other vendor', async () => {
+  await scenario('Lemin and ALTCHA: Extract site key finds each key on a real page and nothing of the other vendor', async () => {
     // A Sentinel on the owner's own host answers the widget; its request is in the page's Resource Timing list
     await ctx.route('https://sentinel.shop.example/**', route => route.fulfill({
       status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: '{"algorithm":"SHA-256"}'
@@ -250,7 +250,7 @@ async function scenario(name, fn) {
   });
 
   // ===============================================================================================
-  await scenario('Lemin and ALTCHA: Analyze Scripts lists the vendor\'s own requests, from the loaded page and from a reload', async () => {
+  await scenario('Lemin and ALTCHA: Analyze scripts lists the vendor\'s own requests, from the loaded page and from a reload', async () => {
     const url = `${origin}/vendors`;
     const page = await open(url);
     const tabId = await tabIdOf(url);

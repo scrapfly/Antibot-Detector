@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-// 3.1.9: the rule editor keeps a content rule's scope "page" (Settings → Content Search Scope → "Only block and challenge pages"),
+// 3.1.9: the rule editor keeps a content rule's scope "page" (Settings → Content search scope → "Only block and challenge pages"),
 // drops it when the option is turned off, and never stores it beside "Only check scripts".
 
 const root = path.join(__dirname, '..');

@@ -68,14 +68,14 @@
       <div class="state-card-icon">
         <img src="icons/icon128.png" alt="Scrapfly" width="64" height="64" class="state-card-logo">
       </div>
-      <h3 class="state-card-title" data-i18n="detectionEmptyTitle">Nothing Detected</h3>
+      <h3 class="state-card-title" data-i18n="detectionEmptyTitle">Nothing detected</h3>
       <p class="state-card-description" data-i18n="detectionNoDetectionsDesc">No matching antibot, CAPTCHA, or fingerprinting signals were found on this page.</p>
       <!-- A page with no completed scan (none yet, a failed or an interrupted one): one click scans it again -->
       <button id="emptyRescanBtn" class="state-card-enable-btn" type="button" data-i18n="historyScanAgain" hidden>Scan again now</button>
       <div class="state-card-badges">
         <span class="state-card-badge" data-i18n="detectionBadgeNoCaptchas">✓ No CAPTCHAs</span>
-        <span class="state-card-badge" data-i18n="detectionBadgeNoAntibot">✓ No Anti-Bot</span>
-        <span class="state-card-badge" data-badge="fingerprint" data-i18n="detectionBadgeNoFingerprint">✓ No Fingerprinting</span>
+        <span class="state-card-badge" data-i18n="detectionBadgeNoAntibot">✓ No anti-bot</span>
+        <span class="state-card-badge" data-badge="fingerprint" data-i18n="detectionBadgeNoFingerprint">✓ No fingerprinting</span>
       </div>
       <!-- A scan that found nothing: when it ran (or the other page of the site it ran on, under the Domain cache scope), and one
            click to scan this page again. The result is cached for days, so reloading the page shows the same card -->
@@ -121,7 +121,7 @@
               <path d="M21 12a9 9 0 1 1-9-9c2.5 0 4.7 1 6.4 2.6L21 8"/><path d="M21 3v5h-5"/><circle cx="12" cy="12" r="2.5"/>
             </svg>
           </button>
-          <button id="clearCacheBtn" class="url-action-btn clear-cache-btn" title="Clear Cache" data-i18n-title="detectionTitleClearCache">
+          <button id="clearCacheBtn" class="url-action-btn clear-cache-btn" title="Clear cache" data-i18n-title="detectionTitleClearCache">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M3 6h18"/>
               <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -310,7 +310,7 @@
             <path d="M12 3v8"/><path d="M6.3 7.2a8 8 0 1 0 11.4 0"/>
           </svg>
         </span>
-        <h3 class="state-card-title" data-i18n="detectionDisabledTitle">Detection Disabled</h3>
+        <h3 class="state-card-title" data-i18n="detectionDisabledTitle">Detection disabled</h3>
       </div>
       <p class="state-card-description" data-i18n="detectionDisabledDesc">Security detection is currently turned off.</p>
       <button id="enableDetectionBtn" class="state-card-enable-btn" type="button" data-i18n="detectionEnableBtn">Enable detection</button>
@@ -331,7 +331,7 @@
         <div class="detection-modal-title-group">
           <div class="detection-modal-icon" id="detectionModalIcon"></div>
           <div class="detection-modal-title-info">
-            <h3 id="detectionModalName">Detection Name</h3>
+            <h3 id="detectionModalName">Detection name</h3>
             <div id="detectionModalCategories" class="detection-modal-categories"></div>
           </div>
         </div>
@@ -412,7 +412,7 @@
         </div>
         <div class="detection-modal-section detection-modal-section--methods">
           <div class="detection-modal-section-header">
-            <h4 data-i18n="detectionModalDetectionMethods">Detection Methods</h4>
+            <h4 data-i18n="detectionModalDetectionMethods">Detection methods</h4>
           </div>
           <div id="detectionModalMethods" class="detection-modal-methods-list">
             <span class="badge" data-i18n="detectionModalNoMethodsDetected">No methods detected</span>

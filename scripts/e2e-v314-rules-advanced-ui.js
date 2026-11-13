@@ -619,7 +619,7 @@ async function scenario(name, fn) {
     await showTools(popup);
     const dialog = await popup.$eval('#advancedInfoModal .advanced-info-container', el => ({ role: el.getAttribute('role'), modal: el.getAttribute('aria-modal'), by: el.getAttribute('aria-labelledby'),
       name: document.getElementById(el.getAttribute('aria-labelledby')).textContent.trim() }));
-    assert.deepEqual(dialog, { role: 'dialog', modal: 'true', by: 'advancedInfoTitle', name: 'Advanced Detection Tools' });
+    assert.deepEqual(dialog, { role: 'dialog', modal: 'true', by: 'advancedInfoTitle', name: 'Advanced detection tools' });
     await popup.focus('#showAdvancedHelp');
     await popup.keyboard.press('Enter');
     await until(() => helpOpen(popup), 5000, 'the dialog');

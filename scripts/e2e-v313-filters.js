@@ -848,7 +848,7 @@ async function scenario(name, fn) {
       assert.deepEqual(await listed(popup), ['V313 Fingerprint Probe']);
       await popup.fill('#detectionSearch', '');
       await until(async () => (await listed(popup)).length === 3, 5000, 'the search cleared');
-      // A visit to another tab and back shows the results, not the clean "Nothing Detected" card
+      // A visit to another tab and back shows the results, not the clean "Nothing detected" card
       await popup.$eval('.tab-btn[data-tab="history"]', el => el.click());
       await popup.$eval('.tab-btn[data-tab="detection"]', el => el.click());
       await untilDrawn(popup, async () => (await names(popup)).length === 2, 15000, 'the results after a visit to History and back');

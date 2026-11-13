@@ -3130,7 +3130,7 @@
     "message": "Tipo"
   },
   "advCloudflareSiteKeyCopied": {
-    "message": "Site Key copiata"
+    "message": "Site key copiata"
   },
   "advCloudflareTypeChallenge": {
     "message": "Challenge"
@@ -3145,7 +3145,7 @@
     "message": "Chiave pubblica"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
     "message": "BDA (array di dati del browser)"

@@ -7,7 +7,7 @@ const Fixtures = require('../scripts/e2e-v313-advanced-tools.js');
 const Vendors = require('../modules/advanced/captcha-vendors.js');
 
 // The local pages the Advanced browser suite opens (scripts/e2e-v313-advanced-tools.js), one per protection, are only worth
-// anything while the extension's own detectors still score them above the Advanced minimum and the vendors' Analyze Scripts
+// anything while the extension's own detectors still score them above the Advanced minimum and the vendors' Analyze scripts
 // still lists what the suite expects. This checks both in node, with the real detection engine, so a detector change fails here
 // in a second instead of in the middle of a browser run.
 
@@ -66,7 +66,7 @@ test('the variants: Shape v2 and the late pages are detected the same way, a pla
   for (const detectorId of ['detect-akamai', 'detect-datadome', 'detect-recaptcha']) assert.ok(multi[detectorId] > 50, detectorId);
 });
 
-test('the first load of a late page carries only the cookie that detects it, so Analyze Scripts has to reload it', () => {
+test('the first load of a late page carries only the cookie that detects it, so Analyze scripts has to reload it', () => {
   for (const id of ['datadome-late', 'cloudflare-late']) {
     const spec = Fixtures.VARIANTS.find(item => item.id === id);
     assert.equal(spec.late, true);
@@ -77,7 +77,7 @@ test('the first load of a late page carries only the cookie that detects it, so 
   }
 });
 
-test('the first load of the ALTCHA late page carries only its widget markup, which alone detects it above 50%, so Analyze Scripts has to reload it', () => {
+test('the first load of the ALTCHA late page carries only its widget markup, which alone detects it above 50%, so Analyze scripts has to reload it', () => {
   const spec = Fixtures.VARIANTS.find(item => item.id === 'altcha-late');
   assert.equal(spec.late, true);
   assert.equal((spec.cookies || []).length, 0, 'no cookie to detect it by');
@@ -95,7 +95,7 @@ test('the ALTCHA Cloud embed page names its key only in the widget\'s attribute,
   assert.ok(scores(spec)['detect-altcha'] > 50, JSON.stringify(scores(spec)));
 });
 
-test('Analyze Scripts lists, for each page, exactly the addresses the suite expects with the classification it expects', () => {
+test('Analyze scripts lists, for each page, exactly the addresses the suite expects with the classification it expects', () => {
   const classifiers = { awswaf: 'awsWafClassifyUrl', cloudflare: 'cloudflareClassifyUrl', datadome: 'datadomeClassifyUrl', funcaptcha: 'funcaptchaClassifyUrl',
     hcaptcha: 'hcaptchaClassifyUrl', turnstile: 'turnstileClassifyUrl' };
   const worker = vm.createContext({ console, URL, Logger: new Proxy({}, { get: () => () => {} }) });
@@ -113,7 +113,7 @@ test('Analyze Scripts lists, for each page, exactly the addresses the suite expe
     for (const [type, url] of want) assert.ok(got.some(([gotType, gotUrl]) => gotType === type && gotUrl === url), `${spec.id}: ${type} ${url} in ${JSON.stringify(got)}`);
     checked++;
   }
-  assert.equal(checked, 22, 'every protection with an Analyze Scripts list that the suite checks');
+  assert.equal(checked, 22, 'every protection with an Analyze scripts list that the suite checks');
 });
 
 test('every CAPTCHA vendor of captcha-vendors.js has its page, and each key the suite expects is one the vendor\'s own rule accepts', () => {

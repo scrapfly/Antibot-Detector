@@ -1178,7 +1178,7 @@
     "message": "Échec de la suppression des captures"
   },
   "settingsCardWebhookIntegration": {
-    "message": "Intégration Webhook"
+    "message": "Intégration webhook"
   },
   "settingsEnableWebhook": {
     "message": "Activer le webhook"
@@ -3130,7 +3130,7 @@
     "message": "Type"
   },
   "advCloudflareSiteKeyCopied": {
-    "message": "Site Key copiée"
+    "message": "Site key copiée"
   },
   "advCloudflareTypeChallenge": {
     "message": "Défi"

@@ -2836,7 +2836,7 @@
     "message": "ABCK 等級"
   },
   "advAkamaiAbckCookie": {
-    "message": "ABCK Cookie"
+    "message": "ABCK cookie"
   },
   "advAkamaiVersionLabel": {
     "message": "Akamai 版本"
@@ -3028,7 +3028,7 @@
     "message": "標頭模式"
   },
   "advShapeCookieTitle": {
-    "message": "Shape Cookie"
+    "message": "Shape cookie"
   },
   "advShapeAnalysisTitle": {
     "message": "Shape Security 分析"

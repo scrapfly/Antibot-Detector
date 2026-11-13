@@ -3145,7 +3145,7 @@
     "message": "Publik nyckel"
   },
   "advFuncaptchaUserAgent": {
-    "message": "User Agent"
+    "message": "User agent"
   },
   "advFuncaptchaBdaLabel": {
     "message": "BDA (array med webbläsardata)"

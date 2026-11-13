@@ -39,9 +39,9 @@ Rules.prototype.handleImport = async function(event) {
     const data = JSON.parse(text);
 
     const mode = await NotificationHelper.chooseImportMode({
-      title: _tr('importDetectorsTitle', 'Import Detectors'),
-      message: _tr('importDetectorsModeMessage', 'Merge adds the imported detectors to yours.<br>Replace All deletes your custom detectors first; built-in detectors stay.'),
-      replaceText: _tr('replaceAllOption', 'Replace All')
+      title: _tr('importDetectorsTitle', 'Import detectors'),
+      message: _tr('importDetectorsModeMessage', 'Merge adds the imported detectors to yours.<br>Replace all deletes your custom detectors first; built-in detectors stay.'),
+      replaceText: _tr('replaceAllOption', 'Replace all')
     });
 
     // Cancel, ✕, Escape and the backdrop: leave the stored detectors alone

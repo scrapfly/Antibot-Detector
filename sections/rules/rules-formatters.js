@@ -401,7 +401,7 @@ Rules.prototype.getDetectorIcon = function(detector, category = '') {
     : String(value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const i18n = (typeof I18n !== 'undefined') ? I18n : null;
   const iconAlt = escAttr((i18n && i18n.get('ruleFieldIcon')) || 'Icon');
-  const scrapflyAlt = escAttr((i18n && i18n.get('rulesUiScrapflyIconAlt')) || 'Scrapfly Icon');
+  const scrapflyAlt = escAttr((i18n && i18n.get('rulesUiScrapflyIconAlt')) || 'Scrapfly icon');
   const iconOwnerName = this.getDetectorDisplayName ? this.getDetectorDisplayName(detector.displayName || detector.name) : (detector.displayName || detector.name);
   const namedIconAlt = escAttr((i18n && i18n.format('rulesUiDetectorIconAltFmt', iconOwnerName)) || `${iconOwnerName} Icon`);
 

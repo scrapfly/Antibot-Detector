@@ -1173,7 +1173,7 @@ SettingsUI.setupEventListeners = function() {
       });
     }
 
-    // JS API card: "Available Events" / "Usage Example" are collapsed by default
+    // JS API card: "Available events" / "Usage example" are collapsed by default
     document.querySelectorAll('#settingsModal .api-collapsible-header').forEach((header) => {
       if (header.dataset.collapsibleReady) return;
       header.dataset.collapsibleReady = '1';

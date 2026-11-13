@@ -69,8 +69,8 @@ test('no capture data shows a note instead of throwing', () => {
   }
 });
 
-// A tool's saved result (Check Cookies, Extract Site Key...) goes in the same list as the captures. The vendor's capture card reads
-// fields only a capture has: a result in an Akamai list showed an "ABCK Level" it never had
+// A tool's saved result (Check cookies, Extract site key...) goes in the same list as the captures. The vendor's capture card reads
+// fields only a capture has: a result in an Akamai list showed an "ABCK level" it never had
 test('a saved tool result is listed with the plain card, a capture with the vendor\'s own', () => {
   const context = load();
   context.UrlUtils = { resolveDisplayFavicon: () => '', getDefaultFaviconUrl: () => '' };
@@ -82,8 +82,8 @@ test('a saved tool result is listed with the plain card, a capture with the vend
   const cards = html.split('<div class="capture-card"').slice(1);
   assert.equal(cards.length, 2, 'one card each, in order');
   assert.match(cards[0], /data-capture-id="r1"/);
-  assert.doesNotMatch(cards[0], /ABCK Level/, 'the result has no ABCK level to show');
+  assert.doesNotMatch(cards[0], /ABCK level/, 'the result has no ABCK level to show');
   assert.match(cards[1], /data-capture-id="c1"/);
-  assert.match(cards[1], /ABCK Level/, 'the capture keeps its vendor card');
+  assert.match(cards[1], /ABCK level/, 'the capture keeps its vendor card');
   assert.equal(module.renderCaptureRows([]), '');
 });

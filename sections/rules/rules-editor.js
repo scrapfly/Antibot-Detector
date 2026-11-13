@@ -31,13 +31,13 @@ const rulesEditorFormat = (key, fallback, ...args) => {
 // "?" button title of each method section
 const RULES_EDITOR_HELP_TITLES = {
   js_hooks: ['rulesUiHelpJsHooks', 'What are JS hooks?'],
-  window: ['rulesUiHelpWindow', 'What are Window properties?'],
+  window: ['rulesUiHelpWindow', 'What are window properties?'],
   url: ['rulesUiHelpUrl', 'What is URL detection?'],
-  header: ['rulesUiHelpHeader', 'What is Header detection?'],
-  cookie: ['rulesUiHelpCookie', 'What is Cookie detection?'],
-  content: ['rulesUiHelpContent', 'What is Content detection?'],
+  header: ['rulesUiHelpHeader', 'What is header detection?'],
+  cookie: ['rulesUiHelpCookie', 'What is cookie detection?'],
+  content: ['rulesUiHelpContent', 'What is content detection?'],
   dom: ['rulesUiHelpDom', 'What is DOM detection?'],
-  payload: ['rulesUiHelpPayload', 'What is Payload detection?']
+  payload: ['rulesUiHelpPayload', 'What is payload detection?']
 };
 
 Rules.prototype.getMethodHelpButtonTitle = function(methodType) {
@@ -49,16 +49,16 @@ Rules.prototype.getMethodHelpButtonTitle = function(methodType) {
 Rules.prototype.getMethodInputPlaceholders = function(methodType) {
     let name = rulesEditorText('ruleFieldName', 'Name');
     let value = rulesEditorText('rulesUiValueOptionalPlaceholder', 'Value (optional)');
-    if (methodType === 'dom') name = rulesEditorText('rulesUiDomSelectorPlaceholder', 'CSS Selector (e.g., .class, #id, [attr])');
-    else if (methodType === 'content') name = rulesEditorText('rulesUiContentTextPlaceholder', 'Text/Word to search');
-    else if (methodType === 'url' || methodType === 'urls') name = rulesEditorText('rulesUiUrlPatternPlaceholder', 'URL Pattern');
-    else if (methodType === 'js_hooks') name = rulesEditorText('rulesUiJsHookTargetPlaceholder', 'JS Hook Target (e.g., Navigator.prototype.webdriver)');
+    if (methodType === 'dom') name = rulesEditorText('rulesUiDomSelectorPlaceholder', 'CSS selector (e.g., .class, #id, [attr])');
+    else if (methodType === 'content') name = rulesEditorText('rulesUiContentTextPlaceholder', 'Text/word to search');
+    else if (methodType === 'url' || methodType === 'urls') name = rulesEditorText('rulesUiUrlPatternPlaceholder', 'URL pattern');
+    else if (methodType === 'js_hooks') name = rulesEditorText('rulesUiJsHookTargetPlaceholder', 'JS hook target (e.g., Navigator.prototype.webdriver)');
     else if (methodType === 'window') {
-      name = rulesEditorText('rulesUiWindowPathPlaceholder', 'Window Path (e.g., grecaptcha, _cf_chl_opt)');
+      name = rulesEditorText('rulesUiWindowPathPlaceholder', 'Window path (e.g., grecaptcha, _cf_chl_opt)');
       value = rulesEditorText('rulesUiWindowConditionPlaceholder', 'Condition (e.g., typeof object, typeof function)');
     } else if (methodType === 'cookie') {
-      name = rulesEditorText('rulesUiCookieNamePlaceholder', 'Cookie Name (e.g., __cf_bm, session_id)');
-      value = rulesEditorText('rulesUiCookieValuePlaceholder', 'Cookie Value Pattern (optional)');
+      name = rulesEditorText('rulesUiCookieNamePlaceholder', 'Cookie name (e.g., __cf_bm, session_id)');
+      value = rulesEditorText('rulesUiCookieValuePlaceholder', 'Cookie value pattern (optional)');
     } else if (methodType === 'payload') name = rulesEditorText('rulesUiPayloadTextPlaceholder', 'Text (e.g., sensor_data, challenge_token)');
     return { name, value };
   };
@@ -66,15 +66,15 @@ Rules.prototype.getMethodInputPlaceholders = function(methodType) {
 // Button titles and labels shared by every pattern row and section
 Rules.prototype.getMethodRowTexts = function() {
     return {
-      nameSettings: rulesEditorText('rulesUiNameSettings', 'Name Settings'),
-      valueSettings: rulesEditorText('rulesUiValueSettings', 'Value Settings'),
-      deleteMethod: rulesEditorText('rulesUiDeleteMethod', 'Delete Method'),
-      clearValue: rulesEditorText('rulesUiClearValue', 'Clear Value'),
-      addValue: rulesEditorText('rulesUiAddValue', 'Add Value'),
+      nameSettings: rulesEditorText('rulesUiNameSettings', 'Name settings'),
+      valueSettings: rulesEditorText('rulesUiValueSettings', 'Value settings'),
+      deleteMethod: rulesEditorText('rulesUiDeleteMethod', 'Delete method'),
+      clearValue: rulesEditorText('rulesUiClearValue', 'Clear value'),
+      addValue: rulesEditorText('rulesUiAddValue', 'Add value'),
       previousPage: rulesEditorText('paginationPrev', 'Previous page'),
       nextPage: rulesEditorText('paginationNext', 'Next page'),
       searchPatterns: rulesEditorText('methodSearchPatterns', 'Search patterns...'),
-      addPattern: rulesEditorText('methodAddPattern', 'Add Pattern'),
+      addPattern: rulesEditorText('methodAddPattern', 'Add pattern'),
       emptyPagination: rulesEditorFormat('paginationShowingItems', 'Showing {0}-{1} of {2} {3}', 0, 0, 0,
         (typeof I18n !== 'undefined' && I18n.get('methodSuffixPatterns')) || 'patterns'),
       firstPage: rulesEditorFormat('rulesUiPageOfFmt', 'Page {0} / {1}', 1, 1)
@@ -334,7 +334,7 @@ Rules.prototype.populateDetectionMethods = function(detector) {
             <svg width="12" height="12" viewBox="0 0 24 24">
               <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"/>
             </svg>
-            ${(_t && _t.get('methodAddPattern')) || 'Add Pattern'}
+            ${(_t && _t.get('methodAddPattern')) || 'Add pattern'}
           </button>
         </div>
       `;
