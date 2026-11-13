@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "歷史記錄"
   },
+  "storageBulkRuns": {
+    "message": "批次掃描執行紀錄"
+  },
   "storageRules": {
     "message": "規則與類別"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "工具擷取項目已刪除"
+  },
+  "storageClearBulkTitle": {
+    "message": "清除批次掃描執行紀錄"
+  },
+  "storageClearBulkMessage": {
+    "message": "將刪除為與清單的下一次執行比較而保留的已完成批次掃描執行紀錄。歷史紀錄、規則和設定不受影響。"
+  },
+  "storageBulkCleared": {
+    "message": "批次掃描執行紀錄已清除"
   },
   "storageClearFailed": {
     "message": "無法清除。請再試一次。"
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "重新掃描失敗的網頁"
   },
+  "bulkRunAgain": {
+    "message": "再次執行"
+  },
   "bulkFilterLabel": {
     "message": "顯示",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "錯誤狀態（4xx、5xx）"
   },
+  "bulkFilterChanged": {
+    "message": "自上次執行以來有變化"
+  },
   "bulkFilterOnlyFmt": {
     "message": "僅 {0}"
   },
   "bulkCopyLines": {
     "message": "複製為行"
+  },
+  "bulkCompareExport": {
+    "message": "與匯出檔比較…"
   },
   "bulkFilterNone": {
     "message": "沒有頁面符合此篩選條件。"
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "網址"
+  },
+  "bulkColPrevious": {
+    "message": "與上次執行相比"
+  },
+  "bulkPrevUnchanged": {
+    "message": "無變化"
+  },
+  "bulkPrevNew": {
+    "message": "上次執行中沒有"
   },
   "bulkStatusWaiting": {
     "message": "等待中"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "已完成 {0}/{1}"
   },
+  "bulkStoredFmt": {
+    "message": "{0} 執行的結果"
+  },
   "bulkCountsFmt": {
     "message": "完成：{0} · 有防護：{1} · 失敗：{2} · 已略過：{3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "其他未納入的行：{0}"
   },
+  "bulkComparedFmt": {
+    "message": "已與 {0} 的執行比較。有變化的頁面：{1}"
+  },
   "bulkHistoryPaused": {
     "message": "歷史記錄已暫停：網頁會被掃描，但不會被記錄。"
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "無法讀取該檔案。"
+  },
+  "bulkErrCompareFile": {
+    "message": "此檔案不是批次掃描的 JSON 匯出檔。"
   },
   "bulkEmpty": {
     "message": "貼上網址或上傳檔案，然後選擇開始。"

@@ -6,6 +6,11 @@
  * setting and the scans happen there. The page shows the run as the worker keeps it in chrome.storage.session, so it
  * can be closed and opened again while the run goes on. Exports are built here from that state (BulkScan.build).
  * The addresses History's Select bar hands over (BulkHandoff, also in session storage) fill the list once.
+ *
+ * The worker also keeps the runs that finished (BulkRuns, in chrome.storage.local): a run of a list that ran before is compared
+ * with that earlier run (a "Vs previous run" column, the "Changed since previous run" choice of Show, a column of every export),
+ * or with a JSON export the person picks. With no run in session storage (the browser restarted), the page shows the run that
+ * finished last, read-only, with its exports. A CSV's other columns go with the list to the worker and come back in the table.
  */
 (function() {
   'use strict';
@@ -60,7 +65,36 @@
   const label = (pair, fallbackKey) => (pair ? tr(pair[0], pair[1]) : fallbackKey || '');
 
   const FILTER_KEY = 'bulkFilter';
-  const state = { run: null, filter: 'all', starting: false, colors: { ...Categories.DEFAULT_COLORS }, historyEnabled: true };
+  const state = {
+    run: null, filter: 'all', starting: false, colors: { ...Categories.DEFAULT_COLORS }, historyEnabled: true,
+    store: null,       // the finished runs the worker keeps (BulkRuns)
+    restored: false,   // the run shown is the one kept from before (no run in session storage): read-only
+    imported: null,    // a JSON export the person chose to compare with (BulkRuns.fromExport), until the next list
+    compare: null      // BulkScan.diff of the run shown with the earlier one, or null
+  };
+
+  /** The finished runs the worker keeps; nothing when they cannot be read (the page then compares with nothing). */
+  async function readStore() {
+    try {
+      const area = chrome.storage.local;
+      state.store = area ? (await area.get([BulkRuns.KEY]))[BulkRuns.KEY] || null : null;
+    } catch (_) { state.store = null; }
+  }
+
+  /** The run the shown one is compared with: the export the person chose, or the earlier run of the same list. */
+  function earlierRun() {
+    if (!state.run) return null;
+    return state.imported || BulkRuns.previousFor(state.store, state.run);
+  }
+
+  /** Show's choice as it applies: "Changed since previous run" shows every page when there is nothing to compare with. */
+  const activeFilter = () => (state.filter === 'changed' && !state.compare ? 'all' : state.filter);
+  const filterContext = () => ({ compare: state.compare });
+
+  function dateText(ts) {
+    if (!Number.isFinite(ts)) return '';
+    try { return new Intl.DateTimeFormat(I18n.locale(), { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(ts)); } catch (_) { return new Date(ts).toISOString(); }
+  }
 
   /* ---------- Talking to the worker ---------- */
 
@@ -178,8 +212,14 @@
     try {
       const entries = entriesOverride || await entriesOf(byId('bulkInput').value, cap);
       if (!entries.length) { notice(tr('bulkNothingToScan', 'There is no address to scan in this list.'), 'warn'); return; }
-      const response = await send(M.BULK_SCAN_START, { entries, cap, timeoutSec, delaySec, ...extra });
-      if (response.run) state.run = response.run;
+      // The person's other CSV columns go with the list, so the results come back with them
+      const extras = entriesOverride ? extra.extras : BulkScan.extrasOf(BulkScan.readList(byId('bulkInput').value));
+      const response = await send(M.BULK_SCAN_START, { entries, cap, timeoutSec, delaySec, ...extra, ...(extras ? { extras } : {}) });
+      if (response.run) {
+        state.run = response.run;
+        state.restored = false;
+        state.imported = null;
+      }
       if (response.status !== 'ok') {
         const errors = {
           busy: ['bulkErrBusy', 'A bulk scan is already running.'],
@@ -306,17 +346,68 @@
     return cell;
   }
 
+  /** The page's change since the earlier run: "+DataDome −Kasada · 200 → 403", Unchanged, or not in that run. */
+  function previousCell(item) {
+    const cell = document.createElement('td');
+    const entry = BulkScan.diffOf(state.compare, item);
+    if (!entry) return cell;
+    cell.className = entry.changed ? 'bulk-prev bulk-prev--changed' : 'bulk-prev';
+    cell.textContent = BulkScan.diffText(entry, {
+      unchanged: tr('bulkPrevUnchanged', 'Unchanged'),
+      new: tr('bulkPrevNew', 'Not in the previous run'),
+      status: (value) => label(STATUS_TEXT[value], value)
+    });
+    return cell;
+  }
+
+  /** The person's own CSV columns of the run (the cells are their text, never markup). */
+  function extraCells(item, columns) {
+    return columns.map((_, i) => {
+      const cell = document.createElement('td');
+      cell.className = 'bulk-extra';
+      cell.textContent = Array.isArray(item.extra) && item.extra[i] != null ? String(item.extra[i]) : '';
+      return cell;
+    });
+  }
+
+  const columnsOf = (run) => (run && Array.isArray(run.columns) ? run.columns.slice(0, BulkScan.MAX_EXTRA_COLUMNS) : []);
+
+  /** The header: "Vs previous run" when the run is compared, and one column per column of the person's CSV. */
+  function syncColumns(run) {
+    byId('bulkColPrevious').hidden = !state.compare;
+    const head = byId('bulkHeadRow');
+    const columns = columnsOf(run);
+    const signature = columns.join('\n');
+    if (head.dataset.columns === signature) return;
+    head.dataset.columns = signature;
+    const fixed = Array.from(head.children || []).filter(th => th.dataset.extra === undefined);
+    const added = columns.map((name) => {
+      const th = document.createElement('th');
+      th.scope = 'col';
+      th.className = 'bulk-col-extra';
+      th.dataset.extra = '1';
+      th.textContent = name;
+      return th;
+    });
+    head.replaceChildren(...fixed, ...added);
+  }
+
   function renderRows(run) {
     const body = byId('bulkRows');
     const fragment = document.createDocumentFragment();
+    const filter = activeFilter();
+    const context = filterContext();
+    const columns = columnsOf(run);
     run.items.forEach((item, index) => {
-      if (!BulkFilter.matches(item, state.filter)) return;
+      if (!BulkFilter.matches(item, filter, context)) return;
       const row = document.createElement('tr');
       row.className = `bulk-row bulk-row--${item.status}`;
       const num = document.createElement('td');
       num.className = 'bulk-col-num';
       num.textContent = number(index + 1);
       row.append(num, addressCell(item), statusCell(item), protectionsCell(item), difficultyCell(item));
+      if (state.compare) row.append(previousCell(item));
+      row.append(...extraCells(item, columns));
       fragment.appendChild(row);
     });
     if (!fragment.children.length) {
@@ -324,7 +415,7 @@
       const row = document.createElement('tr');
       row.className = 'bulk-row bulk-row--empty';
       const cell = document.createElement('td');
-      cell.colSpan = 5;
+      cell.colSpan = 5 + (state.compare ? 1 : 0) + columns.length;
       cell.className = 'bulk-muted';
       cell.textContent = tr('bulkFilterNone', 'No page matches this filter.');
       row.appendChild(cell);
@@ -349,9 +440,14 @@
     byId('bulkStopBtn').hidden = !active;
     byId('bulkNewBtn').hidden = !run || active;
     const counts = run ? BulkScan.counts(run) : null;
-    byId('bulkWaitingBtn').hidden = !(run && run.status === 'stopped' && counts.waiting > 0);
-    byId('bulkRetryFailedBtn').hidden = !(run && (run.status === 'stopped' || run.status === 'done') && counts.failed > 0);
-    const exportable = !!(run && run.items.some(item => BulkFilter.matches(item, state.filter)));
+    // The run kept from before the restart is read-only: the worker has no run to go on with, only Run again starts one
+    const live = !!run && !state.restored;
+    byId('bulkWaitingBtn').hidden = !(live && run.status === 'stopped' && counts.waiting > 0);
+    byId('bulkRetryFailedBtn').hidden = !(live && (run.status === 'stopped' || run.status === 'done') && counts.failed > 0);
+    byId('bulkRunAgainBtn').hidden = !(run && (run.status === 'stopped' || run.status === 'done') && runAgainEntries(run).length > 0);
+    byId('bulkRunAgainBtn').disabled = state.starting;
+    byId('bulkCompareBtn').hidden = !run;
+    const exportable = !!(run && run.items.some(item => BulkFilter.matches(item, activeFilter(), filterContext())));
     byId('bulkExportCsvBtn').disabled = !exportable;
     byId('bulkExportJsonBtn').disabled = !exportable;
     byId('bulkExportMarkdownBtn').disabled = !exportable;
@@ -359,13 +455,20 @@
     // The button that was just pressed (Pause, Resume, Stop, Scan again) went away: the keyboard goes to the one that took its place
     // instead of back to the top of the page
     if (focused && focused !== document.body && (focused.hidden === true || focused.disabled === true)) {
-      const next = ['bulkPauseBtn', 'bulkResumeBtn', 'bulkStopBtn', 'bulkNewBtn', 'bulkInput'].map(byId).find(el => el && !el.hidden && !el.disabled);
+      const next = ['bulkPauseBtn', 'bulkResumeBtn', 'bulkStopBtn', 'bulkRunAgainBtn', 'bulkNewBtn', 'bulkInput'].map(byId).find(el => el && !el.hidden && !el.disabled);
       if (next) next.focus();
     }
   }
 
+  /** Run again: the run's pages that were scanned or tried (a page left out, by Sites to scan or as no address, stays out). */
+  function runAgainEntries(run) {
+    return (run && Array.isArray(run.items) ? run.items : []).filter(item => item.status !== 'skipped').map(item => item.url);
+  }
+
   function render() {
     const run = state.run;
+    const earlier = earlierRun();
+    state.compare = run && earlier ? BulkScan.diff(earlier, run) : null;
     byId('bulkRunCard').hidden = !run;
     byId('bulkEmpty').hidden = !!run || !!byId('bulkInput').value.trim();
     byId('bulkHistoryPaused').hidden = state.historyEnabled;
@@ -378,7 +481,9 @@
     byId('bulkProgressBar').style.inlineSize = `${percent}%`;
     byId('bulkProgress').setAttribute('aria-valuenow', String(percent));
     byId('bulkProgress').classList.toggle('is-paused', run.status === 'paused');
-    byId('bulkRunStatus').textContent = `${label(RUN_TEXT[run.status], run.status)} · ${fmt('bulkProgressFmt', '{0} of {1} finished', number(finishedCount), number(toScan))}`;
+    byId('bulkRunStatus').textContent = state.restored
+      ? fmt('bulkStoredFmt', 'Results of the run of {0}', dateText(run.finishedAt || run.startedAt))
+      : `${label(RUN_TEXT[run.status], run.status)} · ${fmt('bulkProgressFmt', '{0} of {1} finished', number(finishedCount), number(toScan))}`;
     byId('bulkRunCounts').textContent = fmt('bulkCountsFmt', 'Done: {0} · With protections: {1} · Failed: {2} · Skipped: {3}',
       number(counts.done), number(counts.found), number(counts.failed), number(counts.skipped));
     // The protections found on the most pages: names and numbers, so the label is all there is to translate. Each is isolated
@@ -400,10 +505,17 @@
     if (run.skippedOver) notes.push(fmt('bulkMoreSkippedFmt', 'Other lines left out: {0}', number(run.skippedOver)));
     byId('bulkRunNotes').textContent = notes.join(' · ');
     byId('bulkRunNotes').hidden = !notes.length;
+    const compared = state.compare
+      ? fmt('bulkComparedFmt', 'Compared with the run of {0}. Pages changed: {1}', dateText(state.compare.finishedAt || state.compare.startedAt), number(state.compare.changed))
+      : '';
+    byId('bulkRunCompared').textContent = compared;
+    byId('bulkRunCompared').hidden = !compared;
     syncFilterOptions(run);
+    syncColumns(run);
     renderRows(run);
-    const shown = run.items.filter(item => BulkFilter.matches(item, state.filter)).length;
-    byId('bulkFilterNote').textContent = state.filter === 'all' ? ''
+    const filter = activeFilter();
+    const shown = run.items.filter(item => BulkFilter.matches(item, filter, filterContext())).length;
+    byId('bulkFilterNote').textContent = filter === 'all' ? ''
       : fmt('bulkShowingFmt', 'Pages shown: {0} of {1}. Exports include only these.', number(shown), number(run.items.length));
   }
 
@@ -411,7 +523,7 @@
 
   function exportRun(format) {
     if (!state.run) return;
-    const out = BulkScan.build(BulkFilter.apply(state.run, state.filter), { format });
+    const out = BulkScan.build(BulkFilter.apply(state.run, activeFilter(), filterContext()), { format, compare: state.compare });
     const blob = new Blob([out.fileText], { type: `${out.type};charset=utf-8` });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -425,7 +537,7 @@
 
   async function copyLines() {
     if (!state.run) return;
-    const text = BulkScan.oneLines(BulkFilter.apply(state.run, state.filter));
+    const text = BulkScan.oneLines(BulkFilter.apply(state.run, activeFilter(), filterContext()));
     if (!text) return;
     // notify:false leaves the words to this page, so a copy the browser refused must not be announced as Copied
     if (!await FormatUtils.copyToClipboard(text, { notify: false })) {
@@ -466,7 +578,10 @@
       // Its heading in the list, as the table's Protections column names them
       group.label = tr('statsStackColumn', 'Protections');
     }
-    select.value = state.filter;
+    // "Changed since previous run" only when there is a run to compare with
+    const changed = byId('bulkFilterChangedOption');
+    if (changed) changed.hidden = !state.compare;
+    select.value = activeFilter();
   }
 
   /* ---------- From History ---------- */
@@ -537,18 +652,43 @@
     byId('bulkResumeBtn').addEventListener('click', async () => { const r = await send(M.BULK_SCAN_RESUME); if (r.run) { state.run = r.run; render(); } });
     byId('bulkStopBtn').addEventListener('click', async () => { const r = await send(M.BULK_SCAN_STOP); if (r.run) { state.run = r.run; render(); } });
     byId('bulkNewBtn').addEventListener('click', async () => {
-      const r = await send(M.BULK_SCAN_CLEAR);
-      if (r.status === 'ok') { state.run = null; notice(''); render(); input.focus(); }
+      // The run kept from before is only hidden: it stays kept (Settings → Data clears it)
+      const r = state.restored ? { status: 'ok' } : await send(M.BULK_SCAN_CLEAR);
+      if (r.status === 'ok') { state.run = null; state.restored = false; state.imported = null; notice(''); render(); input.focus(); }
     });
     byId('bulkWaitingBtn').addEventListener('click', () => {
       if (!state.run) return;
       // The pages already finished stay in the table and the exports: the worker carries them into the new run
-      start(state.run.items.filter(item => item.status === 'waiting').map(item => item.url), { continueRun: true });
+      start(state.run.items.filter(item => item.status === 'waiting').map(item => item.url), { continueRun: true, extras: BulkScan.extrasOfRun(state.run) });
     });
     byId('bulkRetryFailedBtn').addEventListener('click', () => {
       if (!state.run) return;
       // The pages that failed (and any still waiting) are scanned again; the others stay in the table and the exports
-      start(state.run.items.filter(item => item.status === 'failed' || item.status === 'waiting').map(item => item.url), { continueRun: true, retryFailed: true });
+      start(state.run.items.filter(item => item.status === 'failed' || item.status === 'waiting').map(item => item.url), { continueRun: true, retryFailed: true, extras: BulkScan.extrasOfRun(state.run) });
+    });
+    byId('bulkRunAgainBtn').addEventListener('click', () => {
+      const run = state.run;
+      if (!run || BulkScan.isActive(run)) return;
+      // The same list with the same limits and wait; when it is done it is compared with this run
+      byId('bulkCap').value = run.cap || BulkScan.MAX_URLS;
+      byId('bulkTimeout').value = run.timeoutSec || BulkScan.TIMEOUT_S.default;
+      byId('bulkDelay').value = Number.isFinite(run.delaySec) ? run.delaySec : BulkScan.DELAY_S.default;
+      start(runAgainEntries(run), { extras: BulkScan.extrasOfRun(run) });
+    });
+    byId('bulkCompareBtn').addEventListener('click', () => byId('bulkCompareFile').click());
+    byId('bulkCompareFile').addEventListener('change', async (event) => {
+      const file = event.target.files && event.target.files[0];
+      event.target.value = '';
+      if (!file || !state.run) return;
+      let read = { ok: false, error: 'invalid' };
+      try {
+        // A file far larger than any export is refused before it is read
+        read = file.size > BulkRuns.MAX_IMPORT_CHARS ? { ok: false, error: 'large' } : BulkRuns.fromExport(await file.text());
+      } catch (_) { /* unreadable: refused below */ }
+      if (!read.ok) { notice(tr('bulkErrCompareFile', 'This file is not a Bulk scan JSON export.'), 'warn'); return; }
+      state.imported = read.run;
+      notice('');
+      render();
     });
     byId('bulkFilter').addEventListener('change', (event) => { state.filter = BulkFilter.normalize(event.target.value);
       try { localStorage.setItem(FILTER_KEY, state.filter); } catch (_) { /* the choice lasts until the page closes */ }
@@ -563,8 +703,16 @@
       if (area === 'session' && changes[BulkHandoff.KEY] && changes[BulkHandoff.KEY].newValue !== undefined) {
         takeHandoff(changes[BulkHandoff.KEY].newValue);
       }
+      if (area === 'local' && changes[BulkRuns.KEY]) {
+        // A run finished (the worker kept it) or Settings → Data cleared the kept runs
+        state.store = changes[BulkRuns.KEY].newValue || null;
+        if (state.restored && !BulkRuns.latest(state.store)) { state.run = null; state.restored = false; }
+        render();
+      }
       if (area === 'session' && changes[STATE_KEY]) {
-        state.run = changes[STATE_KEY].newValue || null;
+        const next = changes[STATE_KEY].newValue || null;
+        // The session run was cleared while the page shows the kept one: it stays
+        if (next || !state.restored) { state.run = next; state.restored = false; }
         render();
       } else if (area === 'local' && changes.scrapfly_language_override) {
         location.reload();
@@ -591,6 +739,12 @@
     await readSettings();
     const response = await send(M.BULK_SCAN_STATE);
     state.run = response && response.run ? response.run : null;
+    await readStore();
+    if (!state.run) {
+      // No run in session storage (the browser restarted, or New list): the run that finished last, read-only
+      const kept = BulkRuns.latest(state.store);
+      if (kept) { state.run = kept; state.restored = true; }
+    }
     if (state.run) {
       byId('bulkTimeout').value = state.run.timeoutSec || BulkScan.TIMEOUT_S.default;
       byId('bulkDelay').value = Number.isFinite(state.run.delaySec) ? state.run.delaySec : BulkScan.DELAY_S.default;

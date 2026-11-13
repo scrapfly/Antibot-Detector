@@ -157,3 +157,8 @@ a.bulk-url:hover { text-decoration: underline; }
   body.bulk-page { --bulk-pad: 16px; }
   .bulk-run-actions { inline-size: 100%; }
 }
+
+/* Compared with the earlier run of the list, and the person's own CSV columns */
+.bulk-prev { color: var(--text-secondary); font-size: 12px; }
+.bulk-prev--changed { color: var(--warning-light); font-weight: 600; }
+.bulk-extra { color: var(--text-secondary); font-size: 12px; max-inline-size: 240px; word-break: break-word; }

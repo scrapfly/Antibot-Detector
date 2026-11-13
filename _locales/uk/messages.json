@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "Історія"
   },
+  "storageBulkRuns": {
+    "message": "Запуски масового сканування"
+  },
   "storageRules": {
     "message": "Правила й категорії"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "Захоплення інструментів видалено"
+  },
+  "storageClearBulkTitle": {
+    "message": "Очистити запуски масового сканування"
+  },
+  "storageClearBulkMessage": {
+    "message": "Буде видалено завершені запуски масового сканування, збережені для порівняння з наступним запуском списку. Історія, правила й налаштування не змінюються."
+  },
+  "storageBulkCleared": {
+    "message": "Запуски масового сканування очищено"
   },
   "storageClearFailed": {
     "message": "Не вдалося очистити. Спробуйте ще раз."
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "Повторно сканувати сторінки зі збоєм"
   },
+  "bulkRunAgain": {
+    "message": "Запустити знову"
+  },
   "bulkFilterLabel": {
     "message": "Показати",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "Код помилки (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Змінилося від попереднього запуску"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Лише {0}"
   },
   "bulkCopyLines": {
     "message": "Копіювати рядками"
+  },
+  "bulkCompareExport": {
+    "message": "Порівняти з експортом…"
   },
   "bulkFilterNone": {
     "message": "Немає сторінок, що відповідають цьому фільтру."
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "Адреса"
+  },
+  "bulkColPrevious": {
+    "message": "Порівняно з попереднім запуском"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Без змін"
+  },
+  "bulkPrevNew": {
+    "message": "Не було в попередньому запуску"
   },
   "bulkStatusWaiting": {
     "message": "Чекає"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "Готово {0} з {1}"
   },
+  "bulkStoredFmt": {
+    "message": "Результати запуску від {0}"
+  },
   "bulkCountsFmt": {
     "message": "Готово: {0} · Із захистом: {1} · Збій: {2} · Пропущено: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Інших пропущених рядків: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Порівняно із запуском від {0}. Змінених сторінок: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Історію призупинено: сторінки скануються, але не записуються."
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "Не вдалося прочитати файл."
+  },
+  "bulkErrCompareFile": {
+    "message": "Цей файл не є JSON-експортом масового сканування."
   },
   "bulkEmpty": {
     "message": "Вставте адреси або завантажте файл, потім натисніть «Запустити»."

@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "السجل"
   },
+  "storageBulkRuns": {
+    "message": "تشغيلات الفحص الجماعي"
+  },
   "storageRules": {
     "message": "القواعد والفئات"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "تم حذف لقطات الأدوات"
+  },
+  "storageClearBulkTitle": {
+    "message": "مسح تشغيلات الفحص الجماعي"
+  },
+  "storageClearBulkMessage": {
+    "message": "تُحذف تشغيلات الفحص الجماعي المكتملة المحفوظة لمقارنة التشغيل التالي للقائمة بها. لا يتأثر السجل والقواعد والإعدادات."
+  },
+  "storageBulkCleared": {
+    "message": "تم مسح تشغيلات الفحص الجماعي"
   },
   "storageClearFailed": {
     "message": "تعذّر المسح. حاول مجددًا."
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "إعادة فحص الصفحات التي فشلت"
   },
+  "bulkRunAgain": {
+    "message": "تشغيل مرة أخرى"
+  },
   "bulkFilterLabel": {
     "message": "عرض",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "حالة خطأ (⁦4xx, 5xx⁩)"
   },
+  "bulkFilterChanged": {
+    "message": "تغيّر منذ التشغيل السابق"
+  },
   "bulkFilterOnlyFmt": {
     "message": "{0} فقط"
   },
   "bulkCopyLines": {
     "message": "نسخ كأسطر"
+  },
+  "bulkCompareExport": {
+    "message": "المقارنة بملف مُصدَّر…"
   },
   "bulkFilterNone": {
     "message": "لا توجد صفحة تطابق هذا المرشح."
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "العنوان"
+  },
+  "bulkColPrevious": {
+    "message": "مقارنة بالتشغيل السابق"
+  },
+  "bulkPrevUnchanged": {
+    "message": "بلا تغيير"
+  },
+  "bulkPrevNew": {
+    "message": "غير موجودة في التشغيل السابق"
   },
   "bulkStatusWaiting": {
     "message": "في الانتظار"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "اكتمل {0} من {1}"
   },
+  "bulkStoredFmt": {
+    "message": "نتائج تشغيل {0}"
+  },
   "bulkCountsFmt": {
     "message": "تم: {0} · مع حماية: {1} · فشل: {2} · تم التخطي: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "أسطر أخرى مستبعدة: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "مقارنة بتشغيل {0}. الصفحات المتغيّرة: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "السجل متوقف مؤقتًا: تُفحص الصفحات لكن لا تُسجَّل."
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "تعذّرت قراءة الملف."
+  },
+  "bulkErrCompareFile": {
+    "message": "هذا الملف ليس تصدير JSON من الفحص الجماعي."
   },
   "bulkEmpty": {
     "message": "الصق العناوين أو ارفع ملفًا، ثم اختر بدء."

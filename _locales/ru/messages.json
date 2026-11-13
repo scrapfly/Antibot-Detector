@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "История"
   },
+  "storageBulkRuns": {
+    "message": "Запуски массового сканирования"
+  },
   "storageRules": {
     "message": "Правила и категории"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "Захваты инструментов удалены"
+  },
+  "storageClearBulkTitle": {
+    "message": "Очистить запуски массового сканирования"
+  },
+  "storageClearBulkMessage": {
+    "message": "Будут удалены завершённые запуски массового сканирования, сохранённые для сравнения со следующим запуском списка. История, правила и настройки не затрагиваются."
+  },
+  "storageBulkCleared": {
+    "message": "Запуски массового сканирования очищены"
   },
   "storageClearFailed": {
     "message": "Не удалось очистить. Попробуйте ещё раз."
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "Повторно сканировать страницы со сбоем"
   },
+  "bulkRunAgain": {
+    "message": "Запустить снова"
+  },
   "bulkFilterLabel": {
     "message": "Показать",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "Код ошибки (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Изменилось с предыдущего запуска"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Только {0}"
   },
   "bulkCopyLines": {
     "message": "Копировать строками"
+  },
+  "bulkCompareExport": {
+    "message": "Сравнить с экспортом…"
   },
   "bulkFilterNone": {
     "message": "Нет страниц, подходящих под этот фильтр."
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "Адрес"
+  },
+  "bulkColPrevious": {
+    "message": "По сравнению с предыдущим запуском"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Без изменений"
+  },
+  "bulkPrevNew": {
+    "message": "Не было в предыдущем запуске"
   },
   "bulkStatusWaiting": {
     "message": "Ожидает"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "Готово {0} из {1}"
   },
+  "bulkStoredFmt": {
+    "message": "Результаты запуска от {0}"
+  },
   "bulkCountsFmt": {
     "message": "Готово: {0} · С защитой: {1} · Сбой: {2} · Пропущено: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Других пропущенных строк: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Сравнение с запуском от {0}. Изменённых страниц: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "История приостановлена: страницы сканируются, но не записываются."
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "Не удалось прочитать файл."
+  },
+  "bulkErrCompareFile": {
+    "message": "Этот файл не является JSON-экспортом массового сканирования."
   },
   "bulkEmpty": {
     "message": "Вставьте адреса или загрузите файл, затем нажмите «Запустить»."

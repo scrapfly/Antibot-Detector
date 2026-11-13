@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "Historie"
   },
+  "storageBulkRuns": {
+    "message": "Běhy hromadného skenování"
+  },
   "storageRules": {
     "message": "Pravidla a kategorie"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "Zachycení nástrojů smazána"
+  },
+  "storageClearBulkTitle": {
+    "message": "Vymazat běhy hromadného skenování"
+  },
+  "storageClearBulkMessage": {
+    "message": "Dokončené běhy hromadného skenování uložené pro porovnání s dalším během seznamu se smažou. Historie, pravidla a nastavení zůstanou beze změny."
+  },
+  "storageBulkCleared": {
+    "message": "Běhy hromadného skenování vymazány"
   },
   "storageClearFailed": {
     "message": "Vymazání se nezdařilo. Zkuste to znovu."
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "Znovu skenovat stránky, které selhaly"
   },
+  "bulkRunAgain": {
+    "message": "Spustit znovu"
+  },
   "bulkFilterLabel": {
     "message": "Zobrazit",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "Chybový stav (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Změněno od předchozího běhu"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Pouze {0}"
   },
   "bulkCopyLines": {
     "message": "Kopírovat jako řádky"
+  },
+  "bulkCompareExport": {
+    "message": "Porovnat s exportem…"
   },
   "bulkFilterNone": {
     "message": "Tomuto filtru neodpovídá žádná stránka."
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "Adresa"
+  },
+  "bulkColPrevious": {
+    "message": "Oproti předchozímu běhu"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Beze změny"
+  },
+  "bulkPrevNew": {
+    "message": "Nebylo v předchozím běhu"
   },
   "bulkStatusWaiting": {
     "message": "Čeká"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "Hotovo {0} z {1}"
   },
+  "bulkStoredFmt": {
+    "message": "Výsledky běhu z {0}"
+  },
   "bulkCountsFmt": {
     "message": "Hotovo: {0} · S ochranou: {1} · Selhalo: {2} · Přeskočeno: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Další vynechané řádky: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Porovnáno s během z {0}. Změněné stránky: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Historie je pozastavená: stránky se skenují, ale neukládají."
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "Soubor se nepodařilo přečíst."
+  },
+  "bulkErrCompareFile": {
+    "message": "Tento soubor není export JSON hromadného skenování."
   },
   "bulkEmpty": {
     "message": "Vložte adresy nebo nahrajte soubor a pak zvolte Spustit."

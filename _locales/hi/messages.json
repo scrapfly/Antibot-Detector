@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "इतिहास"
   },
+  "storageBulkRuns": {
+    "message": "बल्क स्कैन रन"
+  },
   "storageRules": {
     "message": "नियम और श्रेणियाँ"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "टूल कैप्चर हटा दिए गए"
+  },
+  "storageClearBulkTitle": {
+    "message": "बल्क स्कैन रन साफ़ करें"
+  },
+  "storageClearBulkMessage": {
+    "message": "सूची के अगले रन से तुलना के लिए रखे गए पूरे हो चुके बल्क स्कैन रन हटा दिए जाते हैं। इतिहास, नियम और सेटिंग्स पर कोई असर नहीं पड़ता।"
+  },
+  "storageBulkCleared": {
+    "message": "बल्क स्कैन रन साफ़ कर दिए गए"
   },
   "storageClearFailed": {
     "message": "साफ़ नहीं हो सका। फिर से कोशिश करें।"
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "विफल पेज दोबारा स्कैन करें"
   },
+  "bulkRunAgain": {
+    "message": "फिर से चलाएँ"
+  },
   "bulkFilterLabel": {
     "message": "दिखाएँ",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "त्रुटि स्थिति (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "पिछले रन के बाद से बदले हुए"
+  },
   "bulkFilterOnlyFmt": {
     "message": "केवल {0}"
   },
   "bulkCopyLines": {
     "message": "पंक्तियों के रूप में कॉपी करें"
+  },
+  "bulkCompareExport": {
+    "message": "किसी एक्सपोर्ट से तुलना करें…"
   },
   "bulkFilterNone": {
     "message": "कोई पेज इस फ़िल्टर से मेल नहीं खाता।"
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "पता"
+  },
+  "bulkColPrevious": {
+    "message": "पिछले रन की तुलना में"
+  },
+  "bulkPrevUnchanged": {
+    "message": "कोई बदलाव नहीं"
+  },
+  "bulkPrevNew": {
+    "message": "पिछले रन में नहीं था"
   },
   "bulkStatusWaiting": {
     "message": "इंतज़ार में"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "{1} में से {0} पूरे"
   },
+  "bulkStoredFmt": {
+    "message": "{0} के रन के परिणाम"
+  },
   "bulkCountsFmt": {
     "message": "हो गए: {0} · सुरक्षा वाले: {1} · विफल: {2} · छोड़े गए: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "छोड़ी गई दूसरी पंक्तियाँ: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "{0} के रन से तुलना की गई। बदले हुए पेज: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "इतिहास रुका हुआ है: पेज स्कैन होते हैं पर दर्ज नहीं होते।"
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "फ़ाइल पढ़ी नहीं जा सकी।"
+  },
+  "bulkErrCompareFile": {
+    "message": "यह फ़ाइल बल्क स्कैन का JSON एक्सपोर्ट नहीं है।"
   },
   "bulkEmpty": {
     "message": "पते चिपकाएँ या फ़ाइल अपलोड करें, फिर शुरू करें चुनें।"

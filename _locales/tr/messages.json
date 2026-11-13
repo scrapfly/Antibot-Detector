@@ -5642,6 +5642,9 @@
   "storageHistory": {
     "message": "Geçmiş"
   },
+  "storageBulkRuns": {
+    "message": "Toplu tarama çalıştırmaları"
+  },
   "storageRules": {
     "message": "Kurallar ve kategoriler"
   },
@@ -5689,6 +5692,15 @@
   },
   "storageCapturesCleared": {
     "message": "Araç yakalamaları silindi"
+  },
+  "storageClearBulkTitle": {
+    "message": "Toplu tarama çalıştırmalarını temizle"
+  },
+  "storageClearBulkMessage": {
+    "message": "Bir listenin sonraki çalıştırmasıyla karşılaştırmak için saklanan tamamlanmış toplu tarama çalıştırmaları silinir. Geçmiş, kurallar ve ayarlar değişmez."
+  },
+  "storageBulkCleared": {
+    "message": "Toplu tarama çalıştırmaları temizlendi"
   },
   "storageClearFailed": {
     "message": "Temizlenemedi. Yeniden deneyin."
@@ -6635,6 +6647,9 @@
   "bulkScanFailedAgain": {
     "message": "Başarısız olan sayfaları yeniden tara"
   },
+  "bulkRunAgain": {
+    "message": "Yeniden çalıştır"
+  },
   "bulkFilterLabel": {
     "message": "Göster",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6673,17 @@
   "bulkFilterHttpError": {
     "message": "Hata durumu (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Önceki çalıştırmadan beri değişenler"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Yalnızca {0}"
   },
   "bulkCopyLines": {
     "message": "Satırlar olarak kopyala"
+  },
+  "bulkCompareExport": {
+    "message": "Bir dışa aktarımla karşılaştır…"
   },
   "bulkFilterNone": {
     "message": "Bu filtreyle eşleşen sayfa yok."
@@ -6679,6 +6700,15 @@
   },
   "bulkColAddress": {
     "message": "Adres"
+  },
+  "bulkColPrevious": {
+    "message": "Önceki çalıştırmaya göre"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Değişmedi"
+  },
+  "bulkPrevNew": {
+    "message": "Önceki çalıştırmada yoktu"
   },
   "bulkStatusWaiting": {
     "message": "Bekliyor"
@@ -6737,6 +6767,9 @@
   "bulkProgressFmt": {
     "message": "{1} sayfadan {0} tanesi bitti"
   },
+  "bulkStoredFmt": {
+    "message": "{0} tarihli çalıştırmanın sonuçları"
+  },
   "bulkCountsFmt": {
     "message": "Biten: {0} · Korumalı: {1} · Başarısız: {2} · Atlanan: {3}"
   },
@@ -6761,6 +6794,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Dışarıda kalan diğer satırlar: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "{0} tarihli çalıştırmayla karşılaştırıldı. Değişen sayfalar: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Geçmiş duraklatıldı: sayfalar taranır ama kaydedilmez."
   },
@@ -6784,6 +6820,9 @@
   },
   "bulkErrFile": {
     "message": "Dosya okunamadı."
+  },
+  "bulkErrCompareFile": {
+    "message": "Bu dosya bir toplu tarama JSON dışa aktarımı değil."
   },
   "bulkEmpty": {
     "message": "Adresleri yapıştırın veya bir dosya yükleyin, ardından Başlat’ı seçin."
