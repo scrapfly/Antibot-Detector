@@ -42,6 +42,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Settings: removing a site or a webhook header keeps keyboard focus in the list, and copying a webhook template variable says when the browser refuses it.
 - Light theme: the Settings dropdown arrows and the icon of Advanced tools without a logo are visible again.
 - Applying a preset, importing settings or restoring a backup now asks about unsaved Settings changes instead of discarding them.
+- Rules editor: the list of cookies, headers or scripts picked from the page scrolls again, so every item can be reached.
 - A page prerendered while its site was skipped is no longer saved half-scanned when you turn the site back on and scan it.
 - A prerendered page answered from saved results no longer leaves a scan in progress in the background.
 - Arabic: the Detection summary lines show the page path and the +/− protection names on the correct side.

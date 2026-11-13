@@ -57,6 +57,11 @@
   overflow-y: auto;
 }
 
+/* The groups keep their full height so the list scrolls; shrunk to fit, a group clips its own rows (overflow: hidden) and nothing scrolls */
+.page-pick-list > * {
+  flex-shrink: 0;
+}
+
 .page-pick-message {
   margin: 0;
   padding: 4px 2px;
