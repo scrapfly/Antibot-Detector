@@ -17,6 +17,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Detection details: cookie rows show when the cookie was set, how often it changed and when it expires, never its value.
 - Detection details: Edit rule opens the protection's rule in the Rules editor, and Copy evidence copies the detection as Markdown without cookie or header values.
 - Press / to jump to the search box on Detection, History, Rules and Captures; Settings → Keyboard shortcuts lists every shortcut.
+- History cards, exports and Compare scans show the page's HTTP status, and the ⋯ menu can keep only pages that answered with an error.
+- Bulk scan: Show can keep only pages with an error status, or only pages where one protection was found.
+- Bulk scan: an optional wait between pages (0 to 60 seconds) for sites that block quick visits.
 
 ### Changed
 
