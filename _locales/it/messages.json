@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Analizza di nuovo questa pagina: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Apri l’estensione: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Cerca nella scheda aperta: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Spostarsi tra le voci della cronologia: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Chiudi una finestra di dialogo: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "La pagina viene ricaricata, così tutto viene raccolto dall’inizio."
   },

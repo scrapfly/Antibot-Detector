@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Skanna den här sidan igen: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Öppna tillägget: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Sök på den öppna fliken: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Flytta mellan historikposter: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Stäng en dialogruta: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Sidan läses in igen, så allt samlas in från början."
   },

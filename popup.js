@@ -217,6 +217,9 @@ class ScrapflyPopup {
       });
     });
 
+    // "/" goes to the open tab's search box (Detection, History, Rules, Captures)
+    if (typeof SearchShortcut !== 'undefined') SearchShortcut.install(document, () => this.currentTab);
+
     // Main enable/disable toggle
     const enableToggle = document.querySelector('#enableToggle');
     if (enableToggle) {

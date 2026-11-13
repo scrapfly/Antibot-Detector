@@ -2686,17 +2686,7 @@ class History {
     // Setup search functionality
     const searchInput = document.querySelector('#historySearch');
     if (searchInput) {
-      // "/" jumps to the search box while the History tab is open and nothing is being typed
-      document.addEventListener('keydown', (e) => {
-        if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey || e.defaultPrevented) return;
-        const t = e.target;
-        if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
-        const tab = document.querySelector('#historyTab');
-        if (!tab || tab.style.display === 'none' || document.querySelector('.modal.show, .modal-overlay.show')) return;
-        e.preventDefault();
-        searchInput.focus();
-        searchInput.select();
-      });
+      // "/" jumps here while the History tab is open: SearchShortcut (modules/ui/search-shortcut.js), for every tab
       searchInput.addEventListener('input', (e) => {
         this.handleSearch(e.target.value);
       });

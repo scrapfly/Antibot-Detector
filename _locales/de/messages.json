@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Diese Seite erneut scannen: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Erweiterung öffnen: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Im geöffneten Tab suchen: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Zwischen Verlaufseinträgen wechseln: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Dialog schließen: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Die Seite wird neu geladen, damit alles von Anfang an erfasst wird."
   },

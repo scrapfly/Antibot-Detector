@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "このページを再スキャン: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "拡張機能を開く: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "開いているタブを検索: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "履歴の項目間を移動: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "ダイアログを閉じる: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "ページを再読み込みするため、すべてを最初から収集します。"
   },

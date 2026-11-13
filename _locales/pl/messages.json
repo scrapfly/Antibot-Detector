@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Skanuj tę stronę ponownie: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Otwórz rozszerzenie: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Szukaj w otwartej karcie: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Przechodzenie między wpisami historii: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Zamknij okno dialogowe: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Strona zostaje odświeżona, więc wszystko jest zbierane od początku."
   },

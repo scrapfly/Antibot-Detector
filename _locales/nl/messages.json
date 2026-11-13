@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Deze pagina opnieuw scannen: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "De extensie openen: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Zoeken in het geopende tabblad: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Tussen geschiedenisitems wisselen: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Een dialoogvenster sluiten: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "De pagina wordt opnieuw geladen, zodat alles vanaf het begin wordt verzameld."
   },

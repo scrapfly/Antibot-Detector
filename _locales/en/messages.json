@@ -6741,6 +6741,22 @@
     "message": "Scan this page again: {0}",
     "description": "Settings → General: the rescan shortcut. {0} = the keys (for example Alt+Shift+S) or the 'not set' text"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Open the extension: {0}",
+    "description": "Settings → General → Keyboard shortcuts: the browser shortcut that opens the extension's popup; {0} is the key combination, or the 'not set' text"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Search the open tab: {0}",
+    "description": "Settings → General → Keyboard shortcuts: the popup key that moves to the search box of the tab that is open; {0} is the key (/)"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Move between History entries: {0}",
+    "description": "Settings → General → Keyboard shortcuts: the keys that move between the entries of the History tab; {0} is the keys (j / k, ↓ / ↑)"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Close a dialog: {0}",
+    "description": "Settings → General → Keyboard shortcuts: the key that closes a dialog in the popup; {0} is the key (Esc)"
+  },
   "settingsShortcutsDesc": {
     "message": "The page reloads, so everything is collected from the start.",
     "description": "Settings → General: what the rescan shortcut does to the page"

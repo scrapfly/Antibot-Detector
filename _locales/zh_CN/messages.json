@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "重新扫描此页面：{0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "打开扩展程序：{0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "在当前标签页中搜索：{0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "在历史记录条目间移动：{0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "关闭对话框：{0}"
+  },
   "settingsShortcutsDesc": {
     "message": "页面会重新加载，从头收集所有数据。"
   },

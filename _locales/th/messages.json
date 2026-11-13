@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "สแกนหน้านี้อีกครั้ง: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "เปิดส่วนขยาย: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "ค้นหาในแท็บที่เปิดอยู่: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "เลื่อนระหว่างรายการประวัติ: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "ปิดกล่องโต้ตอบ: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "หน้าจะโหลดซ้ำ จึงเก็บข้อมูลทั้งหมดใหม่ตั้งแต่ต้น"
   },

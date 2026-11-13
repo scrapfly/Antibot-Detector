@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Znovu skenovat tuto stránku: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Otevřít rozšíření: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Hledat v otevřené kartě: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Přecházet mezi záznamy historie: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Zavřít dialog: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Stránka se znovu načte, takže se vše shromáždí od začátku."
   },

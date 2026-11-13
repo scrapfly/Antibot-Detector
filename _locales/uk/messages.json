@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Сканувати цю сторінку знову: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Відкрити розширення: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Пошук на відкритій вкладці: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Перехід між записами історії: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Закрити діалогове вікно: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Сторінка перезавантажується, тож усе збирається з самого початку."
   },

@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "重新掃描此網頁：{0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "開啟擴充功能：{0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "在目前分頁中搜尋：{0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "在歷史記錄項目間移動：{0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "關閉對話方塊：{0}"
+  },
   "settingsShortcutsDesc": {
     "message": "網頁會重新載入，從頭收集所有資料。"
   },

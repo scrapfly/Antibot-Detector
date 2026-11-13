@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "이 페이지 다시 스캔: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "확장 프로그램 열기: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "열린 탭에서 검색: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "기록 항목 간 이동: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "대화 상자 닫기: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "페이지를 새로고침하므로 모든 항목을 처음부터 수집합니다."
   },

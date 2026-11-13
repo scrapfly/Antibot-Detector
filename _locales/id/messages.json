@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Pindai ulang halaman ini: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Buka ekstensi: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Cari di tab yang terbuka: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Berpindah antar entri riwayat: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Tutup dialog: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Halaman dimuat ulang, sehingga semuanya dikumpulkan dari awal."
   },

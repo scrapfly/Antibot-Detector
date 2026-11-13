@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Bu sayfayı yeniden tara: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Uzantıyı aç: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Açık sekmede ara: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Geçmiş kayıtları arasında gezin: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "İletişim kutusunu kapat: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Sayfa yeniden yüklenir, böylece her şey baştan toplanır."
   },

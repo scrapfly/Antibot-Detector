@@ -6209,6 +6209,18 @@
   "settingsShortcutRescanFmt": {
     "message": "Quét lại trang này: {0}"
   },
+  "settingsShortcutOpenFmt": {
+    "message": "Mở tiện ích: {0}"
+  },
+  "settingsShortcutSearchFmt": {
+    "message": "Tìm kiếm trong thẻ đang mở: {0}"
+  },
+  "settingsShortcutHistoryFmt": {
+    "message": "Di chuyển giữa các mục lịch sử: {0}"
+  },
+  "settingsShortcutEscapeFmt": {
+    "message": "Đóng hộp thoại: {0}"
+  },
   "settingsShortcutsDesc": {
     "message": "Trang sẽ tải lại để thu thập mọi thứ từ đầu."
   },
