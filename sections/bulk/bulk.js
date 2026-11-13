@@ -455,7 +455,7 @@
     // The button that was just pressed (Pause, Resume, Stop, Scan again) went away: the keyboard goes to the one that took its place
     // instead of back to the top of the page
     if (focused && focused !== document.body && (focused.hidden === true || focused.disabled === true)) {
-      const next = ['bulkPauseBtn', 'bulkResumeBtn', 'bulkStopBtn', 'bulkRunAgainBtn', 'bulkNewBtn', 'bulkInput'].map(byId).find(el => el && !el.hidden && !el.disabled);
+      const next = ['bulkPauseBtn', 'bulkResumeBtn', 'bulkStopBtn', 'bulkNewBtn', 'bulkRunAgainBtn', 'bulkInput'].map(byId).find(el => el && !el.hidden && !el.disabled);
       if (next) next.focus();
     }
   }

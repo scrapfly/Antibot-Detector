@@ -10,6 +10,8 @@
  *   History      a page with a protection is recorded in History the normal way (by the scan pipeline)
  *   Reattach     the page is closed during the run and opened again: it shows the same run, live
  *   Exports      CSV and JSON downloads named for the local day, with the run's pages
+ *   Runs kept    (3.2.0) a finished run is kept; a CSV's other columns come back; Run again compares with the run before;
+ *                with no run in the session the page shows the last one, read-only
  *   Controls     Pause lets the current page finish and opens no other; Resume goes on; Stop closes the scan tab at once
  *   Restart      the service worker is stopped during a run: when it starts again the run reads "stopped" (not stuck
  *                "running") and the scan tab it left is closed
@@ -259,6 +261,50 @@ const PROBE = {
       }
     }
     console.log('PASS Exports: CSV (with the byte-order mark), JSON and Markdown named for the local day');
+
+    // 5b. (3.2.0) The finished run is kept; a CSV's other columns come back; Run again compares with the run before; after the
+    // session's run is gone (a browser restart empties session storage; New list here) the page shows the last run, read-only
+    const kept = () => X(async () => (await chrome.storage.local.get('scrapfly_bulk_runs')).scrapfly_bulk_runs || null);
+    assert.equal((await kept()).lists.length, 1, 'the run that finished is kept');
+    await bulk.click('#bulkNewBtn');
+    await bulk.waitForSelector('#bulkRunCard', { state: 'hidden' });
+    await bulk.fill('#bulkInput', `url,owner\n${at('/clean?r=1')},Ann\n${at('/protected?r=1')},=Bob`);
+    await bulk.fill('#bulkTimeout', '20');
+    await bulk.fill('#bulkDelay', '1');
+    await bulk.click('#bulkStartBtn');
+    const firstRun = await waitRun(r => r.status === 'done', 60000);
+    assert.deepEqual(firstRun.columns, ['owner']);
+    await bulk.waitForFunction(() => [...document.querySelectorAll('#bulkHeadRow th')].some(th => th.textContent === 'owner'), null, { polling: 250, timeout: 8000 });
+    assert.deepEqual(await bulk.$$eval('#bulkRows tr', rows => rows.map(row => row.lastElementChild.textContent)), ['Ann', '=Bob']);
+    assert.equal(await bulk.$eval('#bulkColPrevious', el => el.hidden), true, 'a list that never ran before has nothing to compare with');
+    await bulk.click('#bulkRunAgainBtn');
+    const again = await waitRun(r => r.status === 'done' && r.id !== firstRun.id, 60000);
+    assert.equal(again.delaySec, 1, 'the same wait');
+    assert.equal(again.timeoutSec, 20, 'the same time limit');
+    await bulk.waitForFunction(() => !document.querySelector('#bulkColPrevious').hidden, null, { polling: 250, timeout: 8000 });
+    assert.deepEqual(await bulk.$$eval('#bulkRows tr', rows => rows.map(row => row.children[5].textContent)), ['Unchanged', 'Unchanged']);
+    assert.match(await bulk.$eval('#bulkRunCompared', el => el.textContent), /^Compared with the run of .*\. Pages changed: 0$/);
+    const csvPending = bulk.waitForEvent('download');
+    await bulk.click('#bulkExportCsvBtn');
+    const csvText = fs.readFileSync(await (await csvPending).path(), 'utf8');
+    assert.match(csvText.slice(1), /^url,status,reason,final_url,difficulty,protection,category,confidence,scanned_at,http_status,owner,vs_previous\r\n/);
+    assert.match(csvText, /,200,Ann,unchanged\r\n/);
+    assert.match(csvText, /,200,'=Bob,unchanged\r\n/, 'a cell that looks like a formula stays text');
+    const store = await kept();
+    assert.equal(store.lists.length, 2);
+    assert.equal(store.lists[0].previous.id, firstRun.id);
+    assert.ok(!JSON.stringify(store).includes('Bob'), 'the kept runs never hold the CSV cells');
+    await bulk.click('#bulkNewBtn');
+    await bulk.waitForSelector('#bulkRunCard', { state: 'hidden' });
+    await bulk.reload();
+    await bulk.waitForFunction(() => document.body.classList.contains('is-ready'), null, { polling: 250, timeout: 15000 });
+    assert.match(await bulk.$eval('#bulkRunStatus', el => el.textContent), /^Results of the run of /);
+    assert.equal(await bulk.$eval('#bulkRetryFailedBtn', el => el.hidden), true);
+    assert.equal(await bulk.$eval('#bulkColPrevious', el => el.hidden), false, 'still compared with the run before it');
+    const jsonPending = bulk.waitForEvent('download');
+    await bulk.click('#bulkExportJsonBtn');
+    assert.equal(JSON.parse(fs.readFileSync(await (await jsonPending).path(), 'utf8')).pages.length, 2);
+    console.log('PASS Runs kept (3.2.0): CSV columns come back, Run again compares with the run before, the last run shows after the session ends');
 
     // 6. Pause, Resume, Stop
     await bulk.click('#bulkNewBtn');
