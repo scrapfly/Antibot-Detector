@@ -642,7 +642,8 @@ class ScrapflyPopup {
                     expiry: request.expiry,
                     cacheScope: request.cacheScope,
                     favicon: request.favicon,
-                    httpStatus: request.httpStatus
+                    httpStatus: request.httpStatus,
+                    scanFacts: request.scanFacts
                   }
                 });
               } else {

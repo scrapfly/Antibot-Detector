@@ -351,7 +351,9 @@ DetectionRequests.processDetectionData = async function(context, detectionData) 
         favicon: detectionData.favicon ?? nestedMeta.favicon,
         cacheScope: detectionData.cacheScope ?? nestedMeta.cacheScope,
         // The page's HTTP status saved with the result (none in one saved before 3.1.8): the tile beside Cache
-        httpStatus: detectionData.httpStatus ?? nestedMeta.httpStatus
+        httpStatus: detectionData.httpStatus ?? nestedMeta.httpStatus,
+        // What the scan looked at (none in a result saved before 3.1.9): "What was checked"
+        scanFacts: detectionData.scanFacts ?? nestedMeta.scanFacts
       } : null;
 
       if (detection.debugMode) {
