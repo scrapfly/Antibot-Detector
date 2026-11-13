@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "Sayfanın tarandığında yanıt verdiği HTTP durum kodu. Bir hata (4xx veya 5xx) çoğu zaman isteğin engellendiği ya da doğrulamaya takıldığı anlamına gelir."
   },
+  "detectionFactsTitle": {
+    "message": "Neler kontrol edildi"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Çerezler: {0} · Komut dosyaları: {1} · İstekler: {2} · Üstbilgiler: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS hook'ları: tamamlandı"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS hook'ları: süre sınırında durduruldu"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS hook'ları: bu site için kapalı"
+  },
   "tipCacheExpires": {
     "message": "Sona erer"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "Web sitesi"
+  },
+  "detectionModalEditRule": {
+    "message": "Kuralı düzenle"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Kanıtı kopyala"
   },
   "detectionModalDocs": {
     "message": "Tespit rehberi"

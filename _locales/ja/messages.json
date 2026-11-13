@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "スキャン時にページが返した HTTP ステータスコードです。エラー（4xx または 5xx）は、リクエストがブロックされたかチャレンジを受けたことを示す場合がよくあります。"
   },
+  "detectionFactsTitle": {
+    "message": "確認した内容"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookie: {0} · スクリプト: {1} · リクエスト: {2} · ヘッダー: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS フック: 完了"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS フック: 制限時間で停止"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS フック: このサイトではオフ"
+  },
   "tipCacheExpires": {
     "message": "有効期限"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "ウェブサイト"
+  },
+  "detectionModalEditRule": {
+    "message": "ルールを編集"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "根拠をコピー"
   },
   "detectionModalDocs": {
     "message": "検出ガイド"

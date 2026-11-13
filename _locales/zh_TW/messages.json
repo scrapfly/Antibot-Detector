@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "掃描時頁面回傳的 HTTP 狀態碼。錯誤（4xx 或 5xx）通常表示請求遭到封鎖或被要求驗證。"
   },
+  "detectionFactsTitle": {
+    "message": "檢查了哪些內容"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookie：{0} · 指令碼：{1} · 要求：{2} · 標頭：{3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS 掛鉤：已完成"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS 掛鉤：到達時限後停止"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS 掛鉤：此網站已關閉"
+  },
   "tipCacheExpires": {
     "message": "到期時間"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "官方網站"
+  },
+  "detectionModalEditRule": {
+    "message": "編輯規則"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "複製證據"
   },
   "detectionModalDocs": {
     "message": "偵測指南"

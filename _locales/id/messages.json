@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "Kode status HTTP yang dikembalikan halaman saat dipindai. Galat (4xx atau 5xx) sering berarti permintaan diblokir atau diberi tantangan."
   },
+  "detectionFactsTitle": {
+    "message": "Apa yang diperiksa"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookie: {0} · Script: {1} · Permintaan: {2} · Header: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "Hook JS: selesai"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "Hook JS: berhenti di batas waktu"
+  },
+  "detectionFactsHooksOff": {
+    "message": "Hook JS: nonaktif untuk situs ini"
+  },
   "tipCacheExpires": {
     "message": "Kedaluwarsa"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "Situs web"
+  },
+  "detectionModalEditRule": {
+    "message": "Edit aturan"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Salin bukti"
   },
   "detectionModalDocs": {
     "message": "Panduan deteksi"

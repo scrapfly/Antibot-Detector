@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "스캔할 때 페이지가 응답한 HTTP 상태 코드입니다. 오류(4xx 또는 5xx)는 요청이 차단되었거나 챌린지를 받았다는 뜻인 경우가 많습니다."
   },
+  "detectionFactsTitle": {
+    "message": "확인한 항목"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "쿠키: {0} · 스크립트: {1} · 요청: {2} · 헤더: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS 후크: 완료"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS 후크: 시간 제한에서 중지됨"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS 후크: 이 사이트에서 꺼짐"
+  },
   "tipCacheExpires": {
     "message": "만료"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "웹사이트"
+  },
+  "detectionModalEditRule": {
+    "message": "규칙 편집"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "증거 복사"
   },
   "detectionModalDocs": {
     "message": "탐지 가이드"

@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "Der HTTP-Statuscode, mit dem die Seite beim Scan geantwortet hat. Ein Fehler (4xx oder 5xx) bedeutet oft, dass die Anfrage blockiert oder mit einer Challenge beantwortet wurde."
   },
+  "detectionFactsTitle": {
+    "message": "Was geprüft wurde"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookies: {0} · Skripte: {1} · Anfragen: {2} · Header: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS-Hooks: abgeschlossen"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS-Hooks: beim Zeitlimit beendet"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS-Hooks: für diese Site aus"
+  },
   "tipCacheExpires": {
     "message": "Läuft ab"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "Website"
+  },
+  "detectionModalEditRule": {
+    "message": "Regel bearbeiten"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Belege kopieren"
   },
   "detectionModalDocs": {
     "message": "Erkennungsleitfaden"

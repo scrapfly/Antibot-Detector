@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "扫描时页面返回的 HTTP 状态码。错误（4xx 或 5xx）通常表示请求被拦截或遭遇了验证挑战。"
   },
+  "detectionFactsTitle": {
+    "message": "检查了哪些内容"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookie：{0} · 脚本：{1} · 请求：{2} · 请求头：{3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS 钩子：已完成"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS 钩子：到达时限后停止"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS 钩子：此站点已关闭"
+  },
   "tipCacheExpires": {
     "message": "过期时间"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "官方网站"
+  },
+  "detectionModalEditRule": {
+    "message": "编辑规则"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "复制证据"
   },
   "detectionModalDocs": {
     "message": "检测指南"

@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "El código de estado HTTP con el que respondió la página al analizarla. Un error (4xx o 5xx) suele significar que la petición se bloqueó o recibió un desafío."
   },
+  "detectionFactsTitle": {
+    "message": "Qué se comprobó"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookies: {0} · Scripts: {1} · Solicitudes: {2} · Cabeceras: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "Interceptores de JS: terminados"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "Interceptores de JS: detenidos al llegar al tiempo límite"
+  },
+  "detectionFactsHooksOff": {
+    "message": "Interceptores de JS: desactivados en este sitio"
+  },
   "tipCacheExpires": {
     "message": "Caduca"
   },
@@ -6825,6 +6840,12 @@
   },
   "detectionModalWebsite": {
     "message": "Sitio web"
+  },
+  "detectionModalEditRule": {
+    "message": "Editar regla"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Copiar evidencia"
   },
   "detectionModalDocs": {
     "message": "Guía de detección"

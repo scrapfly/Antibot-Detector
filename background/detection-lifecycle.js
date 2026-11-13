@@ -262,13 +262,16 @@ async function addLateEvidenceNow(tabId, pageUrl, tabFavicon, evidence, stillVal
     const finalResults = Array.from(byId.values()).filter(rescoreCombinations);
     // The page's HTTP status stays the one saved with the result; with none saved, the one the page's scan recorded
     const finished = finishedPages.get(tabId);
-    const httpStatus = stored ? stored.httpStatus
-        : (finished && finished.state && urlWithoutHash(finished.url) === urlWithoutHash(pageUrl) ? finished.state.httpStatus : null);
+    const finishedState = finished && finished.state && urlWithoutHash(finished.url) === urlWithoutHash(pageUrl) ? finished.state : null;
+    const httpStatus = stored ? stored.httpStatus : (finishedState ? finishedState.httpStatus : null);
+    // What was checked stays the scan's own: the one saved with the result, or the one of the scan that just finished
+    const scanFacts = stored ? stored.scanFacts : scanFactsOf(finishedState);
     const storedData = await DetectionEngineManager.storeDetection(pageUrl, {
         url: pageUrl,
         hostname: UrlUtils.getHostnameFromUrl(pageUrl),
         favicon: stored?.favicon || tabFavicon,
         ...(httpStatus ? { httpStatus } : {}),
+        ...(scanFacts ? { scanFacts } : {}),
         // When the scan the base results came from began (a result found before the rules changed is not served: see storeDetection).
         // A saved result is of the current rules, and what is added to it is found with them: nothing to date
         ...(!stored && Number.isFinite(scanStartedAt) ? { scanStartedAt } : {}),
@@ -286,11 +289,17 @@ async function addLateEvidenceNow(tabId, pageUrl, tabFavicon, evidence, stillVal
         timestamp: storedData?.timestamp,
         cacheScope: storedData?.cacheScope,
         favicon: storedData?.favicon,
-        httpStatus: storedData?.httpStatus
+        httpStatus: storedData?.httpStatus,
+        scanFacts: storedData?.scanFacts
     }).catch(() => {
         // Expected: Popup may not be open
     });
     return finalResults;
+}
+
+/** What a finished scan looked at (ScanReport.facts), or null when it is not known. */
+function scanFactsOf(state) {
+    return typeof ScanReport !== 'undefined' && typeof ScanReport.facts === 'function' && state ? ScanReport.facts(state) : null;
 }
 
 // Pages whose scan finished, by tab. Requests they make afterwards (CHEQ's beacons, a challenge call seconds after
@@ -473,6 +482,7 @@ async function finalizeDetection(tabId, state) {
     const privateWindow = typeof HistoryRecorder !== 'undefined' && typeof HistoryRecorder.isIncognitoTab === 'function'
         && await HistoryRecorder.isIncognitoTab(tabId, chrome).catch(() => false);
     if (!DetectionSessionStore.isCurrent(tabId, state)) return;
+    const scanFacts = scanFactsOf(state);
     const pageData = {
         url: state.url,
         hostname: UrlUtils.getHostnameFromUrl(state.url),
@@ -481,6 +491,8 @@ async function finalizeDetection(tabId, state) {
         scanStartedAt: state.startTime,
         // The page's HTTP status (processDetectionData), shown with the result for as long as it is reused
         ...(state.httpStatus ? { httpStatus: state.httpStatus } : {}),
+        // What the scan looked at (counts and how the JS hooks ended), for the Detection tab's "What was checked"
+        ...(scanFacts ? { scanFacts } : {}),
         ...(privateWindow ? { privateWindow: true } : {}),
         // A Bulk scan reports what the page shows now: a clean scan never takes an older result's place
         ...(scanTab && !quietTab ? { fresh: true } : {})
@@ -527,7 +539,9 @@ async function finalizeDetection(tabId, state) {
         cacheScope: storedDataWithExpiry?.cacheScope,
         favicon: storedDataWithExpiry?.favicon,
         // The status saved with the result shown (a result kept from an earlier scan keeps its own)
-        httpStatus: storedDataWithExpiry?.httpStatus
+        httpStatus: storedDataWithExpiry?.httpStatus,
+        // What that result's scan looked at (none in a result saved before 3.1.9)
+        scanFacts: storedDataWithExpiry?.scanFacts
     }).catch(() => {
         // Expected: Popup may not be open
     });

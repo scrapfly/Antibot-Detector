@@ -39,29 +39,10 @@ class AdvancedCookieResults {
         });
     }
 
-    /** "set 4 min. ago · changed 3 times · last change 40 sec. ago · expires in 1 hr." for one cookie's events. */
+    /** "set 4 min. ago · changed 3 times · last change 40 sec. ago · expires in 1 hr." for one cookie's events (CookieTimeline.describe). */
     static cookieTimelineSummary(events, now) {
-        const K = BaseAdvancedModule;
         const locale = (typeof I18n !== 'undefined' && typeof I18n.locale === 'function') ? I18n.locale() : undefined;
-        const ago = (t) => CookieTimeline.relative(t - now, locale);
-        const s = CookieTimeline.summarize(events);
-        if (s.state === 'none') return '';
-        const parts = [];
-        if (s.state !== 'live') {
-            parts.push(s.state === 'expired'
-                ? K._fmt('advCookieTimelineExpiredFmt', `expired ${ago(s.endedAt)}`, ago(s.endedAt))
-                : K._fmt('advCookieTimelineRemovedFmt', `removed ${ago(s.endedAt)}`, ago(s.endedAt)));
-        }
-        if (s.setAt !== null) parts.push(K._fmt('advCookieTimelineSetFmt', `set ${ago(s.setAt)}`, ago(s.setAt)));
-        if (s.changes === 1) parts.push(K._tr('advCookieTimelineChangedOnce', 'changed once'));
-        else if (s.changes > 1) parts.push(K._fmt('advCookieTimelineChangedFmt', `changed ${s.changes} times`, s.changes));
-        if (s.lastChangeAt !== null) parts.push(K._fmt('advCookieTimelineLastChangeFmt', `last change ${ago(s.lastChangeAt)}`, ago(s.lastChangeAt)));
-        if (s.state === 'live') {
-            parts.push(s.expiresAt !== null
-                ? K._fmt('advCookieTimelineExpiresFmt', `expires ${CookieTimeline.relative(s.expiresAt - now, locale)}`, CookieTimeline.relative(s.expiresAt - now, locale))
-                : K._tr('advCookieTimelineSession', 'session cookie'));
-        }
-        return parts.join(' · ');
+        return CookieTimeline.describe(events, now, { t: (key, ...args) => (typeof I18n !== 'undefined' ? I18n.format(key, ...args) : ''), locale });
     }
 
     /**

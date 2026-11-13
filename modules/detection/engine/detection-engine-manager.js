@@ -1914,7 +1914,9 @@ class DetectionEngineManager {
                     url: storedData.url,
                     cacheScope: storedData.cacheScope,
                     // The page's HTTP status recorded with this result (none in one saved before 3.1.8)
-                    httpStatus: storedData.httpStatus
+                    httpStatus: storedData.httpStatus,
+                    // What the scan looked at (none in one saved before 3.1.9)
+                    scanFacts: storedData.scanFacts
                 };
             }
         } catch (error) {
@@ -2083,6 +2085,9 @@ class DetectionEngineManager {
                 cacheScope: cacheScope,
                 // The page's HTTP status (pageHttpStatus in header-capture.js): a cache hit shows the one saved with the result it reuses
                 ...(Number.isInteger(pageData.httpStatus) ? { httpStatus: pageData.httpStatus } : {}),
+                // What the scan looked at (ScanReport.facts): on a site with the JS hooks off, the hooks did not run
+                ...(pageData.scanFacts && typeof pageData.scanFacts === 'object'
+                    ? { scanFacts: hooksOff ? { ...pageData.scanFacts, hooks: 'off' } : pageData.scanFacts } : {}),
                 ...(hooksOff ? { hooksOff: true } : {}),
                 // Absent means revision 0, as in what 3.1.2 saved
                 ...(savedRev > 0 ? { rulesRev: savedRev } : {}),
@@ -2357,7 +2362,8 @@ class DetectionEngineManager {
                 timestamp: storedData.timestamp,
                 cacheScope: storedData.cacheScope,
                 favicon: storedData.favicon,
-                httpStatus: storedData.httpStatus
+                httpStatus: storedData.httpStatus,
+                scanFacts: storedData.scanFacts
             }).catch(() => {});
 
             // Notify content script to disable monitoring (cache hit)

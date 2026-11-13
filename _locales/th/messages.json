@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "รหัสสถานะ HTTP ที่หน้าเว็บตอบกลับขณะสแกน ข้อผิดพลาด (4xx หรือ 5xx) มักหมายความว่าคำขอถูกบล็อกหรือถูกท้าทาย"
   },
+  "detectionFactsTitle": {
+    "message": "สิ่งที่ตรวจแล้ว"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "คุกกี้: {0} · สคริปต์: {1} · คำขอ: {2} · เฮดเดอร์: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS hooks: เสร็จสิ้น"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS hooks: หยุดเมื่อถึงขีดจำกัดเวลา"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS hooks: ปิดสำหรับไซต์นี้"
+  },
   "tipCacheExpires": {
     "message": "หมดอายุ"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "เว็บไซต์"
+  },
+  "detectionModalEditRule": {
+    "message": "แก้ไขกฎ"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "คัดลอกหลักฐาน"
   },
   "detectionModalDocs": {
     "message": "คู่มือการตรวจจับ"

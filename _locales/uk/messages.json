@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "Код HTTP-статусу, яким сторінка відповіла під час сканування. Помилка (4xx або 5xx) часто означає, що запит заблокували або надіслали на перевірку."
   },
+  "detectionFactsTitle": {
+    "message": "Що перевірено"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Файли cookie: {0} · Скрипти: {1} · Запити: {2} · Заголовки: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS-хуки: завершено"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS-хуки: зупинено за лімітом часу"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS-хуки: вимкнено для цього сайту"
+  },
   "tipCacheExpires": {
     "message": "Спливає"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "Сайт"
+  },
+  "detectionModalEditRule": {
+    "message": "Редагувати правило"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Копіювати докази"
   },
   "detectionModalDocs": {
     "message": "Посібник із виявлення"

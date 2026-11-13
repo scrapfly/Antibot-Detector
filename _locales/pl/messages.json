@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "Kod statusu HTTP, którym strona odpowiedziała podczas skanowania. Błąd (4xx lub 5xx) często oznacza, że żądanie zostało zablokowane lub otrzymało wyzwanie."
   },
+  "detectionFactsTitle": {
+    "message": "Co sprawdzono"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Pliki cookie: {0} · Skrypty: {1} · Żądania: {2} · Nagłówki: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "Hooki JS: zakończone"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "Hooki JS: zatrzymane po limicie czasu"
+  },
+  "detectionFactsHooksOff": {
+    "message": "Hooki JS: wyłączone dla tej witryny"
+  },
   "tipCacheExpires": {
     "message": "Wygasa"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "Strona internetowa"
+  },
+  "detectionModalEditRule": {
+    "message": "Edytuj regułę"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Kopiuj dowody"
   },
   "detectionModalDocs": {
     "message": "Przewodnik wykrywania"

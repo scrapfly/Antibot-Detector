@@ -87,7 +87,9 @@ DetectionModals.initializeModalElements = function() {
       links: modal.querySelector('#detectionModalLinks'),
       website: modal.querySelector('#detectionModalWebsite'),
       docs: modal.querySelector('#detectionModalDocs'),
-      openTools: modal.querySelector('#detectionModalOpenTools')
+      openTools: modal.querySelector('#detectionModalOpenTools'),
+      editRule: modal.querySelector('#detectionModalEditRule'),
+      copyEvidence: modal.querySelector('#detectionModalCopyEvidence')
     };
     DetectionModals.bindAboutLinks.call(this);
 
@@ -304,6 +306,8 @@ DetectionModals.renderDetectionModalContent = function(detection) {
     if (this.modalElements.methods) {
       if (detection.matches && detection.matches.length) {
         this.modalElements.methods.innerHTML = this.getMethodBadges(detection.matches);
+        // How long each protection cookie has lived on this site (the worker's cookie timeline), under its row
+        DetectionModals.renderCookieLives.call(this, detection);
       } else {
         const empty = document.createElement('div');
         empty.className = 'detection-modal-empty';
@@ -320,12 +324,20 @@ DetectionModals.DIFFICULTY_MEANINGS = Object.freeze({
     High: ['detectionModalDifficultyHigh', 'High difficulty: hard to get past. It checks the browser, its behaviour and the network it comes from, and blocks plain HTTP clients.']
 });
 
-/** The links row's listener, bound once per dialog: Open tools goes to the Advanced tools of the protection shown. */
+/**
+ * The links row's listeners, bound once per dialog: Open tools goes to the Advanced tools of the protection shown, Edit rule to its
+ * rule in the Rules editor, Copy evidence copies it as Markdown.
+ */
 DetectionModals.bindAboutLinks = function() {
-    const button = this.modalElements && this.modalElements.openTools;
-    if (!button || button.dataset?.bound === 'true') return;
-    if (button.dataset) button.dataset.bound = 'true';
-    button.addEventListener('click', () => DetectionModals.openVendorTools.call(this));
+    const elements = this.modalElements || {};
+    const bind = (button, handler) => {
+      if (!button || button.dataset?.bound === 'true') return;
+      if (button.dataset) button.dataset.bound = 'true';
+      button.addEventListener('click', handler);
+    };
+    bind(elements.openTools, () => DetectionModals.openVendorTools.call(this));
+    bind(elements.editRule, () => DetectionModals.openRuleEditor.call(this));
+    bind(elements.copyEvidence, () => DetectionModals.copyEvidence.call(this));
 };
 
 /** A link of the row: shown with its address, or hidden with none (no address of an earlier protection left behind). */
@@ -377,13 +389,20 @@ DetectionModals.renderAbout = async function(detection, difficulty) {
     _dmSetLink(elements.website, website);
     _dmSetLink(elements.docs, docs);
 
+    // Edit rule: only for a rule the Rules tab has (a result of a rule deleted since is not one)
+    this.modalRuleId = DetectionModals.ruleIdOf.call(this, detection);
+    if (elements.editRule) elements.editRule.hidden = !this.modalRuleId;
+    // Copy evidence: any detection
+    if (elements.copyEvidence) elements.copyEvidence.hidden = false;
+
     // Open tools: hidden until the minimum is read, so it never offers tools Advanced would not list
     const token = {};
     this.aboutRenderToken = token;
     this.modalToolsDetectorId = null;
     if (elements.openTools) elements.openTools.hidden = true;
     const syncRow = () => {
-      if (elements.links) elements.links.hidden = !website && !docs && !(elements.openTools && !elements.openTools.hidden);
+      const shown = (button) => !!button && !button.hidden;
+      if (elements.links) elements.links.hidden = !website && !docs && !shown(elements.openTools) && !shown(elements.editRule) && !shown(elements.copyEvidence);
     };
     syncRow();
     if (!elements.openTools || !_dmToolsEntry(detectorId) || typeof Advanced === 'undefined') return;
@@ -410,6 +429,110 @@ DetectionModals.openVendorTools = async function() {
     } catch (error) {
       Logger.warn('UI', '[Detection] Could not open the Advanced tools', error);
     }
+};
+
+/** The id of the loaded rule a detection came from, or null when no loaded rule has it. */
+DetectionModals.ruleIdOf = function(detection) {
+    const id = detection?.detector?.id;
+    if (typeof id !== 'string' || !id) return null;
+    const all = this.detectorManager?.getAllDetectors?.() || {};
+    for (const category of Object.values(all)) {
+      for (const [key, definition] of Object.entries(category || {})) {
+        if ((definition?.id || key) === id) return id;
+      }
+    }
+    return null;
+};
+
+/** Edit rule: the dialog closes and the Rules tab opens with this protection's rule in the editor. */
+DetectionModals.openRuleEditor = async function() {
+    const ruleId = this.modalRuleId;
+    const popup = typeof window !== 'undefined' ? window.popupInstance : null;
+    if (!ruleId || !popup || typeof popup.switchTab !== 'function' || !popup.rules || typeof popup.rules.openRuleById !== 'function') return;
+    this.closeDetectionModal();
+    try {
+      await popup.switchTab('rules');
+      await popup.rules.openRuleById(ruleId);
+    } catch (error) {
+      Logger.warn('UI', '[Detection] Could not open the rule in the editor', error);
+    }
+};
+
+/** The host of the page the results are shown for (the cached result's address), '' when there is none. */
+const _dmPageHost = (meta) => {
+    try { return meta && meta.url ? new URL(meta.url).hostname : ''; } catch (_) { return ''; }
+};
+
+/**
+ * Copy evidence: this one detection as Markdown (DetectionSummary.evidenceMarkdown): its signals by name or pattern, never a
+ * cookie or header value. A copy the browser refuses is reported as every copy is (FormatUtils.copyToClipboard).
+ * @returns {Promise<string>} the text given to the clipboard ('' when there was no detection)
+ */
+DetectionModals.copyEvidence = async function() {
+    const detection = this.getDetectionByIndex(this.activeModalIndex);
+    if (!detection || typeof DetectionSummary === 'undefined') return '';
+    const text = DetectionSummary.evidenceMarkdown(detection, {
+      host: _dmPageHost(this.cacheMetadata),
+      category: FormatUtils.categoryLabel(FormatUtils.categoryKey(detection)),
+      when: new Date().toISOString().slice(0, 10),
+      format: (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args)
+    });
+    await FormatUtils.copyToClipboard(text.trim());
+    return text;
+};
+
+/** The protection cookie timeline of a page's site from the worker ({ cookies, now }), or null. */
+DetectionModals.fetchCookieTimeline = function(url, timeoutMs = 1500) {
+    if (!url || typeof chrome === 'undefined' || !chrome.runtime || typeof WorkerMessages === 'undefined') return Promise.resolve(null);
+    return new Promise((resolve) => {
+      const timer = setTimeout(() => resolve(null), timeoutMs);
+      try {
+        chrome.runtime.sendMessage({ type: WorkerMessages.COOKIE_TIMELINE_GET, url }, (response) => {
+          clearTimeout(timer);
+          const ok = !chrome.runtime.lastError && response && response.status === 'ok' && response.cookies;
+          resolve(ok ? { cookies: response.cookies, now: Number(response.now) || Date.now() } : null);
+        });
+      } catch (_) { clearTimeout(timer); resolve(null); }
+    });
+};
+
+/**
+ * Under each cookie row of the Detection methods: "set 4 min. ago · changed 3 times · expires in 1 hr.", from the cookie
+ * timeline the worker records for every enabled rule's cookies (CookieTimeline.describe). Times only, never a value; a cookie
+ * with nothing recorded gets no line. Best effort: the rows stay as they are when the timeline cannot be read.
+ * @returns {Promise<number>} how many rows got a line
+ */
+DetectionModals.renderCookieLives = async function(detection) {
+    const list = this.modalElements && this.modalElements.methods;
+    const matches = Array.isArray(detection?.matches) ? detection.matches : [];
+    const cookieAt = matches.map((match, index) => ({ match, index }))
+      .filter(({ match }) => ['cookie', 'cookies'].includes(String(match?.type || '').toLowerCase()));
+    const token = {};
+    this.cookieLivesToken = token;
+    if (!list || !cookieAt.length || typeof CookieTimeline === 'undefined') return 0;
+    const url = (this.cacheMetadata && this.cacheMetadata.url) || this.viewedTabUrl || '';
+    const timeline = await DetectionModals.fetchCookieTimeline(url);
+    if (this.cookieLivesToken !== token || !timeline) return 0;
+    const rows = Array.from(list.children).filter(row => row.classList && row.classList.contains('method-item-card'));
+    const locale = typeof I18n !== 'undefined' && typeof I18n.locale === 'function' ? I18n.locale() : undefined;
+    const t = (key, ...args) => (typeof I18n !== 'undefined' ? I18n.format(key, ...args) : '');
+    let shown = 0;
+    for (const { match, index } of cookieAt) {
+      const row = rows[index];
+      const name = typeof DetectionSummary !== 'undefined' ? DetectionSummary.signal(match) : '';
+      const events = name ? CookieTimeline.eventsFor(timeline.cookies, name) : null;
+      const line = events ? CookieTimeline.describe(events, timeline.now, { t, locale }) : '';
+      if (!row || !line) continue;
+      const life = document.createElement('span');
+      life.className = 'method-cookie-life';
+      life.setAttribute('dir', 'auto');
+      life.textContent = line;
+      row.querySelector('.method-cookie-life')?.remove();
+      row.appendChild(life);
+      row.classList.add('has-life');
+      shown++;
+    }
+    return shown;
 };
 
 /** The detector definition (with its patterns) behind a detection, if loaded. */
