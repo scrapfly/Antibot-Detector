@@ -30,6 +30,28 @@
     return (at === -1 ? value : value.slice(0, at)).trim();
   };
 
+  /**
+   * The selector of a DOM match's value, "selector=text": up to the first "=" outside brackets and quotes, since a selector holds
+   * "=" itself (iframe[src^='https://…/fc/']). A value whose brackets or quotes never close is kept whole.
+   */
+  function selectorPart(text) {
+    const value = String(text == null ? '' : text);
+    let depth = 0;
+    let quote = '';
+    for (let i = 0; i < value.length; i++) {
+      const c = value[i];
+      if (quote) {
+        if (c === '\\') i++;
+        else if (c === quote) quote = '';
+      } else if (c === '"' || c === "'") quote = c;
+      else if (c === '\\') i++;
+      else if (c === '[' || c === '(') depth++;
+      else if ((c === ']' || c === ')') && depth > 0) depth--;
+      else if (c === '=' && depth === 0) return value.slice(0, i).trim();
+    }
+    return value.trim();
+  }
+
   /** A URL as host and path (no query, no fragment, no credentials); a pattern that is not a URL as it is. */
   function urlPart(text) {
     const value = clean(text);
@@ -61,7 +83,8 @@
         text = match.pattern;
         break;
       case 'dom':
-        text = match.selector || match.pattern || firstPart(match.value, '=');
+        // Results saved before 3.2.0 kept only the value ("selector=text")
+        text = match.selector || match.pattern || selectorPart(match.value);
         break;
       case 'js_hooks':
         text = match.pattern || match.target || match.value;

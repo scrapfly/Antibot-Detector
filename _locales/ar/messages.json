@@ -6380,11 +6380,23 @@
   "historyCompareNone": {
     "message": "لا يوجد فحص محفوظ آخر لهذه الصفحة للمقارنة معه"
   },
+  "historyCompareNoneAny": {
+    "message": "لا يوجد فحص محفوظ آخر للمقارنة معه"
+  },
   "historyCompareTitle": {
     "message": "مقارنة عمليات الفحص"
   },
   "historyCompareWith": {
     "message": "مقارنة مع"
+  },
+  "historyCompareScopePage": {
+    "message": "هذه الصفحة"
+  },
+  "historyCompareScopeAny": {
+    "message": "أي صفحة"
+  },
+  "historyCompareSearch": {
+    "message": "التصفية حسب الرابط أو العنوان"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · العدد: {1}"

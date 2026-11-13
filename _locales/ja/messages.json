@@ -6380,11 +6380,23 @@
   "historyCompareNone": {
     "message": "比較できる、このページの保存済みスキャンがほかにありません"
   },
+  "historyCompareNoneAny": {
+    "message": "比較できる保存済みスキャンがほかにありません"
+  },
   "historyCompareTitle": {
     "message": "スキャンを比較"
   },
   "historyCompareWith": {
     "message": "比較対象"
+  },
+  "historyCompareScopePage": {
+    "message": "このページ"
+  },
+  "historyCompareScopeAny": {
+    "message": "すべてのページ"
+  },
+  "historyCompareSearch": {
+    "message": "アドレスまたはタイトルで絞り込む"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · {1} 件検出"

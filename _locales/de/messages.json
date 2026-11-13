@@ -6380,11 +6380,23 @@
   "historyCompareNone": {
     "message": "Kein anderer gespeicherter Scan dieser Seite zum Vergleichen"
   },
+  "historyCompareNoneAny": {
+    "message": "Kein anderer gespeicherter Scan zum Vergleichen"
+  },
   "historyCompareTitle": {
     "message": "Scans vergleichen"
   },
   "historyCompareWith": {
     "message": "Vergleichen mit"
+  },
+  "historyCompareScopePage": {
+    "message": "Diese Seite"
+  },
+  "historyCompareScopeAny": {
+    "message": "Beliebige Seite"
+  },
+  "historyCompareSearch": {
+    "message": "Nach Adresse oder Titel filtern"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · gefunden: {1}"

@@ -6380,11 +6380,23 @@
   "historyCompareNone": {
     "message": "Không có lần quét đã lưu nào khác của trang này để so sánh"
   },
+  "historyCompareNoneAny": {
+    "message": "Không có lần quét đã lưu nào khác để so sánh"
+  },
   "historyCompareTitle": {
     "message": "So sánh các lần quét"
   },
   "historyCompareWith": {
     "message": "So sánh với"
+  },
+  "historyCompareScopePage": {
+    "message": "Trang này"
+  },
+  "historyCompareScopeAny": {
+    "message": "Trang bất kỳ"
+  },
+  "historyCompareSearch": {
+    "message": "Lọc theo địa chỉ hoặc tiêu đề"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · tìm thấy {1}"

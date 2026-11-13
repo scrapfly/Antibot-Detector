@@ -1518,14 +1518,17 @@ class DetectionEngineManager {
 
         const startTime = Date.now();
 
-        // Counts and timing for the worker's scan report
-        this.lastStats = {
+        // Counts and timing for the worker's scan report. They belong to this call: the worker's one engine matches other tabs'
+        // late requests between this call's yields, so a caller passes options.stats and reads its own, never the shared lastStats
+        const stats = options && options.stats && typeof options.stats === 'object' ? options.stats : {};
+        Object.assign(stats, {
             scripts: content.length, dom: dom.length,
             cookies: cookiesToMatch.length, headers: Object.keys(headers).length,
             html: pageHTML.length + (typeof pageSource === 'string' ? pageSource.length : 0), resources: externalContent.length,
             requests: networkUrls.length, payloads: Array.isArray(payloads) ? payloads.length : 0,
             responses: Array.isArray(responses) ? responses.length : 0
-        };
+        });
+        this.lastStats = stats; // the last call's, for a single caller (tests, tools)
 
         // Use pre-computed priorities (saves 50-100ms per detection)
         let detectorPriorities = this.precomputedPriorities || [];
@@ -1638,8 +1641,8 @@ class DetectionEngineManager {
         }
 
         const detectionTime = Date.now() - startTime;
-        this.lastStats.matchMs = detectionTime;
-        this.lastStats.detectors = detectorPriorities.length;
+        stats.matchMs = detectionTime;
+        stats.detectors = detectorPriorities.length;
         Logger.debug('DETECTION', `Matched ${detectorPriorities.length} detectors in ${detectionTime}ms: ${detections.length} hits`);
 
         return options.includePartial ? detections : detections.filter(d => !d.partial);
@@ -2049,6 +2052,10 @@ class DetectionEngineManager {
                         type: m.type,
                         pattern: m.pattern,
                         value: m.value || m.pattern || m.name || m.selector,
+                        // What names the match: a DOM match's value is "selector=text" and a selector may hold "=" itself
+                        // (iframe[src^='…']), so Copy evidence reads the selector, not the value cut at its first "="
+                        ...(m.selector ? { selector: m.selector } : {}),
+                        ...(m.name ? { name: m.name } : {}),
                         confidence: m.confidence,
                         description: m.description,
                         fullUrl: m.fullUrl,

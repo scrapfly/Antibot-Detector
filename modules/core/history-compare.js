@@ -1,10 +1,12 @@
 /**
- * History → … → Compare with…: what changed between two saved scans of the same page.
+ * History → … → Compare with…: what changed between two saved scans, of the same page or (3.2.0) of any two pages.
  * Pure (no browser APIs), loaded by the popup before history.js and shared with the tests.
  *
  *   pageKey()      the page an entry belongs to: its address without the query and the fragment
  *                  (the same "page" the recorder uses to mark a change)
- *   others()       the other entries of that page, newest first; pickDefault() the one to compare with first
+ *   others()       the other entries of that page, newest first (or of any page, filtered by address, host or title);
+ *                  pickDefault() the one to compare with first; matchesQuery() the filter
+ *   pageLabel(), samePage()   a scan's page as "host/path" (no query or fragment), and whether two scans are of one page
  *   compare()      the protections added, removed, changed (confidence or evidence) and unchanged
  *                  between two entries, the earlier scan first whatever order they were given in
  *   changeText()   one changed protection as a line: "70% → 95% (+25) · New evidence: Cookies"
@@ -13,7 +15,8 @@
  *   statusText()   the two scans' HTTP status as a line: "HTTP status: 200 → 403", "HTTP status: 403" when it is the same, '' when
  *                  neither scan knew it (entries saved before 3.1.9)
  *   view()         what the dialog draws, as plain data: four counts, and the groups of rows with the text of each
- *   shortDateTime(), rangeDates(), optionDates(), whereText()   the dialog's dates (no seconds) and the other scan's page path
+ *   shortDateTime(), rangeDates(), optionDates(), whereText(), whereTip()   the dialog's dates (no seconds) and the other scan's
+ *                  page path (both pages, the earlier first, when they are two)
  *
  * Detections are matched by name (case-insensitive), like HistoryPolicy.diffProtections; unlike it,
  * fingerprinting is included, since this is a look at everything the two scans found.
@@ -68,14 +71,61 @@
     return host && host !== 'unknown' ? host : '';
   }
 
-  /** The other entries of the same page, newest first. */
-  function others(items, entry) {
+  /**
+   * Whether a scan matches the dialog's filter: every word of it (any case) is in its address, its host or its page title.
+   * A blank filter matches every scan.
+   */
+  function matchesQuery(item, query) {
+    if (!item || typeof item !== 'object') return false;
+    const words = String(query == null ? '' : query).toLowerCase().split(/\s+/).filter(Boolean);
+    if (!words.length) return true;
+    const text = [item.url, item.hostname, item.title].map((part) => (typeof part === 'string' ? part : '')).join('\n').toLowerCase();
+    return words.every((word) => text.includes(word));
+  }
+
+  /**
+   * The other entries to compare with, newest first: of the same page (scope "page", the default) or of any page (scope "any"),
+   * narrowed by a filter (matchesQuery).
+   * @param {object[]} items - History
+   * @param {object} entry - the entry the dialog was opened from
+   * @param {{scope?: 'page'|'any', query?: string}} [options]
+   */
+  function others(items, entry, options = {}) {
+    const any = !!options && options.scope === 'any';
+    const query = options && options.query;
     const key = pageKey(entry);
-    if (!key || !Array.isArray(items)) return [];
+    if ((!any && !key) || !Array.isArray(items)) return [];
     return items
-      // A scan served from the cache may hold another page's result (the recorder never compares them): it is no scan of this page
-      .filter((item) => item && item !== entry && item.id !== (entry && entry.id) && item.fromCache !== true && pageKey(item) === key)
+      // A scan served from the cache may hold another page's result (the recorder never compares them): it is no scan of a page
+      .filter((item) => item && item !== entry && item.id !== (entry && entry.id) && item.fromCache !== true
+        && (any || pageKey(item) === key) && matchesQuery(item, query))
       .sort((a, b) => timeOf(b) - timeOf(a));
+  }
+
+  /** Whether two scans are of one page (pageKey); two scans whose page cannot be read are not. */
+  function samePage(a, b) {
+    const key = pageKey(a);
+    return !!key && key === pageKey(b);
+  }
+
+  /** A scan's page as "host/path" ("shop.example/cart", "shop.example" for the home page): no query, fragment or login. */
+  function pageLabel(item) {
+    const url = typeof (item && item.url) === 'string' ? item.url.trim() : '';
+    if (url) {
+      try {
+        const parsed = new URL(url);
+        if (parsed.hostname) return `${parsed.hostname}${parsed.pathname === '/' ? '' : parsed.pathname}`;
+      } catch (_) { /* the host name next */ }
+    }
+    const host = String((item && item.hostname) || '').trim().toLowerCase();
+    return host && host !== 'unknown' ? host : '';
+  }
+
+  /** The two scans of a result when they are of two pages, earlier first ([earlier, later] as {url}); null for one page. */
+  function twoPages(result) {
+    const earlier = { url: (result && result.earlier && result.earlier.url) || '' };
+    const later = { url: (result && result.later && result.later.url) || '' };
+    return pageKey(earlier) && pageKey(later) && !samePage(earlier, later) ? [earlier, later] : null;
   }
 
   /**
@@ -191,8 +241,13 @@
     const categoryLabel = options.categoryLabel || ((key) => key);
     const dateText = options.dateText || ((ms) => new Date(ms).toISOString().slice(0, 16).replace('T', ' '));
     const line = (row) => `- ${md(row.name)} (${md(categoryLabel(row.category))}${row.confidence === null ? '' : `, ${row.confidence}%`})`;
-    const lines = [`## ${md(t('historyCompareMdHeadingFmt', 'Compare scans: {0}', options.host || options.address || '?'))}`, ''];
-    if (options.address) lines.push(md(options.address), '');
+    // Two pages: both are named, the earlier first (their hosts in the heading, their addresses without query or fragment under it)
+    const pages = twoPages(result);
+    const hosts = pages ? [...new Set(pages.map((page) => hostOf(page.url)))] : null;
+    const heading = pages ? hosts.join(' → ') : (options.host || options.address || '?');
+    const address = pages ? pages.map((page) => String(page.url).replace(/[?#].*$/s, '')).join(' → ') : options.address;
+    const lines = [`## ${md(t('historyCompareMdHeadingFmt', 'Compare scans: {0}', heading))}`, ''];
+    if (address) lines.push(md(address), '');
     lines.push(md(t('historyCompareRangeFmt', 'From {0} to {1}', dateText(result.earlier.timestamp), dateText(result.later.timestamp))), '');
     const status = statusText(result, options);
     if (status) lines.push(md(status), '');
@@ -228,7 +283,9 @@
    * The comparison as one line, for a chat or a ticket, written with the words and symbols the dialog has: the host, then the
    * protections added (+, with their score), removed (−), changed (the move of the score, or when it is the same the change of
    * evidence), then how many are unchanged: "shop.example: +reCAPTCHA 85%, −Kasada, Cloudflare 70% → 95% (+25), Unchanged (3)".
-   * Two scans that found nothing at all say so with the dialog's own sentence. Host only: never a path, a query or a fragment.
+   * Two scans that found nothing at all say so with the dialog's own sentence. Host only: never a path, a query or a fragment;
+   * scans of two pages are named as both pages, host and path, the earlier first ("a.example/cart → b.example/login: …"), still
+   * without a query or a fragment.
    * @param {object} result - compare()
    * @param {{host?: string, address?: string, t?: Function, methodLabel?: Function}} [options]
    *   host: the site's host name (an address is cut to its host; none given: the later scan's); t and methodLabel as for changeText()
@@ -252,7 +309,9 @@
     ];
     if (rows('same').length) parts.push(`${say('historyCompareUnchanged', 'Unchanged')} (${rows('same').length})`);
     if (!parts.length) parts.push(say('historyCompareIdentical', 'These two scans found the same protections, with the same confidence and evidence.'));
-    const host = hostOf(options.host) || hostOf(options.address) || hostOf(result && result.later && result.later.url) || '?';
+    const pages = twoPages(result);
+    const host = pages ? pages.map(pageLabel).join(' → ')
+      : hostOf(options.host) || hostOf(options.address) || hostOf(result && result.later && result.later.url) || '?';
     return oneLine(`${host}: ${parts.join(', ')}`);
   }
 
@@ -318,13 +377,40 @@
     }
   }
 
+  /** An address as "host/path?query#fragment", without its scheme and login; '' when it cannot be read. */
+  function addressLabel(url) {
+    try {
+      const parsed = new URL(String(url || '').trim());
+      const rest = `${parsed.pathname}${parsed.search}${parsed.hash}`;
+      return parsed.hostname ? `${parsed.hostname}${rest === '/' ? '' : rest}` : '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  /** The entry and the other scan, the earlier first, when they are of two pages whose addresses can be read; else null. */
+  function bothPages(entry, other) {
+    if (!entry || !other || samePage(entry, other) || !addressLabel(entry.url) || !addressLabel(other.url)) return null;
+    return timeOf(entry) <= timeOf(other) ? [entry, other] : [other, entry];
+  }
+
   /**
-   * What the dialog says about the scan picked to compare with: its page path, but only when its address is not the entry's own.
-   * (Every scan listed is of the same page, so what can differ is the query and the fragment.)
+   * What the dialog says about the scan picked to compare with: its page path, but only when its address is not the entry's own
+   * (a scan of the same page: what can differ is the query and the fragment). A scan of another page: both pages, the earlier
+   * first, as host and address ("news.example/front → shop.example/cart").
    */
   function whereText(entry, other) {
+    const pages = bothPages(entry, other);
+    if (pages) return pages.map((page) => addressLabel(page.url)).join(' → ');
     const there = pagePath(other && other.url);
     return there && there !== pagePath(entry && entry.url) ? there : '';
+  }
+
+  /** The hover text of that line: the whole address of the other scan, or both whole addresses, the earlier first. */
+  function whereTip(entry, other) {
+    const pages = bothPages(entry, other);
+    if (pages) return pages.map((page) => String(page.url)).join(' → ');
+    return other && other.url ? String(other.url) : '';
   }
 
   /**
@@ -365,7 +451,7 @@
     return { identical: result.identical, chips, groups };
   }
 
-  const api = { CATEGORY_ORDER, COLLAPSE_AFTER, pageKey, others, pickDefault, compare, changeText, toMarkdown, toOneLine, statusText, methodsOf, timeOf, shortDateTime, rangeDates, optionDates, pagePath, whereText, view };
+  const api = { CATEGORY_ORDER, COLLAPSE_AFTER, pageKey, others, matchesQuery, samePage, pageLabel, pickDefault, compare, changeText, toMarkdown, toOneLine, statusText, methodsOf, timeOf, shortDateTime, rangeDates, optionDates, pagePath, whereText, whereTip, view };
   root.HistoryCompare = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

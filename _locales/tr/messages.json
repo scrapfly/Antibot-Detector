@@ -6380,11 +6380,23 @@
   "historyCompareNone": {
     "message": "Bu sayfanın karşılaştırılacak başka kayıtlı taraması yok"
   },
+  "historyCompareNoneAny": {
+    "message": "Karşılaştırılacak başka kayıtlı tarama yok"
+  },
   "historyCompareTitle": {
     "message": "Taramaları karşılaştır"
   },
   "historyCompareWith": {
     "message": "Karşılaştırılacak tarama"
+  },
+  "historyCompareScopePage": {
+    "message": "Bu sayfa"
+  },
+  "historyCompareScopeAny": {
+    "message": "Herhangi bir sayfa"
+  },
+  "historyCompareSearch": {
+    "message": "Adrese veya başlığa göre filtrele"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · bulunan: {1}"

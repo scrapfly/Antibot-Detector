@@ -6380,11 +6380,23 @@
   "historyCompareNone": {
     "message": "Geen andere opgeslagen scan van deze pagina om mee te vergelijken"
   },
+  "historyCompareNoneAny": {
+    "message": "Geen andere opgeslagen scan om mee te vergelijken"
+  },
   "historyCompareTitle": {
     "message": "Scans vergelijken"
   },
   "historyCompareWith": {
     "message": "Vergelijken met"
+  },
+  "historyCompareScopePage": {
+    "message": "Deze pagina"
+  },
+  "historyCompareScopeAny": {
+    "message": "Elke pagina"
+  },
+  "historyCompareSearch": {
+    "message": "Filteren op adres of titel"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · gevonden: {1}"

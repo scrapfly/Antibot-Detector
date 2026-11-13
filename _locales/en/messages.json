@@ -6959,19 +6959,35 @@
   },
   "historyCompare": {
     "message": "Compare with…",
-    "description": "History entry menu: opens a dialog that compares this saved scan with another saved scan of the same page"
+    "description": "History entry menu: opens a dialog that compares this saved scan with another saved scan, of the same page or of any page"
   },
   "historyCompareNone": {
     "message": "No other saved scan of this page to compare with",
-    "description": "Hover text of the disabled Compare with… menu item, and the message when there is nothing to compare with: History holds only one scan of this page"
+    "description": "Compare dialog: hover text of the disabled 'This page' button: History holds only one scan of this page (the dialog then lists the scans of any page)"
+  },
+  "historyCompareNoneAny": {
+    "message": "No other saved scan to compare with",
+    "description": "Hover text of the disabled Compare with… menu item, and the message when there is nothing to compare with: History holds no other scan, of this page or any other"
   },
   "historyCompareTitle": {
     "message": "Compare scans",
-    "description": "Title of the dialog that compares two saved scans of the same page"
+    "description": "Title of the dialog that compares two saved scans (of one page, or of two pages)"
   },
   "historyCompareWith": {
     "message": "Compare with",
-    "description": "Label of the list of other saved scans of the page, in the compare dialog"
+    "description": "Label of the list of other saved scans to pick from, in the compare dialog (of this page, or of any page)"
+  },
+  "historyCompareScopePage": {
+    "message": "This page",
+    "description": "Compare dialog: button that lists only the other saved scans of the same page (pressed or not, beside 'Compare with')"
+  },
+  "historyCompareScopeAny": {
+    "message": "Any page",
+    "description": "Compare dialog: button that lists the saved scans of every page and site, each with its page, to compare across pages"
+  },
+  "historyCompareSearch": {
+    "message": "Filter by address or title",
+    "description": "Compare dialog, 'Any page': placeholder and accessible name of the box that filters the saved scans by their address or page title"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · {1} found",

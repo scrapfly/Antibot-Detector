@@ -6382,11 +6382,23 @@
   "historyCompareNone": {
     "message": "No hay otro análisis guardado de esta página con el que comparar"
   },
+  "historyCompareNoneAny": {
+    "message": "No hay otro análisis guardado con el que comparar"
+  },
   "historyCompareTitle": {
     "message": "Comparar análisis"
   },
   "historyCompareWith": {
     "message": "Comparar con"
+  },
+  "historyCompareScopePage": {
+    "message": "Esta página"
+  },
+  "historyCompareScopeAny": {
+    "message": "Cualquier página"
+  },
+  "historyCompareSearch": {
+    "message": "Filtrar por dirección o título"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · encontradas: {1}"

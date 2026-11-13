@@ -6380,11 +6380,23 @@
   "historyCompareNone": {
     "message": "Нет другого сохранённого сканирования этой страницы для сравнения"
   },
+  "historyCompareNoneAny": {
+    "message": "Нет другого сохранённого сканирования для сравнения"
+  },
   "historyCompareTitle": {
     "message": "Сравнение сканирований"
   },
   "historyCompareWith": {
     "message": "Сравнить с"
+  },
+  "historyCompareScopePage": {
+    "message": "Эта страница"
+  },
+  "historyCompareScopeAny": {
+    "message": "Любая страница"
+  },
+  "historyCompareSearch": {
+    "message": "Фильтр по адресу или заголовку"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · найдено: {1}"

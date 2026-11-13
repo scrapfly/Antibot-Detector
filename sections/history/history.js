@@ -1206,22 +1206,28 @@ class History {
   }
 
   /**
-   * History → … → Compare with…: a dialog with the entry's other saved scans of the same page to pick from, and what
-   * changed between the two (HistoryCompare): protections added, removed, changed in confidence or evidence, unchanged.
-   * A scan in the list is one short line (date without seconds, count); when it is of another address its page path shows
-   * under the list. Four counts sum the result up, then the protections in groups; Unchanged is folded when it is long.
+   * History → … → Compare with…: a dialog with the entry's other saved scans to pick from, and what changed between the two
+   * (HistoryCompare): protections added, removed, changed in confidence or evidence, unchanged. "This page" lists the scans of the
+   * same page; "Any page" every other scan, each with its page, and a box filters them by address or title (it opens there when
+   * the page has no other scan). A scan in the list is one short line (date without seconds, count); when it is of another address
+   * its page path shows under the list, both pages when they are two. Four counts sum the result up, then the protections in
+   * groups; Unchanged is folded when it is long.
    * "Copy as Markdown" copies that report and closes; "Copy summary", a button of the content under the counts, copies what changed
    * as one line for a chat or a ticket and leaves the dialog open (another scan can be picked next); Close leaves.
    * @param {object} item - History entry
-   * @returns {Promise<boolean>} false when the page has no other scan
+   * @returns {Promise<boolean>} false when History holds no other scan
    */
   async compareHistoryItem(item) {
     const t = (key, fallback, ...args) => FormatUtils.t(key, fallback, ...args);
-    const candidates = HistoryCompare.others(this.historyItems, item);
-    if (!candidates.length) {
-      NotificationHelper.info(t('historyCompareNone', 'No other saved scan of this page to compare with'));
+    const pageScans = HistoryCompare.others(this.historyItems, item);
+    if (!pageScans.length && !HistoryCompare.others(this.historyItems, item, { scope: 'any' }).length) {
+      NotificationHelper.info(t('historyCompareNoneAny', 'No other saved scan to compare with'));
       return false;
     }
+    // "Any page" lists this many scans at most, the newest (the filter finds the others)
+    const ANY_LIMIT = 500;
+    let scope = pageScans.length ? 'page' : 'any';
+    let candidates = pageScans;
     const categoryLabel = (key) => FormatUtils.categoryLabel(key);
     const methodLabel = (type) => this.getMethodLabel(String(type).toLowerCase());
     // The report and the hover texts keep the seconds; the list and the range line show a date without them
@@ -1250,18 +1256,77 @@ class History {
     const select = make('select', 'select-field history-dialog-input ui-select');
     // Each option is a translated sentence (date, count): its direction is the language's, not forced left to right
     select.setAttribute('dir', 'auto');
-    // Two scans in the same minute with the same count would read the same: those keep their seconds
-    const optionDates = HistoryCompare.optionDates(candidates.map(candidate => ({ time: HistoryCompare.timeOf(candidate), count: countOf(candidate) })), { short: shortDate, long: dateText });
-    candidates.forEach((candidate, index) => {
-      const option = make('option', '', t('historyCompareOptionFmt', '{0} · {1} found', optionDates[index], countOf(candidate)));
-      option.value = candidate.id;
-      select.appendChild(option);
-    });
-    const first = HistoryCompare.pickDefault(candidates, item);
-    select.value = first ? first.id : candidates[0].id;
+    const label = make('span', 'history-dialog-label', t('historyCompareWith', 'Compare with'));
+    label.id = `${uid}-label`;
+    select.setAttribute('aria-labelledby', label.id);
+    // This page or any page: two pressed-or-not buttons beside the label
+    const scopeGroup = make('div', 'history-compare-scope');
+    scopeGroup.setAttribute('role', 'group');
+    scopeGroup.setAttribute('aria-labelledby', label.id);
+    const scopeButton = (text) => {
+      const button = make('button', 'history-compare-scope-btn', text);
+      button.setAttribute('type', 'button');
+      return button;
+    };
+    const pageButton = scopeButton(t('historyCompareScopePage', 'This page'));
+    const anyButton = scopeButton(t('historyCompareScopeAny', 'Any page'));
+    if (!pageScans.length) {
+      pageButton.disabled = true;
+      hover(pageButton, t('historyCompareNone', 'No other saved scan of this page to compare with'));
+    }
+    scopeGroup.append(pageButton, anyButton);
+    const head = make('div', 'history-compare-head');
+    head.append(label, scopeGroup);
+    // Any page: the filter, by address, host or title
+    const search = make('input', 'input-field history-dialog-input history-compare-search');
+    search.setAttribute('type', 'search');
+    search.setAttribute('dir', 'auto');
+    search.setAttribute('autocomplete', 'off');
+    search.setAttribute('placeholder', t('historyCompareSearch', 'Filter by address or title'));
+    search.setAttribute('aria-label', t('historyCompareSearch', 'Filter by address or title'));
+    search.value = '';
 
-    const field = make('label', 'history-dialog-field');
-    field.append(make('span', 'history-dialog-label', t('historyCompareWith', 'Compare with')), select);
+    // The list for the scope and the filter: the scan picked stays picked while it is listed, else the default one
+    const fill = () => {
+      const kept = select.value;
+      candidates = scope === 'page' ? pageScans
+        : HistoryCompare.others(this.historyItems, item, { scope: 'any', query: search.value }).slice(0, ANY_LIMIT);
+      // Two scans in the same minute with the same count would read the same: those keep their seconds
+      const optionDates = HistoryCompare.optionDates(candidates.map(candidate => ({ time: HistoryCompare.timeOf(candidate), count: countOf(candidate) })), { short: shortDate, long: dateText });
+      const options = candidates.map((candidate, index) => {
+        const text = t('historyCompareOptionFmt', '{0} · {1} found', optionDates[index], countOf(candidate));
+        // Any page: each scan names its page (host and path)
+        const page = scope === 'any' ? HistoryCompare.pageLabel(candidate) : '';
+        const option = make('option', '', page ? `${text} · ${page}` : text);
+        option.value = candidate.id;
+        return option;
+      });
+      if (!options.length) {
+        const none = make('option', '', t('historyNoResults', 'No entries match your search or filters.'));
+        none.value = '';
+        none.disabled = true;
+        options.push(none);
+      }
+      select.replaceChildren(...options);
+      select.disabled = !candidates.length;
+      const first = candidates.find((candidate) => candidate.id === kept) || HistoryCompare.pickDefault(candidates, item) || candidates[0];
+      select.value = first ? first.id : '';
+    };
+    const showScope = () => {
+      for (const [button, value] of [[pageButton, 'page'], [anyButton, 'any']]) {
+        const on = value === scope;
+        button.setAttribute('aria-pressed', on ? 'true' : 'false');
+        button.classList.toggle('is-active', on);
+      }
+      search.hidden = scope !== 'any';
+      // Hidden and disabled together: the dialog's Tab trap lists enabled inputs, and a hidden one would hold the focus back
+      search.disabled = scope !== 'any';
+    };
+    fill();
+    showScope();
+
+    const field = make('div', 'history-dialog-field');
+    field.append(head, search, select);
     // Under the list, when the other scan is of another address (another query or fragment): its page path, the whole address on hover
     const where = make('div', 'history-compare-where');
     where.id = `${uid}-where`;
@@ -1366,6 +1431,22 @@ class History {
     };
     const refresh = () => {
       const other = candidates.find((c) => c.id === select.value) || candidates[0];
+      copySummary.disabled = !other;
+      if (!other) {
+        // The filter left nothing: nothing compared, nothing to copy (the list says so)
+        current = null;
+        range.textContent = '';
+        hover(range, '');
+        status.textContent = '';
+        status.hidden = true;
+        where.hidden = true;
+        where.textContent = '';
+        hover(where, '');
+        select.removeAttribute('aria-describedby');
+        summary.replaceChildren();
+        result.replaceChildren();
+        return;
+      }
       current = HistoryCompare.compare(item, other);
       const model = HistoryCompare.view(current, { t, methodLabel });
       const rangeText = (from, to) => t('historyCompareRangeFmt', 'From {0} to {1}', from, to);
@@ -1379,7 +1460,7 @@ class History {
       const place = HistoryCompare.whereText(item, other);
       where.hidden = !place;
       where.textContent = place;
-      hover(where, place ? String(other.url) : '');
+      hover(where, place ? HistoryCompare.whereTip(item, other) : '');
       if (place) select.setAttribute('aria-describedby', where.id); else select.removeAttribute('aria-describedby');
       summary.replaceChildren(...model.chips.map(renderChip));
       result.replaceChildren();
@@ -1388,6 +1469,16 @@ class History {
       for (const group of model.groups) result.appendChild(renderGroup(group, model.identical));
     };
     select.addEventListener('change', refresh);
+    const setScope = (value) => {
+      if (value === scope || (value === 'page' && !pageScans.length)) return;
+      scope = value;
+      showScope();
+      fill();
+      refresh();
+    };
+    pageButton.addEventListener('click', () => setScope('page'));
+    anyButton.addEventListener('click', () => setScope('any'));
+    search.addEventListener('input', () => { fill(); refresh(); });
     refresh();
     // The summary of the scan picked now; the dialog stays open, so the other copy and another scan are still there
     copySummary.addEventListener('click', async () => {
@@ -1397,7 +1488,8 @@ class History {
     // The dialog answers Enter by closing with "Copy as Markdown": Enter on a button of the content (Unchanged, Copy summary) is that button's own
     const keepEnterOnButtons = (event) => {
       const active = document.activeElement;
-      if (event.key === 'Enter' && active && (active === copySummary || (active.classList && active.classList.contains('history-compare-toggle')))) event.stopImmediatePropagation();
+      if (event.key === 'Enter' && active && (active === copySummary || active === search || active === pageButton || active === anyButton
+        || (active.classList && active.classList.contains('history-compare-toggle')))) event.stopImmediatePropagation();
     };
     window.addEventListener('keydown', keepEnterOnButtons, true);
     let copy;
@@ -2203,12 +2295,12 @@ class History {
     // A site report needs the entry's site
     const siteReport = menu.querySelector('[data-action="site-report"]');
     if (siteReport) siteReport.disabled = !this.siteReportHost(item);
-    // Compare needs another saved scan of the same page
+    // Compare needs another saved scan, of this page or of any other
     const compare = menu.querySelector('[data-action="compare"]');
     if (compare) {
-      const none = HistoryCompare.others(this.historyItems, item).length === 0;
+      const none = HistoryCompare.others(this.historyItems, item, { scope: 'any' }).length === 0;
       compare.disabled = none;
-      compare.title = none ? FormatUtils.t('historyCompareNone', 'No other saved scan of this page to compare with') : '';
+      compare.title = none ? FormatUtils.t('historyCompareNoneAny', 'No other saved scan to compare with') : '';
     }
   }
 

@@ -6380,11 +6380,23 @@
   "historyCompareNone": {
     "message": "Det finns ingen annan sparad skanning av den här sidan att jämföra med"
   },
+  "historyCompareNoneAny": {
+    "message": "Det finns ingen annan sparad skanning att jämföra med"
+  },
   "historyCompareTitle": {
     "message": "Jämför skanningar"
   },
   "historyCompareWith": {
     "message": "Jämför med"
+  },
+  "historyCompareScopePage": {
+    "message": "Den här sidan"
+  },
+  "historyCompareScopeAny": {
+    "message": "Valfri sida"
+  },
+  "historyCompareSearch": {
+    "message": "Filtrera efter adress eller titel"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · {1} skydd"

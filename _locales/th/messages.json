@@ -6380,11 +6380,23 @@
   "historyCompareNone": {
     "message": "ไม่มีการสแกนอื่นของหน้านี้ที่บันทึกไว้ให้เปรียบเทียบ"
   },
+  "historyCompareNoneAny": {
+    "message": "ไม่มีการสแกนอื่นที่บันทึกไว้ให้เปรียบเทียบ"
+  },
   "historyCompareTitle": {
     "message": "เปรียบเทียบการสแกน"
   },
   "historyCompareWith": {
     "message": "เปรียบเทียบกับ"
+  },
+  "historyCompareScopePage": {
+    "message": "หน้านี้"
+  },
+  "historyCompareScopeAny": {
+    "message": "หน้าใดก็ได้"
+  },
+  "historyCompareSearch": {
+    "message": "กรองตามที่อยู่หรือชื่อเรื่อง"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · พบ {1} รายการ"

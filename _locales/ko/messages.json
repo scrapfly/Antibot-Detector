@@ -6380,11 +6380,23 @@
   "historyCompareNone": {
     "message": "비교할 이 페이지의 다른 저장된 스캔이 없습니다"
   },
+  "historyCompareNoneAny": {
+    "message": "비교할 다른 저장된 스캔이 없습니다"
+  },
   "historyCompareTitle": {
     "message": "스캔 비교"
   },
   "historyCompareWith": {
     "message": "비교 대상"
+  },
+  "historyCompareScopePage": {
+    "message": "이 페이지"
+  },
+  "historyCompareScopeAny": {
+    "message": "모든 페이지"
+  },
+  "historyCompareSearch": {
+    "message": "주소 또는 제목으로 필터링"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · {1}개 발견"

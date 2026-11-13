@@ -6380,11 +6380,23 @@
   "historyCompareNone": {
     "message": "तुलना के लिए इस पेज का कोई और सहेजा गया स्कैन नहीं है"
   },
+  "historyCompareNoneAny": {
+    "message": "तुलना के लिए कोई और सहेजा गया स्कैन नहीं है"
+  },
   "historyCompareTitle": {
     "message": "स्कैन की तुलना"
   },
   "historyCompareWith": {
     "message": "इससे तुलना करें"
+  },
+  "historyCompareScopePage": {
+    "message": "यह पेज"
+  },
+  "historyCompareScopeAny": {
+    "message": "कोई भी पेज"
+  },
+  "historyCompareSearch": {
+    "message": "पते या शीर्षक से फ़िल्टर करें"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · मिले: {1}"

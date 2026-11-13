@@ -13,7 +13,7 @@
  *   Folding cards     Rules → editor: Detection methods, Combinations, Check against History and Test on this page start
  *                     folded with their counts; a click or Enter opens them; Save opens the card it points into
  *   Compare scans     History → … → Compare with…: the dialog lists the page's other scans, shows what was added, removed
- *                     and changed, copies it as Markdown, and the item is disabled when there is nothing to compare with
+ *                     and changed, copies it as Markdown; a page with no other scan of its own is enabled (any page, 3.2.0)
  *   Site report       (3.2.0) History → … → Site report and a Domains row open one site's report: its protections over time,
  *                     a timeline that reads right to left in Arabic, Markdown and JSON exports, and the way back to History
  *
@@ -251,10 +251,10 @@ const SEED = [
       await page.evaluate((target) => document.querySelector(`.history-item[data-history-id="${target}"] .history-more-btn`).click(), id);
       await page.waitForSelector('#historyItemMenu:not([hidden])');
     };
-    // The page with only one scan: the item is disabled and says why
+    // The page with only one scan: since 3.2.0 it can be compared with a scan of any other page, so the item is enabled
     await menuFor('s1');
-    assert.equal(await page.$eval('#historyItemMenu [data-action="compare"]', el => el.disabled), true);
-    assert.equal(await page.$eval('#historyItemMenu [data-action="compare"]', el => el.title), 'No other saved scan of this page to compare with');
+    assert.equal(await page.$eval('#historyItemMenu [data-action="compare"]', el => el.disabled), false);
+    assert.equal(await page.$eval('#historyItemMenu [data-action="compare"]', el => el.title), '');
     await page.keyboard.press('Escape');
 
     // shop.example/cart: scanned three times (the third with another query); compare the newest with the one before it
