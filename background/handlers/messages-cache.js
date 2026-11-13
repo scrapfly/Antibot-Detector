@@ -41,6 +41,26 @@ async function clearTabDetectionCache(request, sendResponse = () => {}) {
 }
 
 /**
+ * The page asking is answered from the cache, so its scan never starts. A page Chrome prerendered sends the hook and window
+ * reports it held while hidden as soon as it is shown, with their normal reasons and before it asks the cache: they opened a
+ * scan state for its document (messages-detection.js), and nothing would close it. Left open, it held the worker awake until
+ * its timeout, the popup said "Searching", and a later Scan of the page in place counted those old reports as its own. The
+ * state is closed when it is this document's and its main scan has not started; any other scan is left alone.
+ * @returns {boolean} whether a state was closed
+ */
+function closeScanAnsweredFromCache(sender, url) {
+    const tabId = sender?.tab?.id;
+    if (!tabId || typeof detectionStates === 'undefined') return false;
+    const state = detectionStates.get(tabId);
+    if (!state || state.mainStarted || state.finalized || state.finalizing) return false;
+    if (state.documentId && sender.documentId && state.documentId !== sender.documentId) return false;
+    if (!DetectionSessionStore.sameAddress(state.url, url)) return false;
+    state.usedCache = true;
+    state.finalized = true;
+    return DetectionSessionStore.finish(tabId, state);
+}
+
+/**
  * registerCacheHandlers registration.
  * Extracted from message-router switch cases for maintainability.
  */
@@ -70,6 +90,7 @@ function registerCacheHandlers(registry, context) {
                         tabsUsingCache.add(sender.tab.id);
                         Logger.debug('BACKGROUND', `[Background] [Early Cache] Marked tab ${sender.tab.id} as using cache`);
                     }
+                    closeScanAnsweredFromCache(sender, url);
                     sendResponse({
                         cacheHit: true,
                         detectionData: cachedData
@@ -105,6 +126,7 @@ function registerCacheHandlers(registry, context) {
                 const tabId = sender.tab?.id;
 
                 Logger.debug('BACKGROUND', '[Background] [Early Cache] Content script exited early due to cache hit for:', url);
+                closeScanAnsweredFromCache(sender, url);
 
                 if (detectionData && tabId) {
                     const detections = Array.isArray(detectionData.detectionResults) ? detectionData.detectionResults : [];
