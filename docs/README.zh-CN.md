@@ -137,7 +137,7 @@ Audio · Battery API · Canvas · Clipboard API · Crypto · CSS · Device Orien
 - **上传检测结果**，获取可分享的链接（默认使用 dpaste.com；见[分享链接](#分享链接)）
 - **清除缓存**，让页面在下次加载时重新扫描
 - **复制**，一个菜单：与上传内容相同的摘要、适合贴到工单或聊天里的 Markdown 表格、包含网站及其防护的一行文字，或 JSON（这些都不包含 Cookie 或请求头的值）；还可以复制重新请求该页面的代码，形式为 curl 命令、Python (requests) 或 Node.js (fetch)，带有此浏览器的 User-Agent、Accept-Language 和 client hints，以及该页面发送的所有 Cookie（包括 HttpOnly 的）。这些代码确实包含 Cookie 的值和带查询字符串的页面地址，请妥善保密
-- **屏蔽此域名**，让扩展不再扫描该域名
+- **跳过此站点**，让扩展不再扫描该站点
 
 ### 历史记录
 
