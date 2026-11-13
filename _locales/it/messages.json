@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Le modifiche alle impostazioni non sono ancora state salvate. Salvarle prima di chiudere?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Le modifiche alle impostazioni non sono ancora state salvate. Salvarle prima di applicare le nuove impostazioni?"
+  },
   "historySortLabel": {
     "message": "Ordina cronologia"
   },

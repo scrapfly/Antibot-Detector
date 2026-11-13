@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Изменения настроек ещё не сохранены. Сохранить их перед закрытием?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Изменения настроек ещё не сохранены. Сохранить их перед применением новых настроек?"
+  },
   "historySortLabel": {
     "message": "Сортировка истории"
   },

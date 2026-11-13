@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Ayarlardaki değişiklikler henüz kaydedilmedi. Kapatmadan önce kaydedilsin mi?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Ayarlardaki değişiklikler henüz kaydedilmedi. Yeni ayarlar uygulanmadan önce kaydedilsin mi?"
+  },
   "historySortLabel": {
     "message": "Geçmişi sırala"
   },

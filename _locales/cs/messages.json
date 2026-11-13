@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Změny nastavení ještě nejsou uloženy. Uložit je před zavřením?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Změny nastavení ještě nejsou uloženy. Uložit je před použitím nového nastavení?"
+  },
   "historySortLabel": {
     "message": "Řazení historie"
   },

@@ -188,6 +188,8 @@ SettingsUI.restoreBackupFile = async function(event) {
             NotificationHelper.info(text('restoreNothing', 'Nothing is selected.'));
             return;
         }
+        // Restored settings redraw the form: edits not saved yet are saved or dropped first (Cancel: nothing is restored)
+        if (choice.parts.settings && !(await SettingsUI.settleUnsavedBeforeReplace(this))) return;
         const { done, failed, language, skipped } = await SettingsUI.applyBackup.call(this, parsed.bundle, choice);
         const names = {
             settings: text('restorePartSettings', 'Settings'),

@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Perubahan pengaturan Anda belum disimpan. Simpan sebelum menutup?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Perubahan pengaturan Anda belum disimpan. Simpan sebelum pengaturan baru diterapkan?"
+  },
   "historySortLabel": {
     "message": "Urutkan riwayat"
   },

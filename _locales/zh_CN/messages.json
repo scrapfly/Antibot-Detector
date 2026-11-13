@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "对设置的更改尚未保存。要在关闭前保存吗？"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "对设置的更改尚未保存。要在应用新设置前保存吗？"
+  },
   "historySortLabel": {
     "message": "排序历史记录"
   },

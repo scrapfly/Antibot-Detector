@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "設定の変更はまだ保存されていません。閉じる前に保存しますか？"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "設定の変更はまだ保存されていません。新しい設定を適用する前に保存しますか？"
+  },
   "historySortLabel": {
     "message": "履歴の並べ替え"
   },

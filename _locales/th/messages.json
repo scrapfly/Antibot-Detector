@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "การเปลี่ยนแปลงการตั้งค่ายังไม่ได้บันทึก บันทึกก่อนปิดไหม"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "การเปลี่ยนแปลงการตั้งค่ายังไม่ได้บันทึก บันทึกก่อนใช้การตั้งค่าใหม่ไหม"
+  },
   "historySortLabel": {
     "message": "เรียงลำดับประวัติ"
   },

@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Zmiany w ustawieniach nie zostały jeszcze zapisane. Zapisać je przed zamknięciem?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Zmiany w ustawieniach nie zostały jeszcze zapisane. Zapisać je przed zastosowaniem nowych ustawień?"
+  },
   "historySortLabel": {
     "message": "Sortuj historię"
   },

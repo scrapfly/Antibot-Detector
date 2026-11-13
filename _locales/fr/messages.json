@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Vos modifications des paramètres ne sont pas encore enregistrées. Les enregistrer avant de fermer ?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Vos modifications des paramètres ne sont pas encore enregistrées. Les enregistrer avant d’appliquer les nouveaux paramètres ?"
+  },
   "historySortLabel": {
     "message": "Trier l’historique"
   },

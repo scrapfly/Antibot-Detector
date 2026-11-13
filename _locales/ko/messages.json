@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "설정 변경 사항이 아직 저장되지 않았습니다. 닫기 전에 저장할까요?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "설정 변경 사항이 아직 저장되지 않았습니다. 새 설정을 적용하기 전에 저장할까요?"
+  },
   "historySortLabel": {
     "message": "기록 정렬"
   },

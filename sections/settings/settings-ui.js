@@ -156,6 +156,56 @@ SettingsUI.requestHideSettings = async function() {
     return false;
 };
 
+/**
+ * Before something replaces the form (a language change that reloads the popup, a preset, an imported settings file, a
+ * restored backup): true to go on. With unsaved changes it asks first, as closing Settings does: Save first (goes on only
+ * if the save worked), Discard (the form shows the saved settings again) or Cancel (false: nothing changes).
+ * @param {object} owner the Settings instance
+ * @param {string} message the question, which says what is about to happen
+ */
+SettingsUI.settleUnsavedChanges = async function(owner, message) {
+    if (!owner || !owner.settingsBaseline || typeof SettingsUI.hasUnsavedChanges !== 'function' || !SettingsUI.hasUnsavedChanges(owner)) return true;
+    if (typeof NotificationHelper === 'undefined' || typeof NotificationHelper.choose !== 'function') return true;
+    const tr = (key, fallback) => ((typeof I18n !== 'undefined') && I18n.get(key)) || fallback;
+    const answer = await NotificationHelper.choose({
+      title: tr('settingsLanguageUnsavedTitle', 'Unsaved settings'),
+      message,
+      cancelText: tr('btnCancel', 'Cancel'),
+      tone: 'warning',
+      actions: [
+        { value: 'discard', text: tr('ruleEditorDiscardConfirm', 'Discard') },
+        { value: 'save', text: tr('btnSave', 'Save'), primary: true }
+      ],
+      defaultValue: 'save'
+    });
+    if (answer === 'save') return SettingsUI.saveFormFirst(owner);
+    if (answer !== 'discard') return false;
+    // The edits are dropped: the form and the staged site lists go back to what is saved
+    owner.settings = JSON.parse(JSON.stringify(owner.settingsBaseline));
+    if (typeof owner.updateSettingsUI === 'function') owner.updateSettingsUI();
+    return true;
+};
+
+/** "Save first": the form's values, checked as the Save button checks them. False when a value is not valid or the save failed. */
+SettingsUI.saveFormFirst = async function(owner) {
+    const fromForm = owner.getSettingsFromUI();
+    const validation = owner.validateSettings(fromForm);
+    if (!validation.isValid) {
+      const message = ((typeof I18n !== 'undefined') && I18n.format && I18n.format('invalidSettingsFmt', validation.errors.join(', ')))
+        || `Invalid settings: ${validation.errors.join(', ')}`;
+      NotificationHelper.error(message);
+      return false;
+    }
+    owner.settings = owner.deepMerge(owner.settings, fromForm);
+    return (await owner.saveSettings({ notify: false })) !== false;
+};
+
+/** The question asked before a preset, an import or a restore replaces settings that have unsaved changes. */
+SettingsUI.settleUnsavedBeforeReplace = function(owner) {
+    const tr = (key, fallback) => ((typeof I18n !== 'undefined') && I18n.get(key)) || fallback;
+    return SettingsUI.settleUnsavedChanges(owner, tr('settingsUnsavedReplaceMessage', 'Your changes to the settings are not saved yet. Save them before the new settings are applied?'));
+};
+
 SettingsUI.switchTab = function(tabName) {
     const allTabButtons = document.querySelectorAll('.settings-tab-btn');
     let activeBtn = null;

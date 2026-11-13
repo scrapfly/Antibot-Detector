@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Các thay đổi cài đặt chưa được lưu. Lưu trước khi đóng?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Các thay đổi cài đặt chưa được lưu. Lưu trước khi áp dụng cài đặt mới?"
+  },
   "historySortLabel": {
     "message": "Sắp xếp lịch sử"
   },

@@ -6775,6 +6775,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Los cambios en los ajustes aún no se han guardado. ¿Guardarlos antes de cerrar?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Los cambios en los ajustes aún no se han guardado. ¿Guardarlos antes de aplicar los nuevos ajustes?"
+  },
   "historySortLabel": {
     "message": "Ordenar historial"
   },

@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Deine Änderungen an den Einstellungen sind noch nicht gespeichert. Vor dem Schließen speichern?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Deine Änderungen an den Einstellungen sind noch nicht gespeichert. Vor dem Übernehmen der neuen Einstellungen speichern?"
+  },
   "historySortLabel": {
     "message": "Verlauf sortieren"
   },

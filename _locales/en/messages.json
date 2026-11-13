@@ -7480,6 +7480,10 @@
     "message": "Your changes to the settings are not saved yet. Save them before closing?",
     "description": "Settings: the question asked when Settings is closed (✕, Escape or a click outside it) with changes that are not saved. The buttons are Cancel, Discard and Save"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Your changes to the settings are not saved yet. Save them before the new settings are applied?",
+    "description": "Settings → Data: the question asked before a preset, an imported settings file or a restored backup replaces settings with changes that are not saved. The buttons are Cancel, Discard and Save"
+  },
   "historySortLabel": {
     "message": "Sort history",
     "description": "Accessible name of the sort dropdown at the end of the History chip row"

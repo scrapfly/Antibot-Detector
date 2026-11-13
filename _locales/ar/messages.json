@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "لم تُحفظ تغييراتك على الإعدادات بعد. هل تريد حفظها قبل الإغلاق؟"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "لم تُحفظ تغييراتك على الإعدادات بعد. هل تريد حفظها قبل تطبيق الإعدادات الجديدة؟"
+  },
   "historySortLabel": {
     "message": "ترتيب السجل"
   },

@@ -6773,6 +6773,9 @@
   "settingsUnsavedCloseMessage": {
     "message": "Ändringarna i inställningarna har inte sparats ännu. Spara dem innan du stänger?"
   },
+  "settingsUnsavedReplaceMessage": {
+    "message": "Ändringarna i inställningarna har inte sparats ännu. Spara dem innan de nya inställningarna används?"
+  },
   "historySortLabel": {
     "message": "Sortera historik"
   },
