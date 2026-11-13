@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "HTTP-statuskoden som sidan svarade med när den skannades. Ett fel (4xx eller 5xx) betyder ofta att begäran blockerades eller fick en utmaning."
   },
+  "detectionFactsTitle": {
+    "message": "Vad som kontrollerades"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookies: {0} · Skript: {1} · Förfrågningar: {2} · Headers: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS-hooks: klara"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS-hooks: stoppade vid tidsgränsen"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS-hooks: av för den här webbplatsen"
+  },
   "tipCacheExpires": {
     "message": "Går ut"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "Webbplats"
+  },
+  "detectionModalEditRule": {
+    "message": "Redigera regel"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Kopiera belägg"
   },
   "detectionModalDocs": {
     "message": "Guide till identifiering"

@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "Код HTTP-статуса, которым страница ответила при сканировании. Ошибка (4xx или 5xx) часто означает, что запрос заблокировали или отправили на проверку."
   },
+  "detectionFactsTitle": {
+    "message": "Что проверено"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Файлы cookie: {0} · Скрипты: {1} · Запросы: {2} · Заголовки: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS-хуки: завершены"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS-хуки: остановлены по лимиту времени"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS-хуки: выключены для этого сайта"
+  },
   "tipCacheExpires": {
     "message": "Истекает"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "Сайт"
+  },
+  "detectionModalEditRule": {
+    "message": "Редактировать правило"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Копировать доказательства"
   },
   "detectionModalDocs": {
     "message": "Руководство по обнаружению"

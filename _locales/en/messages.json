@@ -4798,6 +4798,26 @@
     "message": "The HTTP status code the page answered with when it was scanned. An error (4xx or 5xx) often means the request was blocked or challenged.",
     "description": "Detection tab and Bulk scan: hover text of the page's HTTP status code"
   },
+  "detectionFactsTitle": {
+    "message": "What was checked",
+    "description": "Detection tab: title of the folded panel (and the hover text of its button at the end of the Cache row) that lists what the scan looked at"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookies: {0} · Scripts: {1} · Requests: {2} · Headers: {3}",
+    "description": "Detection tab, What was checked and the line under Nothing Detected: how many cookies, scripts, network requests and response headers the scan looked at"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS hooks: finished",
+    "description": "Detection tab, What was checked: the JavaScript hooks ran until the page went quiet"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS hooks: stopped at the time limit",
+    "description": "Detection tab, What was checked: the JavaScript hooks were still listening when the scan's time limit stopped them, so a late signal may be missing"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS hooks: off for this site",
+    "description": "Detection tab, What was checked: the JavaScript hooks are turned off for this site (Settings → Detection → Sites without JS hooks)"
+  },
   "tipCacheExpires": {
     "message": "Expires"
   },
@@ -7547,6 +7567,14 @@
   "detectionModalWebsite": {
     "message": "Website",
     "description": "Detection details dialog: link to the vendor's official website (opens a new tab)"
+  },
+  "detectionModalEditRule": {
+    "message": "Edit rule",
+    "description": "Detection details dialog, links row: opens the Rules tab with this protection's rule in the editor"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Copy evidence",
+    "description": "Detection details dialog, links row: copies this one detection as Markdown (signal names and patterns, never cookie or header values)"
   },
   "detectionModalDocs": {
     "message": "Detection guide",

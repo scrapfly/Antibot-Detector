@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "De HTTP-statuscode waarmee de pagina antwoordde toen ze werd gescand. Een fout (4xx of 5xx) betekent vaak dat het verzoek werd geblokkeerd of een challenge kreeg."
   },
+  "detectionFactsTitle": {
+    "message": "Wat er is gecontroleerd"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookies: {0} · Scripts: {1} · Verzoeken: {2} · Headers: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS-hooks: voltooid"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS-hooks: gestopt bij de tijdslimiet"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS-hooks: uit voor deze site"
+  },
   "tipCacheExpires": {
     "message": "Verloopt"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "Website"
+  },
+  "detectionModalEditRule": {
+    "message": "Regel bewerken"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Bewijs kopiëren"
   },
   "detectionModalDocs": {
     "message": "Detectiegids"

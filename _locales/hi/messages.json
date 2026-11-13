@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "स्कैन के समय पेज ने जिस HTTP स्थिति कोड के साथ जवाब दिया। कोई त्रुटि (4xx या 5xx) अक्सर बताती है कि अनुरोध ब्लॉक किया गया या उसे चुनौती दी गई।"
   },
+  "detectionFactsTitle": {
+    "message": "क्या जाँचा गया"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "कुकीज़: {0} · स्क्रिप्ट: {1} · अनुरोध: {2} · हेडर: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS हुक: पूरे हुए"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS हुक: समय सीमा पर रुक गए"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS हुक: इस साइट के लिए बंद"
+  },
   "tipCacheExpires": {
     "message": "समाप्ति"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "वेबसाइट"
+  },
+  "detectionModalEditRule": {
+    "message": "नियम संपादित करें"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "साक्ष्य कॉपी करें"
   },
   "detectionModalDocs": {
     "message": "पहचान गाइड"

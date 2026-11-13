@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "رمز حالة HTTP الذي أجابت به الصفحة عند فحصها. الخطأ (4xx أو 5xx) يعني غالبًا أن الطلب حُظر أو خضع لتحدٍّ."
   },
+  "detectionFactsTitle": {
+    "message": "ما الذي فُحص"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "ملفات تعريف الارتباط: {0} · النصوص البرمجية: {1} · الطلبات: {2} · الترويسات: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "خطافات JS: اكتملت"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "خطافات JS: توقفت عند انتهاء المهلة"
+  },
+  "detectionFactsHooksOff": {
+    "message": "خطافات JS: متوقفة لهذا الموقع"
+  },
   "tipCacheExpires": {
     "message": "تنتهي"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "الموقع الإلكتروني"
+  },
+  "detectionModalEditRule": {
+    "message": "تعديل القاعدة"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "نسخ الأدلة"
   },
   "detectionModalDocs": {
     "message": "دليل الكشف"

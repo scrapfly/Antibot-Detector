@@ -401,6 +401,66 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* What was checked: a square at the end of the Cache row, as tall as its tiles. It opens the counts and how the JS hooks ended
+   under the row, so the summary card keeps its height while it is closed */
+.scan-facts-toggle {
+  flex: 0 0 auto;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  padding: 0;
+  background: var(--g-323232);
+  border: 1px solid var(--g-424242);
+  border-radius: 7px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.scan-facts-toggle:hover,
+.scan-facts-toggle[aria-expanded="true"] {
+  border-color: var(--g-525252);
+  color: var(--accent-light);
+}
+
+.scan-facts-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.scan-facts-toggle[hidden],
+.scan-facts-panel[hidden] {
+  display: none;
+}
+
+.scan-facts-panel {
+  margin: 0;
+  padding: 6px 12px 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-bottom: none;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--text-secondary);
+}
+
+.scan-facts-panel p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.scan-facts-title {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.scan-facts-panel .scan-facts-line[hidden] {
+  display: none;
+}
+
 #httpStatusTile .tone-amber { --tone: var(--warning); }
 #httpStatusTile .tone-red { --tone: var(--danger); }
 
@@ -2187,6 +2247,30 @@
   display: none;
 }
 
+/* A cookie row's life on this site (set, changed, expires: times only, never the value): shown folded or not, under the value */
+.detection-modal-methods-list .method-item-card.has-life {
+  grid-template-areas:
+    "head"
+    "value"
+    "life";
+}
+
+.detection-modal-methods-list .method-item-card.has-life.is-folded {
+  grid-template-areas:
+    "head"
+    "life";
+}
+
+.method-cookie-life {
+  grid-area: life;
+  min-width: 0;
+  padding: 0 2px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
 /* A "must not be found" signal: its row says so where the score would be */
 .method-not-present {
   font-size: 11px;
@@ -2294,6 +2378,10 @@
 .detection-note-action[hidden],
 .detection-note-sep[hidden] {
   display: none;
+}
+
+.state-card-checked.state-card-facts {
+  margin-top: 8px;
 }
 
 .state-card-checked {

@@ -79,6 +79,8 @@
       </div>
       <!-- A scan that found nothing: when it ran (or the other page of the site it ran on, under the Domain cache scope), and one
            click to scan this page again. The result is cached for days, so reloading the page shows the same card -->
+      <!-- What the scan looked at: counts and how the JS hooks ended (none for a result saved before 3.1.9) -->
+      <p id="emptyFactsNote" class="state-card-checked state-card-facts" dir="auto" hidden></p>
       <p id="emptyCheckedNote" class="state-card-checked" hidden>
         <span class="detection-note-text"></span>
         <span class="detection-note-action"><span class="detection-note-sep" aria-hidden="true">·</span> <button id="checkedRescanBtn" class="detection-link-btn" type="button" data-i18n="historyScanAgain">Scan again now</button></span>
@@ -231,6 +233,15 @@
             <div class="stat-value-inline" id="httpStatusValue">-</div>
           </div>
         </div>
+        <!-- What was checked: opens the counts and how the JS hooks ended under this row. Hidden for a result saved before 3.1.9 -->
+        <button type="button" id="scanFactsToggle" class="scan-facts-toggle" aria-expanded="false" aria-controls="scanFactsPanel" hidden title="What was checked" aria-label="What was checked" data-i18n-title="detectionFactsTitle" data-i18n-aria-label="detectionFactsTitle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M3.5 6l1 1 2-2M3.5 12l1 1 2-2M3.5 18l1 1 2-2"/></svg>
+        </button>
+      </div>
+      <div id="scanFactsPanel" class="scan-facts-panel" role="region" aria-labelledby="scanFactsTitle" hidden>
+        <p id="scanFactsTitle" class="scan-facts-title" data-i18n="detectionFactsTitle">What was checked</p>
+        <p class="scan-facts-line" data-facts="counts" dir="auto"></p>
+        <p class="scan-facts-line" data-facts="hooks" dir="auto"></p>
       </div>
 
       <!-- What History says changed on this page since its earlier scan, with Compare scans and Watch for changes. Read from
@@ -401,6 +412,9 @@
             <a id="detectionModalWebsite" class="detection-modal-link" hidden><span data-i18n="detectionModalWebsite">Website</span><svg class="detection-modal-link-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
             <a id="detectionModalDocs" class="detection-modal-link" hidden><span data-i18n="detectionModalDocs">Detection guide</span><svg class="detection-modal-link-icon" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
             <button type="button" id="detectionModalOpenTools" class="detection-modal-link detection-modal-link--tools" hidden><span data-i18n="advancedToolsLoadTools">Open tools</span></button>
+            <!-- This protection's rule in the Rules editor (a rule that is loaded), and this one detection as Markdown: names and patterns, no values -->
+            <button type="button" id="detectionModalEditRule" class="detection-modal-link" hidden><span data-i18n="detectionModalEditRule">Edit rule</span></button>
+            <button type="button" id="detectionModalCopyEvidence" class="detection-modal-link"><span data-i18n="detectionModalCopyEvidence">Copy evidence</span></button>
           </div>
         </div>
         <div class="detection-modal-section" id="detectionModalCombinationsSection" hidden>

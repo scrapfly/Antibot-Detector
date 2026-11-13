@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "Stavový kód HTTP, kterým stránka odpověděla při skenování. Chyba (4xx nebo 5xx) často znamená, že požadavek byl zablokován nebo dostal ověřovací výzvu."
   },
+  "detectionFactsTitle": {
+    "message": "Co bylo zkontrolováno"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookies: {0} · Skripty: {1} · Požadavky: {2} · Hlavičky: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "JS hooky: dokončeny"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "JS hooky: zastaveny po vypršení časového limitu"
+  },
+  "detectionFactsHooksOff": {
+    "message": "JS hooky: pro tento web vypnuté"
+  },
   "tipCacheExpires": {
     "message": "Vyprší"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "Web"
+  },
+  "detectionModalEditRule": {
+    "message": "Upravit pravidlo"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Kopírovat důkazy"
   },
   "detectionModalDocs": {
     "message": "Průvodce detekcí"

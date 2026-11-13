@@ -4522,6 +4522,21 @@
   "detectionTipHttpStatus": {
     "message": "Il codice di stato HTTP con cui la pagina ha risposto durante la scansione. Un errore (4xx o 5xx) spesso indica che la richiesta è stata bloccata o sottoposta a una verifica."
   },
+  "detectionFactsTitle": {
+    "message": "Cosa è stato controllato"
+  },
+  "detectionFactsCountsFmt": {
+    "message": "Cookie: {0} · Script: {1} · Richieste: {2} · Intestazioni: {3}"
+  },
+  "detectionFactsHooksDone": {
+    "message": "Intercettori JS: completati"
+  },
+  "detectionFactsHooksTimeout": {
+    "message": "Intercettori JS: fermati al limite di tempo"
+  },
+  "detectionFactsHooksOff": {
+    "message": "Intercettori JS: disattivati per questo sito"
+  },
   "tipCacheExpires": {
     "message": "Scade"
   },
@@ -6823,6 +6838,12 @@
   },
   "detectionModalWebsite": {
     "message": "Sito web"
+  },
+  "detectionModalEditRule": {
+    "message": "Modifica regola"
+  },
+  "detectionModalCopyEvidence": {
+    "message": "Copia prove"
   },
   "detectionModalDocs": {
     "message": "Guida al rilevamento"

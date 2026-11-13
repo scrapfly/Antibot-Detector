@@ -419,6 +419,70 @@ DetectionUI.syncCheckedNote = async function(scan) {
     note.hidden = false;
 };
 
+/** How the JS hooks of a scan ended, as the worker saves it (ScanReport.facts, storeDetection), and the line that says it. */
+DetectionUI.HOOKS_OUTCOMES = Object.freeze({
+    done: ['detectionFactsHooksDone', 'JS hooks: finished'],
+    timeout: ['detectionFactsHooksTimeout', 'JS hooks: stopped at the time limit'],
+    off: ['detectionFactsHooksOff', 'JS hooks: off for this site']
+});
+
+/**
+ * What a scan looked at, as text: "Cookies: 12 · Scripts: 31 · Requests: 200 · Headers: 18" and "JS hooks: finished". Null for a
+ * result with no facts (saved before 3.1.9) or with facts this version does not read.
+ * @param {object} facts - the result's scanFacts
+ * @returns {{counts: string, hooks: string}|null}
+ */
+DetectionUI.scanFactsText = function(facts) {
+    if (!facts || typeof facts !== 'object') return null;
+    const keys = ['cookies', 'scripts', 'requests', 'headers'];
+    if (!keys.every(key => Number.isInteger(facts[key]) && facts[key] >= 0)) return null;
+    const counts = FormatUtils.t('detectionFactsCountsFmt', 'Cookies: {0} · Scripts: {1} · Requests: {2} · Headers: {3}',
+      ...keys.map(key => String(facts[key])));
+    const outcome = Object.prototype.hasOwnProperty.call(DetectionUI.HOOKS_OUTCOMES, facts.hooks) ? DetectionUI.HOOKS_OUTCOMES[facts.hooks] : null;
+    return { counts, hooks: outcome ? FormatUtils.t(outcome[0], outcome[1]) : '' };
+};
+
+/**
+ * What was checked, from the result shown: the square at the end of the Cache row and the lines it opens (results), and the
+ * line under the all-clear card (a scan that found nothing). Both hidden for a result with no facts.
+ * @param {object|null} meta - the result's cache metadata
+ * @param {'results'|'clean'|null} where - which state shows them; null hides both
+ */
+DetectionUI.syncScanFacts = function(meta, where) {
+    const text = where ? DetectionUI.scanFactsText(meta && meta.scanFacts) : null;
+    const toggle = document.querySelector('#scanFactsToggle');
+    const panel = document.querySelector('#scanFactsPanel');
+    const clean = document.querySelector('#emptyFactsNote');
+    const inResults = !!text && where === 'results';
+    if (toggle) {
+      if (toggle.dataset && toggle.dataset.bound !== 'true') {
+        toggle.dataset.bound = 'true';
+        toggle.addEventListener('click', () => {
+          const open = toggle.getAttribute('aria-expanded') !== 'true';
+          toggle.setAttribute('aria-expanded', String(open));
+          const target = document.querySelector('#scanFactsPanel');
+          if (target) target.hidden = !open;
+        });
+      }
+      toggle.hidden = !inResults;
+      if (!inResults) toggle.setAttribute('aria-expanded', 'false');
+    }
+    if (panel) {
+      if (inResults) {
+        const counts = panel.querySelector('[data-facts="counts"]');
+        const hooks = panel.querySelector('[data-facts="hooks"]');
+        if (counts) counts.textContent = text.counts;
+        if (hooks) { hooks.textContent = text.hooks; hooks.hidden = !text.hooks; }
+      }
+      panel.hidden = !inResults || !toggle || toggle.getAttribute('aria-expanded') !== 'true';
+    }
+    if (clean) {
+      const shown = !!text && where === 'clean';
+      clean.textContent = shown ? [text.counts, text.hooks].filter(Boolean).join(' · ') : '';
+      clean.hidden = !shown;
+    }
+};
+
 /**
  * Under the site's name in the summary card: the results were found on another page of the site (under the Domain cache scope
  * every page of a site is served the scan of one of them), which one and when, and Scan again now. Hidden for this page's own
@@ -561,6 +625,8 @@ DetectionUI.showEmptyState = function(options = {}) {
     // A scan that found nothing keeps the all-clear card, with a quiet line under it: when it ran (or which other page of the site
     // it ran on) and Scan again now. Its result is cached for days, so a reload shows the same card
     DetectionUI.syncCheckedNote.call(this, this.scanOutcome === 'complete' ? (options.scan || {}) : null);
+    // What that scan looked at, under the card (nothing for a result saved before 3.1.9)
+    DetectionUI.syncScanFacts.call(this, options.scan || null, this.scanOutcome === 'complete' && options.scan ? 'clean' : null);
 
     if (emptyStateFooter) {
       emptyStateFooter.style.display = options.showBadges === false ? 'none' : 'flex';
@@ -723,6 +789,8 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     // Under the site's name: the results were found on another page of the site (the Domain cache scope)
     DetectionUI.syncSourceNote.call(this, options.cacheMetadata || null);
     DetectionUI.syncHooksOffNote.call(this);
+    // What was checked: the counts and how the JS hooks ended, folded at the end of the Cache row
+    DetectionUI.syncScanFacts.call(this, options.cacheMetadata || null, 'results');
 
     // Update stats
     this.updateStats(detections);
