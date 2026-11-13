@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "Combinaties"
   },
+  "historyFilterHttpError": {
+    "message": "Foutstatus"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Alleen pagina's met een foutstatus (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Geen items komen overeen met je zoekopdracht of filters."
   },

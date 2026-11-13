@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "Kombinasi"
   },
+  "historyFilterHttpError": {
+    "message": "Status galat"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Hanya halaman dengan status galat (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Tidak ada entri yang cocok dengan pencarian atau filter Anda."
   },

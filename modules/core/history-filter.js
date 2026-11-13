@@ -5,6 +5,7 @@
  *   isChanged()          an entry whose protections differ from its earlier scan (what the Changed badge shows)
  *   firedCombinations()  the combinations that fired on a page (what the card counts after the fingerprint total)
  *   hasCombinations()    whether an entry has any
+ *   isHttpError()        an entry whose page answered with an error status (4xx or 5xx) when it was scanned
  *   isActive()           whether any chip is on
  *   matches()            one entry against the search text and the chips
  *   filter()             the entries that match, in their order
@@ -14,17 +15,20 @@
  * stay (か is not が, का is not की, 가 is not 각, и is not й). The chips
  * combine with AND: Pinned, Changed, Combinations and the categories must all hold, and several
  * categories together mean "any of them" (Anti-bot and CAPTCHA keep the pages that have either).
- * Combinations keeps the pages where at least one combination fired.
+ * Combinations keeps the pages where at least one combination fired. Error status (httpError, turned on from the toolbar's
+ * "…" menu: the chip row has no room for one more chip, so its chip is shown only while it is on) keeps the pages that answered
+ * 4xx or 5xx; an entry saved before 3.1.9, or with no known status, is not one of them.
  */
 (function(root) {
   'use strict';
 
   // Loaded before this file in the popup and the worker; under Node it sits next to it
   const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
+  const HttpStatus = root.HttpStatus || (typeof require === 'function' ? require('./http-status.js') : undefined);
 
   const CATEGORIES = Categories.KEYS;
   // The on/off chips; the category chips are a list of their own
-  const FLAGS = ['pinned', 'changed', 'combinations'];
+  const FLAGS = ['pinned', 'changed', 'combinations', 'httpError'];
 
   const detectionName = (d) => String((d && ((d.detector && d.detector.name) || d.name)) || '').trim();
   const categoryKey = (d) => Categories.keyOf(d);
@@ -54,6 +58,9 @@
 
   const hasCombinations = (item) => !!item && firedCombinations(item.detections).length > 0;
 
+  /** The page answered 4xx or 5xx when it was scanned (HttpStatus.isError); an entry with no known status did not. */
+  const isHttpError = (item) => !!item && !!HttpStatus && HttpStatus.isError(item.httpStatus);
+
   /** The chips as the popup keeps them, whatever was passed (nothing gives every chip off): booleans and known categories only. */
   function normalizeChips(chips) {
     const value = chips || {};
@@ -61,6 +68,7 @@
       pinned: value.pinned === true,
       changed: value.changed === true,
       combinations: value.combinations === true,
+      httpError: value.httpError === true,
       categories: [...new Set((Array.isArray(value.categories) ? value.categories : []).filter(key => CATEGORIES.includes(key)))]
     };
   }
@@ -99,7 +107,7 @@
 
   /**
    * @param {object} item  a History entry
-   * @param {{query?: string, chips?: {pinned?: boolean, changed?: boolean, combinations?: boolean, categories?: string[]},
+   * @param {{query?: string, chips?: {pinned?: boolean, changed?: boolean, combinations?: boolean, httpError?: boolean, categories?: string[]},
    *          nameOf?: function, categoryOf?: function}} [options]
    *   nameOf and categoryOf read a detection's display name and category key (the popup passes its own)
    */
@@ -113,6 +121,7 @@
     if (chips.pinned && item.pinned !== true) return false;
     if (chips.changed && !isChanged(item)) return false;
     if (chips.combinations && !hasCombinations(item)) return false;
+    if (chips.httpError && !isHttpError(item)) return false;
     if (chips.categories.length && !detections.some(d => chips.categories.includes(categoryOf(d)))) return false;
 
     const typed = String(options.query || '').trim();
@@ -142,7 +151,7 @@
     return list.filter(item => matches(item, options));
   }
 
-  const api = { CATEGORIES, FLAGS, changeNames, isChanged, firedCombinations, hasCombinations, isActive, normalizeChips, matches, filter };
+  const api = { CATEGORIES, FLAGS, changeNames, isChanged, firedCombinations, hasCombinations, isHttpError, isActive, normalizeChips, matches, filter };
   root.HistoryFilter = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

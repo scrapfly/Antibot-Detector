@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "Tổ hợp"
   },
+  "historyFilterHttpError": {
+    "message": "Trạng thái lỗi"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Chỉ các trang có trạng thái lỗi (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Không có mục nào khớp với tìm kiếm hoặc bộ lọc của bạn."
   },

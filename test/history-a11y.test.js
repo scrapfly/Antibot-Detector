@@ -86,7 +86,7 @@ function load({ messages = ENGLISH } = {}) {
     document: page.doc
   });
   context.self = context; context.window = context; context.globalThis = context;
-  for (const file of ['modules/core/categories.js', 'utils/format-utils.js', 'utils/detection-utils.js', 'modules/core/history-store.js',
+  for (const file of ['modules/core/categories.js', 'modules/core/http-status.js', 'utils/format-utils.js', 'utils/detection-utils.js', 'modules/core/history-store.js',
     'modules/core/history-filter.js', 'modules/core/history-sort.js', 'modules/core/detection-summary.js', 'sections/history/history.js']) {
     vm.runInContext(read(file), context, { filename: file });
   }
@@ -687,7 +687,7 @@ test('the sort and the filter chips are kept for the next time the popup opens',
   next.context.localStorage = h.context.localStorage;
   next.view.restoreViewPrefs();
   assert.equal(next.view.sortKey, 'host');
-  assert.deepEqual(JSON.parse(JSON.stringify(next.view.activeChips)), { pinned: true, changed: false, combinations: false, categories: ['captcha'] });
+  assert.deepEqual(JSON.parse(JSON.stringify(next.view.activeChips)), { pinned: true, changed: false, combinations: false, httpError: false, categories: ['captcha'] });
   next.view.clearFilters();
   assert.equal(JSON.parse(next.context.localStorage.data.historyFilterChips).pinned, false, 'Clear filters is remembered too');
 });
@@ -705,4 +705,36 @@ test('a stored sort or chip nobody knows, or a storage that throws, leaves the d
   assert.equal(blocked.view.sortKey, 'recent');
   const none = load();
   assert.doesNotThrow(() => none.view.restoreViewPrefs(), 'no localStorage at all');
+});
+
+test('a card shows the page\'s HTTP status beside the time, toned for an error and named for a screen reader; an old entry shows none', () => {
+  const h = load();
+  h.view.historyItems = [entry('ok', { httpStatus: 200 }), entry('blocked', { httpStatus: 403 }), entry('down', { httpStatus: 503 }), entry('old')];
+  h.view.renderHistory();
+  const html = h.page.list.html;
+  const cardOf = (id) => html.slice(html.indexOf(`data-history-id="${id}"`), html.indexOf('history-timestamp', html.indexOf(`data-history-id="${id}"`)));
+  assert.match(cardOf('ok'), /<span class="history-http history-http--ok" dir="ltr" role="img" aria-label="HTTP status: 200" data-tip="HTTP status: 200" data-tip-detail="The HTTP status code[^"]*">200<\/span>/);
+  assert.match(cardOf('blocked'), /class="history-http history-http--warn"[^>]*>403</);
+  assert.match(cardOf('down'), /class="history-http history-http--error"[^>]*>503</);
+  assert.ok(!/history-http/.test(cardOf('old')), 'saved before 3.1.9: nothing');
+});
+
+test('Error status: the chip shows only while it is on, and the menu item says whether it is', () => {
+  const h = load();
+  const chip = { dataset: { filter: 'httpError' }, hidden: true, attrs: {}, setAttribute(name, value) { this.attrs[name] = value; }, querySelector: () => null };
+  const menuItem = { attrs: {}, setAttribute(name, value) { this.attrs[name] = value; } };
+  h.page.doc.elements['#historyFilters'].querySelectorAll = (selector) => (selector === '.history-filter-chip' ? [chip] : []);
+  h.page.doc.elements['#historyHttpErrorsBtn'] = menuItem;
+  h.view.historyItems = [entry('blocked', { httpStatus: 403 }), entry('ok', { httpStatus: 200 })];
+  h.view.renderHistory();
+  assert.equal(chip.hidden, true);
+  assert.equal(menuItem.attrs['aria-checked'], 'false');
+  h.view.toggleFilterChip('httpError');
+  assert.equal(chip.hidden, false);
+  assert.equal(chip.attrs['aria-pressed'], 'true');
+  assert.equal(menuItem.attrs['aria-checked'], 'true');
+  assert.deepEqual(cardIds(h), ['blocked']);
+  h.view.toggleFilterChip('httpError');
+  assert.equal(chip.hidden, true, 'its own chip turns it off again');
+  assert.deepEqual(cardIds(h), ['blocked', 'ok']);
 });

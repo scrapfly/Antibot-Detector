@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "Kombinace"
   },
+  "historyFilterHttpError": {
+    "message": "Chybový stav"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Jen stránky s chybovým stavem (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Hledání ani filtrům neodpovídá žádná položka."
   },

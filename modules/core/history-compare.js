@@ -10,6 +10,8 @@
  *   changeText()   one changed protection as a line: "70% → 95% (+25) · New evidence: Cookies"
  *   toMarkdown()   the result as a Markdown report for a ticket or a chat
  *   toOneLine()    the result as one line, for a chat or a ticket: "shop.example: +reCAPTCHA 85%, −Kasada, Cloudflare 70% → 95% (+25), Unchanged (3)"
+ *   statusText()   the two scans' HTTP status as a line: "HTTP status: 200 → 403", "HTTP status: 403" when it is the same, '' when
+ *                  neither scan knew it (entries saved before 3.1.9)
  *   view()         what the dialog draws, as plain data: four counts, and the groups of rows with the text of each
  *   shortDateTime(), rangeDates(), optionDates(), whereText()   the dialog's dates (no seconds) and the other scan's page path
  *
@@ -21,6 +23,8 @@
 
   // Loaded before this file in the popup; under Node it sits next to it
   const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
+  const HttpStatus = root.HttpStatus || (typeof require === 'function' ? require('./http-status.js') : undefined);
+  const httpStatusOf = (item) => (HttpStatus && item ? HttpStatus.of(item.httpStatus) : null);
 
   const CATEGORY_ORDER = Categories.KEYS.slice();
   const METHOD_ALIASES = { headers: 'header', cookies: 'cookie', urls: 'url' };
@@ -126,7 +130,7 @@
     }
     for (const [key, row] of was) if (!is.has(key)) removed.push(row);
     [added, removed, changed, same].forEach((list) => list.sort(bySpot));
-    const brief = (item) => ({ id: item && item.id, timestamp: timeOf(item), url: (item && item.url) || '' });
+    const brief = (item) => ({ id: item && item.id, timestamp: timeOf(item), url: (item && item.url) || '', httpStatus: httpStatusOf(item) });
     return { earlier: brief(earlier), later: brief(later), added, removed, changed, same, identical: !added.length && !removed.length && !changed.length };
   }
 
@@ -159,12 +163,27 @@
     return parts.join(' · ');
   }
 
+  /**
+   * The HTTP status of the two scans, earlier first: "HTTP status: 200 → 403", "HTTP status: 403" when both answered the same,
+   * "HTTP status: - → 403" when only one scan knew it, '' when neither did.
+   * @param {object} result - compare()
+   * @param {{t?: Function, rtl?: boolean}} [options] - rtl: the arrow points the way a right-to-left line reads (←)
+   */
+  function statusText(result, options = {}) {
+    const t = options.t || plain;
+    const from = result && result.earlier ? result.earlier.httpStatus : null;
+    const to = result && result.later ? result.later.httpStatus : null;
+    if (!from && !to) return '';
+    const value = from === to ? String(to) : `${from || '-'} ${options.rtl ? '←' : '→'} ${to || '-'}`;
+    return t('detectionHttpStatusFmt', 'HTTP status: {0}', value);
+  }
+
   // Markdown and HTML characters are escaped: a name must not become an image, a link, HTML or a new table row
   const md = (value) => String(value == null ? '' : value).replace(/[\\`*_[\]<>|~]/g, (c) => `\\${c}`).replace(/[\r\n]+/g, ' ').trim();
 
   /**
    * @param {object} result - compare()
-   * @param {{host?: string, address?: string, t?: Function, methodLabel?: Function, categoryLabel?: Function, dateText?: Function}} [options]
+   * @param {{host?: string, address?: string, t?: Function, methodLabel?: Function, categoryLabel?: Function, dateText?: Function, rtl?: boolean}} [options]
    * @returns {string}
    */
   function toMarkdown(result, options = {}) {
@@ -175,6 +194,8 @@
     const lines = [`## ${md(t('historyCompareMdHeadingFmt', 'Compare scans: {0}', options.host || options.address || '?'))}`, ''];
     if (options.address) lines.push(md(options.address), '');
     lines.push(md(t('historyCompareRangeFmt', 'From {0} to {1}', dateText(result.earlier.timestamp), dateText(result.later.timestamp))), '');
+    const status = statusText(result, options);
+    if (status) lines.push(md(status), '');
     const section = (key, fallback, rows, render) => {
       if (!rows.length) return;
       lines.push(`### ${md(t(key, fallback))}`, ...rows.map(render), '');
@@ -344,7 +365,7 @@
     return { identical: result.identical, chips, groups };
   }
 
-  const api = { CATEGORY_ORDER, COLLAPSE_AFTER, pageKey, others, pickDefault, compare, changeText, toMarkdown, toOneLine, methodsOf, timeOf, shortDateTime, rangeDates, optionDates, pagePath, whereText, view };
+  const api = { CATEGORY_ORDER, COLLAPSE_AFTER, pageKey, others, pickDefault, compare, changeText, toMarkdown, toOneLine, statusText, methodsOf, timeOf, shortDateTime, rangeDates, optionDates, pagePath, whereText, view };
   root.HistoryCompare = api;
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof self !== 'undefined' ? self : (typeof window !== 'undefined' ? window : globalThis));

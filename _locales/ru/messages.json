@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "Комбинации"
   },
+  "historyFilterHttpError": {
+    "message": "Код ошибки"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Только страницы с кодом ошибки (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Нет записей, подходящих под поиск или фильтры."
   },

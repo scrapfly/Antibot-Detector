@@ -324,6 +324,8 @@ class History {
       const key = chip.dataset.filter;
       const on = HistoryFilter.FLAGS.includes(key) ? this.activeChips[key] === true : this.activeChips.categories.includes(key);
       chip.setAttribute('aria-pressed', on ? 'true' : 'false');
+      // Error status is turned on from the "…" menu: its chip is there only while it is on, to show it and to turn it off
+      if (key === 'httpError') chip.hidden = !on;
       const own = chip.querySelector('[data-ui-icon]');
       if (own && !own.firstChild) own.innerHTML = FormatUtils.uiIconSvg(own.dataset.uiIcon);
       if (!chip.dataset.category) return;
@@ -332,11 +334,13 @@ class History {
       const colour = this.detectorManager?.getCategoryInfo?.(key)?.colour || FormatUtils.DEFAULT_CATEGORY_COLORS[key];
       if (colour) chip.style.setProperty('--chip-color', colour);
     });
+    const menuItem = document.querySelector('#historyHttpErrorsBtn');
+    if (menuItem) menuItem.setAttribute('aria-checked', this.activeChips.httpError === true ? 'true' : 'false');
   }
 
   /**
    * Turn a chip on or off (Pinned, Changed, Combinations or a category) and show what it leaves.
-   * @param {string} key - 'pinned', 'changed', 'combinations', 'antibot', 'captcha' or 'fingerprint'
+   * @param {string} key - 'pinned', 'changed', 'combinations', 'httpError', 'antibot', 'captcha' or 'fingerprint'
    */
   toggleFilterChip(key) {
     const chips = this.activeChips;
@@ -407,6 +411,16 @@ class History {
       if (removed.length) rows.push({ label: FormatUtils.t('historyChangeAlertRemovedFmt', 'Removed: {0}', removed.join(', ')), tone: 'red' });
       const when = Number.isFinite(change.at) ? FormatUtils.formatDateTime(change.at) : '';
       return `<span class="history-changed-badge" ${FormatUtils.tipAttrs(_tr('historyChangedBadge', 'Changed'), when, rows)}>${FormatUtils.escapeHtml(_tr('historyChangedBadge', 'Changed'))}</span>`;
+    };
+
+    // The page's HTTP status when its scan knew it (none on an entry saved before 3.1.9): a protocol number, ASCII digits in
+    // every language, amber for 4xx and red for 5xx
+    const httpTip = _tr('detectionTipHttpStatus', 'The HTTP status code the page answered with when it was scanned. An error (4xx or 5xx) often means the request was blocked or challenged.');
+    const httpStatusHtml = (item) => {
+      const code = typeof HttpStatus !== 'undefined' ? HttpStatus.of(item.httpStatus) : null;
+      if (!code) return '';
+      const name = FormatUtils.t('detectionHttpStatusFmt', 'HTTP status: {0}', code);
+      return `<span class="history-http history-http--${HttpStatus.tone(code)}" dir="ltr" role="img" aria-label="${FormatUtils.escapeAttr(name)}" ${FormatUtils.tipAttrs(name, httpTip)}>${code}</span>`;
     };
 
     let cardCount = 0;
@@ -491,6 +505,7 @@ class History {
             <div class="history-detections">
               ${this.renderHistorySummary(cardDetections)}
             </div>
+            ${httpStatusHtml(item)}
             <span class="history-timestamp"${savedAt ? ` data-tip="${FormatUtils.escapeAttr(savedAt)}"` : ''}>${FormatUtils.escapeHtml(timeAgo)}</span>
           </div>
         </div>
@@ -1256,6 +1271,11 @@ class History {
     pick.append(field, where);
     const range = make('div', 'history-dialog-count history-compare-range');
     range.setAttribute('role', 'status');
+    // Under the dates, the two scans' HTTP status when either knew it ("HTTP status: 200 → 403"): a page that started answering
+    // 403 is a change too
+    const status = make('div', 'history-dialog-count history-compare-http');
+    status.hidden = true;
+    const rtl = typeof I18n !== 'undefined' && typeof I18n.dir === 'function' && I18n.dir() === 'rtl';
     const summary = make('ul', 'history-compare-summary');
     summary.setAttribute('role', 'list');
     const result = make('div', 'history-compare-result');
@@ -1272,7 +1292,7 @@ class History {
     copyIcon.innerHTML = COPY;
     copySummary.append(copyIcon, make('span', 'history-compare-copy-text', t('historyCompareCopySummary', 'Copy summary')));
     const form = make('div', 'history-dialog-form history-compare');
-    form.append(pick, range, summary, copySummary, result);
+    form.append(pick, range, status, summary, copySummary, result);
 
     let current = null;
     let unchangedOpen = null; // what the person chose for Unchanged (true = open), kept when another scan is picked
@@ -1353,6 +1373,9 @@ class History {
       // Hover texts go through the shared tooltip (data-tip): a plain title would be adopted once and then go stale.
       // The list has none: it has the focus when the dialog opens, and a tip would cover the dialog straight away
       hover(range, rangeText(dateText(current.earlier.timestamp), dateText(current.later.timestamp)));
+      const statusLine = HistoryCompare.statusText(current, { t, rtl });
+      status.textContent = statusLine;
+      status.hidden = !statusLine;
       const place = HistoryCompare.whereText(item, other);
       where.hidden = !place;
       where.textContent = place;
@@ -1395,7 +1418,7 @@ class History {
     if (copy && current) {
       await FormatUtils.copyToClipboard(HistoryCompare.toMarkdown(current, {
         host: siteHost, address: String(item.url || '').replace(/[?#].*$/s, ''),
-        t, methodLabel, categoryLabel, dateText
+        t, methodLabel, categoryLabel, dateText, rtl
       }));
     }
     return true;
@@ -2826,6 +2849,12 @@ class History {
     const statsBtn = document.querySelector('#historyTab #openStatsBtn');
     if (statsBtn) {
       statsBtn.addEventListener('click', () => this.openStatistics());
+    }
+
+    // Error status, from the "…" menu (the toolbar menu closes first, so the focus goes back to its button)
+    const httpErrorsBtn = document.querySelector('#historyTab #historyHttpErrorsBtn');
+    if (httpErrorsBtn) {
+      httpErrorsBtn.addEventListener('click', () => this.toggleFilterChip('httpError'));
     }
 
     // History is paused: Resume, in the note above the list and in the empty state

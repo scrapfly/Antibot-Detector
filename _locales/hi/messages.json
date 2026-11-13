@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "संयोजन"
   },
+  "historyFilterHttpError": {
+    "message": "त्रुटि स्थिति"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "केवल त्रुटि स्थिति वाले पेज (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "आपकी खोज या फ़िल्टर से कोई प्रविष्टि मेल नहीं खाती।"
   },

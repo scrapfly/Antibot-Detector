@@ -18,7 +18,7 @@
   <!-- What a search or a chip leaves, said aloud: always in the page (the blocks below are hidden when they have nothing to show, and a region that is hidden says nothing) -->
   <div id="historyStatus" class="visually-hidden" role="status" aria-live="polite"></div>
 
-  <!-- Filter chips under the search: Pinned, Changed, Combinations and the categories (combined with AND, categories with OR) -->
+  <!-- Filter chips under the search: Pinned, Changed, Combinations, Error status and the categories (combined with AND, categories with OR) -->
   <div id="historyFilters" class="history-filters" role="group" aria-label="Filter history" data-i18n-aria-label="historyFiltersLabel" hidden>
     <button type="button" class="history-filter-chip" data-filter="pinned" aria-pressed="false">
       <span class="history-filter-icon" data-ui-icon="pin" aria-hidden="true"></span>
@@ -44,6 +44,11 @@
       <span class="history-filter-icon" data-ui-icon="combination" aria-hidden="true"></span>
       <span data-i18n="historyFilterCombinations">Combinations</span>
     </button>
+    <!-- Error status: turned on from the "…" menu (the row has no room for one more chip in most languages); its chip shows only while it is on, and turns it off -->
+    <button type="button" class="history-filter-chip history-filter-chip--http" data-filter="httpError" aria-pressed="false" hidden>
+      <span class="history-filter-icon" data-ui-icon="status" aria-hidden="true"></span>
+      <span data-i18n="historyFilterHttpError">Error status</span>
+    </button>
     <select id="historySort" class="select-field ui-select history-sort" aria-label="Sort history" data-i18n-aria-label="historySortLabel">
       <option value="recent" data-i18n="historySortRecent">Newest first</option>
       <option value="oldest" data-i18n="historySortOldest">Oldest first</option>
@@ -54,6 +59,17 @@
 
   <!-- Toolbar "…" menu: whole-history actions (select, bulk scan, statistics, import / export / clear) -->
   <div id="historyMenu" class="history-menu" role="menu" hidden>
+    <!-- A filter with no room in the chip row: checked, it shows its chip there (HistoryFilter httpError) -->
+    <button id="historyHttpErrorsBtn" class="history-menu-item history-menu-check" role="menuitemcheckbox" aria-checked="false">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5"/><path d="M12 16.5h.01"/>
+      </svg>
+      <span data-i18n="historyFilterHttpErrorMenu">Only pages with an error status (4xx, 5xx)</span>
+      <svg class="history-menu-check-mark" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12.5l4.5 4.5L19 7.5"/>
+      </svg>
+    </button>
+    <div class="history-menu-separator" role="separator"></div>
     <button id="selectHistoryBtn" class="history-menu-item" role="menuitem">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 12l3 3 5-6"/>

@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "组合"
   },
+  "historyFilterHttpError": {
+    "message": "错误状态"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "仅显示错误状态的页面（4xx、5xx）"
+  },
   "historyNoResults": {
     "message": "没有符合搜索或筛选条件的记录。"
   },

@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "Kombinasyonlar"
   },
+  "historyFilterHttpError": {
+    "message": "Hata durumu"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Yalnızca hata durumlu sayfalar (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Aramanızla veya filtrelerinizle eşleşen girdi yok."
   },

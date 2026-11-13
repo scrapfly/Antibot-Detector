@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "Комбінації"
   },
+  "historyFilterHttpError": {
+    "message": "Код помилки"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Лише сторінки з кодом помилки (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Немає записів, що відповідають пошуку чи фільтрам."
   },

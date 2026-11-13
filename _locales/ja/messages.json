@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "組み合わせ"
   },
+  "historyFilterHttpError": {
+    "message": "エラーステータス"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "エラーステータスのページのみ（4xx、5xx）"
+  },
   "historyNoResults": {
     "message": "検索条件またはフィルターに一致するエントリはありません。"
   },

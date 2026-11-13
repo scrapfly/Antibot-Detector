@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "ชุดค่าผสม"
   },
+  "historyFilterHttpError": {
+    "message": "สถานะข้อผิดพลาด"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "เฉพาะหน้าที่มีสถานะข้อผิดพลาด (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "ไม่มีรายการที่ตรงกับการค้นหาหรือตัวกรอง"
   },

@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "組合"
   },
+  "historyFilterHttpError": {
+    "message": "錯誤狀態"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "僅顯示錯誤狀態的網頁（4xx、5xx）"
+  },
   "historyNoResults": {
     "message": "沒有符合搜尋或篩選條件的項目。"
   },

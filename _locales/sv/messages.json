@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "Kombinationer"
   },
+  "historyFilterHttpError": {
+    "message": "Felstatus"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Bara sidor med felstatus (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Inga poster matchar din sökning eller dina filter."
   },

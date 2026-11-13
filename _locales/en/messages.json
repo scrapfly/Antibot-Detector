@@ -5929,6 +5929,14 @@
     "message": "Combinations",
     "description": "Filter chip under the History search: show only pages where a combination matched (a noun, like the Anti-bot and Captcha chips)"
   },
+  "historyFilterHttpError": {
+    "message": "Error status",
+    "description": "History tab: filter chip (shown only while it is on) that keeps the pages that answered with an HTTP error status, 4xx or 5xx. Keep it short"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Only pages with an error status (4xx, 5xx)",
+    "description": "History tab, toolbar “…” menu: a check item that keeps only the pages that answered with an HTTP error status (4xx client errors, 5xx server errors)"
+  },
   "historyNoResults": {
     "message": "No entries match your search or filters.",
     "description": "Shown in History when the search and the filter chips leave no entry"

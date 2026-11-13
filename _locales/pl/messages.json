@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "Kombinacje"
   },
+  "historyFilterHttpError": {
+    "message": "Status błędu"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "Tylko strony ze statusem błędu (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "Żaden wpis nie pasuje do wyszukiwania ani filtrów."
   },

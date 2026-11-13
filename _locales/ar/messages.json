@@ -5597,6 +5597,12 @@
   "historyFilterCombinations": {
     "message": "التركيبات"
   },
+  "historyFilterHttpError": {
+    "message": "حالة خطأ"
+  },
+  "historyFilterHttpErrorMenu": {
+    "message": "الصفحات ذات حالة الخطأ فقط (4xx, 5xx)"
+  },
   "historyNoResults": {
     "message": "لا توجد إدخالات تطابق بحثك أو عوامل التصفية."
   },
