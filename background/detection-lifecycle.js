@@ -140,15 +140,13 @@ async function matchLateRequests(tabId, state, mergedDetections) {
     const payloads = payloadsForEngine(tabId);
     const responses = responsesForPage(tabId, state.url);
     if (networkUrls.length === 0 && payloads.length === 0 && responses.length === 0) return;
-    const stats = detectionEngine.lastStats; // the scan report describes the page snapshot
     try {
-        const late = await detectionEngine.detectOnPage({ url: state.url, networkUrls, payloads, responses }, { includePartial: true });
+        // Its own stats: the scan report keeps describing the page snapshot
+        const late = await detectionEngine.detectOnPage({ url: state.url, networkUrls, payloads, responses }, { includePartial: true, stats: {} });
         if (!DetectionSessionStore.isCurrent(tabId, state)) return;
         for (const detection of Array.isArray(late) ? late : []) mergeDetection(mergedDetections, detection);
     } catch (error) {
         Logger.error('SCAN', 'Late request check failed', error);
-    } finally {
-        if (DetectionSessionStore.isCurrent(tabId, state)) detectionEngine.lastStats = stats;
     }
 }
 
@@ -208,7 +206,7 @@ async function applyLateResponses(tabId) {
         networkUrls: Array.isArray(storedUrls) ? storedUrls.slice() : [],
         payloads: payloadsForEngine(tabId),
         responses
-    }, { includePartial: true });
+    }, { includePartial: true, stats: {} });
     const evidence = (Array.isArray(late) ? late : []).filter(hasResponseMatch);
     if (evidence.length === 0 || detectionStates.has(tabId)) return;
 
@@ -386,11 +384,8 @@ async function applyLateNetworkUrls(tabId, page) {
     if (!ours()) return;
 
     // Only the late requests go in, so only URL rules can match (the page address and the rest were matched by the scan)
-    const statsBefore = detectionEngine.lastStats; // the scan report keeps describing the page snapshot
-    const run = detectionEngine.detectOnPage({ networkUrls: entries }, { includePartial: true });
-    const statsOfRun = detectionEngine.lastStats;
-    let late;
-    try { late = await run; } finally { if (detectionEngine.lastStats === statsOfRun) detectionEngine.lastStats = statsBefore; }
+    // Its own stats: a scan report describes a page snapshot, never this check
+    const late = await detectionEngine.detectOnPage({ networkUrls: entries }, { includePartial: true, stats: {} });
     const urls = new Set(entries.map(entry => entry.url));
     const evidence = [];
     const matchedUrls = new Set();
@@ -783,6 +778,7 @@ async function processDetectionData(message, sender) {
 
     // Run detection analysis immediately
     let detectionResults = [];
+    const scanStats = {};
     try {
         // Ensure DetectorManager is initialized (handles service worker restarts)
         await ensureDetectorManagerInitialized();
@@ -801,7 +797,8 @@ async function processDetectionData(message, sender) {
 
             // Partly matched combinations are kept; finalize decides them
             // once hooks and window properties have arrived
-            const detectionPromise = Promise.resolve(detectionEngine.detectOnPage(pageData, { includePartial: true }));
+            // The counts of this page's matching, filled by this call alone (the shared engine runs other tabs' checks meanwhile)
+            const detectionPromise = Promise.resolve(detectionEngine.detectOnPage(pageData, { includePartial: true, stats: scanStats }));
             let matchingTimeout;
             const timeoutPromise = new Promise((_, reject) => {
                 matchingTimeout = setTimeout(() => reject(new Error('Detection timeout')), Constants.DETECTION_TIMEOUT);
@@ -836,7 +833,7 @@ async function processDetectionData(message, sender) {
         // Store main detection and check if ready to finalize
         // Counts and timing for the scan report (background/scan-report.js)
         state.stats = {
-            ...(detectionEngine.lastStats || {}),
+            ...scanStats,
             cookies: (pageData.allCookies || pageData.cookies || []).length,
             headers: Object.keys(pageData.responseHeaders || pageData.headers || {}).length,
             collectMs: typeof pageData.collectMs === 'number' ? pageData.collectMs : undefined
