@@ -609,7 +609,7 @@
     "message": "Zobrazeno {0}-{1} z {2}"
   },
   "paginationShowingItems": {
-    "message": "Zobrazeno {0}-{1} z {2} {3}"
+    "message": "{3}: zobrazeno {0}-{1} z {2}"
   },
   "timeUnknown": {
     "message": "Neznámé"
@@ -660,7 +660,7 @@
     "message": "Barvy kategorií"
   },
   "methodSuffixPatterns": {
-    "message": "vzorů"
+    "message": "Vzory"
   },
   "btnSaveRule": {
     "message": "Uložit pravidlo"
@@ -818,7 +818,7 @@
     "message": "Žádné odpovídající vzory"
   },
   "methodSuffixMatches": {
-    "message": "shod"
+    "message": "Shody"
   },
   "cacheExpiredLabel": {
     "message": "Vypršelo"

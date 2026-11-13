@@ -609,7 +609,7 @@
     "message": "عرض {0}-{1} من {2}"
   },
   "paginationShowingItems": {
-    "message": "عرض {0}-{1} من {2} {3}"
+    "message": "{3}: عرض {0}-{1} من {2}"
   },
   "timeUnknown": {
     "message": "غير معروف"
@@ -660,7 +660,7 @@
     "message": "ألوان الفئات"
   },
   "methodSuffixPatterns": {
-    "message": "أنماط"
+    "message": "الأنماط"
   },
   "btnSaveRule": {
     "message": "حفظ القاعدة"
@@ -818,7 +818,7 @@
     "message": "لا توجد أنماط مطابقة"
   },
   "methodSuffixMatches": {
-    "message": "تطابقات"
+    "message": "التطابقات"
   },
   "cacheExpiredLabel": {
     "message": "منتهي الصلاحية"
@@ -1136,7 +1136,7 @@
     "message": "لم يُعثر على إصدار منشور من Scrapfly على GitHub."
   },
   "updateErrorRateLimitedFmt": {
-    "message": "يحدّ GitHub من عمليات التحقق من التحديثات. حاول مرة أخرى بعد {0} دقيقة."
+    "message": "يحدّ GitHub من عمليات التحقق من التحديثات. حاول مرة أخرى بعد قليل (الدقائق المتبقية: {0})."
   },
   "errorApplyingUpdates": {
     "message": "خطأ في تطبيق التحديثات"
@@ -5213,7 +5213,7 @@
     "message": "كيف تم تحديد كل فئة"
   },
   "statsLiftFmt": {
-    "message": "{0} نقطة"
+    "message": "الفرق بالنقاط: {0}"
   },
   "statsDecidedAvgFmt": {
     "message": "{0}: {1} · المتوسط {2}"
@@ -6084,7 +6084,7 @@
     "message": "لم تعد هذه الصفحة تحت المراقبة"
   },
   "historyWatchLimitFmt": {
-    "message": "يمكنك مراقبة {0} صفحة كحد أقصى. أوقف مراقبة إحداها أولًا."
+    "message": "الحد الأقصى للصفحات المراقَبة: {0}. أوقف مراقبة إحداها أولًا."
   },
   "settingsGroupHistoryWatch": {
     "message": "مراقبة الصفحات المثبّتة"
@@ -6099,7 +6099,7 @@
     "message": "افحص الآن"
   },
   "settingsHistoryWatchCountFmt": {
-    "message": "{0} من {1} صفحة تحت المراقبة"
+    "message": "الصفحات تحت المراقبة: {0} من {1}"
   },
   "settingsHistoryWatchNever": {
     "message": "لم يُجرَ أي فحص بعد."
@@ -6342,7 +6342,7 @@
     "message": "قيد المراقبة: {0}"
   },
   "historyBulkWatchLimitFmt": {
-    "message": "قيد المراقبة: {0}. لم يُضف: {1} (يمكنك مراقبة {2} صفحة كحد أقصى)."
+    "message": "قيد المراقبة: {0}. لم يُضف: {1} (الحد الأقصى للصفحات المراقَبة: {2})."
   },
   "historyBulkWatchStoppedFmt": {
     "message": "أُوقفت المراقبة: {0}"
