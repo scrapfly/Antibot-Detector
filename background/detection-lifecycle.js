@@ -498,7 +498,7 @@ async function finalizeDetection(tabId, state) {
     // A watchlist check is waiting for this scan: it gets the finished results, and the scan leaves no History entry
     // of its own (the check updates the page it watches) and sends nothing to the webhook
     const watching = quietTab;
-    if (watching) BackgroundTabScan.scanFinished(tabId, state.url, finalResults);
+    if (watching) BackgroundTabScan.scanFinished(tabId, state.url, finalResults, { httpStatus: state.httpStatus });
 
     // Update state with expiry info for immediate popup queries
     if (storedDataWithExpiry) {
@@ -556,7 +556,9 @@ async function finalizeDetection(tabId, state) {
                 url: state.url,
                 hostname: UrlUtils.getHostnameFromUrl(state.url),
                 tabTitle: state.tabTitle,
-                favicon: UrlUtils.normalizeFaviconForStorage(state.favicon, state.url)
+                favicon: UrlUtils.normalizeFaviconForStorage(state.favicon, state.url),
+                // The page's HTTP status (processDetectionData), shown on its History card
+                ...(state.httpStatus ? { httpStatus: state.httpStatus } : {})
             };
 
             const historySettings = await Utils.getHistorySettings();
