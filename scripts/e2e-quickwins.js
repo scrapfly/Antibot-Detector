@@ -759,7 +759,7 @@ async function scenario(name, fn) {
     assert.equal(await pressed(), 'false', 'off to start with');
     assert.ok(await page.$eval(`${chip} svg`, el => !!el), 'the chip carries the same icon as the card count');
     assert.match(await page.$eval(chip, el => el.textContent.trim()), /Combinations/);
-    assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip', list => list.map(el => el.dataset.filter)), ['pinned', 'changed', 'antibot', 'captcha', 'fingerprint', 'combinations']);
+    assert.deepEqual(await page.$$eval('#historyFilters .history-filter-chip:not([hidden])', list => list.map(el => el.dataset.filter)), ['pinned', 'changed', 'antibot', 'captcha', 'fingerprint', 'combinations']);
     await page.$eval(chip, el => el.click());
     await page.waitForFunction(() => document.querySelectorAll('#historyList .history-item').length === 1, null, { polling: 250, timeout: 10000 });
     assert.deepEqual(await shown(), ['combos'], 'only the page where a combination fired');
