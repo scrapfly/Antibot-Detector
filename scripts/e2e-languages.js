@@ -291,6 +291,10 @@ async function run() {
       }
       // The Export menu (CSV, JSON, Markdown)
       await audit('stats-export-menu', async () => { await page.evaluate(() => document.querySelector('#statsExportBtn')?.click()); await sleep(300); }, { width: 1100, height: 800 });
+      // The Site tab (3.2.0): one site's report, opened by the page address as History → ⋯ → Site report does
+      await page.goto(`${base}/sections/stats/stats.html?site=shop.example.test`);
+      await page.waitForSelector('#stats-panel-site:not([hidden])', { timeout: 15000 });
+      await audit('stats-site', async () => { await sleep(600); }, { width: 1100, height: 800 });
 
       await page.close();
       if (locale === 'en') baseline = new Set(truncated.map(t => t.replace(/ "[^"]*" \(cut by \d+px\)/, '')));
