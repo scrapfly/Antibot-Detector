@@ -5,6 +5,8 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.2.1] - 2026-11-14
+
 ## [3.2.0] - 2026-11-13
 
 ### Added
@@ -15,8 +17,9 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Bulk scan: a list scanned before shows what changed on each page since the previous run, with a filter and the changes in every export.
 - Bulk scan: compare a run with an earlier Bulk JSON export.
 - Bulk scan: Run again scans the same list with the same limits and wait.
-- Bulk scan: the last finished run is still shown after the browser restarts, with its exports; Settings → Data lists kept runs with Clear.
+- Bulk scan: the last finished run is still shown after a restart, with its exports; Settings → Data lists kept runs, and History's clear on close removes them.
 - Bulk scan: the other columns of an uploaded CSV come back beside the results and in every export.
+- Detection: What was checked also says what the results mean for scraping: blocked, a CAPTCHA, a real browser needed, cookies to keep.
 
 ### Changed
 
@@ -1237,6 +1240,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.2.1]: https://github.com/scrapfly/Antibot-Detector/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.9...v3.2.0
 [3.1.9]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.8...v3.1.9
 [3.1.8]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.7...v3.1.8

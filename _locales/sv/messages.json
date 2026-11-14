@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS-hooks: av för den här webbplatsen"
   },
+  "detectionScrapingTitle": {
+    "message": "Vad detta betyder för skrapning"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Sidan svarade med HTTP {0}: besöket nekades eller utmanades."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Det finns en CAPTCHA på sidan: en skrapa måste undvika att utlösa den eller lösa den."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Sidan kontrollerar webbläsaren med JavaScript: vanliga HTTP-förfrågningar misslyckas troligen, använd en riktig webbläsare."
+  },
+  "detectionScrapingCookies": {
+    "message": "Skyddskakor sätts: en skrapa måste spara dem och skicka tillbaka dem."
+  },
+  "detectionScrapingAntibot": {
+    "message": "En anti-bot-tjänst bevakar webbplatsen: många eller snabba förfrågningar från en adress kan blockeras."
+  },
   "tipCacheExpires": {
     "message": "Går ut"
   },

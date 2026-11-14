@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "Interceptadores de JS: desativados neste site"
   },
+  "detectionScrapingTitle": {
+    "message": "O que isso significa para scraping"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "A página respondeu com HTTP {0}: esta visita foi recusada ou desafiada."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Há um CAPTCHA na página: um scraper precisa evitar acioná-lo ou resolvê-lo."
+  },
+  "detectionScrapingBrowser": {
+    "message": "A página verifica o navegador com JavaScript: requisições HTTP simples provavelmente falharão, use um navegador real."
+  },
+  "detectionScrapingCookies": {
+    "message": "Cookies de proteção são definidos: um scraper precisa guardá-los e enviá-los de volta."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Um serviço anti-bot monitora este site: muitas requisições ou requisições rápidas de um mesmo endereço podem ser bloqueadas."
+  },
   "tipCacheExpires": {
     "message": "Expira"
   },

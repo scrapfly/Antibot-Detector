@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS hooks: ปิดสำหรับไซต์นี้"
   },
+  "detectionScrapingTitle": {
+    "message": "สิ่งนี้หมายถึงอะไรสำหรับการดึงข้อมูล"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "หน้าเว็บตอบกลับด้วย HTTP {0}: การเข้าชมครั้งนี้ถูกปฏิเสธหรือถูกท้าทาย"
+  },
+  "detectionScrapingCaptcha": {
+    "message": "มี CAPTCHA ในหน้าเว็บ: ตัวดึงข้อมูลต้องหลีกเลี่ยงไม่ให้มันทำงานหรือต้องแก้มัน"
+  },
+  "detectionScrapingBrowser": {
+    "message": "หน้าเว็บตรวจสอบเบราว์เซอร์ด้วย JavaScript: คำขอ HTTP ธรรมดามีแนวโน้มจะล้มเหลว ให้ใช้เบราว์เซอร์จริง"
+  },
+  "detectionScrapingCookies": {
+    "message": "มีการตั้งคุกกี้ป้องกัน: ตัวดึงข้อมูลต้องเก็บไว้และส่งกลับไป"
+  },
+  "detectionScrapingAntibot": {
+    "message": "มีบริการป้องกันบอตเฝ้าดูเว็บไซต์นี้: คำขอจำนวนมากหรือรวดเร็วจากที่อยู่เดียวอาจถูกบล็อก"
+  },
   "tipCacheExpires": {
     "message": "หมดอายุ"
   },

@@ -4818,6 +4818,30 @@
     "message": "JS hooks: off for this site",
     "description": "Detection tab, What was checked: the JavaScript hooks are turned off for this site (Settings → Detection → Sites without JS hooks)"
   },
+  "detectionScrapingTitle": {
+    "message": "What this means for scraping",
+    "description": "Detection tab, the What was checked panel: heading of the points saying what the results mean for someone scraping the page"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "The page answered with HTTP {0}: this visit was refused or challenged.",
+    "description": "Detection tab, What this means for scraping: the page answered with an error status. {0} is the status code, such as 403"
+  },
+  "detectionScrapingCaptcha": {
+    "message": "A CAPTCHA is on the page: a scraper has to avoid triggering it or solve it.",
+    "description": "Detection tab, What this means for scraping: a CAPTCHA was found on the page"
+  },
+  "detectionScrapingBrowser": {
+    "message": "The page checks the browser in JavaScript: plain HTTP requests are likely to fail, use a real browser.",
+    "description": "Detection tab, What this means for scraping: a fingerprinting script, a hooked browser API or a window property check was found"
+  },
+  "detectionScrapingCookies": {
+    "message": "Protection cookies are set: a scraper has to keep them and send them back.",
+    "description": "Detection tab, What this means for scraping: a protection was found through the cookies it sets"
+  },
+  "detectionScrapingAntibot": {
+    "message": "An anti-bot service watches this site: many or fast requests from one address may be blocked.",
+    "description": "Detection tab, What this means for scraping: an anti-bot service was found and nothing more specific applies"
+  },
   "tipCacheExpires": {
     "message": "Expires"
   },

@@ -242,6 +242,11 @@
         <p id="scanFactsTitle" class="scan-facts-title" data-i18n="detectionFactsTitle">What was checked</p>
         <p class="scan-facts-line" data-facts="counts" dir="auto"></p>
         <p class="scan-facts-line" data-facts="hooks" dir="auto"></p>
+        <!-- What this means for scraping: plain points from the results and the status (ScrapingAdvice), hidden when none applies -->
+        <div class="scan-advice" data-facts="advice" hidden>
+          <p id="scanAdviceTitle" class="scan-facts-title" data-i18n="detectionScrapingTitle">What this means for scraping</p>
+          <ul class="scan-advice-list" aria-labelledby="scanAdviceTitle"></ul>
+        </div>
       </div>
 
       <!-- What History says changed on this page since its earlier scan, with Compare scans and Watch for changes. Read from

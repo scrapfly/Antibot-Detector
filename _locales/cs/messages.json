@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS hooky: pro tento web vypnuté"
   },
+  "detectionScrapingTitle": {
+    "message": "Co to znamená pro scraping"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Stránka odpověděla kódem HTTP {0}: tato návštěva byla odmítnuta nebo prověřena."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Na stránce je CAPTCHA: scraper se jí musí vyhnout, nebo ji vyřešit."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Stránka kontroluje prohlížeč pomocí JavaScriptu: obyčejné požadavky HTTP nejspíš selžou, použijte skutečný prohlížeč."
+  },
+  "detectionScrapingCookies": {
+    "message": "Nastavují se ochranné cookies: scraper je musí uchovat a posílat zpět."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Tento web hlídá anti-bot služba: mnoho nebo rychlých požadavků z jedné adresy může být zablokováno."
+  },
   "tipCacheExpires": {
     "message": "Vyprší"
   },

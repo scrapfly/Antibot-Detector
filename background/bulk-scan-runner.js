@@ -140,6 +140,20 @@ const BulkScanRunner = {
         }
     },
 
+    /**
+     * Delete the kept runs (Settings → Data → Clear, History's clear on close). On the same queue as remember(): a run finishing
+     * at that moment cannot write them back.
+     */
+    forgetRuns() {
+        const next = (this._remembering || Promise.resolve()).then(async () => {
+            if (typeof BulkRuns === 'undefined') return false;
+            await chrome.storage.local.remove([BulkRuns.KEY]);
+            return true;
+        });
+        this._remembering = next.catch(() => {});
+        return next;
+    },
+
     async extensionOn() {
         const flags = await chrome.storage.local.get(['scrapfly_enabled']);
         return flags.scrapfly_enabled !== false;
@@ -170,7 +184,10 @@ const BulkScanRunner = {
         const prepared = BulkScan.prepare(entries, { cap: request.cap, isExcluded: await this.scopeTest() });
         // A run that goes on keeps its wait between pages unless the page says another
         const delaySec = request.delaySec !== undefined ? request.delaySec : (resumed && this._run ? this._run.delaySec : undefined);
-        const run = BulkScan.createRun(prepared, { timeoutSec: request.timeoutSec, cap: request.cap, delaySec });
+        // A run that goes on (the failed pages scanned again) is the same run: kept, it replaces its first pass instead of
+        // becoming the list's next run, and it is compared with the run before it (BulkRuns.remember, previousFor)
+        const id = resumed && this._run && typeof this._run.id === 'string' ? this._run.id : undefined;
+        const run = BulkScan.createRun(prepared, { timeoutSec: request.timeoutSec, cap: request.cap, delaySec, id });
         if (resumed) BulkScan.carryOver(run, resumed);
         // The person's other CSV columns: from the page, or for a run that goes on, the ones the stopped run had
         BulkScan.attachExtras(run, request.extras || (resumed ? BulkScan.extrasOfRun(this._run) : null));
@@ -392,6 +409,7 @@ const BulkScanRunner = {
         registry[WorkerMessages.BULK_SCAN_STOP] = guarded(async () => ({ ok: await this.stop('user'), run: this._run }));
         registry[WorkerMessages.BULK_SCAN_STATE] = guarded(async () => ({ ok: true, run: await this.state() }));
         registry[WorkerMessages.BULK_SCAN_CLEAR] = guarded(async () => ({ ok: await this.clear(), run: this._run }));
+        registry[WorkerMessages.BULK_RUNS_FORGET] = guarded(async () => ({ ok: await this.forgetRuns() }));
     },
 
     /** At every worker start: a run left by the worker before this one is marked stopped. */

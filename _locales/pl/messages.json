@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "Hooki JS: wyłączone dla tej witryny"
   },
+  "detectionScrapingTitle": {
+    "message": "Co to oznacza dla scrapingu"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Strona odpowiedziała kodem HTTP {0}: ta wizyta została odrzucona lub poddana weryfikacji."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Na stronie jest CAPTCHA: scraper musi unikać jej wywołania albo ją rozwiązać."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Strona sprawdza przeglądarkę w JavaScripcie: zwykłe żądania HTTP prawdopodobnie się nie powiodą, użyj prawdziwej przeglądarki."
+  },
+  "detectionScrapingCookies": {
+    "message": "Ustawiane są ciasteczka ochronne: scraper musi je zachować i odsyłać."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Usługa anty-bot pilnuje tej witryny: wiele lub szybkie żądania z jednego adresu mogą zostać zablokowane."
+  },
   "tipCacheExpires": {
     "message": "Wygasa"
   },

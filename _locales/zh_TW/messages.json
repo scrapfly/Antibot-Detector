@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS 掛鉤：此網站已關閉"
   },
+  "detectionScrapingTitle": {
+    "message": "這對爬取代表什麼"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "頁面回應了 HTTP {0}：這次造訪遭到拒絕或被要求驗證。"
+  },
+  "detectionScrapingCaptcha": {
+    "message": "頁面上有 CAPTCHA：爬取程式需要避免觸發它或解開它。"
+  },
+  "detectionScrapingBrowser": {
+    "message": "頁面用 JavaScript 檢查瀏覽器：一般 HTTP 請求很可能失敗，請使用真實瀏覽器。"
+  },
+  "detectionScrapingCookies": {
+    "message": "頁面設定了防護 Cookie：爬取程式需要保存並回傳它們。"
+  },
+  "detectionScrapingAntibot": {
+    "message": "此網站由反機器人服務監控：來自同一位址的大量或快速請求可能遭到封鎖。"
+  },
   "tipCacheExpires": {
     "message": "到期時間"
   },

@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS-хуки: вимкнено для цього сайту"
   },
+  "detectionScrapingTitle": {
+    "message": "Що це означає для скрапінгу"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Сторінка відповіла HTTP {0}: цей візит відхилено або відправлено на перевірку."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "На сторінці є CAPTCHA: скраперу треба не викликати її або розв’язувати."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Сторінка перевіряє браузер через JavaScript: прості HTTP-запити, найімовірніше, не пройдуть, використовуйте справжній браузер."
+  },
+  "detectionScrapingCookies": {
+    "message": "Встановлюються захисні cookie: скрапер має зберігати їх і надсилати назад."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Сайт охороняє антибот-сервіс: багато або часті запити з однієї адреси можуть заблокувати."
+  },
   "tipCacheExpires": {
     "message": "Спливає"
   },

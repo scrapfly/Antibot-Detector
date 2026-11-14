@@ -51,6 +51,8 @@
   const MOST_SEEN = 5;             // protections named in the "Most seen" line (the page, the Markdown export)
   const MAX_EXTRA_COLUMNS = 10;    // the person's own columns of a CSV kept with the results, at most
   const MAX_EXTRA_ROWS = 5000;     // rows of them (what the worker takes of a list, at most)
+  /** A header cell that names the address column. */
+  const ADDRESS_HEADER = /^(urls?|address(es)?|links?|websites?|sites?|domains?|pages?|hosts?|hostnames?)$/i;
   const MAX_CELL = 200;            // characters of one of their cells
   const MAX_HEADER = 60;           // characters of one of their column names
   /**
@@ -183,26 +185,39 @@
     const table = lines.some(line => line.includes('\t'))
       || lines.some(line => { const cells = cellsOf(line); return cells.length > 1 && !cells.some(looksLikeAddress); });
     const out = [];
-    const rows = [];
+    const found = [];
     let header = null;
-    let width = 0;
     for (const line of lines) {
       const parts = table || /^"/.test(line) ? cellsOf(line) : partsOf(line);
       if (parts.length < 2) { out.push(unquote(line)); continue; }
       if (!table) { out.push(...parts.filter(looksLikeAddress)); continue; }
-      const at = parts.findIndex(looksLikeAddress);
-      if (at === -1) {
+      if (!parts.some(looksLikeAddress)) {
         // The header: the first row with no address, before any row that has one
-        if (header === null && !rows.length) header = parts;
+        if (header === null && !found.length) header = parts;
         continue;
       }
-      out.push(parts[at]);
-      rows.push({ address: parts[at], at, cells: parts });
-      width = Math.max(width, parts.length);
+      // Placed once the address column is known: a row's first cell that looks like an address may be a number or a note
+      found.push({ cells: parts, slot: out.length });
+      out.push(null);
     }
+    // The address column: the one the header names (url, address, …), else the one where most rows hold an address, a full
+    // address with its scheme counting most. "4.5", "note: vip" or an e-mail address in an earlier column look like one too
+    const width = found.reduce((max, row) => Math.max(max, row.cells.length), 0);
+    let addressAt = header ? header.findIndex(cell => ADDRESS_HEADER.test(String(cell).trim())) : -1;
+    if (addressAt === -1 || !found.some(row => looksLikeAddress(row.cells[addressAt]))) {
+      const score = new Array(width).fill(0);
+      for (const row of found) row.cells.forEach((cell, i) => {
+        if (looksLikeAddress(cell)) score[i] += /^[a-z][a-z0-9+.-]*:\/\//i.test(String(cell).trim()) ? 3 : 1;
+      });
+      addressAt = score.reduce((best, value, i) => (value > score[best] ? i : best), 0);
+    }
+    const rows = found.map(row => {
+      const at = looksLikeAddress(row.cells[addressAt]) ? addressAt : row.cells.findIndex(looksLikeAddress);
+      out[row.slot] = row.cells[at];
+      return { address: row.cells[at], at, cells: row.cells };
+    });
     if (!table || !rows.length || width < 2) return { addresses: out.filter(Boolean), columns: [], rows: [] };
-    // The address column is where the first row has its address; the others are the person's columns, in their order
-    const addressAt = rows[0].at;
+    // The others are the person's columns, in their order
     const places = [];
     for (let i = 0; i < width && places.length < MAX_EXTRA_COLUMNS; i++) if (i !== addressAt) places.push(i);
     const cut = (value, max) => String(value == null ? '' : value).replace(/[\r\n]+/g, ' ').trim().slice(0, max);
@@ -659,6 +674,9 @@
 
   /** The page an item stands for when two runs are compared: its address as it is scanned (normalize), or the text as given. */
   const pageKeyOf = (url) => { const normal = normalize(url); return normal.url || String(url || '').trim(); };
+  /** Addresses a kept run holds, at most (BulkRuns): a longer one is kept shortened, and found again by its shortened form. */
+  const KEPT_URL = 2048;
+  const keptKeyOf = (url) => pageKeyOf(String(url || '').slice(0, KEPT_URL));
   const protectionKeyOf = (name) => (Categories ? Categories.protectionKey(name) : String(name).trim().toLowerCase());
   const confidenceOf = (d) => (d && d.confidence !== null && d.confidence !== undefined && d.confidence !== '' && Number.isFinite(Number(d.confidence)) ? Math.round(Number(d.confidence)) : null);
   const OUTCOMES = Object.freeze(['done', 'failed', 'skipped']);
@@ -703,7 +721,7 @@
       if (!item || !OUTCOMES.includes(item.status)) continue;
       const key = pageKeyOf(item.url);
       if (!key || Object.prototype.hasOwnProperty.call(pages, key)) continue;
-      const was = before.get(key);
+      const was = before.get(key) || (item.url.length > KEPT_URL ? before.get(keptKeyOf(item.url)) : undefined);
       compared++;
       if (!was) {
         pages[key] = { inPrevious: false, changed: true, added: [], removed: [], confidence: [], status: null, http: null };
@@ -913,7 +931,7 @@
     MAX_URLS, TIMEOUT_S, DELAY_S, MAX_SKIPPED_LISTED, MOST_SEEN, REASONS, FORMATS, MAX_EXTRA_COLUMNS, MAX_EXTRA_ROWS, MAX_CELL, MAX_HEADER,
     capOf, timeoutOf, delayOf, linesOf, readList, extrasOf, cleanExtras, attachExtras, extrasOfRun, normalize, isSitemap, parseSitemap, sameSite, prepare,
     createRun, isActive, nextWaiting, waitBefore, counts, begin, finish, fail, skip, pause, resume, hold, release, stop, complete, recover, continuation, carryOver,
-    summarize, protectionTotals, pageKeyOf, diff, diffOf, diffText, oneLines, build, fileName
+    summarize, protectionTotals, pageKeyOf, KEPT_URL, diff, diffOf, diffText, oneLines, build, fileName
   };
   root.BulkScan = api;
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.BulkScan = api;

@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS-hooks: uit voor deze site"
   },
+  "detectionScrapingTitle": {
+    "message": "Wat dit betekent voor scraping"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "De pagina antwoordde met HTTP {0}: dit bezoek is geweigerd of uitgedaagd."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Er staat een CAPTCHA op de pagina: een scraper moet die vermijden of oplossen."
+  },
+  "detectionScrapingBrowser": {
+    "message": "De pagina controleert de browser met JavaScript: gewone HTTP-verzoeken mislukken waarschijnlijk, gebruik een echte browser."
+  },
+  "detectionScrapingCookies": {
+    "message": "Er worden beschermingscookies gezet: een scraper moet ze bewaren en terugsturen."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Een anti-botdienst bewaakt deze site: veel of snelle verzoeken vanaf één adres kunnen worden geblokkeerd."
+  },
   "tipCacheExpires": {
     "message": "Verloopt"
   },

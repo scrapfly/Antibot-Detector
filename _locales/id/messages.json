@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "Hook JS: nonaktif untuk situs ini"
   },
+  "detectionScrapingTitle": {
+    "message": "Artinya bagi scraping"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Halaman menjawab dengan HTTP {0}: kunjungan ini ditolak atau ditantang."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Ada CAPTCHA di halaman: scraper harus menghindari memicunya atau menyelesaikannya."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Halaman memeriksa browser dengan JavaScript: permintaan HTTP biasa kemungkinan gagal, gunakan browser sungguhan."
+  },
+  "detectionScrapingCookies": {
+    "message": "Cookie perlindungan dipasang: scraper harus menyimpannya dan mengirimkannya kembali."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Layanan anti-bot mengawasi situs ini: permintaan yang banyak atau cepat dari satu alamat bisa diblokir."
+  },
   "tipCacheExpires": {
     "message": "Kedaluwarsa"
   },

@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS हुक: इस साइट के लिए बंद"
   },
+  "detectionScrapingTitle": {
+    "message": "स्क्रेपिंग के लिए इसका मतलब"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "पेज ने HTTP {0} से जवाब दिया: यह विज़िट अस्वीकार की गई या जाँच में डाली गई।"
+  },
+  "detectionScrapingCaptcha": {
+    "message": "पेज पर CAPTCHA है: स्क्रेपर को इसे ट्रिगर होने से बचाना होगा या हल करना होगा।"
+  },
+  "detectionScrapingBrowser": {
+    "message": "पेज JavaScript से ब्राउज़र की जाँच करता है: सामान्य HTTP अनुरोध शायद विफल होंगे, असली ब्राउज़र इस्तेमाल करें।"
+  },
+  "detectionScrapingCookies": {
+    "message": "सुरक्षा कुकीज़ सेट की जाती हैं: स्क्रेपर को इन्हें रखना और वापस भेजना होगा।"
+  },
+  "detectionScrapingAntibot": {
+    "message": "इस साइट पर एक एंटी-बॉट सेवा नज़र रखती है: एक ही पते से बहुत ज़्यादा या तेज़ अनुरोध ब्लॉक हो सकते हैं।"
+  },
   "tipCacheExpires": {
     "message": "समाप्ति"
   },

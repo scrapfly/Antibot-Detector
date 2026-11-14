@@ -25,9 +25,9 @@
   const MAX_LISTS = 5;
   const MAX_BYTES = 1500000;          // the whole store, about (chrome.storage.local holds History too)
   const MAX_ITEMS = 1000;             // pages of one kept run (a run has at most 200 scanned and 200 skipped listed)
-  const MAX_DETECTIONS = 12;          // protections kept per page
+  const MAX_DETECTIONS = 64;          // protections kept per page: more than a page finds, or the next run reads the rest as new
   const MAX_NAME = 100;
-  const MAX_URL = 2048;
+  const MAX_URL = (BulkScan && BulkScan.KEPT_URL) || 2048;   // a longer address is kept shortened (BulkScan.diff finds it so)
   const MAX_IMPORT_CHARS = 8 * 1024 * 1024;  // an export file read back, at most
   const STATUSES = Object.freeze(['waiting', 'scanning', 'done', 'failed', 'skipped']);
   const RUN_STATUSES = Object.freeze(['running', 'paused', 'stopped', 'done']);

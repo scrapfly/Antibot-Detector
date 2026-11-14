@@ -187,7 +187,7 @@ test('only a run that is done is kept: not one stopped, running, or with no page
   assert.deepEqual(BulkRuns.remember(null, run([{ url: 'x', status: 'skipped', reason: 'invalid' }])).lists, []);
 });
 
-test('the store stays within its size: lists run longest ago go first, then the earlier run, and a page keeps at most 12 protections', () => {
+test('the store stays within its size: lists run longest ago go first, then the earlier run, and a page keeps at most MAX_DETECTIONS protections', () => {
   // 400 pages (200 scanned and 200 skipped listed is the most a run holds) with long addresses: about 1 MB each
   const many = (id, host) => run(Array.from({ length: 400 }, (_, i) => page(`https://${host}.example/${'p'.repeat(1500)}${i}`,
     Array.from({ length: 30 }, (_, j) => d(`Protection number ${j}`)))), { id });
@@ -220,4 +220,35 @@ test('an earlier JSON export is read back to compare with; anything else is refu
   assert.equal(capped.items.length, BulkRuns.MAX_ITEMS);
   assert.ok(capped.items[0].detections[0].name.length <= 100);
   assert.equal(capped.items[0].detections[0].confidence, null);
+});
+
+test('a page with many protections, the same in both runs, is unchanged once kept and read back', () => {
+  const many = Array.from({ length: 20 }, (_, i) => d(`Protection ${String(i).padStart(2, '0')}`));
+  const first = run([page('https://a.example/', many)], { id: 'one' });
+  const store = BulkRuns.remember(null, first);
+  const second = run([page('https://a.example/', many)], { id: 'two' });
+  const result = BulkScan.diff(BulkRuns.previousFor(store, second), second);
+  assert.equal(result.pages['https://a.example/'].changed, false);
+  assert.ok(BulkRuns.MAX_DETECTIONS >= 64);
+});
+
+test('an address longer than what a kept run holds is still found in the run before', () => {
+  const long = `https://a.example/${'x'.repeat(2100)}`;
+  const store = BulkRuns.remember(null, run([page(long, [d('Akamai')])], { id: 'one' }));
+  const second = run([page(long, [d('Akamai')])], { id: 'two' });
+  const result = BulkScan.diff(BulkRuns.previousFor(store, second), second);
+  const entry = Object.values(result.pages)[0];
+  assert.equal(entry.inPrevious, true);
+  assert.equal(entry.changed, false);
+});
+
+test('a CSV row whose earlier cell looks like an address (a decimal, "note: x") keeps its cells under their headers', () => {
+  const list = BulkScan.readList('name,score,url\nAlpha,3,https://alpha.example\nBeta,4.5,https://beta.example\nGamma,note: vip,https://gamma.example');
+  assert.deepEqual(list.addresses, ['https://alpha.example', 'https://beta.example', 'https://gamma.example']);
+  assert.deepEqual(list.columns, ['name', 'score']);
+  assert.deepEqual(list.rows.map(row => row.cells), [['Alpha', '3'], ['Beta', '4.5'], ['Gamma', 'note: vip']]);
+  // A header that does not name it: the column where most rows hold a full address wins
+  const other = BulkScan.readList('id,where,note\n1.5,https://a.example,x\n2.5,https://b.example,y');
+  assert.deepEqual(other.addresses, ['https://a.example', 'https://b.example']);
+  assert.deepEqual(other.rows.map(row => row.cells), [['1.5', 'x'], ['2.5', 'y']]);
 });

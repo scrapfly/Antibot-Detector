@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS フック: このサイトではオフ"
   },
+  "detectionScrapingTitle": {
+    "message": "スクレイピングにとっての意味"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "ページは HTTP {0} を返しました: このアクセスは拒否されたかチャレンジを受けました。"
+  },
+  "detectionScrapingCaptcha": {
+    "message": "ページに CAPTCHA があります: スクレイパーは発動を避けるか、解く必要があります。"
+  },
+  "detectionScrapingBrowser": {
+    "message": "ページは JavaScript でブラウザーを確認しています: 単純な HTTP リクエストは失敗しやすいため、実際のブラウザーを使ってください。"
+  },
+  "detectionScrapingCookies": {
+    "message": "保護用の Cookie が設定されます: スクレイパーはそれを保持して送り返す必要があります。"
+  },
+  "detectionScrapingAntibot": {
+    "message": "このサイトはアンチボットサービスが監視しています: 1 つのアドレスからの大量または高速なリクエストはブロックされる場合があります。"
+  },
   "tipCacheExpires": {
     "message": "有効期限"
   },

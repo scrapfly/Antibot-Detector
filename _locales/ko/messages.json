@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS 후크: 이 사이트에서 꺼짐"
   },
+  "detectionScrapingTitle": {
+    "message": "스크래핑에 주는 의미"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "페이지가 HTTP {0}(으)로 응답했습니다: 이 방문은 거부되었거나 확인 절차를 받았습니다."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "페이지에 CAPTCHA가 있습니다: 스크래퍼는 이를 유발하지 않거나 풀어야 합니다."
+  },
+  "detectionScrapingBrowser": {
+    "message": "페이지가 JavaScript로 브라우저를 검사합니다: 일반 HTTP 요청은 실패하기 쉬우니 실제 브라우저를 사용하세요."
+  },
+  "detectionScrapingCookies": {
+    "message": "보호용 쿠키가 설정됩니다: 스크래퍼는 이를 보관하고 다시 보내야 합니다."
+  },
+  "detectionScrapingAntibot": {
+    "message": "안티봇 서비스가 이 사이트를 감시합니다: 한 주소에서 오는 많거나 빠른 요청은 차단될 수 있습니다."
+  },
   "tipCacheExpires": {
     "message": "만료"
   },

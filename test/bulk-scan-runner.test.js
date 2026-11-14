@@ -35,7 +35,11 @@ function world({ scans = {}, settings = {}, windows = [{ id: 3, incognito: false
     chrome: {
       runtime: { getURL: (p) => `chrome-extension://abc/${p}` },
       storage: {
-        local: { get: async (keys) => Object.fromEntries([].concat(keys).filter(k => k in local).map(k => [k, local[k]])), set: async (v) => { Object.assign(local, v); } },
+        local: {
+          get: async (keys) => Object.fromEntries([].concat(keys).filter(k => k in local).map(k => [k, local[k]])),
+          set: async (v) => { Object.assign(local, v); },
+          remove: async (keys) => { for (const k of [].concat(keys)) delete local[k]; }
+        },
         session: {
           get: async (key) => (key in session ? { [key]: plain(session[key]) } : {}),
           set: async (values) => { Object.assign(session, plain(values)); },
@@ -668,4 +672,47 @@ test('the person\'s other CSV columns are kept on the run\'s pages, checked, and
   assert.deepEqual(plain(w.stored().items.map(i => [i.url, i.extra])), [['https://a.example/', ['Ann']], ['https://b.example/', ['Bob']]]);
   // Kept runs never hold them
   assert.ok(!JSON.stringify(w.local[KEPT]).includes('Ann'));
+});
+
+test('"Scan the failed pages again" is the same run: kept, it replaces its first pass and is compared with the run before it', async () => {
+  const scans = { 'https://a.example/': { results: found('Kasada') }, 'https://b.example/': { results: [] } };
+  const w = world({ scans });
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/'] });
+  await finished(w);
+  const day1 = w.stored().id;
+  await w.Runner.clear();
+  await new Promise(resolve => setTimeout(resolve, 2));
+  scans['https://b.example/'] = { loadError: 'net::ERR_CONNECTION_RESET' };
+  await w.Runner.start({ entries: ['https://a.example/', 'https://b.example/'] });
+  await finished(w);
+  const day2 = w.stored().id;
+  assert.notEqual(day2, day1);
+  await new Promise(resolve => setTimeout(resolve, 2));
+  scans['https://b.example/'] = { results: [] };
+  await w.Runner.start({ entries: [], continueRun: true, retryFailed: true });
+  assert.equal(w.stored().id, day2, 'the continued run keeps its id');
+  assert.equal(w.ctx.BulkRuns.previousFor(w.local[KEPT], w.stored()).id, day1, 'compared with the run before, not its own first pass');
+  await finished(w);
+  const list = w.local[KEPT].lists[0];
+  assert.equal(list.latest.id, day2);
+  assert.equal(list.latest.items.find(i => i.url === 'https://b.example/').status, 'done');
+  assert.equal(list.previous.id, day1, 'the run before is still kept');
+});
+
+test('Settings → Data → Clear goes through the worker, after a run being kept: the kept runs are gone', async () => {
+  const w = world({ scans: { 'https://a.example/': { results: [] } } });
+  const registry = {};
+  w.Runner.registerHandlers(registry);
+  await w.Runner.start({ entries: ['https://a.example/'] });
+  await finished(w);
+  assert.ok(w.local[KEPT]);
+  const answer = await new Promise(resolve => registry[w.ctx.WorkerMessages.BULK_RUNS_FORGET]({
+    request: {}, sender: { url: 'chrome-extension://abc/popup.html' }, sendResponse: resolve
+  }));
+  assert.equal(answer.status, 'ok');
+  assert.equal(w.local[KEPT], undefined);
+  // A run being written when the clear arrives is written first, then cleared
+  w.Runner.remember({ ...plain(w.stored()), id: 'late' });
+  await w.Runner.forgetRuns();
+  assert.equal(w.local[KEPT], undefined);
 });

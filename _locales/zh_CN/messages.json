@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS 钩子：此站点已关闭"
   },
+  "detectionScrapingTitle": {
+    "message": "这对抓取意味着什么"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "页面返回了 HTTP {0}：此次访问被拒绝或被要求验证。"
+  },
+  "detectionScrapingCaptcha": {
+    "message": "页面上有 CAPTCHA：抓取程序需要避免触发它或解开它。"
+  },
+  "detectionScrapingBrowser": {
+    "message": "页面用 JavaScript 检查浏览器：普通 HTTP 请求很可能失败，请使用真实浏览器。"
+  },
+  "detectionScrapingCookies": {
+    "message": "页面设置了防护 Cookie：抓取程序需要保存并回传它们。"
+  },
+  "detectionScrapingAntibot": {
+    "message": "此网站由反机器人服务监控：来自同一地址的大量或快速请求可能被拦截。"
+  },
   "tipCacheExpires": {
     "message": "过期时间"
   },

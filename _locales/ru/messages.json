@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS-хуки: выключены для этого сайта"
   },
+  "detectionScrapingTitle": {
+    "message": "Что это значит для скрапинга"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Страница ответила HTTP {0}: этот визит отклонён или отправлен на проверку."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "На странице есть CAPTCHA: скраперу нужно не вызывать её или решать."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Страница проверяет браузер через JavaScript: простые HTTP-запросы, скорее всего, не пройдут, используйте настоящий браузер."
+  },
+  "detectionScrapingCookies": {
+    "message": "Устанавливаются защитные cookie: скрапер должен сохранять их и отправлять обратно."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Сайт охраняет антибот-сервис: много или частых запросов с одного адреса могут заблокировать."
+  },
   "tipCacheExpires": {
     "message": "Истекает"
   },

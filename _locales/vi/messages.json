@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS hook: đã tắt cho trang web này"
   },
+  "detectionScrapingTitle": {
+    "message": "Điều này có nghĩa gì với việc thu thập dữ liệu"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Trang trả lời bằng HTTP {0}: lượt truy cập này đã bị từ chối hoặc bị thử thách."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Trang có CAPTCHA: công cụ thu thập phải tránh kích hoạt hoặc giải nó."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Trang kiểm tra trình duyệt bằng JavaScript: yêu cầu HTTP thông thường có thể thất bại, hãy dùng trình duyệt thật."
+  },
+  "detectionScrapingCookies": {
+    "message": "Cookie bảo vệ được đặt: công cụ thu thập phải giữ và gửi lại chúng."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Một dịch vụ chống bot đang giám sát trang này: nhiều yêu cầu hoặc yêu cầu nhanh từ một địa chỉ có thể bị chặn."
+  },
   "tipCacheExpires": {
     "message": "Hết hạn"
   },

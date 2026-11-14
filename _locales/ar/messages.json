@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "خطافات JS: متوقفة لهذا الموقع"
   },
+  "detectionScrapingTitle": {
+    "message": "ماذا يعني هذا للاستخراج الآلي"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "ردّت الصفحة بالرمز HTTP {0}: رُفضت هذه الزيارة أو خضعت لتحدٍّ."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "يوجد CAPTCHA في الصفحة: على أداة الاستخراج تجنّب إطلاقه أو حلّه."
+  },
+  "detectionScrapingBrowser": {
+    "message": "تفحص الصفحة المتصفح بلغة JavaScript: من المرجّح أن تفشل طلبات HTTP العادية، فاستخدم متصفحًا حقيقيًا."
+  },
+  "detectionScrapingCookies": {
+    "message": "تُعيَّن ملفات تعريف ارتباط للحماية: على أداة الاستخراج الاحتفاظ بها وإرسالها مجددًا."
+  },
+  "detectionScrapingAntibot": {
+    "message": "تراقب خدمة لمكافحة الروبوتات هذا الموقع: قد تُحظر الطلبات الكثيرة أو السريعة من عنوان واحد."
+  },
   "tipCacheExpires": {
     "message": "تنتهي"
   },

@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS hook'ları: bu site için kapalı"
   },
+  "detectionScrapingTitle": {
+    "message": "Bunun kazıma için anlamı"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Sayfa HTTP {0} ile yanıt verdi: bu ziyaret reddedildi veya doğrulamaya alındı."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Sayfada bir CAPTCHA var: bir kazıyıcı onu tetiklemekten kaçınmalı ya da çözmeli."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Sayfa tarayıcıyı JavaScript ile denetliyor: düz HTTP istekleri büyük olasılıkla başarısız olur, gerçek bir tarayıcı kullanın."
+  },
+  "detectionScrapingCookies": {
+    "message": "Koruma çerezleri ayarlanıyor: bir kazıyıcı bunları saklamalı ve geri göndermeli."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Bu siteyi bir anti-bot hizmeti izliyor: tek bir adresten gelen çok sayıda veya hızlı istek engellenebilir."
+  },
   "tipCacheExpires": {
     "message": "Sona erer"
   },

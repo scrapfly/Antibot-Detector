@@ -63,6 +63,7 @@
     'BULK_SCAN_STOP',           // close the scan tab now; the pages not scanned stay waiting
     'BULK_SCAN_STATE',          // the run as it is now (also in chrome.storage.session)
     'BULK_SCAN_CLEAR',          // forget a finished or stopped run
+    'BULK_RUNS_FORGET',         // Settings → Data → Clear: delete the kept runs (BulkRuns), after any run being kept is written
     // Is the worker as new as the popup (modules/core/worker-version.js)
     'WORKER_FINGERPRINT',       // the popup asks; the worker answers a fingerprint of the message names it knows
     // Logging and the log collector
