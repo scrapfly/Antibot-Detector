@@ -15,7 +15,7 @@ function history() {
   return [
     entry('shop.example', 60, [['DataDome', 'antibot', 70]], { url: 'https://shop.example/cart?token=SECRET-QUERY', httpStatus: 200, note: 'SECRET-NOTE' }),
     entry('www.shop.example', 20, [['DataDome', 'antibot', 95], ['hCaptcha', 'captcha', 80]], { url: 'https://www.shop.example/cart', httpStatus: 403 }),
-    entry('shop.example', 2, [['DataDome', 'antibot', 90], ['Canvas Fingerprint', 'fingerprint', 30]], { url: 'https://shop.example/login',
+    entry('shop.example', 2, [['DataDome', 'antibot', 90], ['Canvas Fingerprint', 'fingerprint', 30]], { id: 'detection_1_7', url: 'https://shop.example/login',
       changed: { added: ['DataDome'], removed: ['Kasada'] } }),
     entry('other.example', 1, [['Cloudflare', 'antibot', 90]])
   ].map(item => ({ ...item, detections: item.detections.map(d => ({ ...d, ...secret })) }));
@@ -100,8 +100,10 @@ test('HTTP statuses with their tone, and the scans saved without one', async () 
   assert.equal(ui.id('statsSiteStatusUnknown').hidden, false);
 });
 
-test('changed pages list what was added and removed; a page and "Show in History" open History narrowed to it', async () => {
-  const ui = await createPage(history(), { search: '?site=shop.example' });
+test('changed pages list what was added and removed; a page opens its own scan in History, "Show in History" the site', async () => {
+  const items = history();
+  const changedId = items[2].id;
+  const ui = await createPage(items, { search: '?site=shop.example' });
   const rows = ui.rows('statsSiteChangeTable');
   assert.equal(rows.length, 1);
   assert.match(textOf(rowOf(rows[0])), /\+ Added: DataDome/);
@@ -110,7 +112,8 @@ test('changed pages list what was added and removed; a page and "Show in History
   assert.equal(textOf(link), '/login');
   link.events.click();
   ui.id('statsSiteHistory').events.click();
-  assert.deepEqual(ui.opened, ['chrome-extension://test/popup.html?tab=history&search=shop.example%2Flogin', 'chrome-extension://test/popup.html?tab=history&search=shop.example']);
+  // the page's own scan (a search by its address would also find every page of the site, the home page most of all)
+  assert.deepEqual(ui.opened, [`chrome-extension://test/popup.html?tab=history&search=shop.example&entry=${encodeURIComponent(changedId)}`, 'chrome-extension://test/popup.html?tab=history&search=shop.example']);
   assert.equal(ui.id('statsSiteChangeFooter').hidden, false);
   assert.equal(ui.id('statsSiteChangeMore').hidden, true);
 });

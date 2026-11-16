@@ -11,6 +11,11 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 - Detection: What this means for scraping also says when the page is a block or challenge page, even when it answered without an error.
 
+### Fixed
+
+- Statistics → Site report: a changed page opens that scan in History instead of every page of the site, and the category chips also narrow the changes.
+- History → Compare scans: Copy as Markdown and the hover text never show a login saved in an address, and the filter finds accented site names.
+
 ## [3.2.0] - 2026-11-16
 
 ### Added

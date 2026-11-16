@@ -263,22 +263,35 @@ class ScrapflyPopup {
    * `popup.html?tab=history&settings=history`, as a notification click opens it
    * (background/notification-clicks.js): that tab, and Settings on that sub-tab.
    * @param {string} search - location.search
-   * @returns {{tab: string|null, settingsTab: string|null, search: string|null}}
+   * `entry` is a History entry's id (Statistics → Site report → a page that changed): History opens that entry's details.
+   * @returns {{tab: string|null, settingsTab: string|null, search: string|null, entry: string|null}}
    */
   static routeFrom(search) {
     let params;
-    try { params = new URLSearchParams(String(search || '')); } catch (_) { return { tab: null, settingsTab: null, search: null }; }
+    try { params = new URLSearchParams(String(search || '')); } catch (_) { return { tab: null, settingsTab: null, search: null, entry: null }; }
     const tabs = ['detection', 'history', 'rules', 'advanced'];
     const settingsTabs = ['general', 'detection', 'history', 'data'];
     const tab = params.get('tab');
     const settingsTab = params.get('settings');
     // Text for the History search (a host name from Statistics): plain text, at most 200 characters
     const historySearch = (params.get('search') || '').replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, 200);
+    const entry = params.get('entry') || '';
     return {
       tab: tabs.includes(tab) ? tab : null,
       settingsTab: settingsTabs.includes(settingsTab) ? settingsTab : null,
-      search: historySearch || null
+      search: historySearch || null,
+      entry: /^[\w.:-]{1,120}$/.test(entry) ? entry : null
     };
+  }
+
+  /** History's details window for the entry with this id, once History is read; nothing when it is gone (deleted, cleared). */
+  async openHistoryEntry(id) {
+    const find = () => (this.history.historyItems || []).find(item => item && item.id === id);
+    try {
+      if (!find()) await this.history.loadHistoryFromStorage();
+      const item = find();
+      if (item) this.history.showHistoryItemDetails(item);
+    } catch (_) { /* History could not be read: the tab shows why */ }
   }
 
   /** Opens what the page address asks for; false when it asks for nothing. */
@@ -293,6 +306,8 @@ class ScrapflyPopup {
       if (input) input.value = route.search;
       this.history.handleSearch(route.search);
     }
+    // popup.html?tab=history&entry=<id>: that one entry's details (a search by address also finds the site's other pages)
+    if (route.tab === 'history' && route.entry) await this.openHistoryEntry(route.entry);
     if (route.settingsTab) {
       this.settings.showSettings();
       this.settings.switchTab(route.settingsTab);

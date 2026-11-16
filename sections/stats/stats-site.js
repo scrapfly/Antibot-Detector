@@ -14,7 +14,18 @@
   function reportOf(app) {
     const { state } = app;
     const key = [state.historyVersion, [...state.scope].sort().join(','), state.site].join('|');
-    if (!state.siteCache || state.siteCache.key !== key) state.siteCache = { key, report: SiteReport.build(state.scoped, state.site) };
+    if (!state.siteCache || state.siteCache.key !== key) {
+      // The chips narrow the pages' changes too: a protection of a category left out is not named there
+      let keepChange;
+      if (state.scoped !== state.items) {
+        const categories = SiteReport.categoriesOf(state.items, state.site);
+        keepChange = (name) => {
+          const category = categories.get(Categories.protectionKey(name));
+          return !category || state.scope.has(category);
+        };
+      }
+      state.siteCache = { key, report: SiteReport.build(state.scoped, state.site, { keepChange }) };
+    }
     return state.siteCache.report;
   }
 
@@ -165,12 +176,13 @@
       part(row.removed, 'stats-change-removed', '−', 'statsChangeRemovedSr', 'Removed:');
       return chips;
     };
-    // The page opens History narrowed to it (its host and path: History searches the address)
+    // The page opens that scan's details in History, over the list narrowed to the site (a search by address alone would also
+    // find the site's other pages: every address of the site starts like its home page)
     const page = row => {
       const link = ltr(element('button', 'stats-link-btn stats-host-link', (row.host !== report.site ? row.host : '') + row.path));
       link.type = 'button';
       link.setAttribute('title', fmt('statsOpenInHistoryFmt', 'Open {0} in History', row.host + row.path));
-      link.addEventListener('click', () => app.openHistory(SiteReport.siteOf(row.host) + row.path));
+      link.addEventListener('click', () => app.openHistory(SiteReport.siteOf(row.host), row.id));
       return link;
     };
     U.table(byId('statsSiteChangeTable'), {

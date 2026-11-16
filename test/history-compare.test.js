@@ -586,6 +586,11 @@ test('others(): the filter matches the address, the host or the title, every wor
   assert.deepEqual(ids('   '), ['d', 'c', 'b'], 'blank is no filter');
   assert.equal(C.matchesQuery(null, 'x'), false);
   assert.equal(C.matchesQuery({ url: 'https://a.example/' }, ''), true);
+  // as History's own search: accents either way, and a host typed with letters finds the stored one
+  assert.equal(C.matchesQuery({ url: 'https://xn--bcher-kva.de/x', hostname: 'xn--bcher-kva.de' }, 'bücher.de'), true);
+  assert.equal(C.matchesQuery({ url: 'https://a.example/', title: 'Café Central' }, 'cafe central'), true);
+  assert.equal(C.matchesQuery({ url: 'https://a.example/', title: 'cafe' }, 'CAFÉ'), true);
+  assert.equal(C.matchesQuery({ url: 'https://a.example/', title: 'cafe' }, 'tea'), false);
 });
 
 test('pageLabel() and samePage(): a scan\'s page as host and path, and whether two scans are of one page', () => {
@@ -616,6 +621,18 @@ test('toOneLine() and toMarkdown(): two pages are both named, the earlier first,
   const sameSite = C.compare(a, { ...b, url: 'https://shop.example/checkout?token=SECRET3' });
   assert.equal(C.toOneLine(sameSite, { host: 'shop.example' }), 'shop.example/cart → shop.example/checkout: +DataDome 70%, Unchanged (1)');
   assert.ok(C.toMarkdown(sameSite, { host: 'shop.example' }).startsWith('## Compare scans: shop.example\n\nhttps://shop.example/cart → https://shop.example/checkout\n\n'));
+});
+
+test('toMarkdown() and whereTip(): a login saved in an address (user:password@) is never copied or shown', () => {
+  const a = entry('a', 'https://shop.example/cart', T0, [det('Kasada', 'Anti-Bot', 80)]);
+  const b = entry('b', 'https://user:LOGINSECRET@other.example/x?t=1', T0 + HOUR, [det('Kasada', 'Anti-Bot', 80)]);
+  const md = C.toMarkdown(C.compare(b, a), { host: 'shop.example' });
+  assert.ok(md.includes('https://other.example/x'), md.slice(0, 200));
+  assert.ok(!/LOGINSECRET|user:/.test(md));
+  assert.ok(!/LOGINSECRET/.test(C.whereTip(a, b)), C.whereTip(a, b));
+  assert.ok(!/LOGINSECRET/.test(C.whereTip({ url: 'https://other.example/x' }, b)));
+  const same = C.toMarkdown(C.compare(a, a), { host: 'shop.example', address: 'https://u:LOGINSECRET@shop.example/cart' });
+  assert.ok(!/LOGINSECRET/.test(same) && same.includes('https://shop.example/cart'));
 });
 
 const scopeButtons = (d) => d.form.find('history-compare-scope-btn');
