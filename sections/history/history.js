@@ -1289,8 +1289,16 @@ class History {
     // The list for the scope and the filter: the scan picked stays picked while it is listed, else the default one
     const fill = () => {
       const kept = select.value;
-      candidates = scope === 'page' ? pageScans
-        : HistoryCompare.others(this.historyItems, item, { scope: 'any', query: search.value }).slice(0, ANY_LIMIT);
+      if (scope === 'page') {
+        candidates = pageScans;
+      } else {
+        // Every match, newest first, at most ANY_LIMIT listed; the scan just before this entry stays listed (at the end, where its
+        // date puts it) when an older entry's neighbour is not among the newest ones
+        const all = HistoryCompare.others(this.historyItems, item, { scope: 'any', query: search.value });
+        candidates = all.slice(0, ANY_LIMIT);
+        const near = HistoryCompare.pickDefault(all, item);
+        if (near && !candidates.includes(near)) candidates.push(near);
+      }
       // Two scans in the same minute with the same count would read the same: those keep their seconds
       const optionDates = HistoryCompare.optionDates(candidates.map(candidate => ({ time: HistoryCompare.timeOf(candidate), count: countOf(candidate) })), { short: shortDate, long: dateText });
       const options = candidates.map((candidate, index) => {

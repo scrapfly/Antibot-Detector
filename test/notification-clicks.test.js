@@ -104,7 +104,9 @@ test('popup.html?tab=&settings= picks a known tab and Settings sub-tab, nothing 
   assert.strictEqual(route('?search=%20%20').search, null);
   // a History entry from Statistics → Site report: an id as the recorder writes it, nothing else
   assert.strictEqual(route('?tab=history&search=shop.example&entry=detection_1731600000000_12').entry, 'detection_1731600000000_12');
-  assert.strictEqual(route('?tab=history&entry=' + encodeURIComponent('<img src=x>')).entry, null);
+  assert.strictEqual(route('?tab=history&entry=' + encodeURIComponent('imported 7/a {x}')).entry, 'imported 7/a {x}', 'an imported entry keeps its own id');
+  assert.strictEqual(route('?tab=history&entry=' + encodeURIComponent('a\nb')).entry, null);
+  assert.strictEqual(route('?tab=history&entry=%20').entry, null);
   assert.strictEqual(route('?tab=history&entry=' + 'x'.repeat(121)).entry, null);
 });
 

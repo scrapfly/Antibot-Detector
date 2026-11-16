@@ -239,6 +239,35 @@ const SEED = [
   });
 
   // ===============================================================================================
+  await scenario('Site report (3.2.1): a changed page opens that scan\'s details in History, not every page of the site', async () => {
+    const changed = SEED.map(item => item.id === 'c2' ? { ...item, changed: { added: ['Akamai'], removed: [], at: item.timestamp } } : item);
+    await seed(changed);
+    try {
+      const page = await openExtensionPage('sections/stats/stats.html?site=shop.example');
+      await page.waitForSelector('#stats-panel-site:not([hidden]) #statsSiteChangeTable .stats-host-link', { timeout: 15000 });
+      const opened = new Promise(r => ctx.once('page', r));
+      await page.$eval('#statsSiteChangeTable .stats-host-link', el => el.click());
+      const tab = await opened;
+      tab.on('pageerror', (e) => pageErrors.push(`history entry: ${e.message}`));
+      await tab.waitForURL(/popup\.html\?tab=history&search=shop\.example&entry=c2$/, { timeout: 10000 });
+      await tab.waitForFunction(() => { const m = document.querySelector('#historyDetailModal'); return m && getComputedStyle(m).display !== 'none'; }, null, { timeout: 20000, polling: 250 });
+      assert.equal(await tab.$eval('#historyModalUrl', el => el.getAttribute('href')), 'https://shop.example/cart');
+      assert.equal(await tab.evaluate(() => window.popupInstance.history._modalItemId), 'c2', 'the changed scan itself, not another scan of the page');
+      assert.equal(await tab.$eval('#historySearch', el => el.value), 'shop.example', 'the list behind it is narrowed to the site');
+      await tab.close();
+      await page.close();
+
+      // An id History no longer holds (deleted, cleared): History opens narrowed, with no details window and no error
+      const gone = await openExtensionPage('popup.html?tab=history&search=shop.example&entry=detection_0_0');
+      await gone.waitForSelector('.history-item', { timeout: 20000 });
+      await sleep(800);
+      assert.equal(await gone.$eval('#historyDetailModal', el => getComputedStyle(el).display), 'none');
+      await gone.close();
+    } finally {
+      await seed(SEED);
+    }
+  });
+
   await scenario('History → Compare with…: what was added, removed and changed, Markdown, and nothing to compare', async () => {
     const page = await openExtensionPage();
     await page.evaluate(() => {

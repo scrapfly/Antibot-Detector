@@ -714,6 +714,28 @@ test('the dialog: a page with no other scan of its own opens on "Any page", and 
   assert.ok(d.copied[0].startsWith(`## Compare scans: other.example → search.example\n\nhttps://other.example/ → ${SEARCH}\n\n`), d.copied[0].slice(0, 200));
 });
 
+test('the dialog: an old entry under "Any page" still has the scan just before it, though 500 newer scans fill the list', async () => {
+  const old = entry('old', 'https://lonely.example/', T0, [det('Kasada', 'Anti-Bot', 80)]);
+  const near = entry('near', 'https://near.example/', T0 - HOUR, []);
+  const newer = Array.from({ length: 520 }, (_, i) => entry(`n${i}`, `https://n${i}.example/`, T0 + (520 - i) * HOUR, []));
+  const d = compareDialog([...newer, old, near], old);
+  assert.ok(d.options, 'the dialog opened');
+  const values = d.select.children.map(o => o.value);
+  assert.equal(values.length, 501, 'the 500 newest and the one just before the entry');
+  assert.equal(values[values.length - 1], 'near', 'at the end, where its date puts it');
+  assert.equal(d.select.value, 'near', 'picked by default, not a scan days later');
+});
+
+test('two sites, one entry saved with a host name and no address: both sites are named, never as one page', () => {
+  const bare = { id: 'bare', hostname: 'a.example', timestamp: T0, detections: [det('Kasada', 'Anti-Bot', 80)] };
+  const other = entry('other', 'https://b.example/y', T0 + HOUR, [det('Kasada', 'Anti-Bot', 80), det('DataDome', 'Anti-Bot', 70)]);
+  const r = C.compare(other, bare);
+  assert.ok(C.toOneLine(r, { host: 'a.example' }).startsWith('a.example → b.example/y: '), C.toOneLine(r, { host: 'a.example' }));
+  assert.ok(C.toMarkdown(r, { host: 'a.example' }).startsWith('## Compare scans: a.example → b.example\n\nhttps://a.example/ → https://b.example/y\n\n'));
+  assert.equal(C.whereText(bare, other), 'a.example → b.example/y');
+  assert.equal(C.whereText({ id: 'x', hostname: 'a.example', timestamp: T0 + 2 * HOUR }, bare), '', 'the same host twice is one page');
+});
+
 // ---- "Copy summary": a button of the dialog's own content (the dialog's footer has room for Close and Copy as Markdown only) ---
 
 const flush = () => new Promise((resolve) => setImmediate(resolve));

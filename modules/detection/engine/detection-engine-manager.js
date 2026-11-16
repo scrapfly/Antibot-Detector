@@ -2057,6 +2057,8 @@ class DetectionEngineManager {
                         // (iframe[src^='…']), so Copy evidence reads the selector, not the value cut at its first "="
                         ...(m.selector ? { selector: m.selector } : {}),
                         ...(m.name ? { name: m.name } : {}),
+                        // A block or challenge page's own text (a rule scoped to "page"): Detection → What this means for scraping
+                        ...(m.scope === 'page' ? { scope: 'page' } : {}),
                         confidence: m.confidence,
                         description: m.description,
                         fullUrl: m.fullUrl,

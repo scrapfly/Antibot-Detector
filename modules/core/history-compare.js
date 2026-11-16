@@ -116,6 +116,22 @@
   }
 
   /** Whether two scans are of one page (pageKey); two scans whose page cannot be read are not. */
+  /**
+   * A scan's address for naming its page: its own, or, for a scan saved with a host name and no address (an old or imported
+   * entry), that host's home page; '' when it has neither.
+   */
+  function addressOf(item) {
+    const url = typeof (item && item.url) === 'string' ? item.url.trim() : '';
+    if (url) return url;
+    const host = String((item && item.hostname) || '').trim().toLowerCase();
+    if (!host || host === 'unknown') return '';
+    try {
+      return new URL(`https://${host}/`).hostname ? `https://${host}/` : '';
+    } catch (_) {
+      return '';
+    }
+  }
+
   function samePage(a, b) {
     const key = pageKey(a);
     return !!key && key === pageKey(b);
@@ -136,8 +152,8 @@
 
   /** The two scans of a result when they are of two pages, earlier first ([earlier, later] as {url}); null for one page. */
   function twoPages(result) {
-    const earlier = { url: (result && result.earlier && result.earlier.url) || '' };
-    const later = { url: (result && result.later && result.later.url) || '' };
+    const earlier = { url: addressOf(result && result.earlier) };
+    const later = { url: addressOf(result && result.later) };
     return pageKey(earlier) && pageKey(later) && !samePage(earlier, later) ? [earlier, later] : null;
   }
 
@@ -193,7 +209,7 @@
     }
     for (const [key, row] of was) if (!is.has(key)) removed.push(row);
     [added, removed, changed, same].forEach((list) => list.sort(bySpot));
-    const brief = (item) => ({ id: item && item.id, timestamp: timeOf(item), url: (item && item.url) || '', httpStatus: httpStatusOf(item) });
+    const brief = (item) => ({ id: item && item.id, timestamp: timeOf(item), url: (item && item.url) || '', hostname: (item && typeof item.hostname === 'string' && item.hostname) || '', httpStatus: httpStatusOf(item) });
     return { earlier: brief(earlier), later: brief(later), added, removed, changed, same, identical: !added.length && !removed.length && !changed.length };
   }
 
@@ -403,8 +419,11 @@
 
   /** The entry and the other scan, the earlier first, when they are of two pages whose addresses can be read; else null. */
   function bothPages(entry, other) {
-    if (!entry || !other || samePage(entry, other) || !addressLabel(entry.url) || !addressLabel(other.url)) return null;
-    return timeOf(entry) <= timeOf(other) ? [entry, other] : [other, entry];
+    if (!entry || !other || samePage(entry, other)) return null;
+    const one = { url: addressOf(entry), timestamp: timeOf(entry) };
+    const two = { url: addressOf(other), timestamp: timeOf(other) };
+    if (!addressLabel(one.url) || !addressLabel(two.url)) return null;
+    return one.timestamp <= two.timestamp ? [one, two] : [two, one];
   }
 
   /**

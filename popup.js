@@ -280,7 +280,9 @@ class ScrapflyPopup {
       tab: tabs.includes(tab) ? tab : null,
       settingsTab: settingsTabs.includes(settingsTab) ? settingsTab : null,
       search: historySearch || null,
-      entry: /^[\w.:-]{1,120}$/.test(entry) ? entry : null
+      // Only ever compared with the entries' ids, never written into the page: any id but one with control characters (an
+      // imported entry keeps its own, spaces and slashes included)
+      entry: entry.length <= 120 && entry.trim() && !/[\u0000-\u001f\u007f]/.test(entry) ? entry : null
     };
   }
 
