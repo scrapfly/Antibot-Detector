@@ -22,6 +22,12 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History: clearing it also drops webhook deliveries waiting to be retried, and deleting the last entry no longer clears the webhook's Recent deliveries.
 - History watchlist: a page unwatched, unpinned or deleted during a check is no longer opened.
 - Detection: What was checked says the JS hooks stopped at the time limit when they did, and counts the page's cookies when the browser listed none.
+- Detection: a protection whose evidence arrives partly after the scan, such as Kasada or PerimeterX, is now found once its last request comes in.
+- Detection: a clean page no longer shows a cached result from another port of the same host, or from another page cached by path.
+- Rules → Update no longer replaces your own rule that uses an official rule's id; Reset to official also moves the rule back to its category.
+- Rules: a delete that could not be saved no longer removes the rule later; Duplicate keeps the extension version the rule needs; import messages list rules in your language.
+- Statistics: clicking a protection lists every domain the row counts, including those that saved it under another name.
+- Settings → Data counts captures made in private windows, and colours from a settings file no longer turn black.
 
 ## [3.2.0] - 2026-11-16
 

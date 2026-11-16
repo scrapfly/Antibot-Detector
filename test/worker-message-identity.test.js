@@ -22,7 +22,7 @@ function harness() {
     setTimeout: callback => { const id = ++timerId; timers.set(id, callback); return id; },
     clearTimeout: id => timers.delete(id),
     chrome: { webNavigation: { getFrame: async () => ({ ...current }) } },
-    detectorManager: { getDetector: () => ({ id: 'detect-demo', name: 'Demo' }), findDetectorById: () => null },
+    detectorManager: { getDetector: () => ({ id: 'detect-demo', name: 'Demo', detection: { js_hooks: ['Navigator.example', 'Navigator.a', 'Navigator.b', 'Navigator.c'].map(target => ({ target, confidence: 50 })) } }), findDetectorById: () => null },
     ensureDetectorManagerInitialized: async () => {},
     DetectionEngineManager: { getStoredDetection: async () => null, scansFresh: () => false, handlePageLoadNotification: async () => {} },
     HistoryRecorder: {}, Settings: {}, CategoryManager: {}, categoryManager: {}, Utils: {},

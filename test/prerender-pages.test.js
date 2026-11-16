@@ -142,7 +142,7 @@ function worker() {
     workerKeepaliveManager: null, Constants: {},
     setTimeout: () => 1, clearTimeout: () => {},
     chrome: { webNavigation: { getFrame: async () => ({ ...current }) } },
-    detectorManager: { getDetector: () => ({ id: 'detect-demo', name: 'Demo' }), findDetectorById: () => null },
+    detectorManager: { getDetector: () => ({ id: 'detect-demo', name: 'Demo', detection: { js_hooks: [{ target: 'HTMLCanvasElement.prototype.toDataURL', confidence: 80, id: 'canvas' }] } }), findDetectorById: () => null },
     ensureDetectorManagerInitialized: async () => {},
     DetectionEngineManager: { getStoredDetection: async () => null, scansFresh: () => false },
     checkAndFinalizeDetection: () => {},
@@ -420,4 +420,14 @@ test('JS hooks cut off at the page\'s own time limit, or after the worker gave u
   await quiet.send('JS_HOOK_DETECTION_BATCH', quiet.hookBatch, quiet.sender());
   await quiet.send('JS_HOOKS_COMPLETE', { url: quiet.current.url, completionReason: 'activity_timeout' }, quiet.sender());
   assert.equal(quiet.context.detectionStates.get(7).hooksTimedOut, false, 'the page went quiet: finished');
+});
+
+test('a hook report counts only for one of the rule\'s own hooks, with the rule\'s confidence and id, never the page\'s', async () => {
+  const w = worker();
+  const report = (hook) => ({ detections: [{ detection: { detectorId: 'detect-demo', category: 'fingerprint', detectorName: 'Demo', hook } }] });
+  await w.send('JS_HOOK_DETECTION_BATCH', report({ target: 'HTMLCanvasElement.prototype.toDataURL', confidence: 900, id: 'forged' }), w.sender());
+  const match = w.context.detectionStates.get(7).hooksData.get('detect-demo').matches[0];
+  assert.deepEqual([match.confidence, match.patternId], [80, 'canvas'], 'the rule says 80 and names it, whatever the report claims');
+  await w.send('JS_HOOK_DETECTION_BATCH', report({ target: 'Navigator.prototype.notARule', confidence: 100 }), w.sender());
+  assert.equal(w.context.detectionStates.get(7).hooksData.get('detect-demo').matches.length, 1, 'an API the rule does not hook is not evidence');
 });

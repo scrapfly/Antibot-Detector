@@ -1995,6 +1995,12 @@ class DetectionEngineManager {
                     if (!exactUrlMatch && !UrlUtils.hostnamesMatch(requestedHostname, storedHostname)) {
                         continue;
                     }
+                    // As getStoredDetection reads the cache: another port is another site (localhost:3000 and :8080), and under
+                    // "Domain" only a result saved under "Domain" stands for its site (one saved under "Path" is one page's)
+                    if (!exactUrlMatch && (UrlUtils.portOf(url) !== UrlUtils.portOf(stored.url || '')
+                        || (cacheScope === 'domain' && stored.cacheScope !== 'domain'))) {
+                        continue;
+                    }
                     // Cached by page or by full address, another page of the site is not this one: a clean
                     // /about must not take the detections found on /login
                     if (!exactUrlMatch && (cacheScope === 'path' || cacheScope === 'full') &&

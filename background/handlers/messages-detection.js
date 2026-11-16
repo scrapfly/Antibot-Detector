@@ -94,6 +94,18 @@ function windowRuleFor(detector, property) {
 }
 
 /**
+ * The detector's own JS hook rule for the API a hook report names (one the MAIN world was given), or null: what the match says
+ * (its confidence, description and id) is the rule's, as for window properties, never the page's.
+ */
+function hookRuleFor(detector, target) {
+    const rules = Array.isArray(detector?.detection?.js_hooks) ? detector.detection.js_hooks : [];
+    if (typeof target !== 'string' || !target) return null;
+    // Trimmed, as the install trims it (DetectionEngineManager's normalizeHook)
+    return rules.find(rule => rule && typeof rule === 'object' && rule.enabled !== false && typeof rule.target === 'string'
+        && rule.target.trim() === target) || null;
+}
+
+/**
  * registerDetectionHandlers registration.
  * Extracted from message-router switch cases for maintainability.
  */
@@ -459,6 +471,11 @@ function registerDetectionHandlers(registry, context) {
                             Logger.warn('BACKGROUND', `[hookBatch] Detector ${detectorId} not found, skipping`);
                             continue;
                         }
+                        const hookRule = hookRuleFor(fullDetector, detection.hook && detection.hook.target);
+                        if (!hookRule) {
+                            Logger.warn('BACKGROUND', `[hookBatch] ${detectorId} has no hook rule for that API, skipping`);
+                            continue;
+                        }
 
                         if (!state.hooksData.has(detectorId)) {
                             const normalizedDifficulty = (typeof DetectionUtils !== 'undefined' && typeof DetectionUtils.normalizeDifficulty === 'function')
@@ -488,14 +505,15 @@ function registerDetectionHandlers(registry, context) {
                         }
 
                         const detector = state.hooksData.get(detectorId);
+                        // The rule's confidence (the default when it gives none; 0 stays 0), from 0 to 100
+                        const ruleConfidence = Number.isFinite(hookRule.confidence) ? hookRule.confidence : Constants.DEFAULT_MATCH_CONFIDENCE;
                         const newMatch = {
                             type: 'js_hooks',
-                            pattern: detection.hook.target,
-                            value: detection.hook.target.split('.').pop(),
-                            // A hook that declares no confidence gets the default, like every other rule (0 stays 0)
-                            confidence: Number.isFinite(detection.hook.confidence) ? detection.hook.confidence : Constants.DEFAULT_MATCH_CONFIDENCE,
-                            description: detection.hook.description,
-                            ...(detection.hook.id ? { patternId: detection.hook.id } : {})
+                            pattern: hookRule.target.trim(),
+                            value: hookRule.target.trim().split('.').pop(),
+                            confidence: Math.min(100, Math.max(0, ruleConfidence)),
+                            description: hookRule.description,
+                            ...(hookRule.id ? { patternId: hookRule.id } : {})
                         };
 
                         const isDuplicate = detector.matches.some(m => m.pattern === newMatch.pattern);
