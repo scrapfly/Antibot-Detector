@@ -383,11 +383,12 @@ class UpdateManager {
      */
     static isProtected(localDetector) {
         if (!localDetector) return false;
-        // An author other than Scrapfly marks the user's own rule (the editor reserves that name for official ones)
+        // Only Scrapfly's author marks an installed official rule (the editor reserves that name, and every official rule carries
+        // it): any other author, or none (a new rule, a Duplicate, a file's copy under an official id), is the user's own rule
         const author = typeof localDetector.author === 'string' ? localDetector.author.trim().toLowerCase() : '';
         // A rule the user only translated is not edited: updates replace it and keep the translations
         const edited = !!localDetector.userModified && !this.translatedOnly(localDetector);
-        return edited || (author !== '' && author !== 'scrapfly');
+        return edited || author !== 'scrapfly';
     }
 
     /** An official rule marked as edited for its translations alone (DetectorManager.isTranslationOnlyEdit) */

@@ -42,7 +42,8 @@ test('the copy keeps the patterns, combinations, icon and texts, as a new custom
   assert.strictEqual(copy.enabled, true);
   assert.strictEqual(copy.author, '', 'the Scrapfly author stays with the official rule');
   assert.strictEqual(copy.lastUpdated, '2026-10-21 09:05:07');
-  for (const field of ['userModified', 'officialSnapshot', 'dismissedVersion', 'minExtensionVersion']) assert.ok(!(field in copy), field);
+  for (const field of ['userModified', 'officialSnapshot', 'dismissedVersion']) assert.ok(!(field in copy), field);
+  assert.equal(copy.minExtensionVersion, '2.8', 'the version the rule needs stays: an older build refuses the copy as it does the original');
   assert.strictEqual(official.userModified, true, 'the original object is not changed');
 });
 

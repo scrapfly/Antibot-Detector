@@ -276,7 +276,7 @@ test('the limits are far above what ships, so an export of every rule imports ba
 function importHandler({ skipped = [], size } = {}) {
   const calls = { read: 0, mode: 0, errors: [], warnings: [], successes: [], imported: [] };
   const ctx = { console, Logger: new Proxy({}, { get: () => () => {} }), DetectorSchema, WorkerMessages: { RELOAD_DETECTORS: 'reload' },
-    chrome: { runtime: { sendMessage() {} } },
+    chrome: { runtime: { sendMessage() {} } }, FormatUtils: require('../utils/format-utils.js'),
     NotificationHelper: { chooseImportMode: async () => { calls.mode++; return 'merge'; }, error: (m) => calls.errors.push(m),
       warning: (m) => calls.warnings.push(m), success: (m) => calls.successes.push(m) } };
   vm.createContext(ctx);
@@ -314,7 +314,7 @@ test('the skipped rules are named in the message, the first ten of them when the
   await many.run();
   const message = many.calls.warnings[0];
   assert.match(message, /Rule 1, Rule 2/);
-  assert.ok(message.includes(`Rule 10, ${String.fromCharCode(0x2026)} (`), 'ten names, then an ellipsis');
+  assert.ok(message.includes('Rule 10, 15 more ('), 'ten names, then how many more');
   assert.doesNotMatch(message, /Rule 11\b/);
   const none = importHandler({ skipped: [] });
   await none.run();

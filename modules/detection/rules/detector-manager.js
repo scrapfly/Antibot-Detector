@@ -868,8 +868,12 @@ class DetectorManager {
         const official = DetectionUtils.isOfficialDetector(detector);
         // The list of deletions is read before anything changes: one that cannot be read is never written over
         if (official) await DetectorManager.getDeletedOfficialIds({ strict: true });
-        delete this.detectors[category][detectorName];
-        await this.saveDetectorsToStorage();
+        // Removed from a copy, which replaces the rules only once it is saved: a failed delete leaves the rule in memory too, so
+        // the next save of anything else does not delete it after all (without the record that keeps an official rule out of Update)
+        const next = { ...this.detectors, [category]: { ...this.detectors[category] } };
+        delete next[category][detectorName];
+        await this.saveDetectorsToStorage(next);
+        this.detectors = next;
         if (official) {
             await DetectorManager.markOfficialDeleted(detector.id || detectorName, true);
         }

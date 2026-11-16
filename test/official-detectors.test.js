@@ -97,6 +97,16 @@ test('deleteDetector deletes an official detector and remembers it', async () =>
   assert.deepStrictEqual(await DetectorManager.getDeletedOfficialIds(), ['detect-akamai']);
 });
 
+test('a delete that cannot be saved leaves the rule in memory too, so the next save does not delete it after all', async () => {
+  const dm = makeManager();
+  const before = dm.detectors;
+  dm.saveDetectorsToStorage = async () => { throw new Error('storage is full'); };
+  await assert.rejects(dm.deleteDetector('antibot', 'detect-akamai'), /storage is full/);
+  assert.strictEqual(dm.detectors, before);
+  assert.ok(dm.detectors.antibot['detect-akamai'], 'still there');
+  assert.deepStrictEqual(await DetectorManager.getDeletedOfficialIds(), [], 'and not recorded as deleted');
+});
+
 // The packaged index the restore reads ({category: {detectors: [ids]}})
 const packagedIndex = (categories) => ({ getAllCategories: () => categories });
 const loads = (dm, names, fail = []) => async (cat, id) => {
