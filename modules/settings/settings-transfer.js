@@ -18,6 +18,12 @@
     };
     const COLOR_GROUPS = new Set(['badgeColors', 'categoryColors', 'tagColors']);
     const isHexColor = (value) => typeof value === 'string' && /^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(value);
+    /** A hex colour as #rrggbb: short forms written out, an alpha left out (a colour picker has none). */
+    function sixDigit(value) {
+        const hex = value.slice(1).toLowerCase();
+        const full = hex.length <= 4 ? hex.slice(0, 3).split('').map(c => c + c).join('') : hex.slice(0, 6);
+        return `#${full}`;
+    }
     function portable(settings) {
         const output = {};
         if (!settings || typeof settings !== 'object' || Array.isArray(settings)) return output;
@@ -28,7 +34,13 @@
             for (const key of keys) {
                 if (!Object.prototype.hasOwnProperty.call(source, key)) continue;
                 // A colour is written into the pages' styles: only a hex colour comes in from a file
-                if (COLOR_GROUPS.has(section) && !isHexColor(source[key])) continue;
+                if (COLOR_GROUPS.has(section)) {
+                    if (!isHexColor(source[key])) continue;
+                    // As the colour pickers and the Statistics page hold it (#rrggbb): "#f00" or "#ff000080" would turn black
+                    // in a picker and be saved so at the next Save, or be dropped by the Statistics page
+                    target[key] = sixDigit(source[key]);
+                    continue;
+                }
                 target[key] = JSON.parse(JSON.stringify(source[key]));
             }
         }
