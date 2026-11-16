@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS hook: đã tắt cho trang web này"
   },
+  "detectionScrapingTitle": {
+    "message": "Điều này có nghĩa gì với việc thu thập dữ liệu"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Trang trả lời bằng HTTP {0}: lượt truy cập này đã bị từ chối hoặc bị thử thách."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Trang có CAPTCHA: công cụ thu thập phải tránh kích hoạt hoặc giải nó."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Trang kiểm tra trình duyệt bằng JavaScript: yêu cầu HTTP thông thường có thể thất bại, hãy dùng trình duyệt thật."
+  },
+  "detectionScrapingCookies": {
+    "message": "Cookie bảo vệ được đặt: công cụ thu thập phải giữ và gửi lại chúng."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Một dịch vụ chống bot đang giám sát trang này: nhiều yêu cầu hoặc yêu cầu nhanh từ một địa chỉ có thể bị chặn."
+  },
   "tipCacheExpires": {
     "message": "Hết hạn"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "Lịch sử"
   },
+  "storageBulkRuns": {
+    "message": "Các lần quét hàng loạt"
+  },
   "storageRules": {
     "message": "Quy tắc và danh mục"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "Đã xóa bản ghi của công cụ"
+  },
+  "storageClearBulkTitle": {
+    "message": "Xóa các lần quét hàng loạt"
+  },
+  "storageClearBulkMessage": {
+    "message": "Các lần quét hàng loạt đã xong được giữ lại để so sánh với lần chạy tiếp theo của một danh sách sẽ bị xóa. Lịch sử, quy tắc và cài đặt không bị ảnh hưởng."
+  },
+  "storageBulkCleared": {
+    "message": "Đã xóa các lần quét hàng loạt"
   },
   "storageClearFailed": {
     "message": "Không thể xóa. Hãy thử lại."
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "Mở {0} trong Lịch sử"
   },
+  "statsSectionSite": {
+    "message": "Trang web"
+  },
+  "statsSiteReport": {
+    "message": "Báo cáo trang web"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Báo cáo trang web: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Trang: {0} · Lượt quét: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Cũng được lưu dưới tên: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Mọi lượt quét đã lưu của trang web này, bất kể khoảng thời gian. Địa chỉ có và không có www được tính là một trang web."
+  },
+  "statsSiteProtections": {
+    "message": "Biện pháp bảo vệ trên trang web này"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Lần thấy đầu tiên"
+  },
+  "statsScansColumn": {
+    "message": "Lượt quét"
+  },
+  "statsSiteTimeline": {
+    "message": "Dòng thời gian"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Đang hiển thị {0} lượt quét gần nhất trong {1}."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "đã phát hiện"
+  },
+  "statsSiteNotFound": {
+    "message": "không phát hiện"
+  },
+  "statsSiteStatuses": {
+    "message": "Trạng thái HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "Trạng thái HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Lượt quét không rõ trạng thái: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Các trang có biện pháp bảo vệ thay đổi"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Ngày quét"
+  },
+  "statsSiteNoChanges": {
+    "message": "Không có lượt quét đã lưu nào của trang web này thay đổi biện pháp bảo vệ."
+  },
+  "statsSiteNoProtections": {
+    "message": "Không tìm thấy biện pháp bảo vệ nào trong các lượt quét đã lưu của trang web này."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Không có lượt quét đã lưu nào của {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Hiện trong Lịch sử"
+  },
   "historyCompare": {
     "message": "So sánh với…"
   },
   "historyCompareNone": {
     "message": "Không có lần quét đã lưu nào khác của trang này để so sánh"
   },
+  "historyCompareNoneAny": {
+    "message": "Không có lần quét đã lưu nào khác để so sánh"
+  },
   "historyCompareTitle": {
     "message": "So sánh các lần quét"
   },
   "historyCompareWith": {
     "message": "So sánh với"
+  },
+  "historyCompareScopePage": {
+    "message": "Trang này"
+  },
+  "historyCompareScopeAny": {
+    "message": "Trang bất kỳ"
+  },
+  "historyCompareSearch": {
+    "message": "Lọc theo địa chỉ hoặc tiêu đề"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · tìm thấy {1}"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "Quét lại các trang thất bại"
   },
+  "bulkRunAgain": {
+    "message": "Chạy lại"
+  },
   "bulkFilterLabel": {
     "message": "Hiển thị",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "Trạng thái lỗi (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Thay đổi so với lần chạy trước"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Chỉ {0}"
   },
   "bulkCopyLines": {
     "message": "Sao chép theo dòng"
+  },
+  "bulkCompareExport": {
+    "message": "So sánh với một tệp xuất…"
   },
   "bulkFilterNone": {
     "message": "Không có trang nào khớp với bộ lọc này."
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "Địa chỉ"
+  },
+  "bulkColPrevious": {
+    "message": "So với lần chạy trước"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Không đổi"
+  },
+  "bulkPrevNew": {
+    "message": "Không có trong lần chạy trước"
   },
   "bulkStatusWaiting": {
     "message": "Đang chờ"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "Đã xong {0}/{1}"
   },
+  "bulkStoredFmt": {
+    "message": "Kết quả của lần chạy lúc {0}"
+  },
   "bulkCountsFmt": {
     "message": "Xong: {0} · Có bảo vệ: {1} · Thất bại: {2} · Bỏ qua: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Các dòng khác bị bỏ ra: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Đã so sánh với lần chạy lúc {0}. Số trang thay đổi: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Lịch sử đang tạm dừng: các trang vẫn được quét nhưng không được ghi lại."
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "Không đọc được tệp."
+  },
+  "bulkErrCompareFile": {
+    "message": "Tệp này không phải tệp JSON xuất từ quét hàng loạt."
   },
   "bulkEmpty": {
     "message": "Dán địa chỉ hoặc tải lên một tệp, rồi chọn Bắt đầu."

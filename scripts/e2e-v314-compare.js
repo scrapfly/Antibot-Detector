@@ -379,7 +379,8 @@ async function scenario(name, fn) {
     assert.equal(unchanged.toggle.controls, unchanged.list.id);
     assert.equal(unchanged.list.display, 'none');
     assert.equal(unchanged.rows.length, 9);
-    assert.ok(m.dialog.height < 400, `the dialog is short with Unchanged folded (it was about 490px with nine rows): ${Math.round(m.dialog.height)}px`);
+    // 3.2.0: the This page / Any page pills make the label's line a few pixels taller (about 396px before, 401px with them)
+    assert.ok(m.dialog.height < 410, `the dialog is short with Unchanged folded (it was about 490px with nine rows): ${Math.round(m.dialog.height)}px`);
     assertFits(m, 'one folded');
     await closeCompare(page);
     await page.close();
@@ -419,11 +420,13 @@ async function scenario(name, fn) {
     // Focus order
     await page.focus('.history-compare select');
     const order = [];
-    for (let i = 0; i < 7; i++) {
+    // 3.2.0: "This page" and "Any page" sit above the list, so the Tab order wraps through them to the list
+    for (let i = 0; i < 9; i++) {
       await page.keyboard.press('Tab');
-      order.push(await page.evaluate(() => { const a = document.activeElement; return a.tagName === 'SELECT' ? 'select' : (a.className.match(/history-compare-copy|history-compare-result|history-compare-toggle|notification-btn-cancel|notification-btn-confirm|notification-confirm-close/) || [a.className])[0]; }));
+      order.push(await page.evaluate(() => { const a = document.activeElement; return a.tagName === 'SELECT' ? 'select' : (a.className.match(/history-compare-scope-btn|history-compare-copy|history-compare-result|history-compare-toggle|notification-btn-cancel|notification-btn-confirm|notification-confirm-close/) || [a.className])[0]; }));
     }
-    assert.deepEqual(order, ['history-compare-copy', 'history-compare-result', 'history-compare-toggle', 'notification-btn-cancel', 'notification-btn-confirm', 'notification-confirm-close', 'select'], 'the dialog keeps focus inside, in reading order');
+    assert.deepEqual(order, ['history-compare-copy', 'history-compare-result', 'history-compare-toggle', 'notification-btn-cancel', 'notification-btn-confirm', 'notification-confirm-close',
+      'history-compare-scope-btn', 'history-compare-scope-btn', 'select'], `the dialog keeps focus inside, in reading order: ${order.join(', ')}`);
     // Enter on the Copy button still copies and closes
     await page.focus('.notification-btn-confirm');
     await page.keyboard.press('Enter');
@@ -598,6 +601,63 @@ async function scenario(name, fn) {
       }
       await closeCompare(page);
     }
+    await page.close();
+  });
+
+  // ===============================================================================================
+  await scenario('3.2.0 Any page: the pills switch the list, each scan names its page, the filter narrows it, both pages are named and copied', async () => {
+    const page = await historyPage();
+    await openCompare(page, CASES.mix.id);
+    const state = () => page.evaluate(() => {
+      const pills = [...document.querySelectorAll('.history-compare-scope-btn')];
+      const search = document.querySelector('.history-compare-search');
+      const select = document.querySelector('.history-compare select');
+      return {
+        pills: pills.map(b => [b.textContent, b.getAttribute('aria-pressed'), b.getBoundingClientRect().height]),
+        searchShown: getComputedStyle(search).display !== 'none', searchName: search.getAttribute('aria-label'),
+        options: [...select.options].map(o => [o.value, o.textContent]), selected: select.value, disabled: select.disabled,
+        headLines: Math.round(document.querySelector('.history-compare-head').getBoundingClientRect().height)
+      };
+    });
+    let s = await state();
+    assert.deepEqual(s.pills.map(p => p.slice(0, 2)), [['This page', 'true'], ['Any page', 'false']]);
+    assert.ok(s.pills.every(p => p[2] <= 22), 'small pills');
+    assert.ok(s.headLines <= 24, `the label and the pills are one line: ${s.headLines}px`);
+    assert.equal(s.searchShown, false);
+    assert.deepEqual(s.options.map(o => o[0]), ['mix-before', 'mix-oldest']);
+    await page.click('.history-compare-scope-btn:nth-child(2)');
+    s = await state();
+    assert.deepEqual(s.pills.map(p => p[1]), ['false', 'true']);
+    assert.equal(s.searchShown, true);
+    assert.equal(s.searchName, 'Filter by address or title');
+    assert.equal(s.options.length, SEED.length - 1, 'every other scan');
+    assert.equal(s.selected, 'mix-before', 'the scan picked stays picked');
+    assert.ok(s.options.find(o => o[0] === 'same-now')[1].endsWith(' · news.example/front'), 'each scan names its page');
+    let m = await read(page);
+    assertFits(m, 'any page');
+    await shot(page, 'any-page-en-dark');
+    await page.fill('.history-compare-search', 'news.example');
+    s = await state();
+    assert.deepEqual(s.options.map(o => o[0]), ['same-now', 'same-before']);
+    assert.equal(s.selected, 'same-now');
+    m = await read(page);
+    assert.equal(m.where.shown, true);
+    assert.equal(m.where.text, 'news.example/front → shop.example/cart', 'both pages, the earlier first');
+    assert.deepEqual(m.chips.map(c => c.text), ['Added4', 'Removed0', 'Changed1', 'Unchanged5']);
+    assertFits(m, 'any page filtered');
+    await page.$eval('.history-compare-copy', el => el.click());
+    await page.waitForFunction(() => globalThis.__copied.length === 1, null, { timeout: 5000 });
+    assert.ok((await page.evaluate(() => globalThis.__copied[0])).startsWith('news.example/front → shop.example/cart: '), 'the summary names both pages');
+    await page.fill('.history-compare-search', 'no such page anywhere');
+    s = await state();
+    assert.equal(s.disabled, true);
+    assert.deepEqual(s.options.map(o => o[1]), ['No entries match your search or filters.']);
+    assert.equal(await page.$eval('.history-compare-copy', el => el.disabled), true);
+    await page.fill('.history-compare-search', 'news front');
+    await page.$eval('.notification-btn-confirm', el => el.click());
+    await page.waitForFunction(() => globalThis.__copied.length === 2, null, { timeout: 5000 });
+    const md = await page.evaluate(() => globalThis.__copied[1]);
+    assert.ok(md.startsWith('## Compare scans: news.example → shop.example\n\nhttps://news.example/front → https://shop.example/cart\n\n'), md.slice(0, 160));
     await page.close();
   });
 

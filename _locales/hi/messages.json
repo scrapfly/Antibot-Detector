@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS हुक: इस साइट के लिए बंद"
   },
+  "detectionScrapingTitle": {
+    "message": "स्क्रेपिंग के लिए इसका मतलब"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "पेज ने HTTP {0} से जवाब दिया: यह विज़िट अस्वीकार की गई या जाँच में डाली गई।"
+  },
+  "detectionScrapingCaptcha": {
+    "message": "पेज पर CAPTCHA है: स्क्रेपर को इसे ट्रिगर होने से बचाना होगा या हल करना होगा।"
+  },
+  "detectionScrapingBrowser": {
+    "message": "पेज JavaScript से ब्राउज़र की जाँच करता है: सामान्य HTTP अनुरोध शायद विफल होंगे, असली ब्राउज़र इस्तेमाल करें।"
+  },
+  "detectionScrapingCookies": {
+    "message": "सुरक्षा कुकीज़ सेट की जाती हैं: स्क्रेपर को इन्हें रखना और वापस भेजना होगा।"
+  },
+  "detectionScrapingAntibot": {
+    "message": "इस साइट पर एक एंटी-बॉट सेवा नज़र रखती है: एक ही पते से बहुत ज़्यादा या तेज़ अनुरोध ब्लॉक हो सकते हैं।"
+  },
   "tipCacheExpires": {
     "message": "समाप्ति"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "इतिहास"
   },
+  "storageBulkRuns": {
+    "message": "बल्क स्कैन रन"
+  },
   "storageRules": {
     "message": "नियम और श्रेणियाँ"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "टूल कैप्चर हटा दिए गए"
+  },
+  "storageClearBulkTitle": {
+    "message": "बल्क स्कैन रन साफ़ करें"
+  },
+  "storageClearBulkMessage": {
+    "message": "सूची के अगले रन से तुलना के लिए रखे गए पूरे हो चुके बल्क स्कैन रन हटा दिए जाते हैं। इतिहास, नियम और सेटिंग्स पर कोई असर नहीं पड़ता।"
+  },
+  "storageBulkCleared": {
+    "message": "बल्क स्कैन रन साफ़ कर दिए गए"
   },
   "storageClearFailed": {
     "message": "साफ़ नहीं हो सका। फिर से कोशिश करें।"
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "{0} को इतिहास में खोलें"
   },
+  "statsSectionSite": {
+    "message": "साइट"
+  },
+  "statsSiteReport": {
+    "message": "साइट रिपोर्ट"
+  },
+  "statsSiteReportForFmt": {
+    "message": "साइट रिपोर्ट: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "पेज: {0} · स्कैन: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "इस नाम से भी सहेजा गया: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "इस साइट का हर सहेजा गया स्कैन, तारीख़ की अवधि चाहे जो हो। www वाले और बिना www वाले पते एक ही साइट गिने जाते हैं।"
+  },
+  "statsSiteProtections": {
+    "message": "इस साइट पर सुरक्षा उपाय"
+  },
+  "statsFirstSeenColumn": {
+    "message": "पहली बार दिखा"
+  },
+  "statsScansColumn": {
+    "message": "स्कैन"
+  },
+  "statsSiteTimeline": {
+    "message": "समयरेखा"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "{1} में से नवीनतम {0} स्कैन दिखाए जा रहे हैं।"
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "मिला"
+  },
+  "statsSiteNotFound": {
+    "message": "नहीं मिला"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP स्थितियाँ"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP स्थिति"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "बिना ज्ञात स्थिति वाले स्कैन: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "वे पेज जिनके सुरक्षा उपाय बदले"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "स्कैन की तारीख़"
+  },
+  "statsSiteNoChanges": {
+    "message": "इस साइट के किसी सहेजे गए स्कैन ने अपने सुरक्षा उपाय नहीं बदले।"
+  },
+  "statsSiteNoProtections": {
+    "message": "इस साइट के सहेजे गए स्कैन में कोई सुरक्षा उपाय नहीं मिला।"
+  },
+  "statsSiteEmptyFmt": {
+    "message": "{0} का कोई सहेजा गया स्कैन नहीं है।"
+  },
+  "statsSiteOpenHistory": {
+    "message": "इतिहास में दिखाएँ"
+  },
   "historyCompare": {
     "message": "इससे तुलना करें…"
   },
   "historyCompareNone": {
     "message": "तुलना के लिए इस पेज का कोई और सहेजा गया स्कैन नहीं है"
   },
+  "historyCompareNoneAny": {
+    "message": "तुलना के लिए कोई और सहेजा गया स्कैन नहीं है"
+  },
   "historyCompareTitle": {
     "message": "स्कैन की तुलना"
   },
   "historyCompareWith": {
     "message": "इससे तुलना करें"
+  },
+  "historyCompareScopePage": {
+    "message": "यह पेज"
+  },
+  "historyCompareScopeAny": {
+    "message": "कोई भी पेज"
+  },
+  "historyCompareSearch": {
+    "message": "पते या शीर्षक से फ़िल्टर करें"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · मिले: {1}"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "विफल पेज दोबारा स्कैन करें"
   },
+  "bulkRunAgain": {
+    "message": "फिर से चलाएँ"
+  },
   "bulkFilterLabel": {
     "message": "दिखाएँ",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "त्रुटि स्थिति (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "पिछले रन के बाद से बदले हुए"
+  },
   "bulkFilterOnlyFmt": {
     "message": "केवल {0}"
   },
   "bulkCopyLines": {
     "message": "पंक्तियों के रूप में कॉपी करें"
+  },
+  "bulkCompareExport": {
+    "message": "किसी एक्सपोर्ट से तुलना करें…"
   },
   "bulkFilterNone": {
     "message": "कोई पेज इस फ़िल्टर से मेल नहीं खाता।"
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "पता"
+  },
+  "bulkColPrevious": {
+    "message": "पिछले रन की तुलना में"
+  },
+  "bulkPrevUnchanged": {
+    "message": "कोई बदलाव नहीं"
+  },
+  "bulkPrevNew": {
+    "message": "पिछले रन में नहीं था"
   },
   "bulkStatusWaiting": {
     "message": "इंतज़ार में"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "{1} में से {0} पूरे"
   },
+  "bulkStoredFmt": {
+    "message": "{0} के रन के परिणाम"
+  },
   "bulkCountsFmt": {
     "message": "हो गए: {0} · सुरक्षा वाले: {1} · विफल: {2} · छोड़े गए: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "छोड़ी गई दूसरी पंक्तियाँ: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "{0} के रन से तुलना की गई। बदले हुए पेज: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "इतिहास रुका हुआ है: पेज स्कैन होते हैं पर दर्ज नहीं होते।"
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "फ़ाइल पढ़ी नहीं जा सकी।"
+  },
+  "bulkErrCompareFile": {
+    "message": "यह फ़ाइल बल्क स्कैन का JSON एक्सपोर्ट नहीं है।"
   },
   "bulkEmpty": {
     "message": "पते चिपकाएँ या फ़ाइल अपलोड करें, फिर शुरू करें चुनें।"

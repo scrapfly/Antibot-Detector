@@ -5,6 +5,30 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.2.0] - 2026-11-16
+
+### Added
+
+- Statistics: a Site report shows one site over time: every protection with first and last seen, a scan timeline, HTTP statuses and the pages that changed.
+- History entry ⋯ menu and each Statistics → Domains row open that site's report, which exports as Markdown or JSON.
+- History → Compare scans can compare with a scan of any page or site, with a filter by address or title; the result names both pages.
+- Bulk scan: a list scanned before shows what changed on each page since the previous run, with a filter and the changes in every export.
+- Bulk scan: compare a run with an earlier Bulk JSON export.
+- Bulk scan: Run again scans the same list with the same limits and wait.
+- Bulk scan: the last finished run is still shown after a restart, with its exports; Settings → Data lists kept runs, and History's clear on close removes them.
+- Bulk scan: the other columns of an uploaded CSV come back beside the results and in every export.
+- Detection: What was checked also says what the results mean for scraping: blocked, a CAPTCHA, a real browser needed, cookies to keep.
+
+### Changed
+
+- Statistics: a row in Hardest sites now opens that site's report instead of filtering the Domains table.
+
+### Fixed
+
+- Bulk scan: a long wait between pages combined with a long time limit no longer leaves a page stuck on Scanning.
+- Detection details: Copy evidence no longer cuts a page-element selector at its first "=" after the popup is reopened.
+- Detection: What was checked no longer shows another tab's script and request counts when several pages are scanned at once.
+
 ## [3.1.9] - 2026-11-13
 
 ### Added
@@ -1214,6 +1238,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.2.0]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.9...v3.2.0
 [3.1.9]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.8...v3.1.9
 [3.1.8]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.7...v3.1.8
 [3.1.7]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.6...v3.1.7

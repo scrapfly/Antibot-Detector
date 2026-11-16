@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS-hooks: av för den här webbplatsen"
   },
+  "detectionScrapingTitle": {
+    "message": "Vad detta betyder för skrapning"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Sidan svarade med HTTP {0}: besöket nekades eller utmanades."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Det finns en CAPTCHA på sidan: en skrapa måste undvika att utlösa den eller lösa den."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Sidan kontrollerar webbläsaren med JavaScript: vanliga HTTP-förfrågningar misslyckas troligen, använd en riktig webbläsare."
+  },
+  "detectionScrapingCookies": {
+    "message": "Skyddskakor sätts: en skrapa måste spara dem och skicka tillbaka dem."
+  },
+  "detectionScrapingAntibot": {
+    "message": "En anti-bot-tjänst bevakar webbplatsen: många eller snabba förfrågningar från en adress kan blockeras."
+  },
   "tipCacheExpires": {
     "message": "Går ut"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "Historik"
   },
+  "storageBulkRuns": {
+    "message": "Massskanningskörningar"
+  },
   "storageRules": {
     "message": "Regler och kategorier"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "Verktygsinsamlingarna togs bort"
+  },
+  "storageClearBulkTitle": {
+    "message": "Rensa massskanningskörningarna"
+  },
+  "storageClearBulkMessage": {
+    "message": "De avslutade massskanningskörningarna som sparas för att jämföras med nästa körning av en lista tas bort. Historik, regler och inställningar påverkas inte."
+  },
+  "storageBulkCleared": {
+    "message": "Massskanningskörningarna rensades"
   },
   "storageClearFailed": {
     "message": "Det gick inte att rensa. Försök igen."
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "Öppna {0} i Historik"
   },
+  "statsSectionSite": {
+    "message": "Webbplats"
+  },
+  "statsSiteReport": {
+    "message": "Webbplatsrapport"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Webbplatsrapport: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Sidor: {0} · Skanningar: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Även sparad som: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Alla sparade skanningar av den här webbplatsen, oavsett datumintervall. Adresser med och utan www räknas som en webbplats."
+  },
+  "statsSiteProtections": {
+    "message": "Skydd på den här webbplatsen"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Först sedd"
+  },
+  "statsScansColumn": {
+    "message": "Skanningar"
+  },
+  "statsSiteTimeline": {
+    "message": "Tidslinje"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Visar de senaste {0} av {1} skanningar."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "hittad"
+  },
+  "statsSiteNotFound": {
+    "message": "inte hittad"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP-statusar"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP-status"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Skanningar utan känd status: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Sidor vars skydd ändrades"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Skanningsdatum"
+  },
+  "statsSiteNoChanges": {
+    "message": "Ingen sparad skanning av den här webbplatsen ändrade sina skydd."
+  },
+  "statsSiteNoProtections": {
+    "message": "Inga skydd hittades i den här webbplatsens sparade skanningar."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Inga sparade skanningar av {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Visa i Historik"
+  },
   "historyCompare": {
     "message": "Jämför med…"
   },
   "historyCompareNone": {
     "message": "Det finns ingen annan sparad skanning av den här sidan att jämföra med"
   },
+  "historyCompareNoneAny": {
+    "message": "Det finns ingen annan sparad skanning att jämföra med"
+  },
   "historyCompareTitle": {
     "message": "Jämför skanningar"
   },
   "historyCompareWith": {
     "message": "Jämför med"
+  },
+  "historyCompareScopePage": {
+    "message": "Den här sidan"
+  },
+  "historyCompareScopeAny": {
+    "message": "Valfri sida"
+  },
+  "historyCompareSearch": {
+    "message": "Filtrera efter adress eller titel"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · {1} skydd"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "Skanna om sidorna som misslyckades"
   },
+  "bulkRunAgain": {
+    "message": "Kör igen"
+  },
   "bulkFilterLabel": {
     "message": "Visa",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "Felstatus (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Ändrade sedan föregående körning"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Bara {0}"
   },
   "bulkCopyLines": {
     "message": "Kopiera som rader"
+  },
+  "bulkCompareExport": {
+    "message": "Jämför med en export…"
   },
   "bulkFilterNone": {
     "message": "Ingen sida matchar det här filtret."
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "Adress"
+  },
+  "bulkColPrevious": {
+    "message": "Jämfört med föregående körning"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Oförändrad"
+  },
+  "bulkPrevNew": {
+    "message": "Fanns inte i föregående körning"
   },
   "bulkStatusWaiting": {
     "message": "Väntar"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "{0} av {1} klara"
   },
+  "bulkStoredFmt": {
+    "message": "Resultat av körningen från {0}"
+  },
   "bulkCountsFmt": {
     "message": "Klara: {0} · Med skydd: {1} · Misslyckade: {2} · Överhoppade: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Andra utelämnade rader: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Jämförd med körningen från {0}. Ändrade sidor: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Historiken är pausad: sidorna skannas men sparas inte."
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "Det gick inte att läsa filen."
+  },
+  "bulkErrCompareFile": {
+    "message": "Den här filen är inte en JSON-export från massskanningen."
   },
   "bulkEmpty": {
     "message": "Klistra in adresser eller ladda upp en fil och välj sedan Starta."

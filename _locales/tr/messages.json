@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS hook'ları: bu site için kapalı"
   },
+  "detectionScrapingTitle": {
+    "message": "Bunun kazıma için anlamı"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Sayfa HTTP {0} ile yanıt verdi: bu ziyaret reddedildi veya doğrulamaya alındı."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Sayfada bir CAPTCHA var: bir kazıyıcı onu tetiklemekten kaçınmalı ya da çözmeli."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Sayfa tarayıcıyı JavaScript ile denetliyor: düz HTTP istekleri büyük olasılıkla başarısız olur, gerçek bir tarayıcı kullanın."
+  },
+  "detectionScrapingCookies": {
+    "message": "Koruma çerezleri ayarlanıyor: bir kazıyıcı bunları saklamalı ve geri göndermeli."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Bu siteyi bir anti-bot hizmeti izliyor: tek bir adresten gelen çok sayıda veya hızlı istek engellenebilir."
+  },
   "tipCacheExpires": {
     "message": "Sona erer"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "Geçmiş"
   },
+  "storageBulkRuns": {
+    "message": "Toplu tarama çalıştırmaları"
+  },
   "storageRules": {
     "message": "Kurallar ve kategoriler"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "Araç yakalamaları silindi"
+  },
+  "storageClearBulkTitle": {
+    "message": "Toplu tarama çalıştırmalarını temizle"
+  },
+  "storageClearBulkMessage": {
+    "message": "Bir listenin sonraki çalıştırmasıyla karşılaştırmak için saklanan tamamlanmış toplu tarama çalıştırmaları silinir. Geçmiş, kurallar ve ayarlar değişmez."
+  },
+  "storageBulkCleared": {
+    "message": "Toplu tarama çalıştırmaları temizlendi"
   },
   "storageClearFailed": {
     "message": "Temizlenemedi. Yeniden deneyin."
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "{0} sitesini Geçmiş'te aç"
   },
+  "statsSectionSite": {
+    "message": "Site"
+  },
+  "statsSiteReport": {
+    "message": "Site raporu"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Site raporu: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Sayfalar: {0} · Taramalar: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Şu adla da kaydedildi: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Tarih aralığı ne olursa olsun bu sitenin tüm kayıtlı taramaları. www ile ve www olmadan yazılan adresler tek site sayılır."
+  },
+  "statsSiteProtections": {
+    "message": "Bu sitedeki korumalar"
+  },
+  "statsFirstSeenColumn": {
+    "message": "İlk görülme"
+  },
+  "statsScansColumn": {
+    "message": "Taramalar"
+  },
+  "statsSiteTimeline": {
+    "message": "Zaman çizelgesi"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "{1} taramanın en son {0} tanesi gösteriliyor."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "bulundu"
+  },
+  "statsSiteNotFound": {
+    "message": "bulunmadı"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP durumları"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP durumu"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Durumu bilinmeyen taramalar: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Korumaları değişen sayfalar"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Tarama tarihi"
+  },
+  "statsSiteNoChanges": {
+    "message": "Bu sitenin hiçbir kayıtlı taraması korumalarını değiştirmedi."
+  },
+  "statsSiteNoProtections": {
+    "message": "Bu sitenin kayıtlı taramalarında koruma bulunamadı."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "{0} için kayıtlı tarama yok."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Geçmiş'te göster"
+  },
   "historyCompare": {
     "message": "Şununla karşılaştır…"
   },
   "historyCompareNone": {
     "message": "Bu sayfanın karşılaştırılacak başka kayıtlı taraması yok"
   },
+  "historyCompareNoneAny": {
+    "message": "Karşılaştırılacak başka kayıtlı tarama yok"
+  },
   "historyCompareTitle": {
     "message": "Taramaları karşılaştır"
   },
   "historyCompareWith": {
     "message": "Karşılaştırılacak tarama"
+  },
+  "historyCompareScopePage": {
+    "message": "Bu sayfa"
+  },
+  "historyCompareScopeAny": {
+    "message": "Herhangi bir sayfa"
+  },
+  "historyCompareSearch": {
+    "message": "Adrese veya başlığa göre filtrele"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · bulunan: {1}"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "Başarısız olan sayfaları yeniden tara"
   },
+  "bulkRunAgain": {
+    "message": "Yeniden çalıştır"
+  },
   "bulkFilterLabel": {
     "message": "Göster",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "Hata durumu (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Önceki çalıştırmadan beri değişenler"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Yalnızca {0}"
   },
   "bulkCopyLines": {
     "message": "Satırlar olarak kopyala"
+  },
+  "bulkCompareExport": {
+    "message": "Bir dışa aktarımla karşılaştır…"
   },
   "bulkFilterNone": {
     "message": "Bu filtreyle eşleşen sayfa yok."
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "Adres"
+  },
+  "bulkColPrevious": {
+    "message": "Önceki çalıştırmaya göre"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Değişmedi"
+  },
+  "bulkPrevNew": {
+    "message": "Önceki çalıştırmada yoktu"
   },
   "bulkStatusWaiting": {
     "message": "Bekliyor"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "{1} sayfadan {0} tanesi bitti"
   },
+  "bulkStoredFmt": {
+    "message": "{0} tarihli çalıştırmanın sonuçları"
+  },
   "bulkCountsFmt": {
     "message": "Biten: {0} · Korumalı: {1} · Başarısız: {2} · Atlanan: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Dışarıda kalan diğer satırlar: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "{0} tarihli çalıştırmayla karşılaştırıldı. Değişen sayfalar: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Geçmiş duraklatıldı: sayfalar taranır ama kaydedilmez."
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "Dosya okunamadı."
+  },
+  "bulkErrCompareFile": {
+    "message": "Bu dosya bir toplu tarama JSON dışa aktarımı değil."
   },
   "bulkEmpty": {
     "message": "Adresleri yapıştırın veya bir dosya yükleyin, ardından Başlat’ı seçin."

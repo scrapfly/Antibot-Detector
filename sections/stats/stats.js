@@ -7,16 +7,18 @@
   const U = StatsUI;
   const { byId, tr, fmt, num, share, element } = U;
   const V = StatsViews;
-  const SECTIONS = ['overview', 'protections', 'domains', 'evidence', 'activity', 'rules', 'tools'];
+  const SECTIONS = ['overview', 'protections', 'domains', 'evidence', 'activity', 'rules', 'tools', 'site'];
   const SUBS = ['confidence', 'signals', 'combinations'];
   const RANGE_KEY = 'scrapfly_stats_range';
   const SECTION_KEY = 'scrapfly_stats_section';
   const SUB_KEY = 'scrapfly_stats_sub';
   const SCOPE_KEY = 'scrapfly_stats_scope';
   /** Rows shown before "Show more", per list. Rule lists can hold most of the library, so they page shorter. */
-  const PAGE = { protection: 50, domain: 50, signal: 50, combination: 50, unused: 15, missing: 15, change: 20, capture: 50 };
+  const PAGE = { protection: 50, domain: 50, signal: 50, combination: 50, unused: 15, missing: 15, change: 20, capture: 50, siteChange: 20 };
   /** The Rules and Tools tabs ignore the category scope. */
   const INERT_SECTIONS = ['rules', 'tools'];
+  /** Tabs that read every saved scan, whatever the date range: they show no range line, no comparison and no low-data note. */
+  const ALL_DATES_SECTIONS = ['tools', 'site'];
   /** Tabs that compare with the previous period. */
   const COMPARE_SECTIONS = ['overview', 'protections', 'domains'];
   const CHIP_ORDER = Categories.KEYS_AND_OTHER;
@@ -29,8 +31,10 @@
   const state = { items: [], scope: new Set(HistoryStats.DEFAULT_SCOPE), scoped: [], days: 30, section: 'overview', sub: 'confidence',
     now: 0, exporting: false, loadVersion: 0, historyVersion: 0, d: null, cache: { key: '', stats: null },
     rules: [], captures: [], incompatible: [], officialIds: new Set(), bundledOfficialIds: [], descriptions: new Map(),
-    limits: { ...PAGE }, protectionSort: 'pages', domain: { query: '', protection: '', sort: 'hardest', difficulty: new Set(), captcha: false, changed: false } };
-  const app = { state, PAGE, go: section => selectSection(section), openDomain, openProtection, openHistory, isOfficialRule,
+    limits: { ...PAGE }, protectionSort: 'pages', domain: { query: '', protection: '', sort: 'hardest', difficulty: new Set(), captcha: false, changed: false },
+    site: '', siteCache: null };
+  const app = { state, PAGE, go: section => selectSection(section), openDomain, openProtection, openHistory, openSite, isOfficialRule,
+    status: (message, error) => status(message, error), updateExportButtons: () => updateExportButtons(),
     get d() { return state.d; } };
 
   function isOfficialRule(detector) {
@@ -98,6 +102,8 @@
       if (SUBS.includes(stored[SUB_KEY])) state.sub = stored[SUB_KEY];
       restoreSection(stored[SECTION_KEY]);
       state.scope = validScope(stored[SCOPE_KEY]) || new Set(HistoryStats.DEFAULT_SCOPE);
+      // stats.html?site=shop.example (History → ⋯ → Site report): that site's report first
+      if (state.site) state.section = 'site';
     }
     applyColors(stored.scrapfly_settings);
     applyScope();
@@ -147,20 +153,29 @@
   function updateExportButtons() {
     const none = state.exporting || !state.d || !state.d.stats.totals.entries;
     document.querySelectorAll('[data-export]').forEach(button => { button.disabled = none; });
+    const site = !state.exporting && !!(state.site && state.siteCache && state.siteCache.report.scans);
+    byId('statsSiteExportMd').disabled = !site;
+    byId('statsSiteExportJson').disabled = !site;
+  }
+  /** The tabs, or the empty state when the open tab has nothing to show: the range for most tabs, the whole History for a site. */
+  function syncContent() {
+    const d = state.d;
+    if (!d) return false;
+    const has = state.section === 'site' ? state.items.length > 0 : d.selectedAll.length > 0;
+    byId('statsContent').hidden = !has;
+    byId('statsEmpty').hidden = has;
+    byId('statsBar').classList.toggle('is-empty', !has);
+    U.setText('statsEmptyTitle', state.items.length ? tr('statsRangeEmptyTitle', 'No entries in this range') : tr('statsEmptyTitle', 'No history yet'));
+    U.setText('statsEmptyDesc', state.items.length ? tr('statsRangeEmptyDesc', 'Choose a longer date range to explore your saved history.') : tr('statsEmptyDesc', 'Statistics appear here once pages with detections are saved to the history.'));
+    // Only an empty range has a way out: there is history, just not here
+    byId('statsEmptyAll').hidden = has || !state.items.length || !state.days;
+    return has;
   }
   function render() {
     U.hideTooltip();
     const d = state.d = derive();
     state.now = d.now;
-    const has = d.selectedAll.length > 0;
-    byId('statsContent').hidden = !has;
-    byId('statsEmpty').hidden = has;
-    byId('statsBar').classList.toggle('is-empty', !has);
     byId('statsFilters').hidden = false;
-    U.setText('statsEmptyTitle', state.items.length ? tr('statsRangeEmptyTitle', 'No entries in this range') : tr('statsEmptyTitle', 'No history yet'));
-    U.setText('statsEmptyDesc', state.items.length ? tr('statsRangeEmptyDesc', 'Choose a longer date range to explore your saved history.') : tr('statsEmptyDesc', 'Statistics appear here once pages with detections are saved to the history.'));
-    // Only an empty range has a way out: there is history, just not here
-    byId('statsEmptyAll').hidden = has || !state.items.length || !state.days;
     U.setText('statsExportScope', fmt('statsExportScopeFmt', 'Export the selected range: {0} entries', num(d.selectedAll.length)));
     document.querySelectorAll('[data-days]').forEach(button => {
       const active = Number(button.dataset.days) === state.days;
@@ -169,16 +184,20 @@
     });
     byId('stats-tab-tools').hidden = !state.captures.length;
     if (state.section === 'tools' && !state.captures.length) state.section = 'overview';
-    updateExportButtons();
+    byId('stats-tab-site').hidden = !state.site;
+    if (state.section === 'site' && !state.site) state.section = 'overview';
+    syncContent();
     finishLoading();
     showSection(state.section);
     renderFilters();
     renderActive();
+    updateExportButtons();
     syncToolsTimer();
   }
   function renderActive() {
     if (!state.d || byId('statsContent').hidden) return;
     V[state.section].render(app);
+    if (state.section === 'site') updateExportButtons();
     const width = byId('statsContent').getBoundingClientRect().width;
     if (Number.isFinite(width)) lastWidth = width;
   }
@@ -220,14 +239,17 @@
   }
   function selectSection(section, save = true) {
     if (!SECTIONS.includes(section)) return;
-    // Tools is only offered when Advanced has saved something
+    // Tools is only offered when Advanced has saved something, Site once a site is open
     if (section === 'tools' && !state.captures.length) section = 'overview';
+    if (section === 'site' && !state.site) section = 'overview';
     state.section = section;
     U.hideTooltip();
     if (state.keepOneShown) { status(''); state.keepOneShown = false; } // the "keep one category" note belongs to the moment it was shown
+    syncContent();
     showSection(section);
     if (state.d) { renderFilters(); renderActive(); }
-    if (save) persist(SECTION_KEY, section);
+    // A site is opened by a link, never restored: the next visit opens the tab the person last chose
+    if (save && section !== 'site') persist(SECTION_KEY, section);
     syncToolsTimer();
   }
   function selectSub(sub, save = true) {
@@ -248,6 +270,14 @@
     selectSection('domains');
   }
   function openDomain(hostname) { showDomains(hostname); }
+  /** A site's report on the Site tab: www and the bare host as one site. */
+  function openSite(hostname) {
+    const site = SiteReport.siteOf(hostname);
+    if (!site) return;
+    if (site !== state.site) { state.site = site; state.limits.siteChange = PAGE.siteChange; }
+    byId('stats-tab-site').hidden = false;
+    selectSection('site');
+  }
   /** A protection of the Protections table: the domains that have it. */
   function openProtection(name) { showDomains(name, name); }
   /** A site's History: the popup page in a tab, on its History tab, searched for the host (popup.js routeFrom). */
@@ -270,7 +300,7 @@
     if (!d) return;
     const section = state.section, inert = INERT_SECTIONS.includes(section);
     // Tools ignores the scope and the range alike: there is nothing here to filter
-    byId('statsFilters').classList.toggle('is-empty', !d.selectedAll.length || section === 'tools');
+    byId('statsFilters').classList.toggle('is-empty', section === 'site' ? !state.items.length : !d.selectedAll.length || section === 'tools');
     const scope = byId('statsScope');
     scope.classList.toggle('is-inert', inert);
     if (inert) scope.setAttribute('aria-disabled', 'true'); else scope.removeAttribute('aria-disabled');
@@ -290,7 +320,7 @@
     const t = d.stats.totals, oldest = d.firstSeen.oldestTs;
     const range = d.days ? U.rangeText(d.since, d.now)
       : oldest !== null ? fmt('statsRangeSinceFmt', 'All history since {0}', U.dateText(oldest)) : tr('statsRangeAll', 'All');
-    U.setText('statsContext', section === 'tools' ? '' : fmt('statsContextFmt', 'Pages: {0} · Domains: {1} · {2} · {3}', num(t.entries), num(t.uniqueDomains), range, U.list(scopeNames(inert))));
+    U.setText('statsContext', ALL_DATES_SECTIONS.includes(section) ? '' : fmt('statsContextFmt', 'Pages: {0} · Domains: {1} · {2} · {3}', num(t.entries), num(t.uniqueDomains), range, U.list(scopeNames(inert))));
     let compare = '';
     if (COMPARE_SECTIONS.includes(section)) {
       const prev = d.prevWindow;
@@ -299,7 +329,7 @@
       else if (prev && prev.oldest !== null) compare = fmt('statsCompareIncompleteFmt', 'History starts on {0}, so there is no full previous period to compare.', U.dateText(prev.oldest));
     }
     U.setText('statsCompare', compare);
-    const low = section !== 'tools' && d.selectedAll.length > 0 && d.selectedAll.length < SMALL_HISTORY;
+    const low = !ALL_DATES_SECTIONS.includes(section) && d.selectedAll.length > 0 && d.selectedAll.length < SMALL_HISTORY;
     byId('statsLowData').hidden = !low;
     if (low) U.setText('statsLowData', fmt('statsLowDataFmt', 'Few pages in this range ({0}): comparisons and rankings may mislead.', num(d.selectedAll.length)));
   }
@@ -485,6 +515,17 @@
     V.domains.init(app);
     V.evidence.init(app);
     V.rules.init(app);
+    V.site.init(app);
+  }
+
+  /** The site the page address asks for (?site=<host>), '' when none. */
+  function siteFromAddress() {
+    try {
+      const search = typeof location !== 'undefined' && typeof location.search === 'string' ? location.search : '';
+      return SiteReport.siteOf(String(new URLSearchParams(search).get('site') || '').slice(0, 253));
+    } catch (_) {
+      return '';
+    }
   }
 
   async function init() {
@@ -500,6 +541,7 @@
     document.title = tr('settingsHistoryStatsTitle', 'History statistics') + ' · Scrapfly';
     document.documentElement.lang = U.locale();
     document.documentElement.dir = I18n.dir();
+    state.site = siteFromAddress();
     wire();
     chrome.storage.onChanged.addListener((changes, area) => {
       if (area !== 'local') return;

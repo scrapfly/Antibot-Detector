@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS フック: このサイトではオフ"
   },
+  "detectionScrapingTitle": {
+    "message": "スクレイピングにとっての意味"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "ページは HTTP {0} を返しました: このアクセスは拒否されたかチャレンジを受けました。"
+  },
+  "detectionScrapingCaptcha": {
+    "message": "ページに CAPTCHA があります: スクレイパーは発動を避けるか、解く必要があります。"
+  },
+  "detectionScrapingBrowser": {
+    "message": "ページは JavaScript でブラウザーを確認しています: 単純な HTTP リクエストは失敗しやすいため、実際のブラウザーを使ってください。"
+  },
+  "detectionScrapingCookies": {
+    "message": "保護用の Cookie が設定されます: スクレイパーはそれを保持して送り返す必要があります。"
+  },
+  "detectionScrapingAntibot": {
+    "message": "このサイトはアンチボットサービスが監視しています: 1 つのアドレスからの大量または高速なリクエストはブロックされる場合があります。"
+  },
   "tipCacheExpires": {
     "message": "有効期限"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "履歴"
   },
+  "storageBulkRuns": {
+    "message": "一括スキャンの実行"
+  },
   "storageRules": {
     "message": "ルールとカテゴリ"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "ツールのキャプチャを削除しました"
+  },
+  "storageClearBulkTitle": {
+    "message": "一括スキャンの実行を消去"
+  },
+  "storageClearBulkMessage": {
+    "message": "リストの次回の実行と比較するために保存されている、完了した一括スキャンの実行を削除します。履歴、ルール、設定は変更されません。"
+  },
+  "storageBulkCleared": {
+    "message": "一括スキャンの実行を消去しました"
   },
   "storageClearFailed": {
     "message": "クリアできませんでした。もう一度お試しください。"
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "{0} を履歴で開く"
   },
+  "statsSectionSite": {
+    "message": "サイト"
+  },
+  "statsSiteReport": {
+    "message": "サイトレポート"
+  },
+  "statsSiteReportForFmt": {
+    "message": "サイトレポート: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "ページ: {0} · スキャン: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "別名での保存: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "期間の設定にかかわらず、このサイトの保存済みスキャンすべてが対象です。www の有無が異なるアドレスは同じサイトとして数えます。"
+  },
+  "statsSiteProtections": {
+    "message": "このサイトの保護機能"
+  },
+  "statsFirstSeenColumn": {
+    "message": "初回確認"
+  },
+  "statsScansColumn": {
+    "message": "スキャン"
+  },
+  "statsSiteTimeline": {
+    "message": "タイムライン"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "{1} 件中、最新 {0} 件のスキャンを表示しています。"
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}、{1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "検出"
+  },
+  "statsSiteNotFound": {
+    "message": "未検出"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP ステータス"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP ステータス"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "ステータス不明のスキャン: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "保護が変わったページ"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "スキャン日"
+  },
+  "statsSiteNoChanges": {
+    "message": "このサイトの保存済みスキャンで保護が変わったものはありません。"
+  },
+  "statsSiteNoProtections": {
+    "message": "このサイトの保存済みスキャンでは保護機能が見つかりませんでした。"
+  },
+  "statsSiteEmptyFmt": {
+    "message": "{0} の保存済みスキャンはありません。"
+  },
+  "statsSiteOpenHistory": {
+    "message": "履歴で表示"
+  },
   "historyCompare": {
     "message": "ほかのスキャンと比較…"
   },
   "historyCompareNone": {
     "message": "比較できる、このページの保存済みスキャンがほかにありません"
   },
+  "historyCompareNoneAny": {
+    "message": "比較できる保存済みスキャンがほかにありません"
+  },
   "historyCompareTitle": {
     "message": "スキャンを比較"
   },
   "historyCompareWith": {
     "message": "比較対象"
+  },
+  "historyCompareScopePage": {
+    "message": "このページ"
+  },
+  "historyCompareScopeAny": {
+    "message": "すべてのページ"
+  },
+  "historyCompareSearch": {
+    "message": "アドレスまたはタイトルで絞り込む"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · {1} 件検出"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "失敗したページを再スキャン"
   },
+  "bulkRunAgain": {
+    "message": "もう一度実行"
+  },
   "bulkFilterLabel": {
     "message": "表示",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "エラーステータス（4xx、5xx）"
   },
+  "bulkFilterChanged": {
+    "message": "前回の実行から変化"
+  },
   "bulkFilterOnlyFmt": {
     "message": "{0} のみ"
   },
   "bulkCopyLines": {
     "message": "行としてコピー"
+  },
+  "bulkCompareExport": {
+    "message": "エクスポートと比較…"
   },
   "bulkFilterNone": {
     "message": "このフィルターに一致するページはありません。"
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "アドレス"
+  },
+  "bulkColPrevious": {
+    "message": "前回の実行との比較"
+  },
+  "bulkPrevUnchanged": {
+    "message": "変化なし"
+  },
+  "bulkPrevNew": {
+    "message": "前回の実行にはなし"
   },
   "bulkStatusWaiting": {
     "message": "待機中"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "{1} 件中 {0} 件完了"
   },
+  "bulkStoredFmt": {
+    "message": "{0} の実行の結果"
+  },
   "bulkCountsFmt": {
     "message": "完了: {0} · 保護あり: {1} · 失敗: {2} · スキップ: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "その他の除外された行: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "{0} の実行と比較しました。変化したページ: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "履歴が一時停止中のため、ページはスキャンされますが記録されません。"
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "ファイルを読み込めませんでした。"
+  },
+  "bulkErrCompareFile": {
+    "message": "このファイルは一括スキャンの JSON エクスポートではありません。"
   },
   "bulkEmpty": {
     "message": "アドレスを貼り付けるかファイルをアップロードして、開始を選んでください。"

@@ -4818,6 +4818,30 @@
     "message": "JS hooks: off for this site",
     "description": "Detection tab, What was checked: the JavaScript hooks are turned off for this site (Settings → Detection → Sites without JS hooks)"
   },
+  "detectionScrapingTitle": {
+    "message": "What this means for scraping",
+    "description": "Detection tab, the What was checked panel: heading of the points saying what the results mean for someone scraping the page"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "The page answered with HTTP {0}: this visit was refused or challenged.",
+    "description": "Detection tab, What this means for scraping: the page answered with an error status. {0} is the status code, such as 403"
+  },
+  "detectionScrapingCaptcha": {
+    "message": "A CAPTCHA is on the page: a scraper has to avoid triggering it or solve it.",
+    "description": "Detection tab, What this means for scraping: a CAPTCHA was found on the page"
+  },
+  "detectionScrapingBrowser": {
+    "message": "The page checks the browser in JavaScript: plain HTTP requests are likely to fail, use a real browser.",
+    "description": "Detection tab, What this means for scraping: a fingerprinting script, a hooked browser API or a window property check was found"
+  },
+  "detectionScrapingCookies": {
+    "message": "Protection cookies are set: a scraper has to keep them and send them back.",
+    "description": "Detection tab, What this means for scraping: a protection was found through the cookies it sets"
+  },
+  "detectionScrapingAntibot": {
+    "message": "An anti-bot service watches this site: many or fast requests from one address may be blocked.",
+    "description": "Detection tab, What this means for scraping: an anti-bot service was found and nothing more specific applies"
+  },
   "tipCacheExpires": {
     "message": "Expires"
   },
@@ -5989,6 +6013,10 @@
     "message": "History",
     "description": "Row of the Storage card: the History entries"
   },
+  "storageBulkRuns": {
+    "message": "Bulk runs",
+    "description": "Settings → Data → Storage: row for the finished Bulk scan runs kept to compare the next run of a list with"
+  },
   "storageRules": {
     "message": "Rules and categories",
     "description": "Row of the Storage card: detection rules (detectors), categories and their translations"
@@ -6052,6 +6080,18 @@
   "storageCapturesCleared": {
     "message": "Tool captures deleted",
     "description": "Toast after the Advanced tools' captures were deleted"
+  },
+  "storageClearBulkTitle": {
+    "message": "Clear the Bulk runs",
+    "description": "Settings → Data → Storage: title of the question before the kept Bulk scan runs are deleted"
+  },
+  "storageClearBulkMessage": {
+    "message": "The finished Bulk scan runs kept to compare the next run of a list with are deleted. History, rules and settings are not touched.",
+    "description": "Settings → Data → Storage: what clearing the kept Bulk scan runs does"
+  },
+  "storageBulkCleared": {
+    "message": "Bulk runs cleared",
+    "description": "Settings → Data → Storage: the kept Bulk scan runs were deleted"
   },
   "storageClearFailed": {
     "message": "Could not clear it. Try again.",
@@ -6849,21 +6889,129 @@
     "message": "Open {0} in History",
     "description": "Statistics → Domains and Protection changes: hover text of a site's name, which opens the History tab (in a new tab) narrowed to that site. {0} = the site's host name"
   },
+  "statsSectionSite": {
+    "message": "Site",
+    "description": "Statistics: tab of one site's report, shown once a site is opened (from Domains, Hardest sites or History → ⋯ → Site report)"
+  },
+  "statsSiteReport": {
+    "message": "Site report",
+    "description": "Statistics → Domains: column of the button that opens a site's report; History → entry ⋯ menu: opens the Statistics page on that site's report"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Site report: {0}",
+    "description": "Statistics: hover text of a Domains row's button and of a Hardest sites row, and the heading of the exported report. {0} = the site's host name"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Pages: {0} · Scans: {1} · {2}",
+    "description": "Statistics → Site: line under the site's name. {0} = number of pages (paths) of the site, {1} = number of saved scans, {2} = dates of the oldest and newest scan"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Also saved as: {0}",
+    "description": "Statistics → Site: the other spellings of the site's host the scans were saved under. {0} = a list of host names (www.shop.example)"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Every saved scan of this site, whatever the date range. Addresses with and without www count as one site.",
+    "description": "Statistics → Site: note under the site's name. The report ignores the date range; www.shop.example and shop.example are one site"
+  },
+  "statsSiteProtections": {
+    "message": "Protections on this site",
+    "description": "Statistics → Site: heading of the table of every protection found on the site's saved scans"
+  },
+  "statsFirstSeenColumn": {
+    "message": "First seen",
+    "description": "Statistics → Site: column with the date a protection was first found on the site"
+  },
+  "statsScansColumn": {
+    "message": "Scans",
+    "description": "Statistics → Site: column with a number of saved scans (History entries)"
+  },
+  "statsSiteTimeline": {
+    "message": "Timeline",
+    "description": "Statistics → Site: heading of the grid of protections (rows) by scan date (columns)"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Showing the latest {0} of {1} scans.",
+    "description": "Statistics → Site → Timeline: note when the site has more scans than the grid shows. {0} = scans shown, {1} = all scans of the site"
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}",
+    "description": "Statistics → Site → Timeline: hover and screen-reader text of one cell. {0} = protection name, {1} = date and time of the scan, {2} = its confidence (95%), 'found' or 'not found'"
+  },
+  "statsSiteFound": {
+    "message": "found",
+    "description": "Statistics → Site → Timeline: a protection found on a scan with no confidence score ({2} of the cell text); lower case"
+  },
+  "statsSiteNotFound": {
+    "message": "not found",
+    "description": "Statistics → Site → Timeline: a protection not found on that scan ({2} of the cell text); lower case"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP statuses",
+    "description": "Statistics → Site: heading of the table of HTTP status codes the site's pages answered with"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP status",
+    "description": "Statistics → Site: column with an HTTP status code (200, 403)"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Scans without a known status: {0}",
+    "description": "Statistics → Site: scans that have no HTTP status (saved before version 3.1.9, or not reported by the browser). {0} = number"
+  },
+  "statsSiteChanges": {
+    "message": "Pages whose protections changed",
+    "description": "Statistics → Site: heading of the list of scans History marked Changed (protections added or removed since the page's earlier scan)"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Scan date",
+    "description": "Statistics → Site → Pages whose protections changed: column with the date of the scan History marked Changed"
+  },
+  "statsSiteNoChanges": {
+    "message": "No saved scan of this site changed its protections.",
+    "description": "Statistics → Site: shown when none of the site's scans is marked Changed"
+  },
+  "statsSiteNoProtections": {
+    "message": "No protection found in this site's saved scans.",
+    "description": "Statistics → Site: shown when the site's saved scans found no protection (in the categories shown)"
+  },
+  "statsSiteEmptyFmt": {
+    "message": "No saved scans of {0}.",
+    "description": "Statistics → Site: shown when History has no scan of the site. {0} = the site's host name"
+  },
+  "statsSiteOpenHistory": {
+    "message": "Show in History",
+    "description": "Statistics → Site: button that opens History (in a new tab) narrowed to the site"
+  },
   "historyCompare": {
     "message": "Compare with…",
-    "description": "History entry menu: opens a dialog that compares this saved scan with another saved scan of the same page"
+    "description": "History entry menu: opens a dialog that compares this saved scan with another saved scan, of the same page or of any page"
   },
   "historyCompareNone": {
     "message": "No other saved scan of this page to compare with",
-    "description": "Hover text of the disabled Compare with… menu item, and the message when there is nothing to compare with: History holds only one scan of this page"
+    "description": "Compare dialog: hover text of the disabled 'This page' button: History holds only one scan of this page (the dialog then lists the scans of any page)"
+  },
+  "historyCompareNoneAny": {
+    "message": "No other saved scan to compare with",
+    "description": "Hover text of the disabled Compare with… menu item, and the message when there is nothing to compare with: History holds no other scan, of this page or any other"
   },
   "historyCompareTitle": {
     "message": "Compare scans",
-    "description": "Title of the dialog that compares two saved scans of the same page"
+    "description": "Title of the dialog that compares two saved scans (of one page, or of two pages)"
   },
   "historyCompareWith": {
     "message": "Compare with",
-    "description": "Label of the list of other saved scans of the page, in the compare dialog"
+    "description": "Label of the list of other saved scans to pick from, in the compare dialog (of this page, or of any page)"
+  },
+  "historyCompareScopePage": {
+    "message": "This page",
+    "description": "Compare dialog: button that lists only the other saved scans of the same page (pressed or not, beside 'Compare with')"
+  },
+  "historyCompareScopeAny": {
+    "message": "Any page",
+    "description": "Compare dialog: button that lists the saved scans of every page and site, each with its page, to compare across pages"
+  },
+  "historyCompareSearch": {
+    "message": "Filter by address or title",
+    "description": "Compare dialog, 'Any page': placeholder and accessible name of the box that filters the saved scans by their address or page title"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · {1} found",
@@ -7305,6 +7453,10 @@
     "message": "Scan the failed pages again",
     "description": "Bulk scan: scan again the pages of a finished run that failed (a timeout or a load error); the rest of the run stays in the table"
   },
+  "bulkRunAgain": {
+    "message": "Run again",
+    "description": "Bulk scan: button of a finished or stopped run that scans the same list again, with the same limits and wait, and compares the new results with this run"
+  },
   "bulkFilterLabel": {
     "message": "Show",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -7329,6 +7481,10 @@
     "message": "Error status (4xx, 5xx)",
     "description": "Bulk scan results filter: pages that answered with an HTTP error status (4xx client errors, 5xx server errors)"
   },
+  "bulkFilterChanged": {
+    "message": "Changed since previous run",
+    "description": "Bulk scan: choice of the Show dropdown that keeps the pages whose protections, HTTP status or outcome changed since the earlier run of the same list"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Only {0}",
     "description": "Bulk scan results filter, one per protection the run found: the pages where that protection was found. {0} = the protection's name (Cloudflare, reCAPTCHA...)"
@@ -7336,6 +7492,10 @@
   "bulkCopyLines": {
     "message": "Copy as lines",
     "description": "Bulk scan: button that copies the shown pages as one line each (address and protections), for chats and tickets"
+  },
+  "bulkCompareExport": {
+    "message": "Compare with an export…",
+    "description": "Bulk scan: button that picks a Bulk scan JSON export saved earlier and compares the results shown with it"
   },
   "bulkFilterNone": {
     "message": "No page matches this filter.",
@@ -7356,6 +7516,18 @@
   "bulkColAddress": {
     "message": "Address",
     "description": "Bulk scan: results column with the page address"
+  },
+  "bulkColPrevious": {
+    "message": "Vs previous run",
+    "description": "Bulk scan: heading of the results column that says what changed on each page since the earlier run of the same list (for example +DataDome −Kasada, 200 → 403)"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Unchanged",
+    "description": "Bulk scan: the page is the same as in the earlier run of the list (column Vs previous run)"
+  },
+  "bulkPrevNew": {
+    "message": "Not in the previous run",
+    "description": "Bulk scan: the earlier run of the list had no such page (column Vs previous run)"
   },
   "bulkStatusWaiting": {
     "message": "Waiting",
@@ -7433,6 +7605,10 @@
     "message": "{0} of {1} finished",
     "description": "Bulk scan: progress ({0} = pages finished, {1} = all pages)"
   },
+  "bulkStoredFmt": {
+    "message": "Results of the run of {0}",
+    "description": "Bulk scan: status line of the results kept from a run that finished before the browser restarted (read-only). {0} = date and time of that run"
+  },
   "bulkCountsFmt": {
     "message": "Done: {0} · With protections: {1} · Failed: {2} · Skipped: {3}",
     "description": "Bulk scan: totals of the run"
@@ -7465,6 +7641,10 @@
     "message": "Other lines left out: {0}",
     "description": "Bulk scan: skipped lines not listed in the table ({0} = count)"
   },
+  "bulkComparedFmt": {
+    "message": "Compared with the run of {0}. Pages changed: {1}",
+    "description": "Bulk scan: line under the results. {0} = date and time of the earlier run the results are compared with; {1} = how many pages changed"
+  },
   "bulkHistoryPaused": {
     "message": "History is paused, so the pages are scanned but not recorded.",
     "description": "Bulk scan: notice when History is paused"
@@ -7496,6 +7676,10 @@
   "bulkErrFile": {
     "message": "The file could not be read.",
     "description": "Bulk scan: upload failed"
+  },
+  "bulkErrCompareFile": {
+    "message": "This file is not a Bulk scan JSON export.",
+    "description": "Bulk scan: the file picked to compare with is not a Bulk scan JSON export (or cannot be read)"
   },
   "bulkEmpty": {
     "message": "Paste addresses or upload a file, then choose Start.",

@@ -202,6 +202,10 @@ const HistoryRetention = {
         }, chrome.storage.local);
         // The record of webhook deliveries names pages too: it goes with History's, even when History had nothing left to clear
         await this.forgetDeliveries();
+        // So do the kept Bulk scan runs (their addresses): cleared on close, they are not shown again after the restart
+        if (typeof BulkScanRunner !== 'undefined' && BulkScanRunner.forgetRuns) {
+            try { await BulkScanRunner.forgetRuns(); } catch (error) { this._log(`[HistoryRetention] Bulk runs not cleared: ${error && error.message}`); }
+        }
         if (removed > 0) this._log(`[HistoryRetention] Cleared ${removed} history entries (${reason})`);
         return removed;
     },

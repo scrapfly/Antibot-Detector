@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS-хуки: вимкнено для цього сайту"
   },
+  "detectionScrapingTitle": {
+    "message": "Що це означає для скрапінгу"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Сторінка відповіла HTTP {0}: цей візит відхилено або відправлено на перевірку."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "На сторінці є CAPTCHA: скраперу треба не викликати її або розв’язувати."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Сторінка перевіряє браузер через JavaScript: прості HTTP-запити, найімовірніше, не пройдуть, використовуйте справжній браузер."
+  },
+  "detectionScrapingCookies": {
+    "message": "Встановлюються захисні cookie: скрапер має зберігати їх і надсилати назад."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Сайт охороняє антибот-сервіс: багато або часті запити з однієї адреси можуть заблокувати."
+  },
   "tipCacheExpires": {
     "message": "Спливає"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "Історія"
   },
+  "storageBulkRuns": {
+    "message": "Запуски масового сканування"
+  },
   "storageRules": {
     "message": "Правила й категорії"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "Захоплення інструментів видалено"
+  },
+  "storageClearBulkTitle": {
+    "message": "Очистити запуски масового сканування"
+  },
+  "storageClearBulkMessage": {
+    "message": "Буде видалено завершені запуски масового сканування, збережені для порівняння з наступним запуском списку. Історія, правила й налаштування не змінюються."
+  },
+  "storageBulkCleared": {
+    "message": "Запуски масового сканування очищено"
   },
   "storageClearFailed": {
     "message": "Не вдалося очистити. Спробуйте ще раз."
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "Відкрити {0} в Історії"
   },
+  "statsSectionSite": {
+    "message": "Сайт"
+  },
+  "statsSiteReport": {
+    "message": "Звіт про сайт"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Звіт про сайт: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Сторінки: {0} · Сканування: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Також збережено як: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Усі збережені сканування цього сайту, незалежно від періоду. Адреси з www і без нього вважаються одним сайтом."
+  },
+  "statsSiteProtections": {
+    "message": "Системи захисту на цьому сайті"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Уперше виявлено"
+  },
+  "statsScansColumn": {
+    "message": "Сканування"
+  },
+  "statsSiteTimeline": {
+    "message": "Хронологія"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Показано останні {0} з {1} сканувань."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "знайдено"
+  },
+  "statsSiteNotFound": {
+    "message": "не знайдено"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP-статуси"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP-статус"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Сканування без відомого статусу: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Сторінки, на яких змінилися системи захисту"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Дата сканування"
+  },
+  "statsSiteNoChanges": {
+    "message": "Жодне збережене сканування цього сайту не змінило систем захисту."
+  },
+  "statsSiteNoProtections": {
+    "message": "У збережених скануваннях цього сайту не знайдено жодного захисту."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Немає збережених сканувань {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Показати в Історії"
+  },
   "historyCompare": {
     "message": "Порівняти з…"
   },
   "historyCompareNone": {
     "message": "Немає іншого збереженого сканування цієї сторінки для порівняння"
   },
+  "historyCompareNoneAny": {
+    "message": "Немає іншого збереженого сканування для порівняння"
+  },
   "historyCompareTitle": {
     "message": "Порівняння сканувань"
   },
   "historyCompareWith": {
     "message": "Порівняти з"
+  },
+  "historyCompareScopePage": {
+    "message": "Ця сторінка"
+  },
+  "historyCompareScopeAny": {
+    "message": "Будь-яка сторінка"
+  },
+  "historyCompareSearch": {
+    "message": "Фільтр за адресою або заголовком"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · знайдено: {1}"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "Повторно сканувати сторінки зі збоєм"
   },
+  "bulkRunAgain": {
+    "message": "Запустити знову"
+  },
   "bulkFilterLabel": {
     "message": "Показати",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "Код помилки (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Змінилося від попереднього запуску"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Лише {0}"
   },
   "bulkCopyLines": {
     "message": "Копіювати рядками"
+  },
+  "bulkCompareExport": {
+    "message": "Порівняти з експортом…"
   },
   "bulkFilterNone": {
     "message": "Немає сторінок, що відповідають цьому фільтру."
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "Адреса"
+  },
+  "bulkColPrevious": {
+    "message": "Порівняно з попереднім запуском"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Без змін"
+  },
+  "bulkPrevNew": {
+    "message": "Не було в попередньому запуску"
   },
   "bulkStatusWaiting": {
     "message": "Чекає"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "Готово {0} з {1}"
   },
+  "bulkStoredFmt": {
+    "message": "Результати запуску від {0}"
+  },
   "bulkCountsFmt": {
     "message": "Готово: {0} · Із захистом: {1} · Збій: {2} · Пропущено: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Інших пропущених рядків: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Порівняно із запуском від {0}. Змінених сторінок: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Історію призупинено: сторінки скануються, але не записуються."
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "Не вдалося прочитати файл."
+  },
+  "bulkErrCompareFile": {
+    "message": "Цей файл не є JSON-експортом масового сканування."
   },
   "bulkEmpty": {
     "message": "Вставте адреси або завантажте файл, потім натисніть «Запустити»."

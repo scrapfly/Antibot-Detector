@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS-hooks: uit voor deze site"
   },
+  "detectionScrapingTitle": {
+    "message": "Wat dit betekent voor scraping"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "De pagina antwoordde met HTTP {0}: dit bezoek is geweigerd of uitgedaagd."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Er staat een CAPTCHA op de pagina: een scraper moet die vermijden of oplossen."
+  },
+  "detectionScrapingBrowser": {
+    "message": "De pagina controleert de browser met JavaScript: gewone HTTP-verzoeken mislukken waarschijnlijk, gebruik een echte browser."
+  },
+  "detectionScrapingCookies": {
+    "message": "Er worden beschermingscookies gezet: een scraper moet ze bewaren en terugsturen."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Een anti-botdienst bewaakt deze site: veel of snelle verzoeken vanaf één adres kunnen worden geblokkeerd."
+  },
   "tipCacheExpires": {
     "message": "Verloopt"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "Geschiedenis"
   },
+  "storageBulkRuns": {
+    "message": "Bulkscan-runs"
+  },
   "storageRules": {
     "message": "Regels en categorieën"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "Toolopnamen verwijderd"
+  },
+  "storageClearBulkTitle": {
+    "message": "Bulkscan-runs wissen"
+  },
+  "storageClearBulkMessage": {
+    "message": "De voltooide bulkscan-runs die bewaard worden om de volgende run van een lijst mee te vergelijken, worden verwijderd. Geschiedenis, regels en instellingen blijven ongewijzigd."
+  },
+  "storageBulkCleared": {
+    "message": "Bulkscan-runs gewist"
   },
   "storageClearFailed": {
     "message": "Wissen is niet gelukt. Probeer het opnieuw."
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "{0} openen in Geschiedenis"
   },
+  "statsSectionSite": {
+    "message": "Site"
+  },
+  "statsSiteReport": {
+    "message": "Siterapport"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Siterapport: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Pagina's: {0} · Scans: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Ook opgeslagen als: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Alle opgeslagen scans van deze site, ongeacht het datumbereik. Adressen met en zonder www tellen als één site."
+  },
+  "statsSiteProtections": {
+    "message": "Beveiligingen op deze site"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Eerst gezien"
+  },
+  "statsScansColumn": {
+    "message": "Scans"
+  },
+  "statsSiteTimeline": {
+    "message": "Tijdlijn"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "De laatste {0} van {1} scans worden getoond."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "gevonden"
+  },
+  "statsSiteNotFound": {
+    "message": "niet gevonden"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP-statussen"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP-status"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Scans zonder bekende status: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Pagina's waarvan de beveiligingen veranderden"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Scandatum"
+  },
+  "statsSiteNoChanges": {
+    "message": "Geen enkele opgeslagen scan van deze site heeft zijn beveiligingen gewijzigd."
+  },
+  "statsSiteNoProtections": {
+    "message": "Geen beveiliging gevonden in de opgeslagen scans van deze site."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Geen opgeslagen scans van {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Tonen in Geschiedenis"
+  },
   "historyCompare": {
     "message": "Vergelijken met…"
   },
   "historyCompareNone": {
     "message": "Geen andere opgeslagen scan van deze pagina om mee te vergelijken"
   },
+  "historyCompareNoneAny": {
+    "message": "Geen andere opgeslagen scan om mee te vergelijken"
+  },
   "historyCompareTitle": {
     "message": "Scans vergelijken"
   },
   "historyCompareWith": {
     "message": "Vergelijken met"
+  },
+  "historyCompareScopePage": {
+    "message": "Deze pagina"
+  },
+  "historyCompareScopeAny": {
+    "message": "Elke pagina"
+  },
+  "historyCompareSearch": {
+    "message": "Filteren op adres of titel"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · gevonden: {1}"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "De mislukte pagina's opnieuw scannen"
   },
+  "bulkRunAgain": {
+    "message": "Opnieuw uitvoeren"
+  },
   "bulkFilterLabel": {
     "message": "Tonen",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "Foutstatus (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Gewijzigd sinds de vorige run"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Alleen {0}"
   },
   "bulkCopyLines": {
     "message": "Kopiëren als regels"
+  },
+  "bulkCompareExport": {
+    "message": "Vergelijken met een export…"
   },
   "bulkFilterNone": {
     "message": "Geen pagina komt overeen met dit filter."
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "Adres"
+  },
+  "bulkColPrevious": {
+    "message": "T.o.v. vorige run"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Ongewijzigd"
+  },
+  "bulkPrevNew": {
+    "message": "Niet in de vorige run"
   },
   "bulkStatusWaiting": {
     "message": "Wacht"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "{0} van {1} klaar"
   },
+  "bulkStoredFmt": {
+    "message": "Resultaten van de run van {0}"
+  },
   "bulkCountsFmt": {
     "message": "Klaar: {0} · Met beveiliging: {1} · Mislukt: {2} · Overgeslagen: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Andere weggelaten regels: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Vergeleken met de run van {0}. Gewijzigde pagina's: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "De geschiedenis is gepauzeerd: de pagina's worden gescand maar niet vastgelegd."
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "Het bestand kon niet worden gelezen."
+  },
+  "bulkErrCompareFile": {
+    "message": "Dit bestand is geen JSON-export van de bulkscan."
   },
   "bulkEmpty": {
     "message": "Plak adressen of upload een bestand en kies dan Starten."

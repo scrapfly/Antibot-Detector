@@ -461,6 +461,26 @@
   display: none;
 }
 
+/* What this means for scraping: under the counts, one short point a line */
+.scan-facts-panel .scan-facts-title[hidden],
+.scan-advice[hidden] {
+  display: none;
+}
+
+.scan-facts-line + .scan-advice,
+.scan-facts-line + .scan-facts-line + .scan-advice {
+  margin-top: 6px;
+}
+
+.scan-advice-list {
+  margin: 0;
+  padding-inline-start: 16px;
+}
+
+.scan-advice-list li {
+  overflow-wrap: anywhere;
+}
+
 #httpStatusTile .tone-amber { --tone: var(--warning); }
 #httpStatusTile .tone-red { --tone: var(--danger); }
 

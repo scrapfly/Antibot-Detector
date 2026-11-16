@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS-Hooks: für diese Site aus"
   },
+  "detectionScrapingTitle": {
+    "message": "Was das für Scraping bedeutet"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Die Seite antwortete mit HTTP {0}: Dieser Besuch wurde abgelehnt oder geprüft."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Auf der Seite ist ein CAPTCHA: Ein Scraper muss es vermeiden oder lösen."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Die Seite prüft den Browser per JavaScript: Einfache HTTP-Anfragen scheitern wahrscheinlich, nutzen Sie einen echten Browser."
+  },
+  "detectionScrapingCookies": {
+    "message": "Schutz-Cookies werden gesetzt: Ein Scraper muss sie speichern und zurücksenden."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Ein Anti-Bot-Dienst überwacht diese Site: Viele oder schnelle Anfragen von einer Adresse können blockiert werden."
+  },
   "tipCacheExpires": {
     "message": "Läuft ab"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "Verlauf"
   },
+  "storageBulkRuns": {
+    "message": "Massenscan-Läufe"
+  },
   "storageRules": {
     "message": "Regeln und Kategorien"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "Tool-Aufnahmen gelöscht"
+  },
+  "storageClearBulkTitle": {
+    "message": "Massenscan-Läufe löschen"
+  },
+  "storageClearBulkMessage": {
+    "message": "Die abgeschlossenen Massenscan-Läufe, die zum Vergleich mit dem nächsten Lauf einer Liste aufbewahrt werden, werden gelöscht. Verlauf, Regeln und Einstellungen bleiben unberührt."
+  },
+  "storageBulkCleared": {
+    "message": "Massenscan-Läufe gelöscht"
   },
   "storageClearFailed": {
     "message": "Das Leeren ist fehlgeschlagen. Versuche es erneut."
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "{0} im Verlauf öffnen"
   },
+  "statsSectionSite": {
+    "message": "Website"
+  },
+  "statsSiteReport": {
+    "message": "Website-Bericht"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Website-Bericht: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Seiten: {0} · Scans: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Auch gespeichert als: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Alle gespeicherten Scans dieser Website, unabhängig vom Zeitraum. Adressen mit und ohne www zählen als eine Website."
+  },
+  "statsSiteProtections": {
+    "message": "Schutzmaßnahmen dieser Website"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Zuerst gesehen"
+  },
+  "statsScansColumn": {
+    "message": "Scans"
+  },
+  "statsSiteTimeline": {
+    "message": "Zeitachse"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Die letzten {0} von {1} Scans werden angezeigt."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "gefunden"
+  },
+  "statsSiteNotFound": {
+    "message": "nicht gefunden"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP-Status"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP-Status"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Scans ohne bekannten Status: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Seiten mit geänderten Schutzmaßnahmen"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Scandatum"
+  },
+  "statsSiteNoChanges": {
+    "message": "Kein gespeicherter Scan dieser Website hat seine Schutzmaßnahmen geändert."
+  },
+  "statsSiteNoProtections": {
+    "message": "In den gespeicherten Scans dieser Website wurde kein Schutz gefunden."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Keine gespeicherten Scans von {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Im Verlauf anzeigen"
+  },
   "historyCompare": {
     "message": "Vergleichen mit…"
   },
   "historyCompareNone": {
     "message": "Kein anderer gespeicherter Scan dieser Seite zum Vergleichen"
   },
+  "historyCompareNoneAny": {
+    "message": "Kein anderer gespeicherter Scan zum Vergleichen"
+  },
   "historyCompareTitle": {
     "message": "Scans vergleichen"
   },
   "historyCompareWith": {
     "message": "Vergleichen mit"
+  },
+  "historyCompareScopePage": {
+    "message": "Diese Seite"
+  },
+  "historyCompareScopeAny": {
+    "message": "Beliebige Seite"
+  },
+  "historyCompareSearch": {
+    "message": "Nach Adresse oder Titel filtern"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · gefunden: {1}"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "Die fehlgeschlagenen Seiten erneut scannen"
   },
+  "bulkRunAgain": {
+    "message": "Erneut ausführen"
+  },
   "bulkFilterLabel": {
     "message": "Anzeigen",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "Fehlerstatus (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Seit dem vorherigen Lauf geändert"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Nur {0}"
   },
   "bulkCopyLines": {
     "message": "Als Zeilen kopieren"
+  },
+  "bulkCompareExport": {
+    "message": "Mit einem Export vergleichen…"
   },
   "bulkFilterNone": {
     "message": "Keine Seite entspricht diesem Filter."
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "Adresse"
+  },
+  "bulkColPrevious": {
+    "message": "Gegenüber vorherigem Lauf"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Unverändert"
+  },
+  "bulkPrevNew": {
+    "message": "Nicht im vorherigen Lauf"
   },
   "bulkStatusWaiting": {
     "message": "Wartet"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "{0} von {1} fertig"
   },
+  "bulkStoredFmt": {
+    "message": "Ergebnisse des Laufs vom {0}"
+  },
   "bulkCountsFmt": {
     "message": "Fertig: {0} · Mit Schutz: {1} · Fehlgeschlagen: {2} · Übersprungen: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Weitere ausgelassene Zeilen: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Verglichen mit dem Lauf vom {0}. Geänderte Seiten: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Der Verlauf ist pausiert: Die Seiten werden gescannt, aber nicht gespeichert."
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "Die Datei konnte nicht gelesen werden."
+  },
+  "bulkErrCompareFile": {
+    "message": "Diese Datei ist kein JSON-Export des Massenscans."
   },
   "bulkEmpty": {
     "message": "Fügen Sie Adressen ein oder laden Sie eine Datei hoch und wählen Sie dann Starten."

@@ -648,6 +648,38 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
 .stats-change-added { color: var(--s-ok-text); }
 .stats-change-removed { color: var(--s-danger-text); }
 
+/* Domains: the button of a row that opens the site's report */
+.stats-row-btn {
+  display: inline-flex; align-items: center; justify-content: center; inline-size: 32px; block-size: 32px;
+  border: 1px solid var(--s-hair-strong); border-radius: var(--r-ctl); background: transparent; color: var(--text-secondary);
+}
+.stats-row-btn:hover { border-color: var(--accent); background: var(--s-accent-soft); color: var(--text-primary); }
+.stats-row-btn svg { inline-size: 16px; block-size: 16px; }
+
+/* Site: one site over time */
+.stats-site-card .stats-card-head { align-items: flex-start; }
+.stats-site-title { display: flex; flex-direction: column; gap: 2px; min-inline-size: 0; }
+.stats-card .stats-site-host { font-size: var(--fs-6); font-weight: 600; overflow-wrap: anywhere; text-align: start; unicode-bidi: plaintext; }
+.stats-site-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-2); }
+.stats-site-empty { grid-column: 1 / -1; }
+/* The timeline: protection by scan. Columns follow the writing direction, the protection names stay at its start while it scrolls */
+.stats-site-grid { inline-size: auto; min-inline-size: 100%; }
+.stats-site-grid th, .stats-site-grid td { padding: 6px; }
+.stats-site-grid .stats-site-corner, .stats-site-grid .stats-site-row {
+  position: sticky; inset-inline-start: 0; z-index: 2; min-inline-size: 160px; max-inline-size: 240px; background: var(--s-card);
+}
+.stats-site-grid thead .stats-site-corner { z-index: 3; }
+.stats-site-grid .stats-site-col { min-inline-size: 48px; text-align: center; font-variant-numeric: tabular-nums; }
+.stats-site-grid .stats-site-col.is-error { color: var(--s-warn-text); }
+.stats-site-grid .stats-site-cell { text-align: center; }
+.stats-site-mark {
+  display: inline-block; inline-size: 14px; block-size: 14px; border-radius: 4px;
+  background: var(--c, var(--s-series)); opacity: var(--a, 1); vertical-align: middle;
+}
+.stats-site-status { font-variant-numeric: tabular-nums; font-weight: 600; }
+.stats-site-status.is-warn { color: var(--s-warn-text); }
+.stats-site-status.is-error { color: var(--s-danger-text); }
+
 /* --------------------------------------------------------------------------
    13. Overview lists: hardest sites and what changed
    -------------------------------------------------------------------------- */
@@ -806,6 +838,7 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
 }
 @media (pointer: coarse) {
   .stats-section-btn, .stats-menu-btn, .stats-menu-item, .stats-scope-chip, .stats-chip-btn, .stats-sub-btn, .stats-table-more, .stats-btn, .stats-search, .stats-sort { min-block-size: 44px; }
+  .stats-row-btn { inline-size: 44px; block-size: 44px; }
   .stats-range { padding: 0; }
   .stats-range-btn { min-block-size: 44px; }
   .stats-link-btn:not(.stats-host-link) { padding-block: 10px; }
@@ -828,6 +861,7 @@ rect.is-partial:not(.stats-seg) { stroke-width: 1.5; }
   .stats-scope-chip .category-icon { color: currentColor; opacity: 1; }
   .stats-rank-track, .stats-rank-track > i, .stats-databar > span, .stats-databar i, .stats-legend-swatch, .stats-dot,
   .stats-cal-swatch, .stats-seg, .stats-seg-track, .stats-cal-cell rect, .stats-spark, .stats-spark * { forced-color-adjust: none; }
+  .stats-site-mark { forced-color-adjust: none; background: CanvasText; opacity: 1; }
   .stats-rank-track, .stats-databar > span { border: 1px solid CanvasText; }
   .stats-kpi::before { forced-color-adjust: none; }
   .stats-card, .stats-headline, .stats-kpi { border-color: CanvasText; }

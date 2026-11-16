@@ -83,3 +83,24 @@ test('Scan again opens the page when the tab that showed it closed in between', 
   assert.strictEqual(await view.rescanHistoryItem(item), 'opened');
   assert.deepStrictEqual(plain(calls).created, [{ url: item.url, active: true }]);
 });
+
+// 3.2.0: History → … → Site report opens the Statistics page on the entry's site
+
+test('Site report opens Statistics on the entry\'s site, in a new tab, and is off for an entry with no site', () => {
+  const { view, calls } = load();
+  assert.strictEqual(view.openSiteReport({ id: 'e1', url: 'https://www.shop.example/cart?x=1', hostname: 'www.shop.example' }), true);
+  assert.strictEqual(view.openSiteReport({ id: 'e2', url: 'https://shop.example/' }), true, 'the address gives the host when the entry has none');
+  assert.strictEqual(view.openSiteReport({ id: 'e3', url: 'not an address', hostname: 'unknown' }), false);
+  assert.deepStrictEqual(plain(calls).created, [{ url: 'sections/stats/stats.html?site=www.shop.example' }, { url: 'sections/stats/stats.html?site=shop.example' }]);
+
+  const items = { 'site-report': { disabled: false } };
+  const menu = { querySelector: (selector) => { const m = selector.match(/data-action="([^"]+)"/); return m ? items[m[1]] || null : null; } };
+  view.historyItems = [];
+  view.syncItemMenu(menu, { id: 'e3', url: '' });
+  assert.strictEqual(items['site-report'].disabled, true);
+  view.syncItemMenu(menu, { id: 'e1', url: 'https://shop.example/' });
+  assert.strictEqual(items['site-report'].disabled, false);
+  const html = fs.readFileSync(path.join(root, 'sections/history/history.html'), 'utf8');
+  assert.ok(/data-action="site-report">[\s\S]*?<span data-i18n="statsSiteReport">Site report<\/span>/.test(html));
+  assert.ok(fs.readFileSync(path.join(root, 'sections/history/history.js'), 'utf8').includes("action === 'site-report'"));
+});

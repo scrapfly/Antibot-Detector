@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS 掛鉤：此網站已關閉"
   },
+  "detectionScrapingTitle": {
+    "message": "這對爬取代表什麼"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "頁面回應了 HTTP {0}：這次造訪遭到拒絕或被要求驗證。"
+  },
+  "detectionScrapingCaptcha": {
+    "message": "頁面上有 CAPTCHA：爬取程式需要避免觸發它或解開它。"
+  },
+  "detectionScrapingBrowser": {
+    "message": "頁面用 JavaScript 檢查瀏覽器：一般 HTTP 請求很可能失敗，請使用真實瀏覽器。"
+  },
+  "detectionScrapingCookies": {
+    "message": "頁面設定了防護 Cookie：爬取程式需要保存並回傳它們。"
+  },
+  "detectionScrapingAntibot": {
+    "message": "此網站由反機器人服務監控：來自同一位址的大量或快速請求可能遭到封鎖。"
+  },
   "tipCacheExpires": {
     "message": "到期時間"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "歷史記錄"
   },
+  "storageBulkRuns": {
+    "message": "批次掃描執行紀錄"
+  },
   "storageRules": {
     "message": "規則與類別"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "工具擷取項目已刪除"
+  },
+  "storageClearBulkTitle": {
+    "message": "清除批次掃描執行紀錄"
+  },
+  "storageClearBulkMessage": {
+    "message": "將刪除為與清單的下一次執行比較而保留的已完成批次掃描執行紀錄。歷史紀錄、規則和設定不受影響。"
+  },
+  "storageBulkCleared": {
+    "message": "批次掃描執行紀錄已清除"
   },
   "storageClearFailed": {
     "message": "無法清除。請再試一次。"
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "在歷史記錄中開啟 {0}"
   },
+  "statsSectionSite": {
+    "message": "網站"
+  },
+  "statsSiteReport": {
+    "message": "網站報告"
+  },
+  "statsSiteReportForFmt": {
+    "message": "網站報告：{0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "網頁：{0} · 掃描：{1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "也以此名稱儲存：{0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "此網站所有已儲存的掃描，與時間範圍無關。帶 www 與不帶 www 的網址算作同一個網站。"
+  },
+  "statsSiteProtections": {
+    "message": "此網站的防護"
+  },
+  "statsFirstSeenColumn": {
+    "message": "首次出現"
+  },
+  "statsScansColumn": {
+    "message": "掃描"
+  },
+  "statsSiteTimeline": {
+    "message": "時間軸"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "顯示 {1} 次掃描中最近的 {0} 次。"
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}，{1}：{2}"
+  },
+  "statsSiteFound": {
+    "message": "已偵測到"
+  },
+  "statsSiteNotFound": {
+    "message": "未偵測到"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP 狀態"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP 狀態"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "狀態未知的掃描：{0}"
+  },
+  "statsSiteChanges": {
+    "message": "防護有所變化的網頁"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "掃描日期"
+  },
+  "statsSiteNoChanges": {
+    "message": "此網站已儲存的掃描中沒有防護有所變化的。"
+  },
+  "statsSiteNoProtections": {
+    "message": "此網站已儲存的掃描中未發現任何防護。"
+  },
+  "statsSiteEmptyFmt": {
+    "message": "沒有 {0} 的已儲存掃描。"
+  },
+  "statsSiteOpenHistory": {
+    "message": "在歷史記錄中顯示"
+  },
   "historyCompare": {
     "message": "與…比較"
   },
   "historyCompareNone": {
     "message": "此網頁沒有其他已儲存的掃描可供比較"
   },
+  "historyCompareNoneAny": {
+    "message": "沒有其他已儲存的掃描可供比較"
+  },
   "historyCompareTitle": {
     "message": "比較掃描"
   },
   "historyCompareWith": {
     "message": "比較對象"
+  },
+  "historyCompareScopePage": {
+    "message": "此網頁"
+  },
+  "historyCompareScopeAny": {
+    "message": "任何網頁"
+  },
+  "historyCompareSearch": {
+    "message": "依網址或標題篩選"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · 找到 {1} 個"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "重新掃描失敗的網頁"
   },
+  "bulkRunAgain": {
+    "message": "再次執行"
+  },
   "bulkFilterLabel": {
     "message": "顯示",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "錯誤狀態（4xx、5xx）"
   },
+  "bulkFilterChanged": {
+    "message": "自上次執行以來有變化"
+  },
   "bulkFilterOnlyFmt": {
     "message": "僅 {0}"
   },
   "bulkCopyLines": {
     "message": "複製為行"
+  },
+  "bulkCompareExport": {
+    "message": "與匯出檔比較…"
   },
   "bulkFilterNone": {
     "message": "沒有頁面符合此篩選條件。"
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "網址"
+  },
+  "bulkColPrevious": {
+    "message": "與上次執行相比"
+  },
+  "bulkPrevUnchanged": {
+    "message": "無變化"
+  },
+  "bulkPrevNew": {
+    "message": "上次執行中沒有"
   },
   "bulkStatusWaiting": {
     "message": "等待中"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "已完成 {0}/{1}"
   },
+  "bulkStoredFmt": {
+    "message": "{0} 執行的結果"
+  },
   "bulkCountsFmt": {
     "message": "完成：{0} · 有防護：{1} · 失敗：{2} · 已略過：{3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "其他未納入的行：{0}"
   },
+  "bulkComparedFmt": {
+    "message": "已與 {0} 的執行比較。有變化的頁面：{1}"
+  },
   "bulkHistoryPaused": {
     "message": "歷史記錄已暫停：網頁會被掃描，但不會被記錄。"
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "無法讀取該檔案。"
+  },
+  "bulkErrCompareFile": {
+    "message": "此檔案不是批次掃描的 JSON 匯出檔。"
   },
   "bulkEmpty": {
     "message": "貼上網址或上傳檔案，然後選擇開始。"

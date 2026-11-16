@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS 钩子：此站点已关闭"
   },
+  "detectionScrapingTitle": {
+    "message": "这对抓取意味着什么"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "页面返回了 HTTP {0}：此次访问被拒绝或被要求验证。"
+  },
+  "detectionScrapingCaptcha": {
+    "message": "页面上有 CAPTCHA：抓取程序需要避免触发它或解开它。"
+  },
+  "detectionScrapingBrowser": {
+    "message": "页面用 JavaScript 检查浏览器：普通 HTTP 请求很可能失败，请使用真实浏览器。"
+  },
+  "detectionScrapingCookies": {
+    "message": "页面设置了防护 Cookie：抓取程序需要保存并回传它们。"
+  },
+  "detectionScrapingAntibot": {
+    "message": "此网站由反机器人服务监控：来自同一地址的大量或快速请求可能被拦截。"
+  },
   "tipCacheExpires": {
     "message": "过期时间"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "历史记录"
   },
+  "storageBulkRuns": {
+    "message": "批量扫描运行记录"
+  },
   "storageRules": {
     "message": "规则和类别"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "工具捕获已删除"
+  },
+  "storageClearBulkTitle": {
+    "message": "清除批量扫描运行记录"
+  },
+  "storageClearBulkMessage": {
+    "message": "将删除为与列表的下一次运行比较而保留的已完成批量扫描运行记录。历史记录、规则和设置不受影响。"
+  },
+  "storageBulkCleared": {
+    "message": "批量扫描运行记录已清除"
   },
   "storageClearFailed": {
     "message": "无法清除。请重试。"
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "在历史记录中打开 {0}"
   },
+  "statsSectionSite": {
+    "message": "网站"
+  },
+  "statsSiteReport": {
+    "message": "网站报告"
+  },
+  "statsSiteReportForFmt": {
+    "message": "网站报告：{0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "页面：{0} · 扫描：{1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "也以此名称保存：{0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "此网站所有已保存的扫描，与时间范围无关。带 www 和不带 www 的地址算作同一个网站。"
+  },
+  "statsSiteProtections": {
+    "message": "此网站的防护"
+  },
+  "statsFirstSeenColumn": {
+    "message": "首次出现"
+  },
+  "statsScansColumn": {
+    "message": "扫描"
+  },
+  "statsSiteTimeline": {
+    "message": "时间线"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "显示 {1} 次扫描中最近的 {0} 次。"
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}，{1}：{2}"
+  },
+  "statsSiteFound": {
+    "message": "已发现"
+  },
+  "statsSiteNotFound": {
+    "message": "未发现"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP 状态"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP 状态"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "状态未知的扫描：{0}"
+  },
+  "statsSiteChanges": {
+    "message": "防护发生变化的页面"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "扫描日期"
+  },
+  "statsSiteNoChanges": {
+    "message": "此网站已保存的扫描中没有防护发生变化的。"
+  },
+  "statsSiteNoProtections": {
+    "message": "此网站已保存的扫描中未发现任何防护。"
+  },
+  "statsSiteEmptyFmt": {
+    "message": "没有 {0} 的已保存扫描。"
+  },
+  "statsSiteOpenHistory": {
+    "message": "在历史记录中显示"
+  },
   "historyCompare": {
     "message": "与…比较"
   },
   "historyCompareNone": {
     "message": "此页面没有其他已保存的扫描可供比较"
   },
+  "historyCompareNoneAny": {
+    "message": "没有其他已保存的扫描可供比较"
+  },
   "historyCompareTitle": {
     "message": "比较扫描"
   },
   "historyCompareWith": {
     "message": "比较对象"
+  },
+  "historyCompareScopePage": {
+    "message": "此页面"
+  },
+  "historyCompareScopeAny": {
+    "message": "任意页面"
+  },
+  "historyCompareSearch": {
+    "message": "按地址或标题筛选"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · 发现 {1} 个"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "重新扫描失败的页面"
   },
+  "bulkRunAgain": {
+    "message": "再次运行"
+  },
   "bulkFilterLabel": {
     "message": "显示",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "错误状态（4xx、5xx）"
   },
+  "bulkFilterChanged": {
+    "message": "自上次运行以来有变化"
+  },
   "bulkFilterOnlyFmt": {
     "message": "仅 {0}"
   },
   "bulkCopyLines": {
     "message": "复制为行"
+  },
+  "bulkCompareExport": {
+    "message": "与导出文件比较…"
   },
   "bulkFilterNone": {
     "message": "没有页面符合此筛选条件。"
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "地址"
+  },
+  "bulkColPrevious": {
+    "message": "与上次运行相比"
+  },
+  "bulkPrevUnchanged": {
+    "message": "无变化"
+  },
+  "bulkPrevNew": {
+    "message": "上次运行中没有"
   },
   "bulkStatusWaiting": {
     "message": "等待中"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "已完成 {0}/{1}"
   },
+  "bulkStoredFmt": {
+    "message": "{0} 运行的结果"
+  },
   "bulkCountsFmt": {
     "message": "完成：{0} · 有防护：{1} · 失败：{2} · 已跳过：{3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "其他未纳入的行：{0}"
   },
+  "bulkComparedFmt": {
+    "message": "已与 {0} 的运行比较。有变化的页面：{1}"
+  },
   "bulkHistoryPaused": {
     "message": "历史记录已暂停：页面会被扫描，但不会被记录。"
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "无法读取该文件。"
+  },
+  "bulkErrCompareFile": {
+    "message": "此文件不是批量扫描的 JSON 导出文件。"
   },
   "bulkEmpty": {
     "message": "粘贴地址或上传文件，然后选择开始。"

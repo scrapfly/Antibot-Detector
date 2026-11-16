@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "خطافات JS: متوقفة لهذا الموقع"
   },
+  "detectionScrapingTitle": {
+    "message": "ماذا يعني هذا للاستخراج الآلي"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "ردّت الصفحة بالرمز HTTP {0}: رُفضت هذه الزيارة أو خضعت لتحدٍّ."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "يوجد CAPTCHA في الصفحة: على أداة الاستخراج تجنّب إطلاقه أو حلّه."
+  },
+  "detectionScrapingBrowser": {
+    "message": "تفحص الصفحة المتصفح بلغة JavaScript: من المرجّح أن تفشل طلبات HTTP العادية، فاستخدم متصفحًا حقيقيًا."
+  },
+  "detectionScrapingCookies": {
+    "message": "تُعيَّن ملفات تعريف ارتباط للحماية: على أداة الاستخراج الاحتفاظ بها وإرسالها مجددًا."
+  },
+  "detectionScrapingAntibot": {
+    "message": "تراقب خدمة لمكافحة الروبوتات هذا الموقع: قد تُحظر الطلبات الكثيرة أو السريعة من عنوان واحد."
+  },
   "tipCacheExpires": {
     "message": "تنتهي"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "السجل"
   },
+  "storageBulkRuns": {
+    "message": "تشغيلات الفحص الجماعي"
+  },
   "storageRules": {
     "message": "القواعد والفئات"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "تم حذف لقطات الأدوات"
+  },
+  "storageClearBulkTitle": {
+    "message": "مسح تشغيلات الفحص الجماعي"
+  },
+  "storageClearBulkMessage": {
+    "message": "تُحذف تشغيلات الفحص الجماعي المكتملة المحفوظة لمقارنة التشغيل التالي للقائمة بها. لا يتأثر السجل والقواعد والإعدادات."
+  },
+  "storageBulkCleared": {
+    "message": "تم مسح تشغيلات الفحص الجماعي"
   },
   "storageClearFailed": {
     "message": "تعذّر المسح. حاول مجددًا."
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "فتح {0} في السجل"
   },
+  "statsSectionSite": {
+    "message": "الموقع"
+  },
+  "statsSiteReport": {
+    "message": "تقرير الموقع"
+  },
+  "statsSiteReportForFmt": {
+    "message": "تقرير الموقع: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "الصفحات: {0} · الفحوصات: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "محفوظ أيضًا باسم: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "كل فحص محفوظ لهذا الموقع، أيًّا كان النطاق الزمني. العناوين مع www وبدونها تُعدّ موقعًا واحدًا."
+  },
+  "statsSiteProtections": {
+    "message": "وسائل الحماية في هذا الموقع"
+  },
+  "statsFirstSeenColumn": {
+    "message": "أول ظهور"
+  },
+  "statsScansColumn": {
+    "message": "الفحوصات"
+  },
+  "statsSiteTimeline": {
+    "message": "الخط الزمني"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "عرض أحدث {0} من {1} فحصًا."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}، {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "موجودة"
+  },
+  "statsSiteNotFound": {
+    "message": "غير موجودة"
+  },
+  "statsSiteStatuses": {
+    "message": "حالات HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "حالة HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "فحوصات بلا حالة معروفة: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "الصفحات التي تغيّرت حماياتها"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "تاريخ الفحص"
+  },
+  "statsSiteNoChanges": {
+    "message": "لم يغيّر أي فحص محفوظ لهذا الموقع حماياته."
+  },
+  "statsSiteNoProtections": {
+    "message": "لم يُعثر على أي حماية في الفحوصات المحفوظة لهذا الموقع."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "لا توجد فحوصات محفوظة لـ {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "عرض في السجل"
+  },
   "historyCompare": {
     "message": "مقارنة مع…"
   },
   "historyCompareNone": {
     "message": "لا يوجد فحص محفوظ آخر لهذه الصفحة للمقارنة معه"
   },
+  "historyCompareNoneAny": {
+    "message": "لا يوجد فحص محفوظ آخر للمقارنة معه"
+  },
   "historyCompareTitle": {
     "message": "مقارنة عمليات الفحص"
   },
   "historyCompareWith": {
     "message": "مقارنة مع"
+  },
+  "historyCompareScopePage": {
+    "message": "هذه الصفحة"
+  },
+  "historyCompareScopeAny": {
+    "message": "أي صفحة"
+  },
+  "historyCompareSearch": {
+    "message": "التصفية حسب الرابط أو العنوان"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · العدد: {1}"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "إعادة فحص الصفحات التي فشلت"
   },
+  "bulkRunAgain": {
+    "message": "تشغيل مرة أخرى"
+  },
   "bulkFilterLabel": {
     "message": "عرض",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "حالة خطأ (⁦4xx, 5xx⁩)"
   },
+  "bulkFilterChanged": {
+    "message": "تغيّر منذ التشغيل السابق"
+  },
   "bulkFilterOnlyFmt": {
     "message": "{0} فقط"
   },
   "bulkCopyLines": {
     "message": "نسخ كأسطر"
+  },
+  "bulkCompareExport": {
+    "message": "المقارنة بملف مُصدَّر…"
   },
   "bulkFilterNone": {
     "message": "لا توجد صفحة تطابق هذا المرشح."
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "العنوان"
+  },
+  "bulkColPrevious": {
+    "message": "مقارنة بالتشغيل السابق"
+  },
+  "bulkPrevUnchanged": {
+    "message": "بلا تغيير"
+  },
+  "bulkPrevNew": {
+    "message": "غير موجودة في التشغيل السابق"
   },
   "bulkStatusWaiting": {
     "message": "في الانتظار"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "اكتمل {0} من {1}"
   },
+  "bulkStoredFmt": {
+    "message": "نتائج تشغيل {0}"
+  },
   "bulkCountsFmt": {
     "message": "تم: {0} · مع حماية: {1} · فشل: {2} · تم التخطي: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "أسطر أخرى مستبعدة: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "مقارنة بتشغيل {0}. الصفحات المتغيّرة: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "السجل متوقف مؤقتًا: تُفحص الصفحات لكن لا تُسجَّل."
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "تعذّرت قراءة الملف."
+  },
+  "bulkErrCompareFile": {
+    "message": "هذا الملف ليس تصدير JSON من الفحص الجماعي."
   },
   "bulkEmpty": {
     "message": "الصق العناوين أو ارفع ملفًا، ثم اختر بدء."

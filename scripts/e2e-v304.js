@@ -13,7 +13,9 @@
  *   Folding cards     Rules → editor: Detection methods, Combinations, Check against History and Test on this page start
  *                     folded with their counts; a click or Enter opens them; Save opens the card it points into
  *   Compare scans     History → … → Compare with…: the dialog lists the page's other scans, shows what was added, removed
- *                     and changed, copies it as Markdown, and the item is disabled when there is nothing to compare with
+ *                     and changed, copies it as Markdown; a page with no other scan of its own is enabled (any page, 3.2.0)
+ *   Site report       (3.2.0) History → … → Site report and a Domains row open one site's report: its protections over time,
+ *                     a timeline that reads right to left in Arabic, Markdown and JSON exports, and the way back to History
  *
  * History is seeded with entries, so no site is visited.
  *
@@ -158,6 +160,85 @@ const SEED = [
   });
 
   // ===============================================================================================
+  await scenario('Site report (3.2.0): History → ⋯ → Site report, Domains, the timeline in Arabic, exports and the way back to History', async () => {
+    // History → ⋯ → Site report opens Statistics on the entry's site in a new tab
+    const popup = await openExtensionPage();
+    await popup.$eval('#nav-history', el => el.click());
+    await popup.waitForSelector('.history-item', { timeout: 20000 });
+    await popup.evaluate(() => document.querySelector('.history-item[data-history-id="c3"] .history-more-btn').click());
+    await popup.waitForSelector('#historyItemMenu:not([hidden])');
+    assert.equal(await popup.$eval('#historyItemMenu [data-action="site-report"]', el => el.textContent.trim()), 'Site report');
+    const opened = new Promise(r => ctx.once('page', r));
+    await popup.$eval('#historyItemMenu [data-action="site-report"]', el => el.click());
+    const page = await opened;
+    page.on('pageerror', (e) => pageErrors.push(`site report: ${e.message}`));
+    await page.waitForURL(/sections\/stats\/stats\.html\?site=shop\.example$/, { timeout: 10000 });
+    await page.waitForSelector('#stats-panel-site:not([hidden]) #statsSiteProtectionTable table', { timeout: 15000 });
+    assert.equal(await page.$eval('#statsSiteHost', el => el.textContent), 'shop.example');
+    assert.match(await page.$eval('#statsSiteSummary', el => el.textContent), /^Pages: 1 · Scans: 3 · /);
+    const names = await page.$$eval('#statsSiteProtectionTable tbody th', els => els.map(el => el.textContent.trim()));
+    assert.deepEqual(names.slice().sort(), ['Akamai', 'Cloudflare', 'DataDome', 'Turnstile'], names.join(', '));
+    const cloudflare = await page.$$eval('#statsSiteProtectionTable tbody tr', rows => rows.map(r => [...r.children].map(c => c.textContent.trim())).find(r => r[0] === 'Cloudflare'));
+    assert.equal(cloudflare[5], '3', 'scans');
+    assert.equal(cloudflare[6], '70% – 95%', 'confidence range');
+    // Timeline: three scans, oldest first, left to right in English
+    const cols = await page.$$eval('#statsSiteTimeline thead th.stats-site-col', els => els.map(el => el.getBoundingClientRect().left));
+    assert.equal(cols.length, 3);
+    assert.ok(cols[0] < cols[2], 'oldest on the left in English: ' + cols);
+    const akamai = await page.$$eval('#statsSiteTimeline tbody tr', rows => rows.map(r => [r.querySelector('th').textContent.trim(), [...r.querySelectorAll('td')].map(td => td.classList.contains('is-on'))]).find(r => r[0] === 'Akamai'));
+    assert.deepEqual(akamai[1], [false, true, false], 'Akamai only on the middle scan');
+    assert.equal(await page.$eval('#statsSiteStatusUnknown', el => el.textContent), 'Scans without a known status: 3');
+    if (shotsDir) await page.screenshot({ path: path.join(shotsDir, 'site-report-en.png'), fullPage: true });
+
+    // Exports: a real file through the download path, without the matched values
+    await page.evaluate(() => {
+      globalThis.__dl = [];
+      chrome.downloads.download = (options, cb) => { globalThis.__dl.push(options); cb(globalThis.__dl.length); };
+    });
+    await page.$eval('#statsSiteExportJson', el => el.click());
+    await page.$eval('#statsSiteExportMd', el => el.click());
+    const downloads = await until(async () => { const list = await page.evaluate(() => globalThis.__dl); return list.length === 2 && list; }, 10000, 'the two downloads');
+    assert.match(downloads[0].filename, /^scrapfly-site-report-shop\.example-\d{4}-\d{2}-\d{2}\.json$/);
+    assert.match(downloads[1].filename, /\.md$/);
+    const json = await page.evaluate(async (u) => (await fetch(u)).text(), downloads[0].url);
+    const md = await page.evaluate(async (u) => (await fetch(u)).text(), downloads[1].url);
+    assert.equal(JSON.parse(json).scans, 3);
+    assert.ok(md.startsWith('# Site report: shop.example'), md.slice(0, 60));
+    for (const text of [json, md]) assert.ok(!/cookie-value|header-value|ref=mail/.test(text), 'no matched value or query in an export');
+
+    // Show in History: the popup page on History, narrowed to the site
+    const history = new Promise(r => ctx.once('page', r));
+    await page.$eval('#statsSiteHistory', el => el.click());
+    const tab = await history;
+    await tab.waitForURL(/popup\.html\?tab=history&search=shop\.example$/, { timeout: 10000 });
+    await tab.close();
+
+    // Domains: a row's button opens that site's report in place
+    await page.evaluate(() => document.querySelector('.stats-section-btn[data-section="domains"]').click());
+    await page.waitForSelector('#statsDomainTable .stats-row-btn', { timeout: 10000 });
+    await page.evaluate(() => [...document.querySelectorAll('#statsDomainTable tbody tr')].find(r => r.querySelector('th').textContent.trim() === 'news.example').querySelector('.stats-row-btn').click());
+    await page.waitForFunction(() => !document.querySelector('#stats-panel-site').hidden && document.querySelector('#statsSiteHost').textContent === 'news.example', null, { timeout: 5000, polling: 250 });
+    await page.close();
+    await popup.close();
+
+    // In Arabic the timeline reads right to left: the oldest scan on the right
+    await W(() => chrome.storage.local.set({ scrapfly_language_override: 'ar' }));
+    try {
+      const ar = await openExtensionPage('sections/stats/stats.html?site=shop.example');
+      await ar.waitForSelector('#stats-panel-site:not([hidden]) #statsSiteTimeline table', { timeout: 15000 });
+      assert.equal(await ar.evaluate(() => document.documentElement.dir), 'rtl');
+      const arCols = await ar.$$eval('#statsSiteTimeline thead th.stats-site-col', els => els.map(el => el.getBoundingClientRect().left));
+      assert.ok(arCols[0] > arCols[2], 'oldest on the right in Arabic: ' + arCols);
+      const nameCol = await ar.$eval('#statsSiteTimeline tbody th', el => el.getBoundingClientRect().left);
+      assert.ok(nameCol > arCols[0], 'the protection names at the start (right) of the row');
+      if (shotsDir) await ar.screenshot({ path: path.join(shotsDir, 'site-report-ar.png'), fullPage: true });
+      await ar.close();
+    } finally {
+      await W(() => chrome.storage.local.set({ scrapfly_language_override: 'en' }));
+    }
+  });
+
+  // ===============================================================================================
   await scenario('History → Compare with…: what was added, removed and changed, Markdown, and nothing to compare', async () => {
     const page = await openExtensionPage();
     await page.evaluate(() => {
@@ -170,10 +251,10 @@ const SEED = [
       await page.evaluate((target) => document.querySelector(`.history-item[data-history-id="${target}"] .history-more-btn`).click(), id);
       await page.waitForSelector('#historyItemMenu:not([hidden])');
     };
-    // The page with only one scan: the item is disabled and says why
+    // The page with only one scan: since 3.2.0 it can be compared with a scan of any other page, so the item is enabled
     await menuFor('s1');
-    assert.equal(await page.$eval('#historyItemMenu [data-action="compare"]', el => el.disabled), true);
-    assert.equal(await page.$eval('#historyItemMenu [data-action="compare"]', el => el.title), 'No other saved scan of this page to compare with');
+    assert.equal(await page.$eval('#historyItemMenu [data-action="compare"]', el => el.disabled), false);
+    assert.equal(await page.$eval('#historyItemMenu [data-action="compare"]', el => el.title), '');
     await page.keyboard.press('Escape');
 
     // shop.example/cart: scanned three times (the third with another query); compare the newest with the one before it

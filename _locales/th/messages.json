@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS hooks: ปิดสำหรับไซต์นี้"
   },
+  "detectionScrapingTitle": {
+    "message": "สิ่งนี้หมายถึงอะไรสำหรับการดึงข้อมูล"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "หน้าเว็บตอบกลับด้วย HTTP {0}: การเข้าชมครั้งนี้ถูกปฏิเสธหรือถูกท้าทาย"
+  },
+  "detectionScrapingCaptcha": {
+    "message": "มี CAPTCHA ในหน้าเว็บ: ตัวดึงข้อมูลต้องหลีกเลี่ยงไม่ให้มันทำงานหรือต้องแก้มัน"
+  },
+  "detectionScrapingBrowser": {
+    "message": "หน้าเว็บตรวจสอบเบราว์เซอร์ด้วย JavaScript: คำขอ HTTP ธรรมดามีแนวโน้มจะล้มเหลว ให้ใช้เบราว์เซอร์จริง"
+  },
+  "detectionScrapingCookies": {
+    "message": "มีการตั้งคุกกี้ป้องกัน: ตัวดึงข้อมูลต้องเก็บไว้และส่งกลับไป"
+  },
+  "detectionScrapingAntibot": {
+    "message": "มีบริการป้องกันบอตเฝ้าดูเว็บไซต์นี้: คำขอจำนวนมากหรือรวดเร็วจากที่อยู่เดียวอาจถูกบล็อก"
+  },
   "tipCacheExpires": {
     "message": "หมดอายุ"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "ประวัติ"
   },
+  "storageBulkRuns": {
+    "message": "รอบการสแกนหลายหน้า"
+  },
   "storageRules": {
     "message": "กฎและหมวดหมู่"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "ลบข้อมูลที่จับจากเครื่องมือแล้ว"
+  },
+  "storageClearBulkTitle": {
+    "message": "ล้างรอบการสแกนหลายหน้า"
+  },
+  "storageClearBulkMessage": {
+    "message": "รอบการสแกนหลายหน้าที่เสร็จแล้วซึ่งเก็บไว้เพื่อเปรียบเทียบกับรอบถัดไปของรายการจะถูกลบ ประวัติ กฎ และการตั้งค่าจะไม่ถูกแตะต้อง"
+  },
+  "storageBulkCleared": {
+    "message": "ล้างรอบการสแกนหลายหน้าแล้ว"
   },
   "storageClearFailed": {
     "message": "ล้างไม่สำเร็จ ลองอีกครั้ง"
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "เปิด {0} ในประวัติ"
   },
+  "statsSectionSite": {
+    "message": "ไซต์"
+  },
+  "statsSiteReport": {
+    "message": "รายงานไซต์"
+  },
+  "statsSiteReportForFmt": {
+    "message": "รายงานไซต์: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "หน้า: {0} · การสแกน: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "บันทึกในชื่ออื่นด้วย: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "การสแกนที่บันทึกไว้ทั้งหมดของไซต์นี้ ไม่ว่าจะเลือกช่วงวันที่ใด ที่อยู่ที่มีและไม่มี www นับเป็นไซต์เดียวกัน"
+  },
+  "statsSiteProtections": {
+    "message": "ระบบป้องกันบนไซต์นี้"
+  },
+  "statsFirstSeenColumn": {
+    "message": "พบครั้งแรก"
+  },
+  "statsScansColumn": {
+    "message": "การสแกน"
+  },
+  "statsSiteTimeline": {
+    "message": "ไทม์ไลน์"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "แสดงการสแกนล่าสุด {0} จาก {1} ครั้ง"
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "พบ"
+  },
+  "statsSiteNotFound": {
+    "message": "ไม่พบ"
+  },
+  "statsSiteStatuses": {
+    "message": "สถานะ HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "สถานะ HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "การสแกนที่ไม่ทราบสถานะ: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "หน้าที่ระบบป้องกันเปลี่ยนไป"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "วันที่สแกน"
+  },
+  "statsSiteNoChanges": {
+    "message": "ไม่มีการสแกนที่บันทึกไว้ของไซต์นี้ที่ระบบป้องกันเปลี่ยนไป"
+  },
+  "statsSiteNoProtections": {
+    "message": "ไม่พบระบบป้องกันในการสแกนที่บันทึกไว้ของไซต์นี้"
+  },
+  "statsSiteEmptyFmt": {
+    "message": "ไม่มีการสแกนที่บันทึกไว้ของ {0}"
+  },
+  "statsSiteOpenHistory": {
+    "message": "แสดงในประวัติ"
+  },
   "historyCompare": {
     "message": "เปรียบเทียบกับ…"
   },
   "historyCompareNone": {
     "message": "ไม่มีการสแกนอื่นของหน้านี้ที่บันทึกไว้ให้เปรียบเทียบ"
   },
+  "historyCompareNoneAny": {
+    "message": "ไม่มีการสแกนอื่นที่บันทึกไว้ให้เปรียบเทียบ"
+  },
   "historyCompareTitle": {
     "message": "เปรียบเทียบการสแกน"
   },
   "historyCompareWith": {
     "message": "เปรียบเทียบกับ"
+  },
+  "historyCompareScopePage": {
+    "message": "หน้านี้"
+  },
+  "historyCompareScopeAny": {
+    "message": "หน้าใดก็ได้"
+  },
+  "historyCompareSearch": {
+    "message": "กรองตามที่อยู่หรือชื่อเรื่อง"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · พบ {1} รายการ"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "สแกนหน้าที่ไม่สำเร็จอีกครั้ง"
   },
+  "bulkRunAgain": {
+    "message": "เรียกใช้อีกครั้ง"
+  },
   "bulkFilterLabel": {
     "message": "แสดง",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "สถานะข้อผิดพลาด (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "เปลี่ยนไปจากรอบก่อนหน้า"
+  },
   "bulkFilterOnlyFmt": {
     "message": "เฉพาะ {0}"
   },
   "bulkCopyLines": {
     "message": "คัดลอกเป็นบรรทัด"
+  },
+  "bulkCompareExport": {
+    "message": "เปรียบเทียบกับไฟล์ที่ส่งออก…"
   },
   "bulkFilterNone": {
     "message": "ไม่มีหน้าที่ตรงกับตัวกรองนี้"
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "ที่อยู่"
+  },
+  "bulkColPrevious": {
+    "message": "เทียบกับรอบก่อนหน้า"
+  },
+  "bulkPrevUnchanged": {
+    "message": "ไม่เปลี่ยนแปลง"
+  },
+  "bulkPrevNew": {
+    "message": "ไม่มีในรอบก่อนหน้า"
   },
   "bulkStatusWaiting": {
     "message": "รออยู่"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "เสร็จ {0} จาก {1}"
   },
+  "bulkStoredFmt": {
+    "message": "ผลของรอบเมื่อ {0}"
+  },
   "bulkCountsFmt": {
     "message": "เสร็จ: {0} · มีการป้องกัน: {1} · ไม่สำเร็จ: {2} · ข้าม: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "บรรทัดอื่นที่ไม่รวม: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "เปรียบเทียบกับรอบเมื่อ {0} หน้าที่เปลี่ยน: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "ประวัติหยุดชั่วคราวอยู่ หน้าจะถูกสแกนแต่ไม่ถูกบันทึก"
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "อ่านไฟล์ไม่ได้"
+  },
+  "bulkErrCompareFile": {
+    "message": "ไฟล์นี้ไม่ใช่ไฟล์ JSON ที่ส่งออกจากการสแกนหลายหน้า"
   },
   "bulkEmpty": {
     "message": "วางที่อยู่หรืออัปโหลดไฟล์ แล้วเลือกเริ่ม"

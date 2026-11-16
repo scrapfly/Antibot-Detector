@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS 후크: 이 사이트에서 꺼짐"
   },
+  "detectionScrapingTitle": {
+    "message": "스크래핑에 주는 의미"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "페이지가 HTTP {0}(으)로 응답했습니다: 이 방문은 거부되었거나 확인 절차를 받았습니다."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "페이지에 CAPTCHA가 있습니다: 스크래퍼는 이를 유발하지 않거나 풀어야 합니다."
+  },
+  "detectionScrapingBrowser": {
+    "message": "페이지가 JavaScript로 브라우저를 검사합니다: 일반 HTTP 요청은 실패하기 쉬우니 실제 브라우저를 사용하세요."
+  },
+  "detectionScrapingCookies": {
+    "message": "보호용 쿠키가 설정됩니다: 스크래퍼는 이를 보관하고 다시 보내야 합니다."
+  },
+  "detectionScrapingAntibot": {
+    "message": "안티봇 서비스가 이 사이트를 감시합니다: 한 주소에서 오는 많거나 빠른 요청은 차단될 수 있습니다."
+  },
   "tipCacheExpires": {
     "message": "만료"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "기록"
   },
+  "storageBulkRuns": {
+    "message": "일괄 스캔 실행"
+  },
   "storageRules": {
     "message": "규칙 및 카테고리"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "도구 캡처를 삭제했습니다"
+  },
+  "storageClearBulkTitle": {
+    "message": "일괄 스캔 실행 지우기"
+  },
+  "storageClearBulkMessage": {
+    "message": "목록의 다음 실행과 비교하려고 보관한 완료된 일괄 스캔 실행이 삭제됩니다. 기록, 규칙, 설정은 그대로입니다."
+  },
+  "storageBulkCleared": {
+    "message": "일괄 스캔 실행을 지웠습니다"
   },
   "storageClearFailed": {
     "message": "지우지 못했습니다. 다시 시도하세요."
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "기록에서 {0} 열기"
   },
+  "statsSectionSite": {
+    "message": "사이트"
+  },
+  "statsSiteReport": {
+    "message": "사이트 보고서"
+  },
+  "statsSiteReportForFmt": {
+    "message": "사이트 보고서: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "페이지: {0} · 스캔: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "다른 이름으로도 저장됨: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "날짜 범위와 관계없이 이 사이트의 저장된 모든 스캔입니다. www가 있는 주소와 없는 주소는 한 사이트로 셉니다."
+  },
+  "statsSiteProtections": {
+    "message": "이 사이트의 보호"
+  },
+  "statsFirstSeenColumn": {
+    "message": "처음 확인"
+  },
+  "statsScansColumn": {
+    "message": "스캔"
+  },
+  "statsSiteTimeline": {
+    "message": "타임라인"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "스캔 {1}개 중 최신 {0}개를 표시합니다."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "발견됨"
+  },
+  "statsSiteNotFound": {
+    "message": "발견되지 않음"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP 상태"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP 상태"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "상태를 알 수 없는 스캔: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "보호가 바뀐 페이지"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "스캔 날짜"
+  },
+  "statsSiteNoChanges": {
+    "message": "이 사이트의 저장된 스캔 중 보호가 바뀐 것은 없습니다."
+  },
+  "statsSiteNoProtections": {
+    "message": "이 사이트의 저장된 스캔에서 보호를 찾지 못했습니다."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "{0}의 저장된 스캔이 없습니다."
+  },
+  "statsSiteOpenHistory": {
+    "message": "기록에서 보기"
+  },
   "historyCompare": {
     "message": "다른 스캔과 비교…"
   },
   "historyCompareNone": {
     "message": "비교할 이 페이지의 다른 저장된 스캔이 없습니다"
   },
+  "historyCompareNoneAny": {
+    "message": "비교할 다른 저장된 스캔이 없습니다"
+  },
   "historyCompareTitle": {
     "message": "스캔 비교"
   },
   "historyCompareWith": {
     "message": "비교 대상"
+  },
+  "historyCompareScopePage": {
+    "message": "이 페이지"
+  },
+  "historyCompareScopeAny": {
+    "message": "모든 페이지"
+  },
+  "historyCompareSearch": {
+    "message": "주소 또는 제목으로 필터링"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · {1}개 발견"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "실패한 페이지 다시 스캔"
   },
+  "bulkRunAgain": {
+    "message": "다시 실행"
+  },
   "bulkFilterLabel": {
     "message": "표시",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "오류 상태 (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "이전 실행 이후 변경됨"
+  },
   "bulkFilterOnlyFmt": {
     "message": "{0}만"
   },
   "bulkCopyLines": {
     "message": "줄로 복사"
+  },
+  "bulkCompareExport": {
+    "message": "내보낸 파일과 비교…"
   },
   "bulkFilterNone": {
     "message": "이 필터와 일치하는 페이지가 없습니다."
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "주소"
+  },
+  "bulkColPrevious": {
+    "message": "이전 실행 대비"
+  },
+  "bulkPrevUnchanged": {
+    "message": "변경 없음"
+  },
+  "bulkPrevNew": {
+    "message": "이전 실행에 없음"
   },
   "bulkStatusWaiting": {
     "message": "대기 중"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "{1}개 중 {0}개 완료"
   },
+  "bulkStoredFmt": {
+    "message": "{0} 실행 결과"
+  },
   "bulkCountsFmt": {
     "message": "완료: {0} · 보호 있음: {1} · 실패: {2} · 건너뜀: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "그 밖에 제외된 줄: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "{0} 실행과 비교했습니다. 변경된 페이지: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "기록이 일시 중지되어 페이지는 스캔되지만 기록되지 않습니다."
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "파일을 읽을 수 없습니다."
+  },
+  "bulkErrCompareFile": {
+    "message": "이 파일은 일괄 스캔 JSON 내보내기가 아닙니다."
   },
   "bulkEmpty": {
     "message": "주소를 붙여 넣거나 파일을 업로드한 다음 시작을 선택하세요."

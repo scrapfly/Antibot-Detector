@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "JS-хуки: выключены для этого сайта"
   },
+  "detectionScrapingTitle": {
+    "message": "Что это значит для скрапинга"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Страница ответила HTTP {0}: этот визит отклонён или отправлен на проверку."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "На странице есть CAPTCHA: скраперу нужно не вызывать её или решать."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Страница проверяет браузер через JavaScript: простые HTTP-запросы, скорее всего, не пройдут, используйте настоящий браузер."
+  },
+  "detectionScrapingCookies": {
+    "message": "Устанавливаются защитные cookie: скрапер должен сохранять их и отправлять обратно."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Сайт охраняет антибот-сервис: много или частых запросов с одного адреса могут заблокировать."
+  },
   "tipCacheExpires": {
     "message": "Истекает"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "История"
   },
+  "storageBulkRuns": {
+    "message": "Запуски массового сканирования"
+  },
   "storageRules": {
     "message": "Правила и категории"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "Захваты инструментов удалены"
+  },
+  "storageClearBulkTitle": {
+    "message": "Очистить запуски массового сканирования"
+  },
+  "storageClearBulkMessage": {
+    "message": "Будут удалены завершённые запуски массового сканирования, сохранённые для сравнения со следующим запуском списка. История, правила и настройки не затрагиваются."
+  },
+  "storageBulkCleared": {
+    "message": "Запуски массового сканирования очищены"
   },
   "storageClearFailed": {
     "message": "Не удалось очистить. Попробуйте ещё раз."
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "Открыть {0} в Истории"
   },
+  "statsSectionSite": {
+    "message": "Сайт"
+  },
+  "statsSiteReport": {
+    "message": "Отчёт по сайту"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Отчёт по сайту: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Страницы: {0} · Сканирования: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Также сохранён как: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Все сохранённые сканирования этого сайта, независимо от периода. Адреса с www и без него считаются одним сайтом."
+  },
+  "statsSiteProtections": {
+    "message": "Защиты на этом сайте"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Впервые замечен"
+  },
+  "statsScansColumn": {
+    "message": "Сканирования"
+  },
+  "statsSiteTimeline": {
+    "message": "Хронология"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Показаны последние {0} из {1} сканирований."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "найдена"
+  },
+  "statsSiteNotFound": {
+    "message": "не найдена"
+  },
+  "statsSiteStatuses": {
+    "message": "HTTP-статусы"
+  },
+  "statsHttpStatusColumn": {
+    "message": "HTTP-статус"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Сканирования без известного статуса: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Страницы, на которых изменились защиты"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Дата сканирования"
+  },
+  "statsSiteNoChanges": {
+    "message": "Ни одно сохранённое сканирование этого сайта не изменило защиты."
+  },
+  "statsSiteNoProtections": {
+    "message": "В сохранённых сканированиях этого сайта защиты не найдены."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Нет сохранённых сканирований {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Показать в Истории"
+  },
   "historyCompare": {
     "message": "Сравнить с…"
   },
   "historyCompareNone": {
     "message": "Нет другого сохранённого сканирования этой страницы для сравнения"
   },
+  "historyCompareNoneAny": {
+    "message": "Нет другого сохранённого сканирования для сравнения"
+  },
   "historyCompareTitle": {
     "message": "Сравнение сканирований"
   },
   "historyCompareWith": {
     "message": "Сравнить с"
+  },
+  "historyCompareScopePage": {
+    "message": "Эта страница"
+  },
+  "historyCompareScopeAny": {
+    "message": "Любая страница"
+  },
+  "historyCompareSearch": {
+    "message": "Фильтр по адресу или заголовку"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · найдено: {1}"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "Повторно сканировать страницы со сбоем"
   },
+  "bulkRunAgain": {
+    "message": "Запустить снова"
+  },
   "bulkFilterLabel": {
     "message": "Показать",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "Код ошибки (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Изменилось с предыдущего запуска"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Только {0}"
   },
   "bulkCopyLines": {
     "message": "Копировать строками"
+  },
+  "bulkCompareExport": {
+    "message": "Сравнить с экспортом…"
   },
   "bulkFilterNone": {
     "message": "Нет страниц, подходящих под этот фильтр."
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "Адрес"
+  },
+  "bulkColPrevious": {
+    "message": "По сравнению с предыдущим запуском"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Без изменений"
+  },
+  "bulkPrevNew": {
+    "message": "Не было в предыдущем запуске"
   },
   "bulkStatusWaiting": {
     "message": "Ожидает"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "Готово {0} из {1}"
   },
+  "bulkStoredFmt": {
+    "message": "Результаты запуска от {0}"
+  },
   "bulkCountsFmt": {
     "message": "Готово: {0} · С защитой: {1} · Сбой: {2} · Пропущено: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Других пропущенных строк: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Сравнение с запуском от {0}. Изменённых страниц: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "История приостановлена: страницы сканируются, но не записываются."
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "Не удалось прочитать файл."
+  },
+  "bulkErrCompareFile": {
+    "message": "Этот файл не является JSON-экспортом массового сканирования."
   },
   "bulkEmpty": {
     "message": "Вставьте адреса или загрузите файл, затем нажмите «Запустить»."

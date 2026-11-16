@@ -106,23 +106,31 @@ function el(extra = {}) {
 function loadUi(messages = null) {
   const counts = el();
   const hooks = el();
+  const title = el();
+  const list = { ...el(), items: [], replaceChildren(...items) { this.items = items; } };
+  const advice = el({ children: { '.scan-advice-list': list } });
   const nodes = {
     '#scanFactsToggle': el(),
-    '#scanFactsPanel': el({ children: { '[data-facts="counts"]': counts, '[data-facts="hooks"]': hooks } }),
+    '#scanFactsPanel': el({ children: { '[data-facts="counts"]': counts, '[data-facts="hooks"]': hooks, '#scanFactsTitle': title, '[data-facts="advice"]': advice } }),
     '#emptyFactsNote': el()
   };
   const context = vm.createContext({
     console, URL,
     Logger: { ui() {}, debug() {}, error() {}, detection() {}, warn() {} },
     chrome: { runtime: { getURL: (p) => p } },
-    document: { querySelector: (selector) => nodes[selector] || null }
+    document: {
+      querySelector: (selector) => nodes[selector] || null,
+      createElement: () => ({ ...el(), textContent: '' })
+    }
   });
   context.self = context;
   if (messages) context.I18n = { format: (key, ...args) => (messages[key] ? messages[key].message.replace(/\{(\d+)\}/g, (p, i) => String(args[i])) : null), locale: () => 'es' };
   vm.runInContext(read('modules/core/categories.js'), context);
+  vm.runInContext(read('modules/core/http-status.js'), context);
+  vm.runInContext(read('modules/core/scraping-advice.js'), context);
   vm.runInContext(read('utils/format-utils.js'), context);
   vm.runInContext(read('sections/detection/detection-ui.js'), context);
-  return { DetectionUI: context.DetectionUI, nodes, counts, hooks };
+  return { DetectionUI: context.DetectionUI, nodes, counts, hooks, title, advice, list };
 }
 
 const FACTS = { cookies: 12, scripts: 31, requests: 200, headers: 18, hooks: 'timeout' };
@@ -175,6 +183,26 @@ test('results: a closed square at the end of the Cache row opens the lines; the 
   }
 });
 
+test('What this means for scraping: the panel lists the points of the results, also for a result saved without facts', () => {
+  const { DetectionUI, nodes, counts, title, advice, list } = loadUi();
+  const detections = [{ name: 'Cloudflare', category: 'antibot', confidence: 95, matches: [{ type: 'cookie' }] },
+    { name: 'reCAPTCHA', category: 'captcha', confidence: 80, matches: [{ type: 'script' }] }];
+  DetectionUI.syncScanFacts({ httpStatus: 403 }, 'results', detections);
+  assert.equal(nodes['#scanFactsToggle'].hidden, false, 'no facts, but something to say');
+  assert.equal(title.hidden, true, 'no "What was checked" heading without facts');
+  assert.equal(counts.hidden, true);
+  assert.equal(advice.hidden, false);
+  assert.deepEqual(list.items.map(item => item.textContent), [
+    'The page answered with HTTP 403: this visit was refused or challenged.',
+    'A CAPTCHA is on the page: a scraper has to avoid triggering it or solve it.',
+    'Protection cookies are set: a scraper has to keep them and send them back.']);
+  DetectionUI.syncScanFacts({ scanFacts: FACTS, httpStatus: 200 }, 'results', []);
+  assert.equal(advice.hidden, true, 'nothing to say: hidden');
+  assert.equal(title.hidden, false);
+  DetectionUI.syncScanFacts({ httpStatus: 200 }, 'results', [{ name: 'Weak', category: 'captcha', confidence: 20 }]);
+  assert.equal(nodes['#scanFactsToggle'].hidden, true, 'neither facts nor a point: no square');
+});
+
 test('the square, the lines and the clean line are in the page, named, and wired to the results and the clean card', () => {
   const html = read('sections/detection/detection.html');
   const row = html.slice(html.indexOf('class="cache-expiry-line"'), html.indexOf('id="detectionChangeNote"'));
@@ -182,7 +210,7 @@ test('the square, the lines and the clean line are in the page, named, and wired
   assert.match(row, /id="scanFactsPanel"[^>]*hidden>[\s\S]*?data-i18n="detectionFactsTitle"/);
   assert.match(html, /<p id="emptyFactsNote" class="state-card-checked state-card-facts"[^>]*hidden><\/p>/);
   const ui = read('sections/detection/detection-ui.js');
-  assert.match(ui, /DetectionUI\.syncScanFacts\.call\(this, options\.cacheMetadata \|\| null, 'results'\);/);
+  assert.match(ui, /DetectionUI\.syncScanFacts\.call\(this, options\.cacheMetadata \|\| null, 'results', detections\);/);
   assert.match(ui, /DetectionUI\.syncScanFacts\.call\(this, options\.scan \|\| null, this\.scanOutcome === 'complete' && options\.scan \? 'clean' : null\);/);
 });
 

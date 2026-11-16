@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "Intercepteurs JS : désactivés pour ce site"
   },
+  "detectionScrapingTitle": {
+    "message": "Ce que cela implique pour le scraping"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "La page a répondu avec HTTP {0} : cette visite a été refusée ou soumise à un défi."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Un CAPTCHA est sur la page : un scraper doit éviter de le déclencher ou le résoudre."
+  },
+  "detectionScrapingBrowser": {
+    "message": "La page vérifie le navigateur en JavaScript : de simples requêtes HTTP risquent d’échouer, utilisez un vrai navigateur."
+  },
+  "detectionScrapingCookies": {
+    "message": "Des cookies de protection sont définis : un scraper doit les conserver et les renvoyer."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Un service anti-bot surveille ce site : des requêtes nombreuses ou rapides depuis une même adresse peuvent être bloquées."
+  },
   "tipCacheExpires": {
     "message": "Expire"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "Historique"
   },
+  "storageBulkRuns": {
+    "message": "Exécutions de l’analyse groupée"
+  },
   "storageRules": {
     "message": "Règles et catégories"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "Captures des outils supprimées"
+  },
+  "storageClearBulkTitle": {
+    "message": "Effacer les exécutions de l’analyse groupée"
+  },
+  "storageClearBulkMessage": {
+    "message": "Les exécutions terminées de l’analyse groupée, conservées pour les comparer à la prochaine exécution d’une liste, sont supprimées. L’historique, les règles et les paramètres ne sont pas touchés."
+  },
+  "storageBulkCleared": {
+    "message": "Exécutions de l’analyse groupée effacées"
   },
   "storageClearFailed": {
     "message": "Impossible de l’effacer. Réessayez."
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "Ouvrir {0} dans l’Historique"
   },
+  "statsSectionSite": {
+    "message": "Site"
+  },
+  "statsSiteReport": {
+    "message": "Rapport du site"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Rapport du site : {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Pages : {0} · Analyses : {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Aussi enregistré sous : {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Toutes les analyses enregistrées de ce site, quelle que soit la période. Les adresses avec et sans www comptent comme un seul site."
+  },
+  "statsSiteProtections": {
+    "message": "Protections de ce site"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Vu pour la première fois"
+  },
+  "statsScansColumn": {
+    "message": "Analyses"
+  },
+  "statsSiteTimeline": {
+    "message": "Chronologie"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Affichage des {0} dernières analyses sur {1}."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1} : {2}"
+  },
+  "statsSiteFound": {
+    "message": "trouvée"
+  },
+  "statsSiteNotFound": {
+    "message": "non trouvée"
+  },
+  "statsSiteStatuses": {
+    "message": "Statuts HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "Statut HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Analyses sans statut connu : {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Pages dont les protections ont changé"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Date de l’analyse"
+  },
+  "statsSiteNoChanges": {
+    "message": "Aucune analyse enregistrée de ce site n'a changé de protections."
+  },
+  "statsSiteNoProtections": {
+    "message": "Aucune protection trouvée dans les analyses enregistrées de ce site."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Aucune analyse enregistrée pour {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Voir dans l’Historique"
+  },
   "historyCompare": {
     "message": "Comparer avec…"
   },
   "historyCompareNone": {
     "message": "Aucune autre analyse enregistrée de cette page avec laquelle comparer"
   },
+  "historyCompareNoneAny": {
+    "message": "Aucune autre analyse enregistrée avec laquelle comparer"
+  },
   "historyCompareTitle": {
     "message": "Comparer les analyses"
   },
   "historyCompareWith": {
     "message": "Comparer avec"
+  },
+  "historyCompareScopePage": {
+    "message": "Cette page"
+  },
+  "historyCompareScopeAny": {
+    "message": "N’importe quelle page"
+  },
+  "historyCompareSearch": {
+    "message": "Filtrer par adresse ou titre"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · trouvées : {1}"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "Analyser à nouveau les pages en échec"
   },
+  "bulkRunAgain": {
+    "message": "Relancer"
+  },
   "bulkFilterLabel": {
     "message": "Afficher",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "Statut d'erreur (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Modifiées depuis l’exécution précédente"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Uniquement {0}"
   },
   "bulkCopyLines": {
     "message": "Copier en lignes"
+  },
+  "bulkCompareExport": {
+    "message": "Comparer avec un export…"
   },
   "bulkFilterNone": {
     "message": "Aucune page ne correspond à ce filtre."
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "Adresse"
+  },
+  "bulkColPrevious": {
+    "message": "Par rapport à l’exécution précédente"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Inchangé"
+  },
+  "bulkPrevNew": {
+    "message": "Absente de l’exécution précédente"
   },
   "bulkStatusWaiting": {
     "message": "En attente"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "{0} sur {1} terminées"
   },
+  "bulkStoredFmt": {
+    "message": "Résultats de l’exécution du {0}"
+  },
   "bulkCountsFmt": {
     "message": "Terminées : {0} · Avec protections : {1} · En échec : {2} · Ignorées : {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Autres lignes écartées : {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Comparé à l’exécution du {0}. Pages modifiées : {1}"
+  },
   "bulkHistoryPaused": {
     "message": "L’historique est en pause : les pages sont analysées mais pas enregistrées."
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "Le fichier n’a pas pu être lu."
+  },
+  "bulkErrCompareFile": {
+    "message": "Ce fichier n’est pas un export JSON de l’analyse groupée."
   },
   "bulkEmpty": {
     "message": "Collez des adresses ou importez un fichier, puis choisissez Démarrer."

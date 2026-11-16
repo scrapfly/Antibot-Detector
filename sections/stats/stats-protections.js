@@ -22,6 +22,18 @@
     return link;
   }
 
+  /** The button of a Domains row that opens the site's report (the host name itself opens its History). */
+  function siteButton(app, hostname) {
+    const label = fmt('statsSiteReportForFmt', 'Site report: {0}', hostname);
+    const button = element('button', 'stats-row-btn');
+    button.type = 'button';
+    button.setAttribute('title', label);
+    button.setAttribute('aria-label', label);
+    button.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 20V10m5 10V4m6 16v-7m5 7V7M2 22h20"/></svg>';
+    button.addEventListener('click', () => app.openSite(hostname));
+    return button;
+  }
+
   /* ---------- Protections ---------- */
   /** Detector rows with their pages in the previous period, sorted by the chosen column. */
   function protectionRows(app) {
@@ -135,8 +147,9 @@
     const rows = all.slice(0, state.limits.domain);
     U.table(byId('statsDomainTable'), {
       caption: tr('statsDomainDetails', 'All domains'), ltrFirst: true,
-      headers: [tr('statsDomainColumn', 'Domain'), tr('statsDifficultyColumn', 'Difficulty'), tr('statsStackColumn', 'Protections'), { text: tr('statsPagesColumn', 'Pages'), num: true }, { text: tr('statsLastSeenColumn', 'Last seen'), nowrap: true }],
-      rows: rows.map(row => [hostLink(app, row.hostname), U.pill(row.difficulty), row.stackTotal ? U.stack(row) : '–', num(row.visits), lastSeen(row, d.now)]),
+      headers: [tr('statsDomainColumn', 'Domain'), tr('statsDifficultyColumn', 'Difficulty'), tr('statsStackColumn', 'Protections'), { text: tr('statsPagesColumn', 'Pages'), num: true }, { text: tr('statsLastSeenColumn', 'Last seen'), nowrap: true },
+        { text: tr('statsSiteReport', 'Site report'), nowrap: true }],
+      rows: rows.map(row => [hostLink(app, row.hostname), U.pill(row.difficulty), row.stackTotal ? U.stack(row) : '–', num(row.visits), lastSeen(row, d.now), siteButton(app, row.hostname)]),
       empty: tr('statsNoMatchingDomains', 'No domains match your search.')
     });
     U.tableCount('statsDomain', rows.length, all.length);

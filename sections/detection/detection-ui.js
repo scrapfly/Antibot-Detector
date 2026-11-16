@@ -443,17 +443,35 @@ DetectionUI.scanFactsText = function(facts) {
 };
 
 /**
+ * What this means for scraping, as the panel's lines: one text per point ScrapingAdvice finds in the results and the status.
+ * @param {object[]} detections - the results shown
+ * @param {object|null} meta - the result's cache metadata (its httpStatus)
+ * @returns {string[]}
+ */
+DetectionUI.scrapingAdviceText = function(detections, meta) {
+    if (typeof ScrapingAdvice === 'undefined') return [];
+    const httpStatus = meta && meta.httpStatus;
+    return ScrapingAdvice.of({ detections, httpStatus }).map((key) => {
+      const [id, english] = ScrapingAdvice.TEXTS[key];
+      return key === 'blocked' ? FormatUtils.t(id, english, String(httpStatus)) : FormatUtils.t(id, english);
+    });
+};
+
+/**
  * What was checked, from the result shown: the square at the end of the Cache row and the lines it opens (results), and the
- * line under the all-clear card (a scan that found nothing). Both hidden for a result with no facts.
+ * line under the all-clear card (a scan that found nothing). With results the panel also says what they mean for scraping, so
+ * the square shows for a result with facts or with such a point; the clean line needs facts.
  * @param {object|null} meta - the result's cache metadata
  * @param {'results'|'clean'|null} where - which state shows them; null hides both
+ * @param {object[]} [detections] - the results shown (with 'results')
  */
-DetectionUI.syncScanFacts = function(meta, where) {
+DetectionUI.syncScanFacts = function(meta, where, detections) {
     const text = where ? DetectionUI.scanFactsText(meta && meta.scanFacts) : null;
+    const advice = where === 'results' ? DetectionUI.scrapingAdviceText(Array.isArray(detections) ? detections : [], meta) : [];
     const toggle = document.querySelector('#scanFactsToggle');
     const panel = document.querySelector('#scanFactsPanel');
     const clean = document.querySelector('#emptyFactsNote');
-    const inResults = !!text && where === 'results';
+    const inResults = (!!text || advice.length > 0) && where === 'results';
     if (toggle) {
       if (toggle.dataset && toggle.dataset.bound !== 'true') {
         toggle.dataset.bound = 'true';
@@ -469,10 +487,21 @@ DetectionUI.syncScanFacts = function(meta, where) {
     }
     if (panel) {
       if (inResults) {
+        const title = panel.querySelector('#scanFactsTitle');
         const counts = panel.querySelector('[data-facts="counts"]');
         const hooks = panel.querySelector('[data-facts="hooks"]');
-        if (counts) counts.textContent = text.counts;
-        if (hooks) { hooks.textContent = text.hooks; hooks.hidden = !text.hooks; }
+        if (title) title.hidden = !text;
+        if (counts) { counts.textContent = text ? text.counts : ''; counts.hidden = !text; }
+        if (hooks) { hooks.textContent = text ? text.hooks : ''; hooks.hidden = !text || !text.hooks; }
+        const box = panel.querySelector('[data-facts="advice"]');
+        const list = box && box.querySelector('.scan-advice-list');
+        if (list) list.replaceChildren(...advice.map((line) => {
+          const item = document.createElement('li');
+          item.textContent = line;
+          item.setAttribute('dir', 'auto');
+          return item;
+        }));
+        if (box) box.hidden = !advice.length;
       }
       panel.hidden = !inResults || !toggle || toggle.getAttribute('aria-expanded') !== 'true';
     }
@@ -790,7 +819,7 @@ DetectionUI.displayResults = async function(detections = [], options = {}) {
     DetectionUI.syncSourceNote.call(this, options.cacheMetadata || null);
     DetectionUI.syncHooksOffNote.call(this);
     // What was checked: the counts and how the JS hooks ended, folded at the end of the Cache row
-    DetectionUI.syncScanFacts.call(this, options.cacheMetadata || null, 'results');
+    DetectionUI.syncScanFacts.call(this, options.cacheMetadata || null, 'results', detections);
 
     // Update stats
     this.updateStats(detections);

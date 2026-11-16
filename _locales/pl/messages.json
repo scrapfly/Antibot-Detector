@@ -4537,6 +4537,24 @@
   "detectionFactsHooksOff": {
     "message": "Hooki JS: wyłączone dla tej witryny"
   },
+  "detectionScrapingTitle": {
+    "message": "Co to oznacza dla scrapingu"
+  },
+  "detectionScrapingBlockedFmt": {
+    "message": "Strona odpowiedziała kodem HTTP {0}: ta wizyta została odrzucona lub poddana weryfikacji."
+  },
+  "detectionScrapingCaptcha": {
+    "message": "Na stronie jest CAPTCHA: scraper musi unikać jej wywołania albo ją rozwiązać."
+  },
+  "detectionScrapingBrowser": {
+    "message": "Strona sprawdza przeglądarkę w JavaScripcie: zwykłe żądania HTTP prawdopodobnie się nie powiodą, użyj prawdziwej przeglądarki."
+  },
+  "detectionScrapingCookies": {
+    "message": "Ustawiane są ciasteczka ochronne: scraper musi je zachować i odsyłać."
+  },
+  "detectionScrapingAntibot": {
+    "message": "Usługa anty-bot pilnuje tej witryny: wiele lub szybkie żądania z jednego adresu mogą zostać zablokowane."
+  },
   "tipCacheExpires": {
     "message": "Wygasa"
   },
@@ -5642,6 +5660,9 @@
   "storageHistory": {
     "message": "Historia"
   },
+  "storageBulkRuns": {
+    "message": "Przebiegi skanowania zbiorczego"
+  },
   "storageRules": {
     "message": "Reguły i kategorie"
   },
@@ -5689,6 +5710,15 @@
   },
   "storageCapturesCleared": {
     "message": "Usunięto przechwycenia narzędzi"
+  },
+  "storageClearBulkTitle": {
+    "message": "Wyczyść przebiegi skanowania zbiorczego"
+  },
+  "storageClearBulkMessage": {
+    "message": "Zakończone przebiegi skanowania zbiorczego, przechowywane do porównania z kolejnym przebiegiem listy, zostaną usunięte. Historia, reguły i ustawienia pozostaną bez zmian."
+  },
+  "storageBulkCleared": {
+    "message": "Wyczyszczono przebiegi skanowania zbiorczego"
   },
   "storageClearFailed": {
     "message": "Nie udało się wyczyścić. Spróbuj ponownie."
@@ -6293,17 +6323,98 @@
   "statsOpenInHistoryFmt": {
     "message": "Otwórz {0} w Historii"
   },
+  "statsSectionSite": {
+    "message": "Witryna"
+  },
+  "statsSiteReport": {
+    "message": "Raport witryny"
+  },
+  "statsSiteReportForFmt": {
+    "message": "Raport witryny: {0}"
+  },
+  "statsSiteSummaryFmt": {
+    "message": "Strony: {0} · Skany: {1} · {2}"
+  },
+  "statsSiteAlsoFmt": {
+    "message": "Zapisano też jako: {0}"
+  },
+  "statsSiteAllDatesNote": {
+    "message": "Wszystkie zapisane skany tej witryny, niezależnie od zakresu dat. Adresy z www i bez www liczą się jako jedna witryna."
+  },
+  "statsSiteProtections": {
+    "message": "Ochrony w tej witrynie"
+  },
+  "statsFirstSeenColumn": {
+    "message": "Pierwszy raz"
+  },
+  "statsScansColumn": {
+    "message": "Skany"
+  },
+  "statsSiteTimeline": {
+    "message": "Oś czasu"
+  },
+  "statsSiteTimelineLimitFmt": {
+    "message": "Wyświetlono ostatnie {0} z {1} skanów."
+  },
+  "statsSiteCellFmt": {
+    "message": "{0}, {1}: {2}"
+  },
+  "statsSiteFound": {
+    "message": "wykryto"
+  },
+  "statsSiteNotFound": {
+    "message": "nie wykryto"
+  },
+  "statsSiteStatuses": {
+    "message": "Statusy HTTP"
+  },
+  "statsHttpStatusColumn": {
+    "message": "Status HTTP"
+  },
+  "statsSiteStatusUnknownFmt": {
+    "message": "Skany bez znanego statusu: {0}"
+  },
+  "statsSiteChanges": {
+    "message": "Strony, na których zmieniły się ochrony"
+  },
+  "statsSiteScanDateColumn": {
+    "message": "Data skanu"
+  },
+  "statsSiteNoChanges": {
+    "message": "Żaden zapisany skan tej witryny nie zmienił swoich ochron."
+  },
+  "statsSiteNoProtections": {
+    "message": "W zapisanych skanach tej witryny nie znaleziono żadnej ochrony."
+  },
+  "statsSiteEmptyFmt": {
+    "message": "Brak zapisanych skanów dla {0}."
+  },
+  "statsSiteOpenHistory": {
+    "message": "Pokaż w Historii"
+  },
   "historyCompare": {
     "message": "Porównaj z…"
   },
   "historyCompareNone": {
     "message": "Brak innego zapisanego skanu tej strony do porównania"
   },
+  "historyCompareNoneAny": {
+    "message": "Brak innego zapisanego skanu do porównania"
+  },
   "historyCompareTitle": {
     "message": "Porównaj skany"
   },
   "historyCompareWith": {
     "message": "Porównaj z"
+  },
+  "historyCompareScopePage": {
+    "message": "Ta strona"
+  },
+  "historyCompareScopeAny": {
+    "message": "Dowolna strona"
+  },
+  "historyCompareSearch": {
+    "message": "Filtruj według adresu lub tytułu"
   },
   "historyCompareOptionFmt": {
     "message": "{0} · znaleziono: {1}"
@@ -6635,6 +6746,9 @@
   "bulkScanFailedAgain": {
     "message": "Skanuj ponownie strony, które się nie powiodły"
   },
+  "bulkRunAgain": {
+    "message": "Uruchom ponownie"
+  },
   "bulkFilterLabel": {
     "message": "Pokaż",
     "description": "Bulk scan: label of the dropdown that chooses which pages of the results are shown"
@@ -6658,11 +6772,17 @@
   "bulkFilterHttpError": {
     "message": "Status błędu (4xx, 5xx)"
   },
+  "bulkFilterChanged": {
+    "message": "Zmienione od poprzedniego przebiegu"
+  },
   "bulkFilterOnlyFmt": {
     "message": "Tylko {0}"
   },
   "bulkCopyLines": {
     "message": "Kopiuj jako wiersze"
+  },
+  "bulkCompareExport": {
+    "message": "Porównaj z eksportem…"
   },
   "bulkFilterNone": {
     "message": "Żadna strona nie pasuje do tego filtra."
@@ -6679,6 +6799,15 @@
   },
   "bulkColAddress": {
     "message": "Adres"
+  },
+  "bulkColPrevious": {
+    "message": "Względem poprzedniego przebiegu"
+  },
+  "bulkPrevUnchanged": {
+    "message": "Bez zmian"
+  },
+  "bulkPrevNew": {
+    "message": "Nie było w poprzednim przebiegu"
   },
   "bulkStatusWaiting": {
     "message": "Czeka"
@@ -6737,6 +6866,9 @@
   "bulkProgressFmt": {
     "message": "Ukończono {0} z {1}"
   },
+  "bulkStoredFmt": {
+    "message": "Wyniki przebiegu z {0}"
+  },
   "bulkCountsFmt": {
     "message": "Gotowe: {0} · Z zabezpieczeniami: {1} · Nieudane: {2} · Pominięte: {3}"
   },
@@ -6761,6 +6893,9 @@
   "bulkMoreSkippedFmt": {
     "message": "Inne pominięte wiersze: {0}"
   },
+  "bulkComparedFmt": {
+    "message": "Porównano z przebiegiem z {0}. Zmienione strony: {1}"
+  },
   "bulkHistoryPaused": {
     "message": "Historia jest wstrzymana: strony są skanowane, ale nie zapisywane."
   },
@@ -6784,6 +6919,9 @@
   },
   "bulkErrFile": {
     "message": "Nie udało się odczytać pliku."
+  },
+  "bulkErrCompareFile": {
+    "message": "Ten plik nie jest eksportem JSON skanowania zbiorczego."
   },
   "bulkEmpty": {
     "message": "Wklej adresy lub wczytaj plik, a potem wybierz Rozpocznij."

@@ -16,6 +16,10 @@
  * else opens. Switched on again, the run no longer says why it waits (release) and Resume goes on with it; Resume while the
  * extension is still off leaves it paused.
  *
+ * A run that is done is kept in chrome.storage.local (BulkRuns, remember()): a slim copy, so the next run of the same list can say
+ * what changed and the Bulk page can show the last results after the browser restarts. A stopped run is not kept, nor a run started
+ * from a private window, nor any while History is paused (the person asked for no record of the pages they visit).
+ *
  * "Wait between pages" (the run's delaySec, 0 to 60 s) is a pause after each page visited, inside the keepalive like the rest of
  * the run. Pause, Stop and switching the extension off end it at once (_interruptWait). It is counted from the end of the last
  * page (BulkScan.waitBefore), so a run resumed, or continued after the worker started again, waits only what is left of it.
@@ -110,6 +114,46 @@ const BulkScanRunner = {
         return !!settings && settings.settingsUnreadable === true;
     },
 
+    /**
+     * Keep a run that is done (BulkRuns.remember), unless it came from a private window or History is paused. One write at a time:
+     * two runs finishing together must not drop each other.
+     */
+    remember(run) {
+        const next = (this._remembering || Promise.resolve()).then(() => this._remember(run));
+        this._remembering = next.catch(() => {});
+        return next;
+    },
+
+    async _remember(run) {
+        if (!run || run.status !== 'done' || run.private === true || typeof BulkRuns === 'undefined') return false;
+        try {
+            const settings = await Utils.getSettings();
+            if (settings && (settings.settingsUnreadable === true || (settings.history && settings.history.historyEnabled === false))) return false;
+            const local = chrome.storage.local;
+            const stored = (await local.get([BulkRuns.KEY]))[BulkRuns.KEY];
+            const store = BulkRuns.remember(stored, run);
+            await local.set({ [BulkRuns.KEY]: store });
+            return true;
+        } catch (error) {
+            if (typeof Logger !== 'undefined' && Logger.warn) Logger.warn('BACKGROUND', '[BulkScan] Run not kept:', error);
+            return false;
+        }
+    },
+
+    /**
+     * Delete the kept runs (Settings → Data → Clear, History's clear on close). On the same queue as remember(): a run finishing
+     * at that moment cannot write them back.
+     */
+    forgetRuns() {
+        const next = (this._remembering || Promise.resolve()).then(async () => {
+            if (typeof BulkRuns === 'undefined') return false;
+            await chrome.storage.local.remove([BulkRuns.KEY]);
+            return true;
+        });
+        this._remembering = next.catch(() => {});
+        return next;
+    },
+
     async extensionOn() {
         const flags = await chrome.storage.local.get(['scrapfly_enabled']);
         return flags.scrapfly_enabled !== false;
@@ -118,7 +162,9 @@ const BulkScanRunner = {
     /**
      * A new run. With `continueRun`, a run that was stopped goes on: its waiting pages are scanned and the pages it
      * already finished stay in the list with their results (the run's own state is the source, not the page's copy).
-     * @param {{entries: Array<string|{url: string, reason: string}>, timeoutSec?: number, delaySec?: number, cap?: number, continueRun?: boolean, retryFailed?: boolean}} request
+     * `extras`: the person's other CSV columns (BulkScan.extrasOf), kept on the run's pages. `privateWindow`: set by the handler
+     * from the sender (a page in a private window), never by the page: such a run is never kept (remember()).
+     * @param {{entries: Array<string|{url: string, reason: string}>, timeoutSec?: number, delaySec?: number, cap?: number, continueRun?: boolean, retryFailed?: boolean, extras?: object, privateWindow?: boolean}} request
      * @returns {Promise<{ok: boolean, run?: object, error?: 'busy'|'off'|'empty'|'no_window'}>}
      */
     start(request = {}) {
@@ -138,8 +184,15 @@ const BulkScanRunner = {
         const prepared = BulkScan.prepare(entries, { cap: request.cap, isExcluded: await this.scopeTest() });
         // A run that goes on keeps its wait between pages unless the page says another
         const delaySec = request.delaySec !== undefined ? request.delaySec : (resumed && this._run ? this._run.delaySec : undefined);
-        const run = BulkScan.createRun(prepared, { timeoutSec: request.timeoutSec, cap: request.cap, delaySec });
+        // A run that goes on (the failed pages scanned again) is the same run: kept, it replaces its first pass instead of
+        // becoming the list's next run, and it is compared with the run before it (BulkRuns.remember, previousFor)
+        const id = resumed && this._run && typeof this._run.id === 'string' ? this._run.id : undefined;
+        const run = BulkScan.createRun(prepared, { timeoutSec: request.timeoutSec, cap: request.cap, delaySec, id });
         if (resumed) BulkScan.carryOver(run, resumed);
+        // The person's other CSV columns: from the page, or for a run that goes on, the ones the stopped run had
+        BulkScan.attachExtras(run, request.extras || (resumed ? BulkScan.extrasOfRun(this._run) : null));
+        // Started from a private window, or going on with a run that was: never kept
+        if (request.privateWindow === true || (resumed && this._run && this._run.private === true)) run.private = true;
         if (BulkScan.nextWaiting(run) === -1) {
             // Nothing to scan: the list is shown with its reasons, and the run is over before it began
             BulkScan.complete(run);
@@ -197,6 +250,7 @@ const BulkScanRunner = {
             if (index === -1) {
                 BulkScan.complete(run);
                 await this.save();
+                await this.remember(run);
                 break;
             }
             // The gap between two pages, or the person's longer wait (what is left of it after a pause or a worker restart)
@@ -206,6 +260,9 @@ const BulkScanRunner = {
             if (this._run !== run || run.status !== 'running') continue;
             // Woken early (paused and resumed at once): the rest of the wait first
             if (BulkScan.waitBefore(run, Date.now()) > this.WAIT_SLACK_MS) continue;
+            // Renewed again after the wait: the keepalive drops an operation after two minutes, and a wait of up to 60 s
+            // followed by a page of up to 120 s would outlast the renewal at the top of the loop (the worker went idle mid-page)
+            this._renewKeepalive();
             await this._scanOne(run, index);
         }
     },
@@ -335,12 +392,13 @@ const BulkScanRunner = {
                 sendResponse({ status: 'error', error: 'Bulk scan can only be used from extension pages' });
                 return false;
             }
-            Promise.resolve(work(request || {}))
+            Promise.resolve(work(request || {}, sender))
                 .then(result => sendResponse({ status: result && result.ok === false ? 'error' : 'ok', ...result }))
                 .catch(error => sendResponse({ status: 'error', error: String((error && error.message) || error) }));
             return true;
         };
-        registry[WorkerMessages.BULK_SCAN_START] = guarded(request => this.start(request));
+        // Whether the page is in a private window is the sender's to say, never the page's
+        registry[WorkerMessages.BULK_SCAN_START] = guarded((request, sender) => this.start({ ...request, privateWindow: !!(sender && sender.tab && sender.tab.incognito === true) }));
         registry[WorkerMessages.BULK_SCAN_PAUSE] = guarded(async () => ({ ok: await this.pause(), run: this._run }));
         registry[WorkerMessages.BULK_SCAN_RESUME] = guarded(async () => {
             const ok = await this.resume();
@@ -351,6 +409,7 @@ const BulkScanRunner = {
         registry[WorkerMessages.BULK_SCAN_STOP] = guarded(async () => ({ ok: await this.stop('user'), run: this._run }));
         registry[WorkerMessages.BULK_SCAN_STATE] = guarded(async () => ({ ok: true, run: await this.state() }));
         registry[WorkerMessages.BULK_SCAN_CLEAR] = guarded(async () => ({ ok: await this.clear(), run: this._run }));
+        registry[WorkerMessages.BULK_RUNS_FORGET] = guarded(async () => ({ ok: await this.forgetRuns() }));
     },
 
     /** At every worker start: a run left by the worker before this one is marked stopped. */

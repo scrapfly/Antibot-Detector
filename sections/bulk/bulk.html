@@ -65,10 +65,13 @@
           <button type="button" class="bulk-btn bulk-btn--danger" id="bulkStopBtn" data-i18n="bulkStop" hidden>Stop</button>
           <button type="button" class="bulk-btn" id="bulkWaitingBtn" data-i18n="bulkScanWaiting" hidden>Scan the pages still waiting</button>
           <button type="button" class="bulk-btn" id="bulkRetryFailedBtn" data-i18n="bulkScanFailedAgain" hidden>Scan the failed pages again</button>
+          <button type="button" class="bulk-btn" id="bulkRunAgainBtn" data-i18n="bulkRunAgain" hidden>Run again</button>
           <button type="button" class="bulk-btn" id="bulkExportCsvBtn" data-i18n="statsExportCSV">Export CSV</button>
           <button type="button" class="bulk-btn" id="bulkExportJsonBtn" data-i18n="statsExportJSON">Export JSON</button>
           <button type="button" class="bulk-btn" id="bulkExportMarkdownBtn" data-i18n="statsExportMarkdown">Export Markdown</button>
           <button type="button" class="bulk-btn" id="bulkCopyLinesBtn" data-i18n="bulkCopyLines">Copy as lines</button>
+          <button type="button" class="bulk-btn" id="bulkCompareBtn" data-i18n="bulkCompareExport">Compare with an export…</button>
+          <input type="file" id="bulkCompareFile" accept=".json,application/json" hidden>
           <button type="button" class="bulk-btn" id="bulkNewBtn" data-i18n="bulkNewList" hidden>New list</button>
         </div>
       </div>
@@ -79,6 +82,7 @@
       <p class="bulk-muted" id="bulkRunMostSeen" hidden></p>
       <p class="bulk-notice bulk-notice--warn" id="bulkRunReason" hidden></p>
       <p class="bulk-muted" id="bulkRunNotes" hidden></p>
+      <p class="bulk-muted" id="bulkRunCompared" hidden></p>
       <div class="bulk-filter" id="bulkFilterRow">
         <label class="bulk-field-label" for="bulkFilter" data-i18n="bulkFilterLabel">Show</label>
         <select id="bulkFilter" class="select-field ui-select bulk-select">
@@ -87,6 +91,8 @@
           <option value="clear" data-i18n="bulkFilterClear">No protection found</option>
           <option value="problem" data-i18n="bulkFilterProblem">Failed or skipped</option>
           <option value="httpError" data-i18n="bulkFilterHttpError">Error status (4xx, 5xx)</option>
+          <!-- Only when the run is compared with an earlier one (the previous run of the list, or an export) -->
+          <option value="changed" id="bulkFilterChangedOption" data-i18n="bulkFilterChanged" hidden>Changed since previous run</option>
           <!-- One "Only <protection>" per protection the run found, most pages first (bulk.js syncFilterOptions) -->
           <optgroup id="bulkFilterProtections" label="Protections" hidden></optgroup>
         </select>
@@ -95,12 +101,14 @@
       <div class="bulk-table-wrap">
         <table class="bulk-table" aria-labelledby="bulkResultsTitle">
           <thead>
-            <tr>
+            <tr id="bulkHeadRow">
               <th scope="col" class="bulk-col-num">#</th>
               <th scope="col" data-i18n="bulkColAddress">Address</th>
               <th scope="col" data-i18n="statsRulesStatusColumn">Status</th>
               <th scope="col" data-i18n="statsStackColumn">Protections</th>
               <th scope="col" data-i18n="statsDifficultyColumn">Difficulty</th>
+              <th scope="col" id="bulkColPrevious" data-i18n="bulkColPrevious" hidden>Vs previous run</th>
+              <!-- The person's own CSV columns follow, one th each (bulk.js syncColumns) -->
             </tr>
           </thead>
           <tbody id="bulkRows"></tbody>
@@ -121,6 +129,7 @@
   <script src="../../modules/core/http-status.js"></script>
   <script src="../../utils/format-utils.js"></script>
   <script src="../../modules/core/bulk-scan.js"></script>
+  <script src="../../modules/core/bulk-runs.js"></script>
   <script src="../../modules/core/bulk-filter.js"></script>
   <script src="../../modules/core/bulk-handoff.js"></script>
   <script src="bulk.js"></script>

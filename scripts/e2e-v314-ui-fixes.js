@@ -233,7 +233,7 @@ async function scenario(name, fn) {
     assert.equal(info.name, info.title, 'named like the dialog');
     // From the list of scans, Tab: the Unchanged button is not there (nothing unchanged but Cloudflare's move), the result is next
     const stops = [];
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 14; i++) { // 3.2.0: This page / Any page joined the loop
       await page.keyboard.press('Tab');
       stops.push(await page.evaluate(() => { const a = document.activeElement; return a.classList.contains('history-compare-result') ? 'result' : (a.textContent.trim().slice(0, 20) || a.tagName); }));
     }
