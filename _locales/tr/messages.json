@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "Aramanızla veya filtrelerinizle eşleşen girdi yok."
   },
+  "historyEntryGone": {
+    "message": "Bu tarama artık geçmişte yok."
+  },
   "historyClearFilters": {
     "message": "Filtreleri temizle"
   },

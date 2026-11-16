@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "没有符合搜索或筛选条件的记录。"
   },
+  "historyEntryGone": {
+    "message": "该扫描已不在历史记录中。"
+  },
   "historyClearFilters": {
     "message": "清除筛选"
   },

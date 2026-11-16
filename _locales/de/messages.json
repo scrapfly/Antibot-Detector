@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "Keine Einträge entsprechen deiner Suche oder den Filtern."
   },
+  "historyEntryGone": {
+    "message": "Dieser Scan ist nicht mehr im Verlauf."
+  },
   "historyClearFilters": {
     "message": "Filter zurücksetzen"
   },

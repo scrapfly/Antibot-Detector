@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "Hledání ani filtrům neodpovídá žádná položka."
   },
+  "historyEntryGone": {
+    "message": "Toto skenování už v Historii není."
+  },
   "historyClearFilters": {
     "message": "Vymazat filtry"
   },

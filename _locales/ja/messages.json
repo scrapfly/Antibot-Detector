@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "検索条件またはフィルターに一致するエントリはありません。"
   },
+  "historyEntryGone": {
+    "message": "そのスキャンは履歴にもうありません。"
+  },
   "historyClearFilters": {
     "message": "フィルターをクリア"
   },

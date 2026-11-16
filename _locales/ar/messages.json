@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "لا توجد إدخالات تطابق بحثك أو عوامل التصفية."
   },
+  "historyEntryGone": {
+    "message": "لم يعد هذا الفحص موجودًا في السجل."
+  },
   "historyClearFilters": {
     "message": "مسح عوامل التصفية"
   },

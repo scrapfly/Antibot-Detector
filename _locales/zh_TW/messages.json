@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "沒有符合搜尋或篩選條件的項目。"
   },
+  "historyEntryGone": {
+    "message": "該掃描已不在歷史記錄中。"
+  },
   "historyClearFilters": {
     "message": "清除篩選條件"
   },

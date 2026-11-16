@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "Немає записів, що відповідають пошуку чи фільтрам."
   },
+  "historyEntryGone": {
+    "message": "Цього сканування більше немає в історії."
+  },
   "historyClearFilters": {
     "message": "Скинути фільтри"
   },

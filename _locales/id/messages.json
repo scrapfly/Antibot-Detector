@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "Tidak ada entri yang cocok dengan pencarian atau filter Anda."
   },
+  "historyEntryGone": {
+    "message": "Pindaian itu sudah tidak ada di Riwayat."
+  },
   "historyClearFilters": {
     "message": "Hapus filter"
   },

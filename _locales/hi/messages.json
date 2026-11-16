@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "आपकी खोज या फ़िल्टर से कोई प्रविष्टि मेल नहीं खाती।"
   },
+  "historyEntryGone": {
+    "message": "वह स्कैन अब इतिहास में नहीं है।"
+  },
   "historyClearFilters": {
     "message": "फ़िल्टर साफ़ करें"
   },

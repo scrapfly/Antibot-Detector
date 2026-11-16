@@ -293,6 +293,8 @@ class ScrapflyPopup {
       if (!find()) await this.history.loadHistoryFromStorage();
       const item = find();
       if (item) this.history.showHistoryItemDetails(item);
+      // Deleted since, or History cleared: say so, rather than leave the list without the details that were asked for
+      else if (typeof NotificationHelper !== 'undefined') NotificationHelper.info(FormatUtils.t('historyEntryGone', 'That scan is no longer in History.'));
     } catch (_) { /* History could not be read: the tab shows why */ }
   }
 

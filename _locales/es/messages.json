@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "Ninguna entrada coincide con tu búsqueda o tus filtros."
   },
+  "historyEntryGone": {
+    "message": "Ese análisis ya no está en el historial."
+  },
   "historyClearFilters": {
     "message": "Borrar filtros"
   },

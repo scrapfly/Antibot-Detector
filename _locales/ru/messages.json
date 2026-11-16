@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "Нет записей, подходящих под поиск или фильтры."
   },
+  "historyEntryGone": {
+    "message": "Этого сканирования больше нет в истории."
+  },
   "historyClearFilters": {
     "message": "Сбросить фильтры"
   },

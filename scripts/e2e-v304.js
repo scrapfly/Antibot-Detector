@@ -257,10 +257,10 @@ const SEED = [
       await tab.close();
       await page.close();
 
-      // An id History no longer holds (deleted, cleared): History opens narrowed, with no details window and no error
+      // An id History no longer holds (deleted, cleared): History opens narrowed, says so, with no details window and no error
       const gone = await openExtensionPage('popup.html?tab=history&search=shop.example&entry=detection_0_0');
       await gone.waitForSelector('.history-item', { timeout: 20000 });
-      await sleep(800);
+      await gone.waitForFunction(() => document.body.innerText.includes('That scan is no longer in History.'), null, { timeout: 10000, polling: 250 });
       assert.equal(await gone.$eval('#historyDetailModal', el => getComputedStyle(el).display), 'none');
       await gone.close();
     } finally {

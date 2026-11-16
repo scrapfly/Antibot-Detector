@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "Không có mục nào khớp với tìm kiếm hoặc bộ lọc của bạn."
   },
+  "historyEntryGone": {
+    "message": "Lượt quét đó không còn trong lịch sử."
+  },
   "historyClearFilters": {
     "message": "Xóa bộ lọc"
   },

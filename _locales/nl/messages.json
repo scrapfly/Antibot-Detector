@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "Geen items komen overeen met je zoekopdracht of filters."
   },
+  "historyEntryGone": {
+    "message": "Die scan staat niet meer in de geschiedenis."
+  },
   "historyClearFilters": {
     "message": "Filters wissen"
   },

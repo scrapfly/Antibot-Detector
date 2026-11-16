@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "ไม่มีรายการที่ตรงกับการค้นหาหรือตัวกรอง"
   },
+  "historyEntryGone": {
+    "message": "การสแกนนั้นไม่อยู่ในประวัติแล้ว"
+  },
   "historyClearFilters": {
     "message": "ล้างตัวกรอง"
   },

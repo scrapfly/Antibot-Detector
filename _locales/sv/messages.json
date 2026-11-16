@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "Inga poster matchar din sökning eller dina filter."
   },
+  "historyEntryGone": {
+    "message": "Den skanningen finns inte längre i historiken."
+  },
   "historyClearFilters": {
     "message": "Rensa filter"
   },

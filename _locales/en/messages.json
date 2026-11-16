@@ -5989,6 +5989,10 @@
     "message": "No entries match your search or filters.",
     "description": "Shown in History when the search and the filter chips leave no entry"
   },
+  "historyEntryGone": {
+    "message": "That scan is no longer in History.",
+    "description": "History, opened on one scan from Statistics → Site report: that scan was deleted or History was cleared since"
+  },
   "historyClearFilters": {
     "message": "Clear filters",
     "description": "Button under the no-matches message in History: turns every chip off and empties the search"

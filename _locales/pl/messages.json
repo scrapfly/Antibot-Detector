@@ -5642,6 +5642,9 @@
   "historyNoResults": {
     "message": "Żaden wpis nie pasuje do wyszukiwania ani filtrów."
   },
+  "historyEntryGone": {
+    "message": "Tego skanu nie ma już w historii."
+  },
   "historyClearFilters": {
     "message": "Wyczyść filtry"
   },
