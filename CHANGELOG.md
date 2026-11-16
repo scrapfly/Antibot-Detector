@@ -18,7 +18,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - History → Compare scans: Copy as Markdown and the hover text never show a login saved in an address, and the filter finds accented site names.
 - History → Compare scans: an old scan compared with any page picks the scan just before it, and a scan saved without an address names its site.
 - Bulk scan: lists with very long addresses, CSV files without a header or with dotted column names, and exports of stopped runs now compare correctly.
-- Bulk scan: clearing History also removes the kept runs; an export picked to compare with applies only to its own list, and a refused file says why.
+- Bulk scan: clearing History removes the kept runs; a chosen export applies only to its own list, refused files say why, and Show lists each protection once.
+- History: clearing it also drops webhook deliveries waiting to be retried, and deleting the last entry no longer clears the webhook's Recent deliveries.
+- History watchlist: a page unwatched, unpinned or deleted during a check is no longer opened.
+- Detection: What was checked says the JS hooks stopped at the time limit when they did, and counts the page's cookies when the browser listed none.
 
 ## [3.2.0] - 2026-11-16
 

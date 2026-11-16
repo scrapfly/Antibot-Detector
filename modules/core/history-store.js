@@ -499,7 +499,7 @@
    * Register the worker-side handlers on a message registry
    * ({ [type]: ({ request, sendResponse }) => boolean }).
    */
-  function registerHandlers(registry, storage) {
+  function registerHandlers(registry, storage, options = {}) {
     const respond = (sendResponse, promise) => {
       promise
         .then(({ items, result }) => sendResponse({ status: 'ok', count: items.length, ...(result || {}) }))
@@ -600,7 +600,14 @@
     // A worker that was not reloaded after an update answers { status: 'unknown' } here: the popup then says so
     registry[Messages.PING] = ({ sendResponse }) => { sendResponse({ status: 'ok' }); return false; };
 
-    registry[Messages.CLEAR] = guard(({ sendResponse }) => respond(sendResponse, mutate(() => [], store())));
+    // History → Clear (also Settings → Data): options.onClear forgets what goes with it (the kept Bulk runs). Only here: deleting
+    // the last card, or retention removing the last entry, also leaves History empty and must not take them
+    registry[Messages.CLEAR] = guard(({ sendResponse }) => respond(sendResponse, mutate(() => [], store()).then((done) => {
+      if (typeof options.onClear === 'function') {
+        try { Promise.resolve(options.onClear()).catch(() => {}); } catch (_) { /* History is cleared either way */ }
+      }
+      return done;
+    })));
   }
 
   /**

@@ -500,6 +500,15 @@ test('a protection chosen on an earlier run stays listed and selected when this 
   assert.equal(page.byId('bulkFilterProtections').hidden, true, 'nothing found, nothing chosen: no group');
 });
 
+test('a protection remembered under another spelling is the run\'s own option, listed once', async () => {
+  const cf = { name: 'Cloudflare', category: 'antibot', confidence: 90 };
+  const page = pageWorld({ run: runOf([finished('https://a.example/', [cf]), finished('https://b.example/', [])]), local: { bulkFilter: 'protection:cloudflare' } });
+  await page.open();
+  assert.deepEqual(page.byId('bulkFilterProtections').children.map(o => o.value), ['protection:Cloudflare'], 'not "cloudflare" beside "Cloudflare"');
+  assert.equal(page.byId('bulkFilter').value, 'protection:Cloudflare');
+  assert.deepEqual(page.rows().map(row => row.address), ['https://a.example/']);
+});
+
 test('Show → Error status keeps the pages that answered 4xx or 5xx, and the exports follow it', async () => {
   const page = pageWorld({ run: runOf([
     { ...finished('https://a.example/', []), httpStatus: 403 },
@@ -634,6 +643,9 @@ test('the export picked to compare with stays for the same list (its failed page
   // The same list going on (its failed page scanned again): still compared with the export
   page.update({ ...now, status: 'running', items: [finished('https://a.example/', []), { url: 'https://b.example/', status: 'scanning' }] });
   assert.equal(page.byId('bulkColPrevious').hidden, false, 'the same list keeps the export');
+  // A page the run skips partway (Sites to scan changed meanwhile): still the same list
+  page.update({ ...now, status: 'running', items: [finished('https://a.example/', []), { url: 'https://b.example/', status: 'skipped', reason: 'scope' }] });
+  assert.equal(page.byId('bulkColPrevious').hidden, false, 'a page skipped partway keeps the export');
   // Another list (started in another tab): the export is not compared with it
   page.update({ ...runOf([finished('https://other.example/', [])]), id: 'r10' });
   assert.equal(page.byId('bulkColPrevious').hidden, true, 'another list: no comparison with the old export');

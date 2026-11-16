@@ -24,7 +24,9 @@ function buildMessageHandlerRegistry(context) {
     }
     // History writes (delete / import / clear) from the popup: the worker is the only writer
     if (typeof HistoryStore !== 'undefined') {
-        HistoryStore.registerHandlers(registry);
+        HistoryStore.registerHandlers(registry, undefined, {
+            onClear: () => (typeof HistoryRetention !== 'undefined' ? HistoryRetention.forgetWithHistory() : undefined)
+        });
     }
     // "Back up now" from Settings
     if (typeof HistoryBackup !== 'undefined') {

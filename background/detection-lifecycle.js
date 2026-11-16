@@ -831,11 +831,13 @@ async function processDetectionData(message, sender) {
         }
 
         // Store main detection and check if ready to finalize
+        const nonEmpty = (list) => (Array.isArray(list) && list.length > 0 ? list : null);
         // Counts and timing for the scan report (background/scan-report.js)
         state.stats = {
             ...scanStats,
-            cookies: (pageData.allCookies || pageData.cookies || []).length,
-            headers: Object.keys(pageData.responseHeaders || pageData.headers || {}).length,
+            // As the engine read them: every cookie of the site when there are any, else the page's own (an empty list is no list)
+            cookies: (nonEmpty(pageData.allCookies) || nonEmpty(pageData.cookies) || []).length,
+            headers: Object.keys(pageData.headers || {}).length, // the engine's own: the response headers when they were captured
             collectMs: typeof pageData.collectMs === 'number' ? pageData.collectMs : undefined
         };
 

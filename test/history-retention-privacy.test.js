@@ -9,7 +9,7 @@ const vm = require('node:vm');
 //    which reads, parses and re-serializes all of it. The worker starts many times a day, and every write is already compact,
 //    so it is done once per browser session and again after an update, not at every start.
 //  - The webhook's record of recent deliveries names pages, so it goes where History's own record goes: when the browser
-//    closes with "Clear on close" on, and when History is emptied.
+//    closes with "Clear on close" on, and when the person clears History (not when the last card is deleted).
 
 const root = path.join(__dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
@@ -207,55 +207,49 @@ test('at the start of the browser, "Clear on close" forgets the delivery record 
   assert.equal(off.state.forgot, 0);
 });
 
-test('when History is emptied (Clear in History, or in Settings → Data) the delivery record goes too; a History with entries leaves it', async () => {
+test('History removed outright forgets the delivery record; History written empty (last card deleted, retention) keeps it', async () => {
   const w = world();
   await w.wake();
   const change = (newValue, oldValue = w.local.scrapfly_history) => w.state.listeners.changed[0]({ scrapfly_history: { oldValue, newValue } }, 'local');
   change(EMPTY);
-  assert.equal(w.state.forgot, 1);
+  assert.equal(w.state.forgot, 0, 'the last card deleted, or retention removing the last old entry: not a clear');
   change(JSON.stringify({ items: [entry(1)], lastUpdated: 6 }));
-  assert.equal(w.state.forgot, 1, 'one entry left: kept');
+  assert.equal(w.state.forgot, 0);
   change(undefined);
-  assert.equal(w.state.forgot, 2, 'the key itself removed');
-  w.state.listeners.changed[0]({ scrapfly_history: { oldValue: 'x', newValue: EMPTY } }, 'sync');
-  assert.equal(w.state.forgot, 2, 'only storage.local counts');
+  assert.equal(w.state.forgot, 1, 'the key itself removed');
+  w.state.listeners.changed[0]({ scrapfly_history: { oldValue: 'x' } }, 'sync');
+  assert.equal(w.state.forgot, 1, 'only storage.local counts');
   w.state.listeners.changed[0]({ scrapfly_settings: { newValue: '{}' } }, 'local');
-  assert.equal(w.state.forgot, 2);
+  assert.equal(w.state.forgot, 1);
   await sleep(30);
 });
 
-test('when History that held entries is emptied the kept Bulk scan runs go too; an empty History written again keeps them', async () => {
+test('History → Clear (and Settings → Data) forgets the delivery record, the held retries and the kept Bulk runs; deleting the last card does not', async () => {
   const w = world();
   let forgotRuns = 0;
+  let forgotHeld = 0;
   w.ctx.BulkScanRunner = { forgetRuns: async () => { forgotRuns++; } };
-  await w.wake();
-  const change = (newValue, oldValue) => w.state.listeners.changed[0]({ scrapfly_history: { oldValue, newValue } }, 'local');
-  change(EMPTY, w.local.scrapfly_history);
-  await sleep(5);
-  assert.equal(forgotRuns, 1, 'History → Clear');
-  change(EMPTY, EMPTY);
-  change(EMPTY, undefined);
-  await sleep(5);
-  assert.equal(forgotRuns, 1, 'History had nothing: the runs stay (recording off, a first write)');
-  change(JSON.stringify({ items: [entry(1)], lastUpdated: 6 }), EMPTY);
-  assert.equal(forgotRuns, 1, 'a History with entries keeps them');
-  w.ctx.BulkScanRunner.forgetRuns = async () => { throw new Error('busy'); };
-  change(undefined, w.local.scrapfly_history);
-  await sleep(5);
-  await sleep(30);
-});
+  w.ctx.SettingsRuntime.forgetHeldWebhooks = async () => { forgotHeld++; };
+  vm.runInContext(read('modules/core/message-sender.js'), w.ctx, { filename: 'message-sender.js' });
+  const r = await w.wake();
+  const registry = {};
+  w.ctx.HistoryStore.registerHandlers(registry, undefined, { onClear: () => r.forgetWithHistory() });
+  const popup = { id: 'abc', url: 'chrome-extension://abc/popup.html' };
+  w.ctx.chrome.runtime.getURL = (rest) => `chrome-extension://abc/${rest}`;
+  const call = (type, request = {}) => new Promise(resolve => registry[type]({ request: { type, ...request }, sender: popup, sendResponse: resolve }));
 
-test('a big History written by a scan is not parsed to find out whether it is empty', async () => {
-  const w = world();
-  await w.wake();
-  let parsed = 0;
-  const parse = w.ctx.HistoryStore.parse;
-  w.ctx.HistoryStore.parse = (value) => { parsed += typeof value === 'string' && value.length > 1000 ? 1 : 0; return parse(value); };
-  const big = JSON.stringify({ items: Array.from({ length: 50 }, (_, i) => entry(i)), lastUpdated: 7 });
-  assert.ok(big.length > 1000);
-  w.state.listeners.changed[0]({ scrapfly_history: { oldValue: big, newValue: big } }, 'local');
-  assert.equal(parsed, 0);
-  assert.equal(w.state.forgot, 0);
+  const ids = JSON.parse(w.local.scrapfly_history).items.map(item => item.id);
+  assert.equal((await call('HISTORY_DELETE_ITEMS', { ids })).status, 'ok');
+  await sleep(5);
+  assert.equal(JSON.parse(w.local.scrapfly_history).items.length, 0);
+  assert.deepEqual([forgotRuns, forgotHeld, w.state.forgot], [0, 0, 0], 'every card deleted one way or another: the runs stay');
+
+  assert.equal((await call('HISTORY_CLEAR')).status, 'ok');
+  await until(() => forgotRuns === 1, 'the runs forgotten');
+  assert.deepEqual([forgotHeld, w.state.forgot], [1, 1]);
+
+  w.ctx.BulkScanRunner.forgetRuns = async () => { throw new Error('busy'); };
+  assert.equal((await call('HISTORY_CLEAR')).status, 'ok', 'History is cleared even when the runs cannot be');
   await sleep(30);
 });
 

@@ -403,3 +403,21 @@ test('what is kept is bounded per tab and in time, and goes with the tab', async
     assert.match(body.slice(0, 400), /if \(isPrerenderRequest\(details\)\) \{ await keepPrerenderMainFrame\(details\); return; \}/, listener);
   }
 });
+
+test('JS hooks cut off at the page\'s own time limit, or after the worker gave up waiting, read as stopped, not finished', async () => {
+  const w = worker();
+  await w.send('JS_HOOK_DETECTION_BATCH', w.hookBatch, w.sender());
+  await w.send('JS_HOOKS_COMPLETE', { url: w.current.url, completionReason: 'max_timeout' }, w.sender());
+  assert.equal(w.context.detectionStates.get(7).hooksTimedOut, true, 'the page\'s hard limit');
+
+  const late = worker();
+  await late.send('JS_HOOK_DETECTION_BATCH', late.hookBatch, late.sender());
+  late.context.detectionStates.get(7).hooksTimedOut = true;
+  await late.send('JS_HOOKS_COMPLETE', { url: late.current.url, completionReason: 'activity_timeout' }, late.sender());
+  assert.equal(late.context.detectionStates.get(7).hooksTimedOut, true, 'a completion arriving after the worker\'s deadline');
+
+  const quiet = worker();
+  await quiet.send('JS_HOOK_DETECTION_BATCH', quiet.hookBatch, quiet.sender());
+  await quiet.send('JS_HOOKS_COMPLETE', { url: quiet.current.url, completionReason: 'activity_timeout' }, quiet.sender());
+  assert.equal(quiet.context.detectionStates.get(7).hooksTimedOut, false, 'the page went quiet: finished');
+});

@@ -184,24 +184,34 @@
     const lines = logicalLines(text).map(raw => raw.trim()).filter(line => line && !line.startsWith('#'));
     // A header names the address column ("url", "website"): such a row is a header even when another of its names has a dot in it
     // ("owner.name", "Est.traffic"), which would otherwise read as an address and be scanned
-    const namesAddress = (cells) => cells.length > 1 && cells.some(cell => ADDRESS_HEADER.test(String(cell).trim()));
+    // A cell is a column name only when the rows under it hold addresses: "https://acme.com/,site" over "https://foo.com/,page" is
+    // two pages with a note, not a header and a page
+    const cellRows = lines.map(cellsOf);
+    const namesAddress = (index) => {
+      const cells = cellRows[index];
+      if (!cells || cells.length < 2) return false;
+      const below = cellRows.slice(index + 1);
+      return cells.some((cell, i) => ADDRESS_HEADER.test(String(cell).trim())
+        && (!below.length || below.some(row => looksLikeAddress(row[i]))));
+    };
     // A table with no header: two rows or more, each split (as partsOf reads a line, so a comma inside an address's path stays
-    // in it) into the same number of cells, one of them an address and another not ("Acme Corp,acme.com")
+    // in it) into the same number of cells, one of them an address and another not ("Acme Corp,acme.com"). Not when a comma
+    // inside an address would split it as a table row ("Acme,https://a.com/s?q=a,b"): that list is read line by line
     const split = lines.map(partsOf);
-    const headerless = lines.length > 1 && split.every(parts => parts.length > 1 && parts.length === split[0].length
-      && parts.filter(looksLikeAddress).length === 1);
+    const headerless = lines.length > 1 && split.every((parts, i) => parts.length > 1 && parts.length === split[0].length
+      && parts.length === cellRows[i].length && parts.filter(looksLikeAddress).length === 1);
     const table = lines.some(line => line.includes('\t'))
-      || lines.some(line => { const cells = cellsOf(line); return cells.length > 1 && !cells.some(looksLikeAddress); })
-      || namesAddress(cellsOf(lines[0] || ''))
+      || cellRows.some(cells => cells.length > 1 && !cells.some(looksLikeAddress))
+      || namesAddress(0)
       || headerless;
     const out = [];
     const found = [];
     let header = null;
-    for (const line of lines) {
+    for (const [index, line] of lines.entries()) {
       const parts = table || /^"/.test(line) ? cellsOf(line) : partsOf(line);
       if (parts.length < 2) { out.push(unquote(line)); continue; }
       if (!table) { out.push(...parts.filter(looksLikeAddress)); continue; }
-      if (!parts.some(looksLikeAddress) || (header === null && !found.length && namesAddress(parts))) {
+      if (!parts.some(looksLikeAddress) || (header === null && !found.length && namesAddress(index))) {
         // The header: the first row with no address, before any row that has one
         if (header === null && !found.length) header = parts;
         continue;

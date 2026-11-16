@@ -95,6 +95,22 @@ test('the scan report counts this page, not what another tab\'s check left on th
   assert.equal(state.stats.dom, 1);
   assert.equal(state.stats.requests, 0, 'not the other tab\'s 57 requests');
   assert.equal(state.stats.detectors, 1);
+  assert.equal(state.stats.cookies, 0);
+});
+
+test('the scan report counts the cookies the scan read: the page\'s own when the browser listed none for the site', async () => {
+  const ctx = harness();
+  const shared = engine();
+  shared.setDetectors = () => {};
+  ctx.detectionEngine = shared;
+  let state = null;
+  const begin = ctx.DetectionSessionStore.begin;
+  ctx.DetectionSessionStore.begin = (...args) => (state = begin.apply(ctx.DetectionSessionStore, args));
+  ctx.checkAndFinalizeDetection = () => {};
+  ctx.finalizeDetection = async () => {};
+  await ctx.processDetectionData({ data: { url: 'https://page.example/', content: [], dom: [], cookies: [{ name: 'a', value: '1' }, { name: 'b', value: '2' }] } },
+    { tab: { id: 4, url: 'https://page.example/' } });
+  assert.equal(state.stats.cookies, 2, 'not 0 because the site\'s cookie list came back empty');
 });
 
 test('the worker reads no shared lastStats for a report', () => {

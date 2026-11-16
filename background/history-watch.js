@@ -199,6 +199,12 @@ const HistoryWatch = {
                 const next = await this._gate();
                 if (next.halt) return await halted(next.halt);
                 settings = next.settings;
+                // The page is still watched: unwatched, unpinned, deleted or History cleared since the check began, it is not
+                // opened (a background tab with the person's cookies) only to be thrown away
+                if (i > 0) {
+                    const now = HistoryPolicy.watchedOf(await HistoryStore.read(chrome.storage.local));
+                    if (!now.some(item => item.id === watched[i].id && item.url === watched[i].url)) { totals.skipped++; continue; }
+                }
                 // The worker's keepalive drops an operation after two minutes (a leaked one would pin it awake for good), and a
                 // check of many pages takes longer: each page renews it, and looks for a window again (the one used may be closed)
                 if (typeof workerKeepaliveManager !== 'undefined' && workerKeepaliveManager) workerKeepaliveManager.startOperation('history-watch', { reason: 'history_watch' });

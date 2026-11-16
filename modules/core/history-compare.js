@@ -419,10 +419,11 @@
 
   /** The entry and the other scan, the earlier first, when they are of two pages whose addresses can be read; else null. */
   function bothPages(entry, other) {
-    if (!entry || !other || samePage(entry, other)) return null;
+    if (!entry || !other) return null;
     const one = { url: addressOf(entry), timestamp: timeOf(entry) };
     const two = { url: addressOf(other), timestamp: timeOf(other) };
-    if (!addressLabel(one.url) || !addressLabel(two.url)) return null;
+    // The same page once both are addresses: "shop.com" saved without an address is https://shop.com/
+    if (samePage(one, two) || !addressLabel(one.url) || !addressLabel(two.url)) return null;
     return one.timestamp <= two.timestamp ? [one, two] : [two, one];
   }
 

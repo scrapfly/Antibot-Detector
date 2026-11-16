@@ -437,3 +437,20 @@ test('a stop asked for between two pages is honoured before the next page opens,
   const next = await w.Watch.run('manual');
   assert.deepEqual(plain(next), { ok: true, checked: 3, changed: 0, skipped: 0, failed: 0 });
 });
+
+test('a page unwatched, unpinned or deleted while the check runs is not opened; the pages still watched are', async () => {
+  const w = world({ items: three() });
+  const apply = w.ctx.HistoryRecorder.applyWatchResult;
+  w.ctx.HistoryRecorder.applyWatchResult = async (...args) => {
+    const applied = await apply(...args);
+    // After the first page the person unwatches the second and deletes the third
+    const list = JSON.parse(w.store.scrapfly_history).items;
+    const second = list.find(item => item.url === 'https://b.example/');
+    if (second) second.watch = false;
+    w.store.scrapfly_history = JSON.stringify({ items: list.filter(item => item.url !== 'https://c.example/') });
+    return applied;
+  };
+  const result = await w.Watch.run('manual');
+  assert.deepEqual(w.log.created.map(c => c.url), ['https://a.example/'], 'only the page still watched');
+  assert.deepEqual([result.checked, result.skipped], [1, 2]);
+});

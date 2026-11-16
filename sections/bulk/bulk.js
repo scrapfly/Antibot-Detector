@@ -82,10 +82,15 @@
     } catch (_) { state.store = null; }
   }
 
+  // The list an export was picked for, every page counted: a page the run skips partway (Sites to scan) leaves it the same list
+  const importKey = (run) => BulkRuns.listKey(run && {
+    items: (Array.isArray(run.items) ? run.items : []).map(item => (item && item.status === 'skipped' ? { ...item, status: 'pending' } : item))
+  });
+
   /** The run the shown one is compared with: the export the person chose for this list, or the earlier run of the same list. */
   function earlierRun() {
     if (!state.run) return null;
-    if (state.imported && BulkRuns.listKey(state.run) === state.importedFor) return state.imported;
+    if (state.imported && importKey(state.run) === state.importedFor) return state.imported;
     return BulkRuns.previousFor(state.store, state.run);
   }
 
@@ -221,7 +226,7 @@
         state.run = response.run;
         state.restored = false;
         // The export chosen to compare with stays only while the list is the same one (earlierRun)
-        if (BulkRuns.listKey(state.run) !== state.importedFor) { state.imported = null; state.importedFor = ''; }
+        if (importKey(state.run) !== state.importedFor) { state.imported = null; state.importedFor = ''; }
       }
       if (response.status !== 'ok') {
         const errors = {
@@ -566,7 +571,14 @@
     const group = byId('bulkFilterProtections');
     const names = (run ? BulkScan.protectionTotals(run) : []).map(row => row.name);
     const chosen = BulkFilter.protectionOf(state.filter);
-    if (chosen && !names.some(name => BulkFilter.forProtection(name) === state.filter)) names.push(chosen);
+    if (chosen) {
+      // The remembered protection under the name this run uses ("PerimeterX" then "HUMAN (PerimeterX)", other capitals): one
+      // option, not two that keep the same pages
+      const key = Categories.protectionKey(chosen);
+      const same = names.find(name => Categories.protectionKey(name) === key);
+      if (same) state.filter = BulkFilter.forProtection(same);
+      else names.push(chosen);
+    }
     const signature = names.join('\n');
     if (group && group.dataset.names !== signature) {
       group.dataset.names = signature;
@@ -697,7 +709,7 @@
         return;
       }
       state.imported = read.run;
-      state.importedFor = BulkRuns.listKey(state.run);
+      state.importedFor = importKey(state.run);
       notice('');
       render();
     });

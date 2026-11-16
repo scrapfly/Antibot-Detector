@@ -289,6 +289,18 @@ test('a CSV with no header keeps its columns; a header with a dotted name is a h
   assert.deepEqual(BulkScan.readList('a.com\nb.com').columns, []);
 });
 
+test('a first row is a header only when the column it names holds addresses below it; a comma in an address never splits it', () => {
+  // "site", "page", "Domain" as a note beside each address: every row is a page, the first one too
+  assert.deepEqual(BulkScan.readList('https://acme.com/,site\nhttps://foo.com/,page').addresses, ['https://acme.com/', 'https://foo.com/']);
+  assert.deepEqual(BulkScan.readList('acme.com,Domain\nfoo.com,Domain\nbar.com,Domain').addresses, ['acme.com', 'foo.com', 'bar.com']);
+  // A name and an address with a comma in its query: the whole address is scanned, and no column is made of its tail
+  const comma = BulkScan.readList('Acme,https://a.com/s?q=a,b\nBeta,https://c.com/s?q=c,d');
+  assert.deepEqual(comma.addresses, ['https://a.com/s?q=a,b', 'https://c.com/s?q=c,d']);
+  assert.ok(!comma.columns.includes('column_3'), JSON.stringify(comma.columns));
+  // A real header still is one
+  assert.deepEqual(BulkScan.readList('site,owner\nacme.com,Ann\nfoo.com,Bob').columns, ['owner']);
+});
+
 test('a CSV row whose earlier cell looks like an address (a decimal, "note: x") keeps its cells under their headers', () => {
   const list = BulkScan.readList('name,score,url\nAlpha,3,https://alpha.example\nBeta,4.5,https://beta.example\nGamma,note: vip,https://gamma.example');
   assert.deepEqual(list.addresses, ['https://alpha.example', 'https://beta.example', 'https://gamma.example']);

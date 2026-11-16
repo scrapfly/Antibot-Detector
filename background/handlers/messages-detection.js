@@ -768,7 +768,10 @@ function registerDetectionHandlers(registry, context) {
                     const state = detectionStateForDocument(document);
 
                     state.hooksComplete = true;
-                    state.hooksTimedOut = false;
+                    // The page's own hard limit cut the hooks off ("stopped at the time limit"), and a time-out the worker already
+                    // recorded stays one: a completion arriving while the scan is being finished must not turn it into "finished"
+                    state.hooksTimedOut = state.hooksTimedOut === true
+                        || request.completionReason === globalThis.ScrapflyBridgeProtocol.COMPLETION_REASONS.HOOKS.MAX_TIMEOUT;
                     state.hooksCompletionReason = request.completionReason || state.hooksCompletionReason || null;
                     state.hooksCompletionTime = request.completionTime || state.hooksCompletionTime || null;
                     state.hooksUninstallStats = request.uninstallStats || state.hooksUninstallStats || null;

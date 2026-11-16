@@ -734,6 +734,9 @@ test('two sites, one entry saved with a host name and no address: both sites are
   assert.ok(C.toMarkdown(r, { host: 'a.example' }).startsWith('## Compare scans: a.example → b.example\n\nhttps://a.example/ → https://b.example/y\n\n'));
   assert.equal(C.whereText(bare, other), 'a.example → b.example/y');
   assert.equal(C.whereText({ id: 'x', hostname: 'a.example', timestamp: T0 + 2 * HOUR }, bare), '', 'the same host twice is one page');
+  const home = entry('home', 'https://a.example/', T0 + HOUR, []);
+  assert.equal(C.whereText(home, bare), '', 'a.example saved without an address is its home page: not "a.example → a.example"');
+  assert.equal(C.whereTip(home, bare), '');
 });
 
 // ---- "Copy summary": a button of the dialog's own content (the dialog's footer has room for Close and Copy as Markdown only) ---
