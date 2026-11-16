@@ -876,3 +876,16 @@ test('no hard-coded English: every key the page asks for exists in the English l
   assert.deepEqual(missing, []);
   assert.ok(keys.size > 100);
 });
+
+test('a protection clicked in the table lists every domain the row counts, under each of its names', async () => {
+  const ui = await createPage([
+    entry('a.example', 0, [['HUMAN (PerimeterX)', 'antibot', 90]]),
+    entry('b.example', 0, [['PerimeterX', 'antibot', 90]])
+  ]);
+  ui.section('protections');
+  const links = flatten(ui.id('statsProtectionTable')).filter(node => node.classes && node.classes.has('stats-cell-link'));
+  assert.equal(links.length, 1, 'one row for both names');
+  links[0].events.click();
+  assert.deepEqual(ui.visiblePanel(), ['domains']);
+  assert.deepEqual(ui.rows('statsDomainTable').map(row => textOf(row)).sort(), ['a.example', 'b.example']);
+});

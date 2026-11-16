@@ -104,9 +104,10 @@
     const { state, d } = app, query = state.domain.query.trim().toLowerCase(), index = domainIndex(app);
     // A protection clicked in the Protections table: the domains that have exactly it (a site named after it, or another
     // rule whose name contains it, is not listed); anything typed in the search box is a text search again
-    const protection = (state.domain.protection || '').toLowerCase();
+    // By its key, as the table groups it: "PerimeterX" and "HUMAN (PerimeterX)" are one row there, so one list here
+    const protection = state.domain.protection ? Categories.protectionKey(state.domain.protection) : '';
     const rows = protection
-      ? d.stats.domainMetrics.filter(row => HistoryStats.domainProtectionNames(row).some(name => String(name).toLowerCase() === protection))
+      ? d.stats.domainMetrics.filter(row => HistoryStats.domainProtectionNames(row).some(name => Categories.protectionKey(name) === protection))
       : d.stats.domainMetrics.filter((row, i) => !query || index[i].includes(query));
     const changed = new Set(d.changes.hostnames);
     return { rows, changed, counts: { High: rows.filter(r => r.difficulty === 'High').length, Medium: rows.filter(r => r.difficulty === 'Medium').length,
