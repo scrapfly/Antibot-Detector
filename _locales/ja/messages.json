@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "このファイルは一括スキャンの JSON エクスポートではありません。"
   },
+  "bulkErrCompareLarge": {
+    "message": "このファイルは一括スキャンのエクスポートにしては大きすぎます。"
+  },
+  "bulkErrCompareEmpty": {
+    "message": "この一括スキャンのエクスポートには比較できるページがありません。"
+  },
   "bulkEmpty": {
     "message": "アドレスを貼り付けるかファイルをアップロードして、開始を選んでください。"
   },

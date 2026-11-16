@@ -203,11 +203,15 @@ const HistoryRetention = {
         // The record of webhook deliveries names pages too: it goes with History's, even when History had nothing left to clear
         await this.forgetDeliveries();
         // So do the kept Bulk scan runs (their addresses): cleared on close, they are not shown again after the restart
-        if (typeof BulkScanRunner !== 'undefined' && BulkScanRunner.forgetRuns) {
-            try { await BulkScanRunner.forgetRuns(); } catch (error) { this._log(`[HistoryRetention] Bulk runs not cleared: ${error && error.message}`); }
-        }
+        await this.forgetBulkRuns();
         if (removed > 0) this._log(`[HistoryRetention] Cleared ${removed} history entries (${reason})`);
         return removed;
+    },
+
+    /** Forget the kept Bulk scan runs (BulkScanRunner queues it after a run being saved). Never throws. */
+    async forgetBulkRuns() {
+        if (typeof BulkScanRunner === 'undefined' || !BulkScanRunner.forgetRuns) return;
+        try { await BulkScanRunner.forgetRuns(); } catch (error) { this._log(`[HistoryRetention] Bulk runs not cleared: ${error && error.message}`); }
     },
 
     /** The last normal window closed: clear History if Settings says so. */
@@ -279,7 +283,12 @@ const HistoryRetention = {
 
         chrome.storage.onChanged.addListener((changes, namespace) => {
             if (namespace !== 'local') return;
-            if (changes.scrapfly_history && this.isEmptied(changes.scrapfly_history.newValue)) this.forgetDeliveries();
+            if (changes.scrapfly_history && this.isEmptied(changes.scrapfly_history.newValue)) {
+                this.forgetDeliveries();
+                // History emptied by the person (History → Clear, Settings → Data): the kept Bulk runs name pages too. Only when it
+                // held something: an empty History written again (recording off) must not take the runs
+                if (!this.isEmptied(changes.scrapfly_history.oldValue)) this.forgetBulkRuns();
+            }
             if (changes.scrapfly_settings) this.schedule('settings_saved');
             else if (changes.scrapfly_history && changes.scrapfly_history.newValue !== undefined) this.schedule('history_write');
         });

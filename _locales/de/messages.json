@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "Diese Datei ist kein JSON-Export des Massenscans."
   },
+  "bulkErrCompareLarge": {
+    "message": "Diese Datei ist zu groß für einen Export des Massenscans."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Dieser Export des Massenscans enthält keine Seiten zum Vergleichen."
+  },
   "bulkEmpty": {
     "message": "Fügen Sie Adressen ein oder laden Sie eine Datei hoch und wählen Sie dann Starten."
   },

@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "Bu dosya bir toplu tarama JSON dışa aktarımı değil."
   },
+  "bulkErrCompareLarge": {
+    "message": "Bu dosya bir toplu tarama dışa aktarımı olamayacak kadar büyük."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Bu toplu tarama dışa aktarımında karşılaştırılacak sayfa yok."
+  },
   "bulkEmpty": {
     "message": "Adresleri yapıştırın veya bir dosya yükleyin, ardından Başlat’ı seçin."
   },

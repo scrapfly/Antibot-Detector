@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "Este arquivo não é uma exportação JSON da análise em massa."
   },
+  "bulkErrCompareLarge": {
+    "message": "Este arquivo é grande demais para ser uma exportação da análise em massa."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Esta exportação da análise em massa não tem páginas para comparar."
+  },
   "bulkEmpty": {
     "message": "Cole endereços ou envie um arquivo e depois escolha Iniciar."
   },

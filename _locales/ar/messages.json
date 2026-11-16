@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "هذا الملف ليس تصدير JSON من الفحص الجماعي."
   },
+  "bulkErrCompareLarge": {
+    "message": "هذا الملف أكبر من أن يكون تصديرًا من الفحص الجماعي."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "تصدير الفحص الجماعي هذا لا يحتوي على صفحات للمقارنة بها."
+  },
   "bulkEmpty": {
     "message": "الصق العناوين أو ارفع ملفًا، ثم اختر بدء."
   },

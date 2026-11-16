@@ -69,7 +69,8 @@
     run: null, filter: 'all', starting: false, colors: { ...Categories.DEFAULT_COLORS }, historyEnabled: true,
     store: null,       // the finished runs the worker keeps (BulkRuns)
     restored: false,   // the run shown is the one kept from before (no run in session storage): read-only
-    imported: null,    // a JSON export the person chose to compare with (BulkRuns.fromExport), until the next list
+    imported: null,    // a JSON export the person chose to compare with (BulkRuns.fromExport), for the list it was chosen for
+    importedFor: '',   // that list (BulkRuns.listKey): scanning its failed or waiting pages again keeps the export, another list does not
     compare: null      // BulkScan.diff of the run shown with the earlier one, or null
   };
 
@@ -81,10 +82,11 @@
     } catch (_) { state.store = null; }
   }
 
-  /** The run the shown one is compared with: the export the person chose, or the earlier run of the same list. */
+  /** The run the shown one is compared with: the export the person chose for this list, or the earlier run of the same list. */
   function earlierRun() {
     if (!state.run) return null;
-    return state.imported || BulkRuns.previousFor(state.store, state.run);
+    if (state.imported && BulkRuns.listKey(state.run) === state.importedFor) return state.imported;
+    return BulkRuns.previousFor(state.store, state.run);
   }
 
   /** Show's choice as it applies: "Changed since previous run" shows every page when there is nothing to compare with. */
@@ -218,7 +220,8 @@
       if (response.run) {
         state.run = response.run;
         state.restored = false;
-        state.imported = null;
+        // The export chosen to compare with stays only while the list is the same one (earlierRun)
+        if (BulkRuns.listKey(state.run) !== state.importedFor) { state.imported = null; state.importedFor = ''; }
       }
       if (response.status !== 'ok') {
         const errors = {
@@ -654,7 +657,7 @@
     byId('bulkNewBtn').addEventListener('click', async () => {
       // The run kept from before is only hidden: it stays kept (Settings → Data clears it)
       const r = state.restored ? { status: 'ok' } : await send(M.BULK_SCAN_CLEAR);
-      if (r.status === 'ok') { state.run = null; state.restored = false; state.imported = null; notice(''); render(); input.focus(); }
+      if (r.status === 'ok') { state.run = null; state.restored = false; state.imported = null; state.importedFor = ''; notice(''); render(); input.focus(); }
     });
     byId('bulkWaitingBtn').addEventListener('click', () => {
       if (!state.run) return;
@@ -685,8 +688,16 @@
         // A file far larger than any export is refused before it is read
         read = file.size > BulkRuns.MAX_IMPORT_CHARS ? { ok: false, error: 'large' } : BulkRuns.fromExport(await file.text());
       } catch (_) { /* unreadable: refused below */ }
-      if (!read.ok) { notice(tr('bulkErrCompareFile', 'This file is not a Bulk scan JSON export.'), 'warn'); return; }
+      if (!read.ok) {
+        const errors = {
+          large: ['bulkErrCompareLarge', 'This file is too large to be a Bulk scan export.'],
+          empty: ['bulkErrCompareEmpty', 'This Bulk scan export has no pages to compare with.']
+        };
+        notice(label(errors[read.error] || ['bulkErrCompareFile', 'This file is not a Bulk scan JSON export.']), 'warn');
+        return;
+      }
       state.imported = read.run;
+      state.importedFor = BulkRuns.listKey(state.run);
       notice('');
       render();
     });

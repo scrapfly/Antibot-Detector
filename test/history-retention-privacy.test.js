@@ -224,6 +224,27 @@ test('when History is emptied (Clear in History, or in Settings → Data) the de
   await sleep(30);
 });
 
+test('when History that held entries is emptied the kept Bulk scan runs go too; an empty History written again keeps them', async () => {
+  const w = world();
+  let forgotRuns = 0;
+  w.ctx.BulkScanRunner = { forgetRuns: async () => { forgotRuns++; } };
+  await w.wake();
+  const change = (newValue, oldValue) => w.state.listeners.changed[0]({ scrapfly_history: { oldValue, newValue } }, 'local');
+  change(EMPTY, w.local.scrapfly_history);
+  await sleep(5);
+  assert.equal(forgotRuns, 1, 'History → Clear');
+  change(EMPTY, EMPTY);
+  change(EMPTY, undefined);
+  await sleep(5);
+  assert.equal(forgotRuns, 1, 'History had nothing: the runs stay (recording off, a first write)');
+  change(JSON.stringify({ items: [entry(1)], lastUpdated: 6 }), EMPTY);
+  assert.equal(forgotRuns, 1, 'a History with entries keeps them');
+  w.ctx.BulkScanRunner.forgetRuns = async () => { throw new Error('busy'); };
+  change(undefined, w.local.scrapfly_history);
+  await sleep(5);
+  await sleep(30);
+});
+
 test('a big History written by a scan is not parsed to find out whether it is empty', async () => {
   const w = world();
   await w.wake();

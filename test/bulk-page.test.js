@@ -618,6 +618,27 @@ test('an earlier JSON export can be picked to compare with; a file that is not o
   assert.equal(cellsOf(page)[0][5], '−Akamai');
 });
 
+test('the export picked to compare with stays for the same list (its failed pages scanned again) and not for another list; its refusals say why', async () => {
+  const BulkScan = require('../modules/core/bulk-scan.js');
+  const now = { ...runOf([finished('https://a.example/', []), { url: 'https://b.example/', status: 'failed', reason: 'timeout' }]), id: 'r9' };
+  const page = pageWorld({ run: now, kept: {} });
+  await page.open();
+  const pick = (text, size = text.length) => page.handlers.bulkCompareFile.change({ target: { value: 'x', files: [{ size, text: async () => text }] } });
+  await pick('x', 9 * 1024 * 1024);
+  assert.equal(page.byId('bulkNotice').textContent, 'This file is too large to be a Bulk scan export.');
+  await pick(JSON.stringify({ type: 'bulk-scan', pages: [] }));
+  assert.equal(page.byId('bulkNotice').textContent, 'This Bulk scan export has no pages to compare with.');
+  const exported = BulkScan.build(runOf([finished('https://a.example/', [{ name: 'Akamai', category: 'antibot', confidence: 80 }])]), { format: 'json', now: 1 }).text;
+  await pick(exported);
+  assert.equal(page.byId('bulkColPrevious').hidden, false);
+  // The same list going on (its failed page scanned again): still compared with the export
+  page.update({ ...now, status: 'running', items: [finished('https://a.example/', []), { url: 'https://b.example/', status: 'scanning' }] });
+  assert.equal(page.byId('bulkColPrevious').hidden, false, 'the same list keeps the export');
+  // Another list (started in another tab): the export is not compared with it
+  page.update({ ...runOf([finished('https://other.example/', [])]), id: 'r10' });
+  assert.equal(page.byId('bulkColPrevious').hidden, true, 'another list: no comparison with the old export');
+});
+
 test('a CSV\'s other columns go to the worker with the list and come back as columns of the table', async () => {
   const page = pageWorld({
     onStart: (message) => {

@@ -62,7 +62,8 @@
     const pages = new Set();
     for (const item of (run && Array.isArray(run.items) ? run.items : [])) {
       if (!item || item.status === 'skipped' || typeof item.url !== 'string') continue;
-      const key = BulkScan.pageKeyOf(item.url);
+      // As a kept run holds it (an address over KEPT_URL shortened): a run and its kept copy are one list
+      const key = BulkScan.keptKeyOf(item.url);
       if (key) pages.add(key);
     }
     if (!pages.size) return '';

@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "此檔案不是批次掃描的 JSON 匯出檔。"
   },
+  "bulkErrCompareLarge": {
+    "message": "此檔案太大，不可能是批次掃描的匯出檔。"
+  },
+  "bulkErrCompareEmpty": {
+    "message": "此批次掃描匯出檔中沒有可比較的頁面。"
+  },
   "bulkEmpty": {
     "message": "貼上網址或上傳檔案，然後選擇開始。"
   },

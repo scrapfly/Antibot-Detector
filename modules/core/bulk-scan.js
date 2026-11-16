@@ -182,8 +182,18 @@
    */
   function readList(text) {
     const lines = logicalLines(text).map(raw => raw.trim()).filter(line => line && !line.startsWith('#'));
+    // A header names the address column ("url", "website"): such a row is a header even when another of its names has a dot in it
+    // ("owner.name", "Est.traffic"), which would otherwise read as an address and be scanned
+    const namesAddress = (cells) => cells.length > 1 && cells.some(cell => ADDRESS_HEADER.test(String(cell).trim()));
+    // A table with no header: two rows or more, each split (as partsOf reads a line, so a comma inside an address's path stays
+    // in it) into the same number of cells, one of them an address and another not ("Acme Corp,acme.com")
+    const split = lines.map(partsOf);
+    const headerless = lines.length > 1 && split.every(parts => parts.length > 1 && parts.length === split[0].length
+      && parts.filter(looksLikeAddress).length === 1);
     const table = lines.some(line => line.includes('\t'))
-      || lines.some(line => { const cells = cellsOf(line); return cells.length > 1 && !cells.some(looksLikeAddress); });
+      || lines.some(line => { const cells = cellsOf(line); return cells.length > 1 && !cells.some(looksLikeAddress); })
+      || namesAddress(cellsOf(lines[0] || ''))
+      || headerless;
     const out = [];
     const found = [];
     let header = null;
@@ -191,7 +201,7 @@
       const parts = table || /^"/.test(line) ? cellsOf(line) : partsOf(line);
       if (parts.length < 2) { out.push(unquote(line)); continue; }
       if (!table) { out.push(...parts.filter(looksLikeAddress)); continue; }
-      if (!parts.some(looksLikeAddress)) {
+      if (!parts.some(looksLikeAddress) || (header === null && !found.length && namesAddress(parts))) {
         // The header: the first row with no address, before any row that has one
         if (header === null && !found.length) header = parts;
         continue;
@@ -674,8 +684,11 @@
 
   /** The page an item stands for when two runs are compared: its address as it is scanned (normalize), or the text as given. */
   const pageKeyOf = (url) => { const normal = normalize(url); return normal.url || String(url || '').trim(); };
-  /** Addresses a kept run holds, at most (BulkRuns): a longer one is kept shortened, and found again by its shortened form. */
-  const KEPT_URL = 2048;
+  /**
+   * Addresses a kept run holds, at most (BulkRuns): a longer one is kept shortened, and found again by its shortened form. Long
+   * enough for tracking queries, so Run again from a run kept over a restart scans the whole address.
+   */
+  const KEPT_URL = 8192;
   const keptKeyOf = (url) => pageKeyOf(String(url || '').slice(0, KEPT_URL));
   const protectionKeyOf = (name) => (Categories ? Categories.protectionKey(name) : String(name).trim().toLowerCase());
   const confidenceOf = (d) => (d && d.confidence !== null && d.confidence !== undefined && d.confidence !== '' && Number.isFinite(Number(d.confidence)) ? Math.round(Number(d.confidence)) : null);
@@ -710,7 +723,9 @@
     if (!prev || !Array.isArray(prev.items) || !run || !Array.isArray(run.items)) return null;
     const before = new Map();
     for (const item of prev.items) {
-      if (!item || typeof item.url !== 'string') continue;
+      // A page the earlier run never finished (an export of a stopped run, or one made mid-run) has no outcome to compare with:
+      // it reads as not in that run, not as "waiting → done"
+      if (!item || typeof item.url !== 'string' || !OUTCOMES.includes(item.status)) continue;
       const key = pageKeyOf(item.url);
       if (key && !before.has(key)) before.set(key, item);
     }
@@ -931,7 +946,7 @@
     MAX_URLS, TIMEOUT_S, DELAY_S, MAX_SKIPPED_LISTED, MOST_SEEN, REASONS, FORMATS, MAX_EXTRA_COLUMNS, MAX_EXTRA_ROWS, MAX_CELL, MAX_HEADER,
     capOf, timeoutOf, delayOf, linesOf, readList, extrasOf, cleanExtras, attachExtras, extrasOfRun, normalize, isSitemap, parseSitemap, sameSite, prepare,
     createRun, isActive, nextWaiting, waitBefore, counts, begin, finish, fail, skip, pause, resume, hold, release, stop, complete, recover, continuation, carryOver,
-    summarize, protectionTotals, pageKeyOf, KEPT_URL, diff, diffOf, diffText, oneLines, build, fileName
+    summarize, protectionTotals, pageKeyOf, KEPT_URL, keptKeyOf, diff, diffOf, diffText, oneLines, build, fileName
   };
   root.BulkScan = api;
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.BulkScan = api;

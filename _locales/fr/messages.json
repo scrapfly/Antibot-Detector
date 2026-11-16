@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "Ce fichier n’est pas un export JSON de l’analyse groupée."
   },
+  "bulkErrCompareLarge": {
+    "message": "Ce fichier est trop volumineux pour être un export de l’analyse groupée."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Cet export de l’analyse groupée ne contient aucune page à comparer."
+  },
   "bulkEmpty": {
     "message": "Collez des adresses ou importez un fichier, puis choisissez Démarrer."
   },

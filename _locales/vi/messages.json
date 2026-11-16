@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "Tệp này không phải tệp JSON xuất từ quét hàng loạt."
   },
+  "bulkErrCompareLarge": {
+    "message": "Tệp này quá lớn để là tệp xuất từ quét hàng loạt."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Tệp xuất quét hàng loạt này không có trang nào để so sánh."
+  },
   "bulkEmpty": {
     "message": "Dán địa chỉ hoặc tải lên một tệp, rồi chọn Bắt đầu."
   },

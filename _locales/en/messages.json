@@ -7685,6 +7685,14 @@
     "message": "This file is not a Bulk scan JSON export.",
     "description": "Bulk scan: the file picked to compare with is not a Bulk scan JSON export (or cannot be read)"
   },
+  "bulkErrCompareLarge": {
+    "message": "This file is too large to be a Bulk scan export.",
+    "description": "Bulk scan: the file picked to compare with is far larger than any Bulk scan export, so it is not read"
+  },
+  "bulkErrCompareEmpty": {
+    "message": "This Bulk scan export has no pages to compare with.",
+    "description": "Bulk scan: the file picked to compare with is a Bulk scan export, but it holds no page that can be compared"
+  },
   "bulkEmpty": {
     "message": "Paste addresses or upload a file, then choose Start.",
     "description": "Bulk scan: empty state"

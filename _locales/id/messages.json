@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "File ini bukan ekspor JSON pindai massal."
   },
+  "bulkErrCompareLarge": {
+    "message": "File ini terlalu besar untuk menjadi ekspor pindai massal."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Ekspor pindai massal ini tidak memiliki halaman untuk dibandingkan."
+  },
   "bulkEmpty": {
     "message": "Tempel alamat atau unggah file, lalu pilih Mulai."
   },

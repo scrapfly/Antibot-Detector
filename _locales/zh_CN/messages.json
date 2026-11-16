@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "此文件不是批量扫描的 JSON 导出文件。"
   },
+  "bulkErrCompareLarge": {
+    "message": "此文件太大，不可能是批量扫描的导出文件。"
+  },
+  "bulkErrCompareEmpty": {
+    "message": "此批量扫描导出文件中没有可比较的页面。"
+  },
   "bulkEmpty": {
     "message": "粘贴地址或上传文件，然后选择开始。"
   },

@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "Ten plik nie jest eksportem JSON skanowania zbiorczego."
   },
+  "bulkErrCompareLarge": {
+    "message": "Ten plik jest za duży, by był eksportem skanowania zbiorczego."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Ten eksport skanowania zbiorczego nie zawiera stron do porównania."
+  },
   "bulkEmpty": {
     "message": "Wklej adresy lub wczytaj plik, a potem wybierz Rozpocznij."
   },

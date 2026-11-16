@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "Tento soubor není export JSON hromadného skenování."
   },
+  "bulkErrCompareLarge": {
+    "message": "Tento soubor je příliš velký na export hromadného skenování."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Tento export hromadného skenování nemá žádné stránky k porovnání."
+  },
   "bulkEmpty": {
     "message": "Vložte adresy nebo nahrajte soubor a pak zvolte Spustit."
   },

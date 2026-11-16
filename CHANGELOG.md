@@ -17,6 +17,8 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Statistics → Site report: a changed page opens that scan in History instead of every page of the site, and the category chips also narrow the changes.
 - History → Compare scans: Copy as Markdown and the hover text never show a login saved in an address, and the filter finds accented site names.
 - History → Compare scans: an old scan compared with any page picks the scan just before it, and a scan saved without an address names its site.
+- Bulk scan: lists with very long addresses, CSV files without a header or with dotted column names, and exports of stopped runs now compare correctly.
+- Bulk scan: clearing History also removes the kept runs; an export picked to compare with applies only to its own list, and a refused file says why.
 
 ## [3.2.0] - 2026-11-16
 

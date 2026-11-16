@@ -6926,6 +6926,12 @@
   "bulkErrCompareFile": {
     "message": "Den här filen är inte en JSON-export från massskanningen."
   },
+  "bulkErrCompareLarge": {
+    "message": "Den här filen är för stor för att vara en export från massskanningen."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Den här exporten från massskanningen har inga sidor att jämföra med."
+  },
   "bulkEmpty": {
     "message": "Klistra in adresser eller ladda upp en fil och välj sedan Starta."
   },
