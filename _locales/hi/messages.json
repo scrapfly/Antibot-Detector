@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "पेज ने HTTP {0} से जवाब दिया: यह विज़िट अस्वीकार की गई या जाँच में डाली गई।"
   },
+  "detectionScrapingBlockPage": {
+    "message": "यह ब्लॉक या चुनौती पेज है, साइट खुद नहीं: इस विज़िट को अस्वीकार किया गया या चुनौती दी गई।"
+  },
   "detectionScrapingCaptcha": {
     "message": "पेज पर CAPTCHA है: स्क्रेपर को इसे ट्रिगर होने से बचाना होगा या हल करना होगा।"
   },

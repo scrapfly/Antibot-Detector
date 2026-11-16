@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "ページは HTTP {0} を返しました: このアクセスは拒否されたかチャレンジを受けました。"
   },
+  "detectionScrapingBlockPage": {
+    "message": "これはサイト本体ではなく、ブロックまたはチャレンジのページです: このアクセスは拒否されたかチャレンジを受けました。"
+  },
   "detectionScrapingCaptcha": {
     "message": "ページに CAPTCHA があります: スクレイパーは発動を避けるか、解く必要があります。"
   },

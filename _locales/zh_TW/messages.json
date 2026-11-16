@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "頁面回應了 HTTP {0}：這次造訪遭到拒絕或被要求驗證。"
   },
+  "detectionScrapingBlockPage": {
+    "message": "這是封鎖或驗證頁面，而不是網站本身：此次造訪被拒絕或需要驗證。"
+  },
   "detectionScrapingCaptcha": {
     "message": "頁面上有 CAPTCHA：爬取程式需要避免觸發它或解開它。"
   },

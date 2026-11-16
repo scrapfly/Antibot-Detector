@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "De pagina antwoordde met HTTP {0}: dit bezoek is geweigerd of uitgedaagd."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Dit is een blokkeer- of controlepagina, niet de site zelf: dit bezoek is geweigerd of gecontroleerd."
+  },
   "detectionScrapingCaptcha": {
     "message": "Er staat een CAPTCHA op de pagina: een scraper moet die vermijden of oplossen."
   },

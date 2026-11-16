@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Die Seite antwortete mit HTTP {0}: Dieser Besuch wurde abgelehnt oder geprüft."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Das ist eine Sperr- oder Prüfseite, nicht die Website selbst: Dieser Besuch wurde abgelehnt oder geprüft."
+  },
   "detectionScrapingCaptcha": {
     "message": "Auf der Seite ist ein CAPTCHA: Ein Scraper muss es vermeiden oder lösen."
   },

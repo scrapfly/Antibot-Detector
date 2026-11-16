@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Trang trả lời bằng HTTP {0}: lượt truy cập này đã bị từ chối hoặc bị thử thách."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Đây là trang chặn hoặc trang thử thách, không phải chính trang web: lượt truy cập này đã bị từ chối hoặc bị thử thách."
+  },
   "detectionScrapingCaptcha": {
     "message": "Trang có CAPTCHA: công cụ thu thập phải tránh kích hoạt hoặc giải nó."
   },

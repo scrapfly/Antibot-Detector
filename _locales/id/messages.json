@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Halaman menjawab dengan HTTP {0}: kunjungan ini ditolak atau ditantang."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Ini halaman blokir atau tantangan, bukan situsnya sendiri: kunjungan ini ditolak atau ditantang."
+  },
   "detectionScrapingCaptcha": {
     "message": "Ada CAPTCHA di halaman: scraper harus menghindari memicunya atau menyelesaikannya."
   },

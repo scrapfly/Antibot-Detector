@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Strona odpowiedziała kodem HTTP {0}: ta wizyta została odrzucona lub poddana weryfikacji."
   },
+  "detectionScrapingBlockPage": {
+    "message": "To strona blokady lub weryfikacji, a nie sama witryna: ta wizyta została odrzucona lub poddana weryfikacji."
+  },
   "detectionScrapingCaptcha": {
     "message": "Na stronie jest CAPTCHA: scraper musi unikać jej wywołania albo ją rozwiązać."
   },

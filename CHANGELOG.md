@@ -7,6 +7,10 @@ Each line says what changed for the user. Technical detail lives in the commit h
 
 ## [3.2.1] - 2026-11-16
 
+### Added
+
+- Detection: What this means for scraping also says when the page is a block or challenge page, even when it answered without an error.
+
 ## [3.2.0] - 2026-11-16
 
 ### Added

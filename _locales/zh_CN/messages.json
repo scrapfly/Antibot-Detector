@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "页面返回了 HTTP {0}：此次访问被拒绝或被要求验证。"
   },
+  "detectionScrapingBlockPage": {
+    "message": "这是拦截或验证页面，而不是网站本身：此次访问被拒绝或需要验证。"
+  },
   "detectionScrapingCaptcha": {
     "message": "页面上有 CAPTCHA：抓取程序需要避免触发它或解开它。"
   },

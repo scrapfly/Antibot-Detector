@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Sayfa HTTP {0} ile yanıt verdi: bu ziyaret reddedildi veya doğrulamaya alındı."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Bu, sitenin kendisi değil, bir engelleme veya doğrulama sayfası: bu ziyaret reddedildi ya da doğrulamaya alındı."
+  },
   "detectionScrapingCaptcha": {
     "message": "Sayfada bir CAPTCHA var: bir kazıyıcı onu tetiklemekten kaçınmalı ya da çözmeli."
   },

@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "La page a répondu avec HTTP {0} : cette visite a été refusée ou soumise à un défi."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Il s'agit d'une page de blocage ou de vérification, pas du site lui-même : cette visite a été refusée ou soumise à une vérification."
+  },
   "detectionScrapingCaptcha": {
     "message": "Un CAPTCHA est sur la page : un scraper doit éviter de le déclencher ou le résoudre."
   },

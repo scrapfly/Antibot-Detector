@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "ردّت الصفحة بالرمز HTTP {0}: رُفضت هذه الزيارة أو خضعت لتحدٍّ."
   },
+  "detectionScrapingBlockPage": {
+    "message": "هذه صفحة حظر أو تحقق، وليست الموقع نفسه: رُفضت هذه الزيارة أو خضعت لتحقق."
+  },
   "detectionScrapingCaptcha": {
     "message": "يوجد CAPTCHA في الصفحة: على أداة الاستخراج تجنّب إطلاقه أو حلّه."
   },

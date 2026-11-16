@@ -949,6 +949,7 @@ class DetectionEngineManager {
                         pattern: patternText,
                         value: patternText, // Show the matched pattern itself
                         foundIn, // 'page content', 'inline script' or the resource URL
+                        ...(checkPageSource ? { scope: 'page' } : {}), // a block or challenge page's own text (ScrapingAdvice)
                         confidence: DetectionEngineManager.ruleConfidence(contentPattern),
                         patternId: DetectionEngineManager.patternIdOf(detector, contentPattern),
                         description: contentPattern.description

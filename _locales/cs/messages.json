@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Stránka odpověděla kódem HTTP {0}: tato návštěva byla odmítnuta nebo prověřena."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Toto je blokovací nebo ověřovací stránka, ne samotný web: tato návštěva byla odmítnuta nebo prověřena."
+  },
   "detectionScrapingCaptcha": {
     "message": "Na stránce je CAPTCHA: scraper se jí musí vyhnout, nebo ji vyřešit."
   },

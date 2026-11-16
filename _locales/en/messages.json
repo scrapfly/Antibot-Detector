@@ -4826,6 +4826,10 @@
     "message": "The page answered with HTTP {0}: this visit was refused or challenged.",
     "description": "Detection tab, What this means for scraping: the page answered with an error status. {0} is the status code, such as 403"
   },
+  "detectionScrapingBlockPage": {
+    "message": "This is a block or challenge page, not the site itself: this visit was refused or challenged.",
+    "description": "Detection tab, What this means for scraping: a block or challenge page's own text was found (Sucuri, F5, Radware block pages), whatever HTTP status it answered with"
+  },
   "detectionScrapingCaptcha": {
     "message": "A CAPTCHA is on the page: a scraper has to avoid triggering it or solve it.",
     "description": "Detection tab, What this means for scraping: a CAPTCHA was found on the page"

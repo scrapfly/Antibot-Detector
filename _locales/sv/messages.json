@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Sidan svarade med HTTP {0}: besöket nekades eller utmanades."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Det här är en blockerings- eller kontrollsida, inte själva webbplatsen: besöket nekades eller kontrollerades."
+  },
   "detectionScrapingCaptcha": {
     "message": "Det finns en CAPTCHA på sidan: en skrapa måste undvika att utlösa den eller lösa den."
   },
