@@ -28,6 +28,13 @@
   const Categories = root.Categories || (typeof require === 'function' ? require('./categories.js') : undefined);
   const HttpStatus = root.HttpStatus || (typeof require === 'function' ? require('./http-status.js') : undefined);
   const httpStatusOf = (item) => (HttpStatus && item ? HttpStatus.of(item.httpStatus) : null);
+  // The History search's own folding (accents, a typed host with letters); absent, a plain lower-case comparison
+  const HistoryFilter = root.HistoryFilter || (typeof require === 'function' ? require('./history-filter.js') : undefined);
+
+  /** An address without a login (user:password@): what the copied report and the hover text may show of a saved address. */
+  const withoutLogin = (url) => String(url == null ? '' : url).replace(/^([a-z][a-z0-9+.-]*:\/\/)[^/?#]*@/i, '$1');
+  /** An address as the copied report names it: no login, no query, no fragment. */
+  const plainAddress = (url) => withoutLogin(url).replace(/[?#].*$/s, '');
 
   const CATEGORY_ORDER = Categories.KEYS.slice();
   const METHOD_ALIASES = { headers: 'header', cookies: 'cookie', urls: 'url' };
@@ -77,10 +84,16 @@
    */
   function matchesQuery(item, query) {
     if (!item || typeof item !== 'object') return false;
-    const words = String(query == null ? '' : query).toLowerCase().split(/\s+/).filter(Boolean);
+    const words = String(query == null ? '' : query).split(/\s+/).filter(Boolean);
     if (!words.length) return true;
-    const text = [item.url, item.hostname, item.title].map((part) => (typeof part === 'string' ? part : '')).join('\n').toLowerCase();
-    return words.every((word) => text.includes(word));
+    // Each word as History's search finds it: any case, any accent, and a host typed with letters (bücher.de) as stored (xn--…)
+    const one = (part) => ({ url: part, title: '', detections: [] });
+    const fields = [item.url, item.hostname, item.title].map((part) => (typeof part === 'string' ? part : ''));
+    if (HistoryFilter && typeof HistoryFilter.matches === 'function') {
+      return words.every((word) => fields.some((part) => part && HistoryFilter.matches(one(part), { query: word })));
+    }
+    const text = fields.join('\n').toLowerCase();
+    return words.every((word) => text.includes(word.toLowerCase()));
   }
 
   /**
@@ -103,6 +116,22 @@
   }
 
   /** Whether two scans are of one page (pageKey); two scans whose page cannot be read are not. */
+  /**
+   * A scan's address for naming its page: its own, or, for a scan saved with a host name and no address (an old or imported
+   * entry), that host's home page; '' when it has neither.
+   */
+  function addressOf(item) {
+    const url = typeof (item && item.url) === 'string' ? item.url.trim() : '';
+    if (url) return url;
+    const host = String((item && item.hostname) || '').trim().toLowerCase();
+    if (!host || host === 'unknown') return '';
+    try {
+      return new URL(`https://${host}/`).hostname ? `https://${host}/` : '';
+    } catch (_) {
+      return '';
+    }
+  }
+
   function samePage(a, b) {
     const key = pageKey(a);
     return !!key && key === pageKey(b);
@@ -123,8 +152,8 @@
 
   /** The two scans of a result when they are of two pages, earlier first ([earlier, later] as {url}); null for one page. */
   function twoPages(result) {
-    const earlier = { url: (result && result.earlier && result.earlier.url) || '' };
-    const later = { url: (result && result.later && result.later.url) || '' };
+    const earlier = { url: addressOf(result && result.earlier) };
+    const later = { url: addressOf(result && result.later) };
     return pageKey(earlier) && pageKey(later) && !samePage(earlier, later) ? [earlier, later] : null;
   }
 
@@ -180,7 +209,7 @@
     }
     for (const [key, row] of was) if (!is.has(key)) removed.push(row);
     [added, removed, changed, same].forEach((list) => list.sort(bySpot));
-    const brief = (item) => ({ id: item && item.id, timestamp: timeOf(item), url: (item && item.url) || '', httpStatus: httpStatusOf(item) });
+    const brief = (item) => ({ id: item && item.id, timestamp: timeOf(item), url: (item && item.url) || '', hostname: (item && typeof item.hostname === 'string' && item.hostname) || '', httpStatus: httpStatusOf(item) });
     return { earlier: brief(earlier), later: brief(later), added, removed, changed, same, identical: !added.length && !removed.length && !changed.length };
   }
 
@@ -245,7 +274,7 @@
     const pages = twoPages(result);
     const hosts = pages ? [...new Set(pages.map((page) => hostOf(page.url)))] : null;
     const heading = pages ? hosts.join(' → ') : (options.host || options.address || '?');
-    const address = pages ? pages.map((page) => String(page.url).replace(/[?#].*$/s, '')).join(' → ') : options.address;
+    const address = pages ? pages.map((page) => plainAddress(page.url)).join(' → ') : (options.address ? plainAddress(options.address) : options.address);
     const lines = [`## ${md(t('historyCompareMdHeadingFmt', 'Compare scans: {0}', heading))}`, ''];
     if (address) lines.push(md(address), '');
     lines.push(md(t('historyCompareRangeFmt', 'From {0} to {1}', dateText(result.earlier.timestamp), dateText(result.later.timestamp))), '');
@@ -390,8 +419,12 @@
 
   /** The entry and the other scan, the earlier first, when they are of two pages whose addresses can be read; else null. */
   function bothPages(entry, other) {
-    if (!entry || !other || samePage(entry, other) || !addressLabel(entry.url) || !addressLabel(other.url)) return null;
-    return timeOf(entry) <= timeOf(other) ? [entry, other] : [other, entry];
+    if (!entry || !other) return null;
+    const one = { url: addressOf(entry), timestamp: timeOf(entry) };
+    const two = { url: addressOf(other), timestamp: timeOf(other) };
+    // The same page once both are addresses: "shop.com" saved without an address is https://shop.com/
+    if (samePage(one, two) || !addressLabel(one.url) || !addressLabel(two.url)) return null;
+    return one.timestamp <= two.timestamp ? [one, two] : [two, one];
   }
 
   /**
@@ -409,8 +442,8 @@
   /** The hover text of that line: the whole address of the other scan, or both whole addresses, the earlier first. */
   function whereTip(entry, other) {
     const pages = bothPages(entry, other);
-    if (pages) return pages.map((page) => String(page.url)).join(' → ');
-    return other && other.url ? String(other.url) : '';
+    if (pages) return pages.map((page) => withoutLogin(page.url)).join(' → ');
+    return other && other.url ? withoutLogin(other.url) : '';
   }
 
   /**

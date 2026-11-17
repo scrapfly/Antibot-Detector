@@ -586,6 +586,11 @@ test('others(): the filter matches the address, the host or the title, every wor
   assert.deepEqual(ids('   '), ['d', 'c', 'b'], 'blank is no filter');
   assert.equal(C.matchesQuery(null, 'x'), false);
   assert.equal(C.matchesQuery({ url: 'https://a.example/' }, ''), true);
+  // as History's own search: accents either way, and a host typed with letters finds the stored one
+  assert.equal(C.matchesQuery({ url: 'https://xn--bcher-kva.de/x', hostname: 'xn--bcher-kva.de' }, 'bücher.de'), true);
+  assert.equal(C.matchesQuery({ url: 'https://a.example/', title: 'Café Central' }, 'cafe central'), true);
+  assert.equal(C.matchesQuery({ url: 'https://a.example/', title: 'cafe' }, 'CAFÉ'), true);
+  assert.equal(C.matchesQuery({ url: 'https://a.example/', title: 'cafe' }, 'tea'), false);
 });
 
 test('pageLabel() and samePage(): a scan\'s page as host and path, and whether two scans are of one page', () => {
@@ -616,6 +621,18 @@ test('toOneLine() and toMarkdown(): two pages are both named, the earlier first,
   const sameSite = C.compare(a, { ...b, url: 'https://shop.example/checkout?token=SECRET3' });
   assert.equal(C.toOneLine(sameSite, { host: 'shop.example' }), 'shop.example/cart → shop.example/checkout: +DataDome 70%, Unchanged (1)');
   assert.ok(C.toMarkdown(sameSite, { host: 'shop.example' }).startsWith('## Compare scans: shop.example\n\nhttps://shop.example/cart → https://shop.example/checkout\n\n'));
+});
+
+test('toMarkdown() and whereTip(): a login saved in an address (user:password@) is never copied or shown', () => {
+  const a = entry('a', 'https://shop.example/cart', T0, [det('Kasada', 'Anti-Bot', 80)]);
+  const b = entry('b', 'https://user:LOGINSECRET@other.example/x?t=1', T0 + HOUR, [det('Kasada', 'Anti-Bot', 80)]);
+  const md = C.toMarkdown(C.compare(b, a), { host: 'shop.example' });
+  assert.ok(md.includes('https://other.example/x'), md.slice(0, 200));
+  assert.ok(!/LOGINSECRET|user:/.test(md));
+  assert.ok(!/LOGINSECRET/.test(C.whereTip(a, b)), C.whereTip(a, b));
+  assert.ok(!/LOGINSECRET/.test(C.whereTip({ url: 'https://other.example/x' }, b)));
+  const same = C.toMarkdown(C.compare(a, a), { host: 'shop.example', address: 'https://u:LOGINSECRET@shop.example/cart' });
+  assert.ok(!/LOGINSECRET/.test(same) && same.includes('https://shop.example/cart'));
 });
 
 const scopeButtons = (d) => d.form.find('history-compare-scope-btn');
@@ -695,6 +712,31 @@ test('the dialog: a page with no other scan of its own opens on "Any page", and 
   d.close(true);
   await d.done;
   assert.ok(d.copied[0].startsWith(`## Compare scans: other.example → search.example\n\nhttps://other.example/ → ${SEARCH}\n\n`), d.copied[0].slice(0, 200));
+});
+
+test('the dialog: an old entry under "Any page" still has the scan just before it, though 500 newer scans fill the list', async () => {
+  const old = entry('old', 'https://lonely.example/', T0, [det('Kasada', 'Anti-Bot', 80)]);
+  const near = entry('near', 'https://near.example/', T0 - HOUR, []);
+  const newer = Array.from({ length: 520 }, (_, i) => entry(`n${i}`, `https://n${i}.example/`, T0 + (520 - i) * HOUR, []));
+  const d = compareDialog([...newer, old, near], old);
+  assert.ok(d.options, 'the dialog opened');
+  const values = d.select.children.map(o => o.value);
+  assert.equal(values.length, 501, 'the 500 newest and the one just before the entry');
+  assert.equal(values[values.length - 1], 'near', 'at the end, where its date puts it');
+  assert.equal(d.select.value, 'near', 'picked by default, not a scan days later');
+});
+
+test('two sites, one entry saved with a host name and no address: both sites are named, never as one page', () => {
+  const bare = { id: 'bare', hostname: 'a.example', timestamp: T0, detections: [det('Kasada', 'Anti-Bot', 80)] };
+  const other = entry('other', 'https://b.example/y', T0 + HOUR, [det('Kasada', 'Anti-Bot', 80), det('DataDome', 'Anti-Bot', 70)]);
+  const r = C.compare(other, bare);
+  assert.ok(C.toOneLine(r, { host: 'a.example' }).startsWith('a.example → b.example/y: '), C.toOneLine(r, { host: 'a.example' }));
+  assert.ok(C.toMarkdown(r, { host: 'a.example' }).startsWith('## Compare scans: a.example → b.example\n\nhttps://a.example/ → https://b.example/y\n\n'));
+  assert.equal(C.whereText(bare, other), 'a.example → b.example/y');
+  assert.equal(C.whereText({ id: 'x', hostname: 'a.example', timestamp: T0 + 2 * HOUR }, bare), '', 'the same host twice is one page');
+  const home = entry('home', 'https://a.example/', T0 + HOUR, []);
+  assert.equal(C.whereText(home, bare), '', 'a.example saved without an address is its home page: not "a.example → a.example"');
+  assert.equal(C.whereTip(home, bare), '');
 });
 
 // ---- "Copy summary": a button of the dialog's own content (the dialog's footer has room for Close and Copy as Markdown only) ---

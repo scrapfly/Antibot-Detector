@@ -500,6 +500,15 @@ test('a protection chosen on an earlier run stays listed and selected when this 
   assert.equal(page.byId('bulkFilterProtections').hidden, true, 'nothing found, nothing chosen: no group');
 });
 
+test('a protection remembered under another spelling is the run\'s own option, listed once', async () => {
+  const cf = { name: 'Cloudflare', category: 'antibot', confidence: 90 };
+  const page = pageWorld({ run: runOf([finished('https://a.example/', [cf]), finished('https://b.example/', [])]), local: { bulkFilter: 'protection:cloudflare' } });
+  await page.open();
+  assert.deepEqual(page.byId('bulkFilterProtections').children.map(o => o.value), ['protection:Cloudflare'], 'not "cloudflare" beside "Cloudflare"');
+  assert.equal(page.byId('bulkFilter').value, 'protection:Cloudflare');
+  assert.deepEqual(page.rows().map(row => row.address), ['https://a.example/']);
+});
+
 test('Show → Error status keeps the pages that answered 4xx or 5xx, and the exports follow it', async () => {
   const page = pageWorld({ run: runOf([
     { ...finished('https://a.example/', []), httpStatus: 403 },
@@ -616,6 +625,30 @@ test('an earlier JSON export can be picked to compare with; a file that is not o
   assert.equal(page.byId('bulkNotice').hidden, true);
   assert.equal(page.byId('bulkColPrevious').hidden, false);
   assert.equal(cellsOf(page)[0][5], '−Akamai');
+});
+
+test('the export picked to compare with stays for the same list (its failed pages scanned again) and not for another list; its refusals say why', async () => {
+  const BulkScan = require('../modules/core/bulk-scan.js');
+  const now = { ...runOf([finished('https://a.example/', []), { url: 'https://b.example/', status: 'failed', reason: 'timeout' }]), id: 'r9' };
+  const page = pageWorld({ run: now, kept: {} });
+  await page.open();
+  const pick = (text, size = text.length) => page.handlers.bulkCompareFile.change({ target: { value: 'x', files: [{ size, text: async () => text }] } });
+  await pick('x', 9 * 1024 * 1024);
+  assert.equal(page.byId('bulkNotice').textContent, 'This file is too large to be a Bulk scan export.');
+  await pick(JSON.stringify({ type: 'bulk-scan', pages: [] }));
+  assert.equal(page.byId('bulkNotice').textContent, 'This Bulk scan export has no pages to compare with.');
+  const exported = BulkScan.build(runOf([finished('https://a.example/', [{ name: 'Akamai', category: 'antibot', confidence: 80 }])]), { format: 'json', now: 1 }).text;
+  await pick(exported);
+  assert.equal(page.byId('bulkColPrevious').hidden, false);
+  // The same list going on (its failed page scanned again): still compared with the export
+  page.update({ ...now, status: 'running', items: [finished('https://a.example/', []), { url: 'https://b.example/', status: 'scanning' }] });
+  assert.equal(page.byId('bulkColPrevious').hidden, false, 'the same list keeps the export');
+  // A page the run skips partway (Sites to scan changed meanwhile): still the same list
+  page.update({ ...now, status: 'running', items: [finished('https://a.example/', []), { url: 'https://b.example/', status: 'skipped', reason: 'scope' }] });
+  assert.equal(page.byId('bulkColPrevious').hidden, false, 'a page skipped partway keeps the export');
+  // Another list (started in another tab): the export is not compared with it
+  page.update({ ...runOf([finished('https://other.example/', [])]), id: 'r10' });
+  assert.equal(page.byId('bulkColPrevious').hidden, true, 'another list: no comparison with the old export');
 });
 
 test('a CSV\'s other columns go to the worker with the list and come back as columns of the table', async () => {

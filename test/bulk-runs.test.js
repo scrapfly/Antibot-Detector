@@ -232,14 +232,73 @@ test('a page with many protections, the same in both runs, is unchanged once kep
   assert.ok(BulkRuns.MAX_DETECTIONS >= 64);
 });
 
+test('a list with an address longer than a kept run holds is the same list once kept: the restored run is compared too', () => {
+  const long = `https://a.example/?utm=${'x'.repeat(BulkScan.KEPT_URL + 100)}`;
+  const first = run([page(long, [d('Akamai')]), page('https://b.example/', [])], { id: 'one' });
+  const store = BulkRuns.remember(BulkRuns.remember(null, first), run([page(long, []), page('https://b.example/', [])], { id: 'two' }));
+  const restored = BulkRuns.latest(store);
+  assert.ok(restored.items[0].url.length <= BulkScan.KEPT_URL, 'kept shortened');
+  assert.equal(BulkRuns.listKey(restored), BulkRuns.listKey(first), 'one list, whether its address is whole or shortened');
+  const previous = BulkRuns.previousFor(store, restored);
+  assert.equal(previous && previous.id, 'one', 'the run shown after a restart still has the run before it');
+  const entry = BulkScan.diff(previous, restored).pages;
+  assert.ok(Object.values(entry).some(p => p.inPrevious && p.changed), 'Akamai gone is a change');
+  // Ordinary long tracking addresses are kept whole
+  const tracked = `https://a.example/?utm=${'y'.repeat(3000)}`;
+  assert.equal(BulkRuns.latest(BulkRuns.remember(null, run([page(tracked, [])], { id: 'x' }))).items[0].url, tracked);
+});
+
 test('an address longer than what a kept run holds is still found in the run before', () => {
-  const long = `https://a.example/${'x'.repeat(2100)}`;
+  const long = `https://a.example/${'x'.repeat(BulkScan.KEPT_URL + 100)}`;
   const store = BulkRuns.remember(null, run([page(long, [d('Akamai')])], { id: 'one' }));
   const second = run([page(long, [d('Akamai')])], { id: 'two' });
   const result = BulkScan.diff(BulkRuns.previousFor(store, second), second);
   const entry = Object.values(result.pages)[0];
   assert.equal(entry.inPrevious, true);
   assert.equal(entry.changed, false);
+});
+
+test('compared with an export of a stopped run, its pages still waiting read as not in that run, not as changed status', () => {
+  const exported = BulkScan.build(run([page('https://a.example/', [d('Akamai')]), { url: 'https://b.example/', status: 'waiting' }, { url: 'https://c.example/', status: 'scanning' }], { id: 'old', status: 'stopped' }));
+  const read = BulkRuns.fromExport(exported.text);
+  assert.equal(read.ok, true, JSON.stringify(read));
+  const now = run([page('https://a.example/', [d('Akamai')]), page('https://b.example/', []), { url: 'https://c.example/', status: 'failed', reason: 'timeout' }], { id: 'new' });
+  const result = BulkScan.diff(read.run, now);
+  const of = (url) => result.pages[BulkScan.pageKeyOf(url)];
+  assert.equal(of('https://a.example/').changed, false);
+  for (const url of ['https://b.example/', 'https://c.example/']) {
+    assert.equal(of(url).inPrevious, false, url);
+    assert.equal(of(url).status, null, `${url}: no "waiting → …"`);
+  }
+});
+
+test('a CSV with no header keeps its columns; a header with a dotted name is a header, not a page to scan', () => {
+  const bare = BulkScan.readList('Acme Corp,acme.com\nBeta Ltd,beta.io');
+  assert.deepEqual(bare.addresses, ['acme.com', 'beta.io']);
+  assert.deepEqual(bare.columns, ['column_1']);
+  assert.deepEqual(bare.rows.map(row => row.cells), [['Acme Corp'], ['Beta Ltd']]);
+  const dotted = BulkScan.readList('No.,url,Est.traffic\n1,https://a.example,100\n2,https://b.example,200');
+  assert.deepEqual(dotted.addresses, ['https://a.example', 'https://b.example'], 'neither "No." nor "Est.traffic" is scanned');
+  assert.deepEqual(dotted.columns, ['No.', 'Est.traffic']);
+  assert.deepEqual(dotted.rows.map(row => row.cells), [['1', '100'], ['2', '200']]);
+  assert.deepEqual(BulkScan.readList('url,owner.name\nhttps://a.example,Ann').columns, ['owner.name']);
+  // Still plain lists: a comma inside an address's path, several addresses on a line, one address a line
+  assert.deepEqual(BulkScan.readList('https://a.com/x,y\nhttps://b.com/z,w'), { addresses: ['https://a.com/x,y', 'https://b.com/z,w'], columns: [], rows: [] });
+  assert.deepEqual(BulkScan.readList('https://a.com, https://b.com\nhttps://c.com').addresses, ['https://a.com', 'https://b.com', 'https://c.com']);
+  assert.deepEqual(BulkScan.readList('https://a.com, https://b.com\nhttps://c.com, https://d.com').columns, [], 'two addresses a row: no table');
+  assert.deepEqual(BulkScan.readList('a.com\nb.com').columns, []);
+});
+
+test('a first row is a header only when the column it names holds addresses below it; a comma in an address never splits it', () => {
+  // "site", "page", "Domain" as a note beside each address: every row is a page, the first one too
+  assert.deepEqual(BulkScan.readList('https://acme.com/,site\nhttps://foo.com/,page').addresses, ['https://acme.com/', 'https://foo.com/']);
+  assert.deepEqual(BulkScan.readList('acme.com,Domain\nfoo.com,Domain\nbar.com,Domain').addresses, ['acme.com', 'foo.com', 'bar.com']);
+  // A name and an address with a comma in its query: the whole address is scanned, and no column is made of its tail
+  const comma = BulkScan.readList('Acme,https://a.com/s?q=a,b\nBeta,https://c.com/s?q=c,d');
+  assert.deepEqual(comma.addresses, ['https://a.com/s?q=a,b', 'https://c.com/s?q=c,d']);
+  assert.ok(!comma.columns.includes('column_3'), JSON.stringify(comma.columns));
+  // A real header still is one
+  assert.deepEqual(BulkScan.readList('site,owner\nacme.com,Ann\nfoo.com,Bob').columns, ['owner']);
 });
 
 test('a CSV row whose earlier cell looks like an address (a decimal, "note: x") keeps its cells under their headers', () => {

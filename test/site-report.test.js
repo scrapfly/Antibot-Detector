@@ -174,6 +174,26 @@ test('build: the pages History marked Changed, newest first, with their path and
   assert.equal(r.changes[0].timestamp, T0 + 4 * DAY);
 });
 
+test('build: the category chips narrow the pages\' changes too; a removed protection keeps the category earlier scans gave it', () => {
+  const items = [
+    entry('https://shop.example/a', 1, [det('Canvas FP', 'Fingerprint')]),
+    entry('https://shop.example/b', 2, [det('Kasada', 'Anti-Bot')]),
+    entry('https://shop.example/a', 3, [], { changed: { added: [], removed: ['Canvas FP'] } }),
+    entry('https://shop.example/b', 4, [det('Kasada', 'Anti-Bot'), det('Canvas FP', 'Fingerprint')], { changed: { added: ['Canvas FP', 'Kasada', 'Unknown thing'], removed: [] } })
+  ];
+  const { protectionKey } = require('../modules/core/categories.js');
+  const categories = SiteReport.categoriesOf(items, 'shop.example');
+  assert.equal(categories.get(protectionKey('Canvas FP')), 'fingerprint', 'from the earlier scan that found it');
+  const keepChange = (name) => {
+    const category = categories.get(protectionKey(name));
+    return !category || category !== 'fingerprint';
+  };
+  const r = SiteReport.build(items, 'shop.example', { keepChange });
+  assert.deepEqual(r.changes.map(c => [c.path, c.added, c.removed]), [['/b', ['Kasada', 'Unknown thing'], []]],
+    'a change that named only a fingerprint is gone; a name no scan gave a category stays');
+  assert.equal(SiteReport.build(items, 'shop.example').changes.length, 2, 'no chips: every change');
+});
+
 test('toJSON: names, counts, dates, paths and statuses, never a cookie or header value, a query or a note', () => {
   const items = [
     entry('https://shop.example/cart?token=SECRET-QUERY', 0, [det('Cloudflare', 'Anti-Bot', 70)], { httpStatus: 403, note: 'SECRET-NOTE', title: 'SECRET-TITLE' }),

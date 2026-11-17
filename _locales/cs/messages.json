@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Stránka odpověděla kódem HTTP {0}: tato návštěva byla odmítnuta nebo prověřena."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Toto je blokovací nebo ověřovací stránka, ne samotný web: tato návštěva byla odmítnuta nebo prověřena."
+  },
   "detectionScrapingCaptcha": {
     "message": "Na stránce je CAPTCHA: scraper se jí musí vyhnout, nebo ji vyřešit."
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "Hledání ani filtrům neodpovídá žádná položka."
+  },
+  "historyEntryGone": {
+    "message": "Toto skenování už v Historii není."
   },
   "historyClearFilters": {
     "message": "Vymazat filtry"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "Tento soubor není export JSON hromadného skenování."
+  },
+  "bulkErrCompareLarge": {
+    "message": "Tento soubor je příliš velký na export hromadného skenování."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Tento export hromadného skenování nemá žádné stránky k porovnání."
   },
   "bulkEmpty": {
     "message": "Vložte adresy nebo nahrajte soubor a pak zvolte Spustit."

@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "De pagina antwoordde met HTTP {0}: dit bezoek is geweigerd of uitgedaagd."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Dit is een blokkeer- of controlepagina, niet de site zelf: dit bezoek is geweigerd of gecontroleerd."
+  },
   "detectionScrapingCaptcha": {
     "message": "Er staat een CAPTCHA op de pagina: een scraper moet die vermijden of oplossen."
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "Geen items komen overeen met je zoekopdracht of filters."
+  },
+  "historyEntryGone": {
+    "message": "Die scan staat niet meer in de geschiedenis."
   },
   "historyClearFilters": {
     "message": "Filters wissen"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "Dit bestand is geen JSON-export van de bulkscan."
+  },
+  "bulkErrCompareLarge": {
+    "message": "Dit bestand is te groot voor een export van de bulkscan."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Deze export van de bulkscan bevat geen pagina's om mee te vergelijken."
   },
   "bulkEmpty": {
     "message": "Plak adressen of upload een bestand en kies dan Starten."

@@ -949,6 +949,7 @@ class DetectionEngineManager {
                         pattern: patternText,
                         value: patternText, // Show the matched pattern itself
                         foundIn, // 'page content', 'inline script' or the resource URL
+                        ...(checkPageSource ? { scope: 'page' } : {}), // a block or challenge page's own text (ScrapingAdvice)
                         confidence: DetectionEngineManager.ruleConfidence(contentPattern),
                         patternId: DetectionEngineManager.patternIdOf(detector, contentPattern),
                         description: contentPattern.description
@@ -1994,6 +1995,12 @@ class DetectionEngineManager {
                     if (!exactUrlMatch && !UrlUtils.hostnamesMatch(requestedHostname, storedHostname)) {
                         continue;
                     }
+                    // As getStoredDetection reads the cache: another port is another site (localhost:3000 and :8080), and under
+                    // "Domain" only a result saved under "Domain" stands for its site (one saved under "Path" is one page's)
+                    if (!exactUrlMatch && (UrlUtils.portOf(url) !== UrlUtils.portOf(stored.url || '')
+                        || (cacheScope === 'domain' && stored.cacheScope !== 'domain'))) {
+                        continue;
+                    }
                     // Cached by page or by full address, another page of the site is not this one: a clean
                     // /about must not take the detections found on /login
                     if (!exactUrlMatch && (cacheScope === 'path' || cacheScope === 'full') &&
@@ -2056,6 +2063,8 @@ class DetectionEngineManager {
                         // (iframe[src^='…']), so Copy evidence reads the selector, not the value cut at its first "="
                         ...(m.selector ? { selector: m.selector } : {}),
                         ...(m.name ? { name: m.name } : {}),
+                        // A block or challenge page's own text (a rule scoped to "page"): Detection → What this means for scraping
+                        ...(m.scope === 'page' ? { scope: 'page' } : {}),
                         confidence: m.confidence,
                         description: m.description,
                         fullUrl: m.fullUrl,

@@ -77,8 +77,9 @@ test('cookie rows in either order give the same score, and the cookie is listed 
 
 test('a JS hook without a confidence is recorded with the default; an explicit 0 stays 0', async () => {
   const detectors = {
-    'hook-default': { id: 'hook-default', name: 'Hook default', category: 'fingerprint' },
-    'hook-zero': { id: 'hook-zero', name: 'Hook zero', category: 'fingerprint' }
+    // The confidence is the rule's own (a report's is not trusted): one hook rule gives none, the other 0
+    'hook-default': { id: 'hook-default', name: 'Hook default', category: 'fingerprint', detection: { js_hooks: [{ target: 'Navigator.prototype.getBattery' }] } },
+    'hook-zero': { id: 'hook-zero', name: 'Hook zero', category: 'fingerprint', detection: { js_hooks: [{ target: 'Navigator.prototype.getBattery', confidence: 0 }] } }
   };
   context.detectorManager = { getDetector: (_, id) => detectors[id], findDetectorById: id => detectors[id], initialized: true };
   context.detectorInitializationPromise = null;

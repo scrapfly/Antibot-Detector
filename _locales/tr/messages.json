@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Sayfa HTTP {0} ile yanıt verdi: bu ziyaret reddedildi veya doğrulamaya alındı."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Bu, sitenin kendisi değil, bir engelleme veya doğrulama sayfası: bu ziyaret reddedildi ya da doğrulamaya alındı."
+  },
   "detectionScrapingCaptcha": {
     "message": "Sayfada bir CAPTCHA var: bir kazıyıcı onu tetiklemekten kaçınmalı ya da çözmeli."
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "Aramanızla veya filtrelerinizle eşleşen girdi yok."
+  },
+  "historyEntryGone": {
+    "message": "Bu tarama artık geçmişte yok."
   },
   "historyClearFilters": {
     "message": "Filtreleri temizle"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "Bu dosya bir toplu tarama JSON dışa aktarımı değil."
+  },
+  "bulkErrCompareLarge": {
+    "message": "Bu dosya bir toplu tarama dışa aktarımı olamayacak kadar büyük."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Bu toplu tarama dışa aktarımında karşılaştırılacak sayfa yok."
   },
   "bulkEmpty": {
     "message": "Adresleri yapıştırın veya bir dosya yükleyin, ardından Başlat’ı seçin."

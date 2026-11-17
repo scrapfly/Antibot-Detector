@@ -63,7 +63,7 @@ test('without the deletion record the missing official detector is offered as ne
 
 test('a pending update queued before the delete does not re-add it', async () => {
   const local = {
-    scrapfly_detectors: { detectors: { antibot: { 'detect-cloudflare': { id: 'detect-cloudflare', version: '1.0', enabled: false } } } },
+    scrapfly_detectors: { detectors: { antibot: { 'detect-cloudflare': { id: 'detect-cloudflare', version: '1.0', author: 'Scrapfly', enabled: false } } } },
     scrapfly_deleted_official_detectors: ['detect-akamai'],
     scrapfly_pending_updates: [
       { id: 'detect-akamai', category: 'antibot', remoteVersion: '2.0', isNew: true },
@@ -76,4 +76,12 @@ test('a pending update queued before the delete does not re-add it', async () =>
   assert.strictEqual(stored['detect-akamai'], undefined);
   assert.strictEqual(stored['detect-cloudflare'].version, '3.0');
   assert.strictEqual(stored['detect-cloudflare'].enabled, false, 'user toggle kept');
+});
+
+test('the person\'s own rule on an official id, with no author (a new rule, a Duplicate, a file\'s copy), is never replaced without asking', async () => {
+  const mine = { id: 'detect-cloudflare', name: 'Mine', version: '1.0.0', enabled: true, detection: { cookie: [{ name: 'mine' }] } };
+  assert.strictEqual(load({}).isProtected(mine), true, 'no author: the person\'s own');
+  assert.strictEqual(load({}).isProtected({ ...mine, author: 'Ann' }), true);
+  assert.strictEqual(load({}).isProtected({ ...mine, author: 'Scrapfly' }), false, 'an installed official rule updates');
+  assert.strictEqual(load({}).isProtected({ ...mine, author: 'Scrapfly', userModified: true }), true, 'edited: asks first');
 });

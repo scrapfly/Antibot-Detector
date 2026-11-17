@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Trang trả lời bằng HTTP {0}: lượt truy cập này đã bị từ chối hoặc bị thử thách."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Đây là trang chặn hoặc trang thử thách, không phải chính trang web: lượt truy cập này đã bị từ chối hoặc bị thử thách."
+  },
   "detectionScrapingCaptcha": {
     "message": "Trang có CAPTCHA: công cụ thu thập phải tránh kích hoạt hoặc giải nó."
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "Không có mục nào khớp với tìm kiếm hoặc bộ lọc của bạn."
+  },
+  "historyEntryGone": {
+    "message": "Lượt quét đó không còn trong lịch sử."
   },
   "historyClearFilters": {
     "message": "Xóa bộ lọc"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "Tệp này không phải tệp JSON xuất từ quét hàng loạt."
+  },
+  "bulkErrCompareLarge": {
+    "message": "Tệp này quá lớn để là tệp xuất từ quét hàng loạt."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Tệp xuất quét hàng loạt này không có trang nào để so sánh."
   },
   "bulkEmpty": {
     "message": "Dán địa chỉ hoặc tải lên một tệp, rồi chọn Bắt đầu."

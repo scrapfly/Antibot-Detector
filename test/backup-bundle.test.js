@@ -158,6 +158,12 @@ test('a settings file brings in only hex colours: anything else in a colour (mar
     badgeColors: { low: '#22c55e', high: 42 }
   });
   assert.deepStrictEqual(imported.categoryColors, { captcha: '#3b82f6' });
-  assert.deepStrictEqual(imported.tagColors, { dom: '#abc' });
+  assert.deepStrictEqual(imported.tagColors, { dom: '#aabbcc' }, 'written out as the colour pickers hold it');
   assert.deepStrictEqual(imported.badgeColors, { low: '#22c55e' });
+});
+
+test('a colour from a settings file comes in as six hex digits with no alpha, or a colour picker would turn it black', () => {
+  const out = globalThis.SettingsTransfer.portable({ badgeColors: { low: '#F00', medium: '#ff000080', high: '#12AbEf' }, tagColors: { dom: '#abcd' } });
+  assert.deepStrictEqual(out.badgeColors, { low: '#ff0000', medium: '#ff0000', high: '#12abef' });
+  assert.deepStrictEqual(out.tagColors, { dom: '#aabbcc' });
 });

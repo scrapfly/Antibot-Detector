@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "A página respondeu com HTTP {0}: esta visita foi recusada ou desafiada."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Esta é uma página de bloqueio ou de desafio, não o site em si: esta visita foi recusada ou desafiada."
+  },
   "detectionScrapingCaptcha": {
     "message": "Há um CAPTCHA na página: um scraper precisa evitar acioná-lo ou resolvê-lo."
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "Nenhuma entrada corresponde à sua pesquisa ou aos filtros."
+  },
+  "historyEntryGone": {
+    "message": "Essa análise não está mais no histórico."
   },
   "historyClearFilters": {
     "message": "Limpar filtros"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "Este arquivo não é uma exportação JSON da análise em massa."
+  },
+  "bulkErrCompareLarge": {
+    "message": "Este arquivo é grande demais para ser uma exportação da análise em massa."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Esta exportação da análise em massa não tem páginas para comparar."
   },
   "bulkEmpty": {
     "message": "Cole endereços ou envie um arquivo e depois escolha Iniciar."

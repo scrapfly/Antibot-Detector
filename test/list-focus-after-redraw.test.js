@@ -338,3 +338,26 @@ test('a focus outside the chips is left alone, and a chip that is gone leaves th
   f.advanced.renderCaptureChips([{ moduleId: 'hcaptcha', moduleName: 'hCaptcha' }]);       // the vendor has no capture left: no chip for it
   assert.equal(f.doc.activeElement.name, 'body');
 });
+
+test('Reset to official puts the rule back in the official category it was moved out of, and a failed save changes nothing', async () => {
+  const f = rulesFixture();
+  f.view.detectorManager.normalizeCategoryName = (name) => String(name).toLowerCase().replace(/[^a-z]/g, '');
+  f.show([['captcha', 'b']], 0);
+  f.detectors.captcha.b = { id: 'b', category: 'CAPTCHA', officialSnapshot: { id: 'b', name: 'B', category: 'Anti-Bot' } };
+  f.redrawTo([['antibot', 'b']]);
+  await f.view.handleResetToOfficial('captcha', 'b', 'B');
+  const now = f.view.detectorManager.detectors;
+  assert.equal(now.captcha.b, undefined, 'out of the category the edit moved it to');
+  assert.equal(now.antibot.b.category, 'Anti-Bot');
+
+  const failing = rulesFixture();
+  failing.view.detectorManager.normalizeCategoryName = (name) => String(name).toLowerCase().replace(/[^a-z]/g, '');
+  failing.view.detectorManager.saveDetectorsToStorage = async () => { throw new Error('storage is full'); };
+  failing.show([['captcha', 'b']], 0);
+  failing.detectors.captcha.b = { id: 'b', category: 'CAPTCHA', officialSnapshot: { id: 'b', category: 'Anti-Bot' } };
+  failing.redrawTo([['captcha', 'b']]);
+  await failing.view.handleResetToOfficial('captcha', 'b', 'B');
+  assert.equal(failing.view.detectorManager.detectors, failing.detectors, 'the rules in memory are the ones before the reset');
+  assert.equal(failing.detectors.captcha.b.category, 'CAPTCHA');
+  assert.equal(failing.detectors.antibot.b, undefined);
+});

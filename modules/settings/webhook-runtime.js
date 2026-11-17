@@ -30,6 +30,12 @@ SettingsRuntime.recordWebhookDelivery = function(entry) {
     return webhookLogQueue;
 };
 
+/** Forget the failed deliveries waiting to be sent again (History cleared): they name pages, and a retry would log them again. */
+SettingsRuntime.forgetHeldWebhooks = async function() {
+    await SettingsRuntime._changeHeld(() => ({}));
+    await SettingsRuntime._scheduleWebhookRetries();
+};
+
 SettingsRuntime.clearWebhookLog = function() {
     const clear = async () => { await chrome.storage.local.remove(SettingsRuntime.WEBHOOK_LOG_KEY); };
     webhookLogQueue = webhookLogQueue.then(clear, clear);

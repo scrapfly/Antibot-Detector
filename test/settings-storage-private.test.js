@@ -11,12 +11,14 @@ const StorageOverview = require('../modules/settings/storage-overview.js');
 
 function sizes({ localCaptures = 0, memory = 0, session = true }) {
   const ctx = { console, StorageOverview, SettingsUI: {}, HistoryStore: { hasUnlimitedStorage: () => false },
-    AdvancedHistoryStore: { PRIVATE_KEY: 'session_advanced_private' },
     chrome: { storage: {
       local: { QUOTA_BYTES: 10485760, getBytesInUse: async (keys) => (keys === null ? 5000 + localCaptures : (Array.isArray(keys) && keys.includes('scrapfly_advanced_history') ? localCaptures : 0)) },
       ...(session ? { session: { getBytesInUse: async () => memory } } : {})
     } } };
+  ctx.window = ctx;
   vm.createContext(ctx);
+  // The popup's own store (the client): the key must come from it, not from a fake
+  vm.runInContext(fs.readFileSync(path.join(root, 'modules/advanced/history-client.js'), 'utf8'), ctx);
   vm.runInContext(fs.readFileSync(path.join(root, 'sections/settings/settings-ui-storage.js'), 'utf8'), ctx);
   return ctx.SettingsUI.readStorageSizes();
 }

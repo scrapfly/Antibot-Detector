@@ -5,6 +5,30 @@ All notable changes to the Scrapfly Antibot Detector extension are documented in
 The format is based on [Keep a Changelog](https://keepachangelog.com/es-ES/0.3.0/).
 Each line says what changed for the user. Technical detail lives in the commit history.
 
+## [3.2.1] - 2026-11-17
+
+### Added
+
+- Detection: What this means for scraping also says when the page is a block or challenge page, even after reopening the popup.
+- Detection: a page that answered with an error status and showed no protection now says the visit was refused, under the all-clear card.
+
+### Fixed
+
+- Statistics → Site report: a changed page opens that scan in History instead of every page of the site, and the category chips also narrow the changes.
+- History → Compare scans: Copy as Markdown and the hover text never show a login saved in an address, and the filter finds accented site names.
+- History → Compare scans: an old scan compared with any page picks the scan just before it, and a scan saved without an address names its site.
+- Bulk scan: lists with very long addresses, CSV files without a header or with dotted column names, and exports of stopped runs now compare correctly.
+- Bulk scan: clearing History removes the kept runs; a chosen export applies only to its own list, refused files say why, and Show lists each protection once.
+- History: clearing it also drops webhook deliveries waiting to be retried, and deleting the last entry no longer clears the webhook's Recent deliveries.
+- History watchlist: a page unwatched, unpinned or deleted during a check is no longer opened.
+- Detection: What was checked says the JS hooks stopped at the time limit when they did, and counts the page's cookies when the browser listed none.
+- Detection: a protection whose evidence arrives partly after the scan, such as Kasada or PerimeterX, is now found once its last request comes in.
+- Detection: a clean page no longer shows a cached result from another port of the same host, or from another page cached by path.
+- Rules → Update no longer replaces your own rule that uses an official rule's id; Reset to official also moves the rule back to its category.
+- Rules: a delete that could not be saved no longer removes the rule later; Duplicate keeps the extension version the rule needs; import messages list rules in your language.
+- Statistics: clicking a protection lists every domain the row counts, including those that saved it under another name.
+- Settings → Data counts captures made in private windows, and colours from a settings file no longer turn black.
+
 ## [3.2.0] - 2026-11-16
 
 ### Added
@@ -1238,6 +1262,7 @@ Each line says what changed for the user. Technical detail lives in the commit h
 - Incomplete HTML escaping in Advanced capture details.
 - Repeated favicon 404 errors in the console.
 
+[3.2.1]: https://github.com/scrapfly/Antibot-Detector/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.9...v3.2.0
 [3.1.9]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.8...v3.1.9
 [3.1.8]: https://github.com/scrapfly/Antibot-Detector/compare/v3.1.7...v3.1.8

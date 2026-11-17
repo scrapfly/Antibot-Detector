@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Strona odpowiedziała kodem HTTP {0}: ta wizyta została odrzucona lub poddana weryfikacji."
   },
+  "detectionScrapingBlockPage": {
+    "message": "To strona blokady lub weryfikacji, a nie sama witryna: ta wizyta została odrzucona lub poddana weryfikacji."
+  },
   "detectionScrapingCaptcha": {
     "message": "Na stronie jest CAPTCHA: scraper musi unikać jej wywołania albo ją rozwiązać."
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "Żaden wpis nie pasuje do wyszukiwania ani filtrów."
+  },
+  "historyEntryGone": {
+    "message": "Tego skanu nie ma już w historii."
   },
   "historyClearFilters": {
     "message": "Wyczyść filtry"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "Ten plik nie jest eksportem JSON skanowania zbiorczego."
+  },
+  "bulkErrCompareLarge": {
+    "message": "Ten plik jest za duży, by był eksportem skanowania zbiorczego."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Ten eksport skanowania zbiorczego nie zawiera stron do porównania."
   },
   "bulkEmpty": {
     "message": "Wklej adresy lub wczytaj plik, a potem wybierz Rozpocznij."

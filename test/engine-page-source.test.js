@@ -142,6 +142,7 @@ test('a "page" rule matches the small page\'s HTML only: not the body text, not 
   const [match] = run({ pageSource: '<title>Access Denied</title>' });
   assert.equal(match.pattern, 'Access Denied');
   assert.equal(match.foundIn, 'page content');
+  assert.equal(match.scope, 'page', 'marked as a block page\'s own text (Detection → What this means for scraping)');
   assert.equal(run({ pageHTML: '<p>Access Denied</p>' }).length, 0);
   assert.equal(run({ content: [{ content: 'var s = "Access Denied";' }] }).length, 0);
   assert.equal(run({ externalContent: [{ url: 'https://cdn.test/a.css', type: 'css', content: '/* Access Denied */' }] }).length, 0);
@@ -155,6 +156,10 @@ test('a rule limited to scripts never reads the small page\'s HTML, and one that
   assert.equal(run(SCRIPTS_RULE).length, 0);
   assert.equal(run({ ...PAGE_RULE, text: 'maxTouchPoints', checkScripts: true }).length, 0);
   assert.equal(run({ ...PAGE_RULE, text: 'maxTouchPoints' }).length, 1);
+  const [scripts] = plain(engine.runDetector({ id: 'detect-x', name: 'X', enabled: true, detection: { content: [{ ...SCRIPTS_RULE, text: 'maxTouchPoints' }] } },
+    { url: 'https://site.test/', content: [{ content: 'navigator.maxTouchPoints' }] }).matches);
+  assert.ok(scripts, 'the scripts rule matches a script');
+  assert.equal(scripts.scope, undefined, 'only a "page" rule marks its match');
 });
 
 // ---- The shipped block-page rules on realistic block pages
@@ -183,6 +188,8 @@ test('Sucuri: the block page\'s title and Block ID are found, and with its heade
   assert.ok(matchIds(result).includes('content:sucuri-block-id'));
   assert.ok(comboIds(result).includes('sucuri-block-page'), comboIds(result).join(', '));
   assert.equal(result.confidence, 100);
+  const ScrapingAdvice = require('../modules/core/scraping-advice.js');
+  assert.ok(ScrapingAdvice.of({ detections: [result], httpStatus: 200 }).includes('blockpage'), 'a block page answering 200 is still a block page');
 });
 
 test('Sucuri: the title as older and newer block pages write it, and the heading, all match', async () => {

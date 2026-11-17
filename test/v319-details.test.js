@@ -203,6 +203,34 @@ test('What this means for scraping: the panel lists the points of the results, a
   assert.equal(nodes['#scanFactsToggle'].hidden, true, 'neither facts nor a point: no square');
 });
 
+test('the panel and its square are named by what they hold: What was checked, or only What this means for scraping', () => {
+  const { DetectionUI, nodes } = loadUi();
+  const toggle = nodes['#scanFactsToggle'];
+  const panel = nodes['#scanFactsPanel'];
+  const captcha = [{ name: 'reCAPTCHA', category: 'captcha', confidence: 80, matches: [] }];
+  DetectionUI.syncScanFacts({ httpStatus: 200 }, 'results', captcha);
+  assert.equal(panel.getAttribute('aria-labelledby'), 'scanAdviceTitle');
+  assert.equal(toggle.getAttribute('aria-label'), 'What this means for scraping');
+  assert.equal(toggle.getAttribute('title'), 'What this means for scraping');
+  DetectionUI.syncScanFacts({ scanFacts: FACTS, httpStatus: 200 }, 'results', captcha);
+  assert.equal(panel.getAttribute('aria-labelledby'), 'scanFactsTitle');
+  assert.equal(toggle.getAttribute('aria-label'), 'What was checked');
+});
+
+test('the all-clear card of a page that answered with an error status says the visit was refused, with or without facts', () => {
+  const { DetectionUI, nodes } = loadUi();
+  const clean = nodes['#emptyFactsNote'];
+  DetectionUI.syncScanFacts({ httpStatus: 403 }, 'clean');
+  assert.equal(clean.hidden, false);
+  assert.equal(clean.textContent, 'The page answered with HTTP 403: this visit was refused or challenged.');
+  DetectionUI.syncScanFacts({ scanFacts: { ...FACTS, hooks: 'done' }, httpStatus: 503 }, 'clean');
+  assert.equal(clean.textContent, 'Cookies: 12 · Scripts: 31 · Requests: 200 · Headers: 18 · JS hooks: finished · The page answered with HTTP 503: this visit was refused or challenged.');
+  DetectionUI.syncScanFacts({ httpStatus: 200 }, 'clean');
+  assert.equal(clean.hidden, true, 'a good status and no facts: nothing');
+  DetectionUI.syncScanFacts({ httpStatus: 403 }, null);
+  assert.equal(clean.hidden, true, 'not the clean card: nothing');
+});
+
 test('the square, the lines and the clean line are in the page, named, and wired to the results and the clean card', () => {
   const html = read('sections/detection/detection.html');
   const row = html.slice(html.indexOf('class="cache-expiry-line"'), html.indexOf('id="detectionChangeNote"'));

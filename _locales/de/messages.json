@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Die Seite antwortete mit HTTP {0}: Dieser Besuch wurde abgelehnt oder geprüft."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Das ist eine Sperr- oder Prüfseite, nicht die Website selbst: Dieser Besuch wurde abgelehnt oder geprüft."
+  },
   "detectionScrapingCaptcha": {
     "message": "Auf der Seite ist ein CAPTCHA: Ein Scraper muss es vermeiden oder lösen."
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "Keine Einträge entsprechen deiner Suche oder den Filtern."
+  },
+  "historyEntryGone": {
+    "message": "Dieser Scan ist nicht mehr im Verlauf."
   },
   "historyClearFilters": {
     "message": "Filter zurücksetzen"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "Diese Datei ist kein JSON-Export des Massenscans."
+  },
+  "bulkErrCompareLarge": {
+    "message": "Diese Datei ist zu groß für einen Export des Massenscans."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Dieser Export des Massenscans enthält keine Seiten zum Vergleichen."
   },
   "bulkEmpty": {
     "message": "Fügen Sie Adressen ein oder laden Sie eine Datei hoch und wählen Sie dann Starten."

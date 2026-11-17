@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Halaman menjawab dengan HTTP {0}: kunjungan ini ditolak atau ditantang."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Ini halaman blokir atau tantangan, bukan situsnya sendiri: kunjungan ini ditolak atau ditantang."
+  },
   "detectionScrapingCaptcha": {
     "message": "Ada CAPTCHA di halaman: scraper harus menghindari memicunya atau menyelesaikannya."
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "Tidak ada entri yang cocok dengan pencarian atau filter Anda."
+  },
+  "historyEntryGone": {
+    "message": "Pindaian itu sudah tidak ada di Riwayat."
   },
   "historyClearFilters": {
     "message": "Hapus filter"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "File ini bukan ekspor JSON pindai massal."
+  },
+  "bulkErrCompareLarge": {
+    "message": "File ini terlalu besar untuk menjadi ekspor pindai massal."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Ekspor pindai massal ini tidak memiliki halaman untuk dibandingkan."
   },
   "bulkEmpty": {
     "message": "Tempel alamat atau unggah file, lalu pilih Mulai."

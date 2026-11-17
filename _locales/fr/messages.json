@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "La page a répondu avec HTTP {0} : cette visite a été refusée ou soumise à un défi."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Il s'agit d'une page de blocage ou de vérification, pas du site lui-même : cette visite a été refusée ou soumise à une vérification."
+  },
   "detectionScrapingCaptcha": {
     "message": "Un CAPTCHA est sur la page : un scraper doit éviter de le déclencher ou le résoudre."
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "Aucune entrée ne correspond à votre recherche ou à vos filtres."
+  },
+  "historyEntryGone": {
+    "message": "Cette analyse n’est plus dans l’historique."
   },
   "historyClearFilters": {
     "message": "Effacer les filtres"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "Ce fichier n’est pas un export JSON de l’analyse groupée."
+  },
+  "bulkErrCompareLarge": {
+    "message": "Ce fichier est trop volumineux pour être un export de l’analyse groupée."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Cet export de l’analyse groupée ne contient aucune page à comparer."
   },
   "bulkEmpty": {
     "message": "Collez des adresses ou importez un fichier, puis choisissez Démarrer."

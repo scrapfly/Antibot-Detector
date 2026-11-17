@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "ردّت الصفحة بالرمز HTTP {0}: رُفضت هذه الزيارة أو خضعت لتحدٍّ."
   },
+  "detectionScrapingBlockPage": {
+    "message": "هذه صفحة حظر أو تحقق، وليست الموقع نفسه: رُفضت هذه الزيارة أو خضعت لتحقق."
+  },
   "detectionScrapingCaptcha": {
     "message": "يوجد CAPTCHA في الصفحة: على أداة الاستخراج تجنّب إطلاقه أو حلّه."
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "لا توجد إدخالات تطابق بحثك أو عوامل التصفية."
+  },
+  "historyEntryGone": {
+    "message": "لم يعد هذا الفحص موجودًا في السجل."
   },
   "historyClearFilters": {
     "message": "مسح عوامل التصفية"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "هذا الملف ليس تصدير JSON من الفحص الجماعي."
+  },
+  "bulkErrCompareLarge": {
+    "message": "هذا الملف أكبر من أن يكون تصديرًا من الفحص الجماعي."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "تصدير الفحص الجماعي هذا لا يحتوي على صفحات للمقارنة بها."
   },
   "bulkEmpty": {
     "message": "الصق العناوين أو ارفع ملفًا، ثم اختر بدء."

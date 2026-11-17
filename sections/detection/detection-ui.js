@@ -460,7 +460,8 @@ DetectionUI.scrapingAdviceText = function(detections, meta) {
 /**
  * What was checked, from the result shown: the square at the end of the Cache row and the lines it opens (results), and the
  * line under the all-clear card (a scan that found nothing). With results the panel also says what they mean for scraping, so
- * the square shows for a result with facts or with such a point; the clean line needs facts.
+ * the square shows for a result with facts or with such a point; the clean line shows the facts and, for a page that answered
+ * with an error status, that it was refused.
  * @param {object|null} meta - the result's cache metadata
  * @param {'results'|'clean'|null} where - which state shows them; null hides both
  * @param {object[]} [detections] - the results shown (with 'results')
@@ -502,13 +503,25 @@ DetectionUI.syncScanFacts = function(meta, where, detections) {
           return item;
         }));
         if (box) box.hidden = !advice.length;
+        // Named by what it holds: "What was checked", or "What this means for scraping" when it holds only that (a result saved
+        // before 3.1.9 has no counts)
+        const named = text ? 'scanFactsTitle' : 'scanAdviceTitle';
+        panel.setAttribute('aria-labelledby', named);
+        if (toggle) {
+          const name = text ? FormatUtils.t('detectionFactsTitle', 'What was checked') : FormatUtils.t('detectionScrapingTitle', 'What this means for scraping');
+          toggle.setAttribute('aria-label', name);
+          toggle.setAttribute('title', name);
+        }
       }
       panel.hidden = !inResults || !toggle || toggle.getAttribute('aria-expanded') !== 'true';
     }
     if (clean) {
-      const shown = !!text && where === 'clean';
-      clean.textContent = shown ? [text.counts, text.hooks].filter(Boolean).join(' · ') : '';
-      clean.hidden = !shown;
+      // A scan that found nothing on a page that answered with an error status: it was refused or challenged, which is what
+      // the all-clear card must not hide (the only point that needs no result)
+      const refused = where === 'clean' ? DetectionUI.scrapingAdviceText([], meta) : [];
+      const lines = where === 'clean' ? [...(text ? [text.counts, text.hooks] : []), ...refused].filter(Boolean) : [];
+      clean.textContent = lines.join(' · ');
+      clean.hidden = !lines.length;
     }
 };
 

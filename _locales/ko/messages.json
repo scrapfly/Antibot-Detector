@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "페이지가 HTTP {0}(으)로 응답했습니다: 이 방문은 거부되었거나 확인 절차를 받았습니다."
   },
+  "detectionScrapingBlockPage": {
+    "message": "사이트 자체가 아니라 차단 또는 챌린지 페이지입니다: 이 방문은 거부되었거나 챌린지를 받았습니다."
+  },
   "detectionScrapingCaptcha": {
     "message": "페이지에 CAPTCHA가 있습니다: 스크래퍼는 이를 유발하지 않거나 풀어야 합니다."
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "검색어나 필터와 일치하는 항목이 없습니다."
+  },
+  "historyEntryGone": {
+    "message": "그 스캔은 더 이상 기록에 없습니다."
   },
   "historyClearFilters": {
     "message": "필터 지우기"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "이 파일은 일괄 스캔 JSON 내보내기가 아닙니다."
+  },
+  "bulkErrCompareLarge": {
+    "message": "이 파일은 일괄 스캔 내보내기라기에는 너무 큽니다."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "이 일괄 스캔 내보내기에는 비교할 페이지가 없습니다."
   },
   "bulkEmpty": {
     "message": "주소를 붙여 넣거나 파일을 업로드한 다음 시작을 선택하세요."

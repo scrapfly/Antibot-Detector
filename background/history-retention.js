@@ -18,7 +18,7 @@
  * and on start a history saved by an older build is compacted: once per browser session and per version (every write
  * keeps it compact, and the compaction reads, parses and writes all of it), not at every service-worker start.
  * The webhook's record of recent deliveries names pages, so it goes where History's own record goes: with Clear on close,
- * and when History is emptied (forgetDeliveries).
+ * and when the person clears History (forgetWithHistory).
  * Settings that cannot be read (the storage does not answer, or what is stored is not JSON or not an object) are not
  * "no settings": the rules above do nothing until they read again (readConfig), and the size is the largest anyone can have
  * chosen (HistoryStore.currentBudget), where the defaults would take entries the person asked to keep.
@@ -200,14 +200,27 @@ const HistoryRetention = {
             const kept = items.filter(item => item && item.pinned === true);
             return kept.length === items.length ? { result: 0 } : { items: kept, result: items.length - kept.length };
         }, chrome.storage.local);
-        // The record of webhook deliveries names pages too: it goes with History's, even when History had nothing left to clear
-        await this.forgetDeliveries();
+        // The record of webhook deliveries names pages too: it goes with History's, even when History had nothing left to clear.
         // So do the kept Bulk scan runs (their addresses): cleared on close, they are not shown again after the restart
-        if (typeof BulkScanRunner !== 'undefined' && BulkScanRunner.forgetRuns) {
-            try { await BulkScanRunner.forgetRuns(); } catch (error) { this._log(`[HistoryRetention] Bulk runs not cleared: ${error && error.message}`); }
-        }
+        await this.forgetWithHistory();
         if (removed > 0) this._log(`[HistoryRetention] Cleared ${removed} history entries (${reason})`);
         return removed;
+    },
+
+    /**
+     * What goes when the person clears History (History → Clear, Settings → Data, clear on close): the webhook delivery record and
+     * the deliveries waiting to be retried, and the kept Bulk scan runs. Not when History is left empty otherwise (the last card
+     * deleted, retention removing the last old entry). Never throws.
+     */
+    async forgetWithHistory() {
+        await this.forgetDeliveries();
+        await this.forgetBulkRuns();
+    },
+
+    /** Forget the kept Bulk scan runs (BulkScanRunner queues it after a run being saved). Never throws. */
+    async forgetBulkRuns() {
+        if (typeof BulkScanRunner === 'undefined' || !BulkScanRunner.forgetRuns) return;
+        try { await BulkScanRunner.forgetRuns(); } catch (error) { this._log(`[HistoryRetention] Bulk runs not cleared: ${error && error.message}`); }
     },
 
     /** The last normal window closed: clear History if Settings says so. */
@@ -279,7 +292,10 @@ const HistoryRetention = {
 
         chrome.storage.onChanged.addListener((changes, namespace) => {
             if (namespace !== 'local') return;
-            if (changes.scrapfly_history && this.isEmptied(changes.scrapfly_history.newValue)) this.forgetDeliveries();
+            // History removed outright (not written empty: deleting the last card or retention does that, and keeps the record)
+            if (changes.scrapfly_history && changes.scrapfly_history.newValue === undefined) {
+                this.forgetDeliveries();
+            }
             if (changes.scrapfly_settings) this.schedule('settings_saved');
             else if (changes.scrapfly_history && changes.scrapfly_history.newValue !== undefined) this.schedule('history_write');
         });
@@ -372,19 +388,13 @@ const HistoryRetention = {
      */
     forgetDeliveries() {
         if (typeof SettingsRuntime === 'undefined' || typeof SettingsRuntime.clearWebhookLog !== 'function') return Promise.resolve();
-        try { return Promise.resolve(SettingsRuntime.clearWebhookLog()).catch(() => {}); } catch (_) { return Promise.resolve(); }
-    },
-
-    /** Was History written with no entry in it, or removed? A History with entries is bigger than 200 characters and is not parsed. */
-    isEmptied(value) {
-        if (value === undefined) return true;
-        let stored = value;
-        if (typeof stored === 'string') {
-            if (stored.length >= 200) return false;
-            try { stored = JSON.parse(stored); } catch (_) { return false; }
-        }
-        const items = Array.isArray(stored) ? stored : (stored && stored.items);
-        return Array.isArray(items) && items.length === 0;
+        const held = () => (typeof SettingsRuntime.forgetHeldWebhooks === 'function' ? SettingsRuntime.forgetHeldWebhooks() : undefined);
+        try {
+            return Promise.all([
+                Promise.resolve(SettingsRuntime.clearWebhookLog()).catch(() => {}),
+                Promise.resolve().then(held).catch(() => {})
+            ]).then(() => undefined);
+        } catch (_) { return Promise.resolve(); }
     },
 
     _log(message) {

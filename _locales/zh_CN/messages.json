@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "页面返回了 HTTP {0}：此次访问被拒绝或被要求验证。"
   },
+  "detectionScrapingBlockPage": {
+    "message": "这是拦截或验证页面，而不是网站本身：此次访问被拒绝或需要验证。"
+  },
   "detectionScrapingCaptcha": {
     "message": "页面上有 CAPTCHA：抓取程序需要避免触发它或解开它。"
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "没有符合搜索或筛选条件的记录。"
+  },
+  "historyEntryGone": {
+    "message": "该扫描已不在历史记录中。"
   },
   "historyClearFilters": {
     "message": "清除筛选"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "此文件不是批量扫描的 JSON 导出文件。"
+  },
+  "bulkErrCompareLarge": {
+    "message": "此文件太大，不可能是批量扫描的导出文件。"
+  },
+  "bulkErrCompareEmpty": {
+    "message": "此批量扫描导出文件中没有可比较的页面。"
   },
   "bulkEmpty": {
     "message": "粘贴地址或上传文件，然后选择开始。"

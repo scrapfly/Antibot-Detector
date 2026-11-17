@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "頁面回應了 HTTP {0}：這次造訪遭到拒絕或被要求驗證。"
   },
+  "detectionScrapingBlockPage": {
+    "message": "這是封鎖或驗證頁面，而不是網站本身：此次造訪被拒絕或需要驗證。"
+  },
   "detectionScrapingCaptcha": {
     "message": "頁面上有 CAPTCHA：爬取程式需要避免觸發它或解開它。"
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "沒有符合搜尋或篩選條件的項目。"
+  },
+  "historyEntryGone": {
+    "message": "該掃描已不在歷史記錄中。"
   },
   "historyClearFilters": {
     "message": "清除篩選條件"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "此檔案不是批次掃描的 JSON 匯出檔。"
+  },
+  "bulkErrCompareLarge": {
+    "message": "此檔案太大，不可能是批次掃描的匯出檔。"
+  },
+  "bulkErrCompareEmpty": {
+    "message": "此批次掃描匯出檔中沒有可比較的頁面。"
   },
   "bulkEmpty": {
     "message": "貼上網址或上傳檔案，然後選擇開始。"

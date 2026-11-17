@@ -58,7 +58,9 @@ Rules.prototype.handleImport = async function(event) {
       const skipped = this.detectorManager.lastImportSkipped || [];
       if (skipped.length) {
         // The rules left out, by name: the first ten (a file can hold a thousand)
-        const names = skipped.length > 10 ? `${skipped.slice(0, 10).join(', ')}, …` : skipped.join(', ');
+        const names = skipped.length > 10
+          ? FormatUtils.formatList([...skipped.slice(0, 10), _fmt('restoreOfficialMoreFmt', `${skipped.length - 10} more`, skipped.length - 10)])
+          : FormatUtils.formatList(skipped);
         NotificationHelper.warning(_fmt('detectorsImportedSkippedFmt', `Detectors imported, except: ${names} (not valid in this version, or a pattern could freeze scanning)`, names));
       } else {
         NotificationHelper.success(_tr('detectorsImported', 'Detectors imported'));
@@ -66,7 +68,8 @@ Rules.prototype.handleImport = async function(event) {
       // Official rules are not replaced by a file: the ones whose content differs are named, so an edit is not lost unseen
       const kept = this.detectorManager.lastImportKept || [];
       if (kept.length) {
-        NotificationHelper.warning(_fmt('detectorsImportedKeptFmt', `Official rules already installed were not replaced: ${kept.join(', ')}`, kept.join(', ')));
+        const keptNames = FormatUtils.formatList(kept);
+        NotificationHelper.warning(_fmt('detectorsImportedKeptFmt', `Official rules already installed were not replaced: ${keptNames}`, keptNames));
       }
       this.displayRules();
     } else {
@@ -128,7 +131,9 @@ Rules.duplicateOf = function(detector, options = {}) {
   const copy = typeof DetectorManager !== 'undefined' && DetectorManager.cleanDetectorCopy
     ? DetectorManager.cleanDetectorCopy(detector)
     : JSON.parse(JSON.stringify(detector || {}));
-  for (const field of ['userModified', 'officialSnapshot', 'dismissedVersion', 'minExtensionVersion', 'source', 'official']) delete copy[field];
+  // The extension version the rule needs stays: a copy of a rule that uses a newer feature ("Only block and challenge pages",
+  // a response body), exported, must be refused by an older build as the original is, not matched as something else
+  for (const field of ['userModified', 'officialSnapshot', 'dismissedVersion', 'source', 'official']) delete copy[field];
   const base = String((detector && (detector.name || detector.displayName || detector.id)) || '').trim();
   copy.id = `custom-${now.getTime()}`;
   copy.name = typeof options.name === 'function' ? options.name(base) : `${base} (copy)`;
@@ -350,8 +355,24 @@ Rules.prototype.handleResetToOfficial = async function(category, detectorName, d
   if (!confirmed) return;
 
   try {
-    this.detectorManager.detectors[category][detectorName] = restored;
-    await this.detectorManager.saveDetectorsToStorage();
+    // Back in the official copy's own category (an edit may have moved the rule), and only once it is saved: a failed save
+    // leaves the rules as they were, so the next save does not write a half-done reset
+    const home = (restored.category && this.detectorManager.normalizeCategoryName(restored.category)) || category;
+    const before = this.detectorManager.detectors;
+    const next = { ...before, [category]: { ...(before[category] || {}) } };
+    if (home === category) {
+      next[category][detectorName] = restored;
+    } else {
+      delete next[category][detectorName];
+      next[home] = { ...(before[home] || {}), [detectorName]: restored };
+    }
+    this.detectorManager.detectors = next;
+    try {
+      await this.detectorManager.saveDetectorsToStorage();
+    } catch (error) {
+      this.detectorManager.detectors = before;
+      throw error;
+    }
     chrome.runtime.sendMessage({ type: WorkerMessages.RELOAD_DETECTORS }, () => { void chrome.runtime.lastError; });
     NotificationHelper.success(_tr('ruleResetToOfficial', 'Rule restored to the official version'));
     // The same page of the list, and the focus goes back to the rule: the menu item that was pressed went with the old card

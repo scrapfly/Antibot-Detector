@@ -140,9 +140,23 @@
   const limitOf = (value) => (Number.isInteger(value) && value > 0 ? value : TIMELINE_LIMIT);
 
   /**
+   * The category of every protection the site's scans found, by protection key: what tells the category of a name in a page's
+   * change (a protection removed is no longer among that scan's results, but an earlier scan of the site found it).
+   * @returns {Map<string, string>}
+   */
+  function categoriesOf(items, site) {
+    const map = new Map();
+    for (const item of entriesOf(items, siteOf(site))) {
+      for (const found of protectionsOf(item).values()) if (!map.has(found.key)) map.set(found.key, found.category);
+    }
+    return map;
+  }
+
+  /**
    * @param {object[]} items - History entries
    * @param {string} site - a host name or an address of the site
-   * @param {{limit?: number}} [options] - limit: the latest scans the timeline shows (30 by default)
+   * @param {{limit?: number, keepChange?: function(string): boolean}} [options] - limit: the latest scans the timeline shows (30 by
+   *   default); keepChange: whether a protection named in a page's change is shown (Statistics' category chips), every one when absent
    */
   function build(items, site, options = {}) {
     const key = siteOf(site);
@@ -185,8 +199,11 @@
         protections.set(found.key, row);
       }
       if (HistoryFilter.isChanged(item)) {
-        const names = (list) => HistoryFilter.changeNames(list).map(oneLine).filter(Boolean);
-        changes.push({ id: item.id === undefined ? null : item.id, timestamp: ts, host, path: pathOf(item), added: names(item.changed.added), removed: names(item.changed.removed) });
+        const keep = typeof options.keepChange === 'function' ? options.keepChange : () => true;
+        const names = (list) => HistoryFilter.changeNames(list).map(oneLine).filter(name => name && keep(name));
+        const added = names(item.changed.added), removed = names(item.changed.removed);
+        // A change that only named protections the chips leave out is no change of what the report shows
+        if (added.length || removed.length) changes.push({ id: item.id === undefined ? null : item.id, timestamp: ts, host, path: pathOf(item), added, removed });
       }
     }
 
@@ -347,7 +364,7 @@
     return `scrapfly-site-report-${safe}-${localDay(now)}.${ext}`;
   }
 
-  const api = { TIMELINE_LIMIT, siteOf, hostOf, entryHost, entriesOf, timeOf, pathOf, build, confidenceText, toJSON, toMarkdown, filename };
+  const api = { TIMELINE_LIMIT, siteOf, hostOf, entryHost, entriesOf, timeOf, pathOf, categoriesOf, build, confidenceText, toJSON, toMarkdown, filename };
   root.SiteReport = api;
   // The page's scripts name it as a plain global: a page has one (self is globalThis), a test sandbox may not
   if (typeof globalThis !== 'undefined' && globalThis !== root) globalThis.SiteReport = api;

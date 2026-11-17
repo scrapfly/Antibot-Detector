@@ -34,6 +34,15 @@ test('an anti-bot alone, found by its scripts, gives the general line', () => {
   assert.deepEqual(ScrapingAdvice.of({ detections: [d('antibot', 90, 'url', 'content')] }), ['antibot']);
 });
 
+test('a block page\'s own text says the visit was refused, unless an error status already says it', () => {
+  const page = { name: 'Sucuri', category: 'antibot', confidence: 100, matches: [{ type: 'content', scope: 'page' }, { type: 'header' }] };
+  assert.deepEqual(ScrapingAdvice.of({ detections: [page], httpStatus: 200 }), ['blockpage']);
+  assert.deepEqual(ScrapingAdvice.of({ detections: [page] }), ['blockpage']);
+  assert.deepEqual(ScrapingAdvice.of({ detections: [page], httpStatus: 403 }), ['blocked']);
+  assert.deepEqual(ScrapingAdvice.of({ detections: [{ ...page, confidence: 40 }], httpStatus: 200 }), []);
+  assert.deepEqual(ScrapingAdvice.of({ detections: [d('antibot', 90, 'content')] }), ['antibot'], 'other page text is no block page');
+});
+
 test('weak results do not count', () => {
   assert.deepEqual(ScrapingAdvice.of({ detections: [d('captcha', 49, 'cookie'), d('fingerprint', null, 'js_hooks')] }), []);
   assert.equal(ScrapingAdvice.MIN_CONFIDENCE, 50);

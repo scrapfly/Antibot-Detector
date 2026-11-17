@@ -26,6 +26,8 @@
     }
     global.AdvancedHistoryStore = Object.freeze({
         STORAGE_KEY: 'scrapfly_advanced_history',
+        // A private window's captures, in memory (session storage): the worker's own key (background/advanced/history-store.js)
+        PRIVATE_KEY: 'session_advanced_private',
         load: (...args) => call('load', args),
         getModule: (...args) => call('getModule', args),
         appendCapture: (...args) => call('appendCapture', args),

@@ -281,8 +281,10 @@
   /** A protection of the Protections table: the domains that have it. */
   function openProtection(name) { showDomains(name, name); }
   /** A site's History: the popup page in a tab, on its History tab, searched for the host (popup.js routeFrom). */
-  function openHistory(hostname) {
-    const url = chrome.runtime.getURL('popup.html?tab=history&search=' + encodeURIComponent(String(hostname || '').slice(0, 200)));
+  /** History narrowed by this text (a host); with an entry id, that entry's details open too. */
+  function openHistory(hostname, entryId = null) {
+    const entry = entryId === null || entryId === undefined ? '' : '&entry=' + encodeURIComponent(String(entryId).slice(0, 120));
+    const url = chrome.runtime.getURL('popup.html?tab=history&search=' + encodeURIComponent(String(hostname || '').slice(0, 200)) + entry);
     try {
       return Promise.resolve(chrome.tabs.create({ url, active: true })).catch(() => {});
     } catch (_) {

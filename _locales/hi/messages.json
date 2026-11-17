@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "पेज ने HTTP {0} से जवाब दिया: यह विज़िट अस्वीकार की गई या जाँच में डाली गई।"
   },
+  "detectionScrapingBlockPage": {
+    "message": "यह ब्लॉक या चुनौती पेज है, साइट खुद नहीं: इस विज़िट को अस्वीकार किया गया या चुनौती दी गई।"
+  },
   "detectionScrapingCaptcha": {
     "message": "पेज पर CAPTCHA है: स्क्रेपर को इसे ट्रिगर होने से बचाना होगा या हल करना होगा।"
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "आपकी खोज या फ़िल्टर से कोई प्रविष्टि मेल नहीं खाती।"
+  },
+  "historyEntryGone": {
+    "message": "वह स्कैन अब इतिहास में नहीं है।"
   },
   "historyClearFilters": {
     "message": "फ़िल्टर साफ़ करें"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "यह फ़ाइल बल्क स्कैन का JSON एक्सपोर्ट नहीं है।"
+  },
+  "bulkErrCompareLarge": {
+    "message": "यह फ़ाइल बल्क स्कैन एक्सपोर्ट होने के लिए बहुत बड़ी है।"
+  },
+  "bulkErrCompareEmpty": {
+    "message": "इस बल्क स्कैन एक्सपोर्ट में तुलना के लिए कोई पेज नहीं है।"
   },
   "bulkEmpty": {
     "message": "पते चिपकाएँ या फ़ाइल अपलोड करें, फिर शुरू करें चुनें।"

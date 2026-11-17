@@ -4543,6 +4543,9 @@
   "detectionScrapingBlockedFmt": {
     "message": "Sidan svarade med HTTP {0}: besöket nekades eller utmanades."
   },
+  "detectionScrapingBlockPage": {
+    "message": "Det här är en blockerings- eller kontrollsida, inte själva webbplatsen: besöket nekades eller kontrollerades."
+  },
   "detectionScrapingCaptcha": {
     "message": "Det finns en CAPTCHA på sidan: en skrapa måste undvika att utlösa den eller lösa den."
   },
@@ -5638,6 +5641,9 @@
   },
   "historyNoResults": {
     "message": "Inga poster matchar din sökning eller dina filter."
+  },
+  "historyEntryGone": {
+    "message": "Den skanningen finns inte längre i historiken."
   },
   "historyClearFilters": {
     "message": "Rensa filter"
@@ -6922,6 +6928,12 @@
   },
   "bulkErrCompareFile": {
     "message": "Den här filen är inte en JSON-export från massskanningen."
+  },
+  "bulkErrCompareLarge": {
+    "message": "Den här filen är för stor för att vara en export från massskanningen."
+  },
+  "bulkErrCompareEmpty": {
+    "message": "Den här exporten från massskanningen har inga sidor att jämföra med."
   },
   "bulkEmpty": {
     "message": "Klistra in adresser eller ladda upp en fil och välj sedan Starta."

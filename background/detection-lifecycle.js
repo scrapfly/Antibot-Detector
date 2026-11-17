@@ -252,12 +252,34 @@ async function addLateEvidenceNow(tabId, pageUrl, tabFavicon, evidence, stillVal
         const id = detection?.detector?.id || detection?.id;
         if (id) byId.set(id, detection);
     }
-    const signature = () => Array.from(byId.values()).map(d => `${d.detector?.id || d.id}:${(d.matches || []).length}`).sort().join(',');
-    const before = signature();
+    // The scan's half-found combination rules (finalizeDetection): late evidence can complete them. Copies, so a request that
+    // completes nothing leaves them as they were for the next one
+    const finishedPage = finishedPages.get(tabId);
+    const samePage = finishedPage && urlWithoutHash(finishedPage.url) === urlWithoutHash(pageUrl);
+    const partialIds = new Set();
+    for (const partial of (samePage && finishedPage.partials) || []) {
+        const id = partial?.detector?.id || partial?.id;
+        if (id && !byId.has(id)) { byId.set(id, JSON.parse(JSON.stringify(partial))); partialIds.add(id); }
+    }
+    const signature = (ids) => Array.from(byId.entries()).filter(([id]) => ids(id))
+        .map(([id, d]) => `${id}:${(d.matches || []).length}`).sort().join(',');
+    const before = signature(() => true);
+    const beforeShown = signature(id => !partialIds.has(id));
     for (const detection of evidence) mergeDetection(byId, detection);
-    if (signature() === before) return null; // already known
+    if (signature(() => true) === before) return null; // already known
 
+    // The half-found rules as they are now, before scoring trims them: one this evidence did not complete keeps what it gained
+    const asFound = new Map([...partialIds].map(id => [id, JSON.parse(JSON.stringify(byId.get(id)))]));
     const finalResults = Array.from(byId.values()).filter(rescoreCombinations);
+    const completed = new Set(finalResults.map(d => d?.detector?.id || d?.id).filter(id => partialIds.has(id)));
+    if (samePage) {
+        finishedPage.partials = (finishedPage.partials || []).map((partial) => {
+            const id = partial?.detector?.id || partial?.id;
+            return asFound.has(id) ? asFound.get(id) : partial;
+        }).filter(partial => !completed.has(partial?.detector?.id || partial?.id));
+    }
+    // Only a half-found rule grew, and none was completed: nothing the page shows changed, so nothing is saved or announced
+    if (!completed.size && signature(id => !partialIds.has(id)) === beforeShown) return null;
     // The page's HTTP status stays the one saved with the result; with none saved, the one the page's scan recorded
     const finished = finishedPages.get(tabId);
     const finishedState = finished && finished.state && urlWithoutHash(finished.url) === urlWithoutHash(pageUrl) ? finished.state : null;
@@ -308,6 +330,7 @@ const LATE_NETWORK_DELAY_MS = 1000;   // requests are checked in batches, at mos
 const LATE_NETWORK_BATCH = 300;       // URLs one check reads; the rest wait for the next second
 const LATE_NETWORK_MAX_SEEN = 5000;   // distinct URLs one page is checked for
 const LATE_NETWORK_MAX_MATCHES = 20;  // late URLs that may add evidence to one page
+const LATE_PARTIALS_MAX = 50;         // half-found combination rules a finished page keeps for its late requests
 
 function urlWithoutHash(url) {
     return typeof url === 'string' ? url.split('#')[0] : '';
@@ -318,6 +341,7 @@ function rememberFinishedPage(tabId, state, results) {
     forgetFinishedPage(tabId);
     const page = {
         state, url: state.url, documentId: state.documentId || null, results: Array.isArray(results) ? results : [],
+        partials: Array.isArray(state.latePartials) ? state.latePartials : [],
         seen: new Set(state.lateCheckedUrls || []), pending: [], timer: null, added: 0
     };
     finishedPages.set(tabId, page);
@@ -440,7 +464,15 @@ async function finalizeDetection(tabId, state) {
     await matchLateRequests(tabId, state, mergedDetections);
     if (!DetectionSessionStore.isCurrent(tabId, state)) return;
 
-    let finalResults = Array.from(mergedDetections.values()).filter(rescoreCombinations);
+    // What the combinations do not yet hold (one half of a two-part rule) is kept aside, as found, for the requests the page
+    // makes after the scan: the other half arriving then completes it (addLateEvidenceNow). Never saved or shown as it is
+    const merged = Array.from(mergedDetections.values());
+    const asFound = new Map(merged.map(detection => [detection, JSON.parse(JSON.stringify(detection))]));
+    let finalResults = merged.filter(rescoreCombinations);
+    state.latePartials = merged.filter(detection => !finalResults.includes(detection))
+        .map(detection => asFound.get(detection))
+        .filter(detection => detection && Array.isArray(detection.matches) && detection.matches.length > 0)
+        .slice(0, LATE_PARTIALS_MAX);
 
     // A site that is skipped, or left out in "only these sites" mode, keeps nothing from a scan (one that began
     // before it was excluded, or a request that got past the checks): no cache entry, History, webhook or page
@@ -831,11 +863,13 @@ async function processDetectionData(message, sender) {
         }
 
         // Store main detection and check if ready to finalize
+        const nonEmpty = (list) => (Array.isArray(list) && list.length > 0 ? list : null);
         // Counts and timing for the scan report (background/scan-report.js)
         state.stats = {
             ...scanStats,
-            cookies: (pageData.allCookies || pageData.cookies || []).length,
-            headers: Object.keys(pageData.responseHeaders || pageData.headers || {}).length,
+            // As the engine read them: every cookie of the site when there are any, else the page's own (an empty list is no list)
+            cookies: (nonEmpty(pageData.allCookies) || nonEmpty(pageData.cookies) || []).length,
+            headers: Object.keys(pageData.headers || {}).length, // the engine's own: the response headers when they were captured
             collectMs: typeof pageData.collectMs === 'number' ? pageData.collectMs : undefined
         };
 

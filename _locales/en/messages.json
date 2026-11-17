@@ -4826,6 +4826,10 @@
     "message": "The page answered with HTTP {0}: this visit was refused or challenged.",
     "description": "Detection tab, What this means for scraping: the page answered with an error status. {0} is the status code, such as 403"
   },
+  "detectionScrapingBlockPage": {
+    "message": "This is a block or challenge page, not the site itself: this visit was refused or challenged.",
+    "description": "Detection tab, What this means for scraping: a block or challenge page's own text was found (Sucuri, F5, Radware block pages), whatever HTTP status it answered with"
+  },
   "detectionScrapingCaptcha": {
     "message": "A CAPTCHA is on the page: a scraper has to avoid triggering it or solve it.",
     "description": "Detection tab, What this means for scraping: a CAPTCHA was found on the page"
@@ -5984,6 +5988,10 @@
   "historyNoResults": {
     "message": "No entries match your search or filters.",
     "description": "Shown in History when the search and the filter chips leave no entry"
+  },
+  "historyEntryGone": {
+    "message": "That scan is no longer in History.",
+    "description": "History, opened on one scan from Statistics → Site report: that scan was deleted or History was cleared since"
   },
   "historyClearFilters": {
     "message": "Clear filters",
@@ -7680,6 +7688,14 @@
   "bulkErrCompareFile": {
     "message": "This file is not a Bulk scan JSON export.",
     "description": "Bulk scan: the file picked to compare with is not a Bulk scan JSON export (or cannot be read)"
+  },
+  "bulkErrCompareLarge": {
+    "message": "This file is too large to be a Bulk scan export.",
+    "description": "Bulk scan: the file picked to compare with is far larger than any Bulk scan export, so it is not read"
+  },
+  "bulkErrCompareEmpty": {
+    "message": "This Bulk scan export has no pages to compare with.",
+    "description": "Bulk scan: the file picked to compare with is a Bulk scan export, but it holds no page that can be compared"
   },
   "bulkEmpty": {
     "message": "Paste addresses or upload a file, then choose Start.",

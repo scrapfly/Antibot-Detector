@@ -59,6 +59,20 @@ test('a saved result keeps a DOM match\'s selector and a cookie\'s name, so Copy
   assert.ok(md.includes(`\`${ARKOSE}\``), md);
 });
 
+test('a saved result keeps a block page\'s mark, so What this means for scraping says it again after reopening', async () => {
+  const ScrapingAdvice = require('../modules/core/scraping-advice.js');
+  const { Engine, store } = loadEngine();
+  const url = 'https://shop.example/';
+  const live = [{ id: 'detect-sucuri', confidence: 100, category: 'antibot', detector: { id: 'detect-sucuri', name: 'Sucuri' },
+    matches: [{ type: 'content', pattern: 'Access Denied', value: 'Access Denied', scope: 'page', confidence: 100 },
+      { type: 'header', name: 'x-sucuri-id', value: 'x-sucuri-id=1', scope: 'whatever', confidence: 50 }] }];
+  await Engine.storeDetection(url, { url, hostname: 'shop.example' }, live);
+  const saved = Object.values(store.scrapfly_detection_storage)[0].detectionResults;
+  assert.equal(saved[0].matches[0].scope, 'page');
+  assert.equal(saved[0].matches[1].scope, undefined, 'only the "page" mark is kept');
+  assert.deepEqual(ScrapingAdvice.of({ detections: saved, httpStatus: 200 }), ['blockpage']);
+});
+
 test('a result saved before keeps only "selector=text": the selector is read whole, not cut at an "=" inside it', () => {
   const dom = (value) => signal({ type: 'dom', value });
   assert.equal(dom(`${ARKOSE}=Verify you are human`), ARKOSE);
